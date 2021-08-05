@@ -1,0 +1,10 @@
+
+.prediction_badge.counterfactual_inactive .outline
+{
+    fill: #c8c8c8;
+}
+
+.prediction_badge.counterfactual_active .outline
+{
+    fill: #ff2e2e;
+}

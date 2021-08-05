@@ -1,0 +1,26 @@
+{
+  "imports": {
+    "@material-ui/core": "./@material-ui/core.js",
+    "@material-ui/core/Breadcrumbs": "./@material-ui/core/Breadcrumbs.js",
+    "@material-ui/core/styles": "./@material-ui/core/styles.js",
+    "@material-ui/icons/Clear": "./@material-ui/icons/Clear.js",
+    "@material-ui/icons/Delete": "./@material-ui/icons/Delete.js",
+    "@material-ui/icons/Edit": "./@material-ui/icons/Edit.js",
+    "@material-ui/icons/FilterCenterFocus": "./@material-ui/icons/FilterCenterFocus.js",
+    "@material-ui/icons/Menu": "./@material-ui/icons/Menu.js",
+    "@material-ui/icons/NavigateBefore": "./@material-ui/icons/NavigateBefore.js",
+    "@material-ui/icons/NavigateNext": "./@material-ui/icons/NavigateNext.js",
+    "@material-ui/icons/PresentToAll": "./@material-ui/icons/PresentToAll.js",
+    "@material-ui/lab": "./@material-ui/lab.js",
+    "@material-ui/lab/ToggleButton": "./@material-ui/lab/ToggleButton.js",
+    "@material-ui/lab/ToggleButtonGroup": "./@material-ui/lab/ToggleButtonGroup.js",
+    "fuzzysort": "./fuzzysort.js",
+    "graphlib": "./graphlib.js",
+    "markdown-to-jsx": "./markdown-to-jsx.js",
+    "preact": "./preact.js",
+    "preact/devtools": "./preact/devtools.js",
+    "preact/hooks": "./preact/hooks.js",
+    "react-redux": "./react-redux.js",
+    "redux": "./redux.js"
+  }
+}

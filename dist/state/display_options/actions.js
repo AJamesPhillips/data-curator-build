@@ -1,0 +1,50 @@
+const toggle_consumption_formatting_type = "toggle_consumption_formatting";
+const toggle_consumption_formatting = (args) => {
+  return {type: toggle_consumption_formatting_type, ...args};
+};
+export const is_toggle_consumption_formatting = (action) => {
+  return action.type === toggle_consumption_formatting_type;
+};
+const toggle_focused_mode_type = "toggle_focused_mode";
+const toggle_focused_mode = (args) => {
+  return {type: toggle_focused_mode_type, ...args};
+};
+export const is_toggle_focused_mode = (action) => {
+  return action.type === toggle_focused_mode_type;
+};
+const set_time_resolution_type = "set_time_resolution";
+const set_time_resolution = (args) => {
+  return {type: set_time_resolution_type, ...args};
+};
+export const is_set_time_resolution = (action) => {
+  return action.type === set_time_resolution_type;
+};
+const set_validity_filter_type = "set_validity_filter";
+const set_validity_filter = (args) => {
+  return {type: set_validity_filter_type, ...args};
+};
+export const is_set_validity_filter = (action) => {
+  return action.type === set_validity_filter_type;
+};
+const set_certainty_formatting_type = "set_certainty_formatting";
+const set_certainty_formatting = (args) => {
+  return {type: set_certainty_formatting_type, ...args};
+};
+export const is_set_certainty_formatting = (action) => {
+  return action.type === set_certainty_formatting_type;
+};
+const set_display_by_simulated_time_type = "set_display_by_simulated_time";
+const set_display_by_simulated_time = (args) => {
+  return {type: set_display_by_simulated_time_type, ...args};
+};
+export const is_set_display_by_simulated_time = (action) => {
+  return action.type === set_display_by_simulated_time_type;
+};
+export const display_actions = {
+  toggle_consumption_formatting,
+  toggle_focused_mode,
+  set_time_resolution,
+  set_validity_filter,
+  set_certainty_formatting,
+  set_display_by_simulated_time
+};

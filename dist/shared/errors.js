@@ -1,0 +1,13 @@
+import {str_enum} from "./utils/str_enum.js";
+export const ERRORS = str_enum([
+  "UNKNOWN_ERROR",
+  "KEY_MISSING",
+  "FIELD_MISSING",
+  "FIELD_INVALID",
+  "EMAIL_FIELD_INVALID",
+  "NAME_FIELD_INVALID",
+  "EMAIL_ALREADY_REGISTERED",
+  "ALREADY_SIGNED_IN",
+  "ALREADY_SIGNED_OUT",
+  "EMAIL_OR_PASSWORD_NOT_RECOGNISED"
+]);

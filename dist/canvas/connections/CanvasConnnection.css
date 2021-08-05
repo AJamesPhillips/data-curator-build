@@ -1,0 +1,82 @@
+
+.connection_container
+{
+    pointer-events: none;
+}
+
+.connection_line_background
+{
+    fill: transparent;
+    stroke: transparent;
+    stroke-opacity: 0.3;
+}
+
+.connection_line
+{
+    fill: transparent;
+    stroke: black;
+}
+
+.connection_end
+{
+    fill: black;
+}
+
+
+
+.connection_line_background.mouseable, .connection_end.mouseable
+{
+    cursor: pointer;
+    pointer-events: stroke;
+}
+.graph_background_pointer_down .connection_line_background.mouseable, .graph_background_pointer_down .connection_end.mouseable
+{
+    cursor: inherit;
+    pointer-events: none;
+}
+
+
+
+.connection_line_background.hovered
+{
+    stroke: orange;
+}
+.connection_line_background.highlighted
+{
+    stroke: blue;
+    stroke-opacity: 0.2;
+}
+
+.connection_line.hovered
+{
+    stroke: blue;
+    /* stroke-width: 3px; */
+    /* stroke-dasharray: 6px 3px; */
+    stroke-opacity: 1 !important;
+    filter: inherit !important;
+}
+
+.connection_end.hovered
+{
+    stroke: blue;
+    fill: blue;
+    fill-opacity: 1 !important;
+    stroke-opacity: 1 !important;
+}
+
+/*
+.connection_line.highlighted
+{
+    stroke: blue;
+}
+.connection_end.highlighted
+{
+    fill: blue;
+} */
+
+
+
+.connection_end.noop_end
+{
+    stroke: black;
+}

@@ -1,0 +1,72 @@
+.wcomponent_canvas_node.connectable_canvas_node.node .node_main_content
+{
+    height: initial;
+    min-height: 80px;
+    text-overflow: initial;
+    white-space: initial;
+    overflow: initial;
+    /* Attempt to allow opacity to transition smoothly */
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+
+.node_title
+{
+    font-size: 14px;
+    min-height: 18px;
+    display: block;
+}
+
+.node_validity_container, .node_state_container
+{
+    display: inline-flex;
+    border-top: thin solid #CCC;
+    padding: 2px;
+    width: 100%;
+    align-items: center;
+}
+
+
+.node_is_selected
+{
+    z-index: 97;
+}
+
+.node_is_current_item
+{
+    z-index: 98;
+}
+
+.node_is_highlighted
+{
+    z-index: 99;
+}
+
+.node_is_moving
+{
+    z-index: 100;
+}
+
+.node_is_type_action > .node_main_content
+{
+    box-shadow: inset orange 0px 0px 5px 3px;
+}
+.node_is_type_goal > .node_main_content
+, .node_is_type_judgement > .node_main_content
+, .node_is_type_objective > .node_main_content
+{
+    box-shadow: inset #67c767 0px 0px 5px 3px;
+}
+
+
+.wcomponent_canvas_node.compact_title .node_main_content .node_title
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wcomponent_canvas_node.node_on_foundational_kv .node_main_content
+{
+    border-color: lightblue;
+}
