@@ -16,6 +16,7 @@
     "@material-ui/lab/ToggleButtonGroup": "./@material-ui/lab/ToggleButtonGroup.js",
     "fuzzysort": "./fuzzysort.js",
     "graphlib": "./graphlib.js",
+    "localforage": "./localforage.js",
     "markdown-to-jsx": "./markdown-to-jsx.js",
     "preact": "./preact.js",
     "preact/devtools": "./preact/devtools.js",

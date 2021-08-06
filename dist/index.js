@@ -18,7 +18,7 @@ import {SandBoxConnected} from "./scratch_pad/SandBoxConnected.js";
 const root = document.getElementById("root");
 const title = document.getElementsByTagName("title")[0];
 if (root) {
-  const in_production = true;
+  const in_production = window.location.hostname.endsWith("datacurator.org");
   if (window.location.pathname === "" || window.location.pathname === "/") {
     let content = `
         <style>

@@ -2,39 +2,19 @@ import {
   is_id_attribute
 } from "../State.js";
 import {ACTIONS} from "../actions.js";
-import {supported_keys} from "./supported_keys.js";
+import {LOCAL_STORAGE_STATE_KEY} from "./supported_keys.js";
+import {setItem} from "../../../snowpack/pkg/localforage.js";
 let last_saved = void 0;
 export function save_state(dispatch, state) {
   if (!needs_save(state, last_saved))
     return;
   last_saved = state;
   dispatch(ACTIONS.sync.update_sync_status("SAVING"));
-  const state_to_save = get_state_to_save(state);
-  const state_str = JSON.stringify(state_to_save);
   const specialised_state = get_specialised_state_to_save(state);
-  const specialised_state_str = JSON.stringify(specialised_state);
-  fetch("http://localhost:4000/api/v1/state/", {
-    method: "post",
-    body: state_str
-  }).then(() => fetch("http://localhost:4000/api/v1/specialised_state/", {
-    method: "post",
-    body: specialised_state_str
-  })).then(() => dispatch(ACTIONS.sync.update_sync_status(void 0)));
+  setItem(LOCAL_STORAGE_STATE_KEY, specialised_state).then(() => dispatch(ACTIONS.sync.update_sync_status(void 0)));
 }
 function needs_save(state, last_saved2) {
-  return !last_saved2 || state.statements !== last_saved2.statements || state.patterns !== last_saved2.patterns || state.objects !== last_saved2.objects || state.specialised_objects !== last_saved2.specialised_objects;
-}
-function get_state_to_save(state) {
-  const state_to_save = {
-    statements: state.statements,
-    patterns: state.patterns,
-    objects: state.objects.map(convert_object_to_core)
-  };
-  Object.keys(state).forEach((k) => {
-    if (!supported_keys.includes(k))
-      throw new Error(`Unexpected key "${k}" in state to save`);
-  });
-  return state_to_save;
+  return !last_saved2 || state.specialised_objects !== last_saved2.specialised_objects;
 }
 function convert_object_to_core(object) {
   return {
