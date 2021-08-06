@@ -1,5 +1,5 @@
 import {get_new_object_id} from "../../../shared/utils/ids.js";
-import {EXTERNAL_ID_KEY, PATTERN_ID_ACTION_V2} from "../_common.js";
+import {EXTERNAL_ID_KEY, PATTERN_ID_ACTION_V2} from "../common.js";
 import {airtable_multi_field_to_multi_attributes, airtable_multi_field_to_single_attribute, num_to_string, date_string_to_string} from "./common.js";
 export function transform_airtable_action(args) {
   const {pattern, get_temp_id} = args;

@@ -1,5 +1,5 @@
 import {get_new_object_id} from "../../../shared/utils/ids.js";
-import {EXTERNAL_ID_KEY, PATTERN_ID_PRIORITY} from "../_common.js";
+import {EXTERNAL_ID_KEY, PATTERN_ID_PRIORITY} from "../common.js";
 import {airtable_multi_field_to_single_attribute, date_string_to_string, num_to_string} from "./common.js";
 export function transform_airtable_priority(args) {
   const {pattern, get_temp_id} = args;

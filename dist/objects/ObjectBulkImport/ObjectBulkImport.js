@@ -3,7 +3,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../../state/actions.js";
 import {LinkButton} from "../../sharedf/Link.js";
 import {get_data_from_air_table, replace_temp_ids, temp_id_factory} from "./get_data_from_air_table.js";
-import {PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT} from "./_common.js";
+import {PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT} from "./common.js";
 const map_state = (state) => {
   const pattern_action = state.patterns.find(({id}) => id === PATTERN_ID_ACTION_V2);
   const pattern_priority = state.patterns.find(({id}) => id === PATTERN_ID_PRIORITY);

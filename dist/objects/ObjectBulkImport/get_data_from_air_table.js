@@ -1,7 +1,7 @@
 import {is_id_attribute} from "../../state/State.js";
 import {get_bulk_import_settings} from "./ObjectBulkImportSetup.js";
 import {get_transformation_function} from "./transformers/get_transformation_function.js";
-import {EXTERNAL_ID_KEY} from "./_common.js";
+import {EXTERNAL_ID_KEY} from "./common.js";
 const TEMP_ID_PREFIX = "temp_id: ";
 export function temp_id_factory() {
   const temporary_ids_map = {};

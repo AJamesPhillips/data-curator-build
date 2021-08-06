@@ -1,4 +1,4 @@
-import {PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT} from "../_common.js";
+import {PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT} from "../common.js";
 import {transform_airtable_action} from "./transform_airtable_action.js";
 import {transform_airtable_event} from "./transform_airtable_event.js";
 import {transform_airtable_priority} from "./transform_airtable_priority.js";
