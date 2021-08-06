@@ -1,7 +1,7 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./datetime.css.proxy.js";
 import {EditableCustomDateTime} from "../../form/EditableCustomDateTime.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 const map_state = (state) => ({
   show_unused_fields: !state.display_options.consumption_formatting
 });

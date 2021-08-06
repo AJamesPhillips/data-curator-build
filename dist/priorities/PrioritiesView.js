@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";

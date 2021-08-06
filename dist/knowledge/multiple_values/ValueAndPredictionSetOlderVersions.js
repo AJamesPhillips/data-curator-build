@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {
   create_new_VAP_set_version
 } from "./utils.js";

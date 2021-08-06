@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {calculate_judgement_value} from "../knowledge/judgements/calculate_judgement_value.js";
 import {JudgementBadge} from "../knowledge/judgements/JudgementBadge.js";
 import {get_wcomponent_state_UI_value} from "../shared/wcomponent/get_wcomponent_state_UI_value.js";

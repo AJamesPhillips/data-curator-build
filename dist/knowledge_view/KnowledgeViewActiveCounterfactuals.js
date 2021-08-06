@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.js";
 import {is_defined} from "../shared/utils/is_defined.js";
 import {get_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";

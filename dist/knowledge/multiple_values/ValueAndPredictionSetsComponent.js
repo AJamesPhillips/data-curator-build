@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {EditableListEntry} from "../../form/editable_list/EditableListEntry.js";
 import {get_items_descriptor, ExpandableList} from "../../form/editable_list/ExpandableList.js";
 import {ListHeader} from "../../form/editable_list/ListHeader.js";

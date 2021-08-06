@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./ConnectableCanvasNode.css.proxy.js";
 import {CanvasNode} from "./CanvasNode.js";
 import {COLOURS} from "./display.js";

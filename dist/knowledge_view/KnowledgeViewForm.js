@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_current_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {factory_get_kv_details, get_all_parent_knowledge_view_ids} from "./common.js";

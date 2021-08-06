@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {UncertainDateTime} from "../uncertainty/datetime.js";
 const map_state = (state) => ({
   creation_context_state: state.creation_context

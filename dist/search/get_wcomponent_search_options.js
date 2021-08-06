@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {JudgementBadgeConnected} from "../knowledge/judgements/JudgementBadgeConnected.js";
 import {
   wcomponent_is_judgement_or_objective

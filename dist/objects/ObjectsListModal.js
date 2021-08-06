@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {Modal} from "../modal/Modal.js";
 import {ObjectsList} from "./ObjectsList.js";
 export function ObjectsListModal(props) {

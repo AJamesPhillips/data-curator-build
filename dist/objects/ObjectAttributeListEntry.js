@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {is_id_attribute, is_value_attribute} from "../state/State.js";
 import {get_id_map} from "../utils/get_id_map.js";
 import {ItemSelect} from "../search/ItemSelect.js";

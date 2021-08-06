@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState, useCallback} from "../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState, useCallback} from "../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./ObjectForm.css.proxy.js";
 import {SelectPattern} from "../patterns/SelectPattern.js";
 import {DeleteButton} from "../sharedf/DeleteButton.js";

@@ -1,4 +1,4 @@
-import {Component, h} from "../../_snowpack/pkg/preact.js";
+import {Component, h} from "../../snowpack/pkg/preact.js";
 export class CanvasNode extends Component {
   render() {
     const {position, extra_styles, display, extra_css_class, title, children} = this.props;

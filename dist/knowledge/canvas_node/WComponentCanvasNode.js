@@ -1,7 +1,7 @@
-import Markdown from "../../../_snowpack/pkg/markdown-to-jsx.js";
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import "./WComponentCanvasNode.css.proxy.js";
 import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {
@@ -32,7 +32,7 @@ import {factory_on_pointer_down} from "../canvas_common.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
 import {get_store} from "../../state/store.js";
 import {NodeValueAndPredictionSetSummary} from "../multiple_values/NodeValueAndPredictionSetSummary.js";
-import {Box} from "../../../_snowpack/pkg/@material-ui/core.js";
+import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state, own_props) => {
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
   const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id);

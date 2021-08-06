@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {uncertain_date_to_string} from "../../form/datetime_utils.js";
 import {EditableCheckbox} from "../../form/EditableCheckbox.js";

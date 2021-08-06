@@ -1,9 +1,9 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {WComponentCanvasConnection} from "../knowledge/WComponentCanvasConnection.js";
 import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
 import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 const map_state = (state) => {
   const sync_ready = state.sync.ready;
   const {current_composed_knowledge_view} = state.derived;

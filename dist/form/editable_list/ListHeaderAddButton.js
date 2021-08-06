@@ -1,5 +1,5 @@
-import {Box} from "../../../_snowpack/pkg/@material-ui/core.js";
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {Button} from "../../sharedf/Button.js";
 export function ListHeaderAddButton(props) {
   const {

@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 export function ProbabilityGraph(props) {
   const {calc_x, reverse, size = 400} = props;
   const step_x = 0.02;

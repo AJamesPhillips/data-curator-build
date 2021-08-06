@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {ExpandableListWithAddButton} from "./ExpandableListWithAddButton.js";
 import {NewItemForm} from "./NewItemForm.js";
 import {factory_render_list_content} from "./render_list_content.js";

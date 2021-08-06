@@ -1,12 +1,12 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./KnowledgeTimeView.css.proxy.js";
 import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
 import {MainArea} from "../layout/MainArea.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {sort_list} from "../shared/utils/sort.js";
 import {wcomponent_has_VAP_sets} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../shared/wcomponent/utils_datetime.js";
-import {Box} from "../../_snowpack/pkg/@material-ui/core.js";
+import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 import {ConnectedValueAndPredictionSetSummary} from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary.js";
 const map_state = (state) => {
   const sync_ready = state.sync.ready;

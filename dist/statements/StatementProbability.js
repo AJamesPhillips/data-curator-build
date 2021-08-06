@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {get_probability_option} from "../shared/uncertainty/probabilities.js";
 import {ProbabilityGraph} from "../probability/ProbabilityGraph.js";
 import {factory_scaled_weibull} from "../probability/weibulll.js";

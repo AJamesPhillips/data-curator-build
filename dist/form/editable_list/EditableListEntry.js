@@ -1,4 +1,4 @@
-import {Component, h} from "../../../_snowpack/pkg/preact.js";
+import {Component, h} from "../../../snowpack/pkg/preact.js";
 import "./EditableListEntry.css.proxy.js";
 import {ConfirmatoryDeleteButton} from "../ConfirmatoryDeleteButton.js";
 import {EditableCustomDateTime} from "../EditableCustomDateTime.js";

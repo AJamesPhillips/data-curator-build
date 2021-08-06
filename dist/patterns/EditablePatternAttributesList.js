@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {DeleteButton} from "../sharedf/DeleteButton.js";
 import {PatternAttributeListEntry, PatternAttributeListHeader} from "./PatternAttributeListEntry.js";
 function _EditablePatternAttributesList(props) {

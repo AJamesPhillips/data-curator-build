@@ -1,7 +1,7 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./SearchWindow.css.proxy.js";
 import {ListOfTypes} from "./ListOfTypes.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Modal} from "../modal/Modal.js";
 export function ItemSearchWindow(props) {
   const [search_string, set_search_string] = useState("");

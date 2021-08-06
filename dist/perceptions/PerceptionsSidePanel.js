@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {get_perception_from_state} from "../state/specialised_objects/accessors.js";
 import {PerceptionForm} from "./PerceptionForm.js";
 import {PerceptionsList} from "./PerceptionsList.js";

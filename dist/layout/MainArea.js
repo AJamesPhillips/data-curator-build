@@ -1,7 +1,7 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./MainArea.css.proxy.js";
 import {MainContentControls} from "./MainContentControls.js";
-import {Box} from "../../_snowpack/pkg/@material-ui/core.js";
+import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 export function MainArea(props) {
   return /* @__PURE__ */ h(Box, {
     id: "main_area",

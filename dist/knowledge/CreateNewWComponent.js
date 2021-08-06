@@ -1,7 +1,7 @@
-import {ButtonGroup} from "../../_snowpack/pkg/@material-ui/core.js";
+import {ButtonGroup} from "../../snowpack/pkg/@material-ui/core.js";
 import {Button} from "../sharedf/Button.js";
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {wcomponent_types} from "../shared/wcomponent/interfaces/wcomponent_base.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import "./CreateNewWComponent.css.proxy.js";

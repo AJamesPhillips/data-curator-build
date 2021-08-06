@@ -1,6 +1,6 @@
-import {ToggleButton, ToggleButtonGroup} from "../../_snowpack/pkg/@material-ui/lab.js";
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {ToggleButton, ToggleButtonGroup} from "../../snowpack/pkg/@material-ui/lab.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {time_resolution_types} from "../state/display_options/state.js";
 const map_state = (state) => ({

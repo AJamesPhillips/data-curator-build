@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Button} from "../sharedf/Button.js";
 import {ACTIONS} from "../state/actions.js";
 import {remove_from_list_by_predicate} from "../utils/list.js";

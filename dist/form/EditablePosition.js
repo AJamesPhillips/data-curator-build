@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {grid_small_step, h_step, round_coordinate_small_step, v_step} from "../canvas/position_utils.js";
 import {EditableNumber} from "./EditableNumber.js";
 export function EditablePosition(props) {

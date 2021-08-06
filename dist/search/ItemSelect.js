@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./ItemSelect.css.proxy.js";
 import {get_id_map} from "../utils/get_id_map.js";
 import {description} from "../utils/item.js";

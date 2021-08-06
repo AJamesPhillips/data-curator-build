@@ -1,11 +1,11 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import fuzzysort from "../../../_snowpack/pkg/fuzzysort.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import fuzzysort from "../../../snowpack/pkg/fuzzysort.js";
 import "./AutocompleteText.css.proxy.js";
 import {sort_list} from "../../shared/utils/sort.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Options} from "./Options.js";
 import {throttle} from "../../utils/throttle.js";
-import {useEffect, useRef, useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {useEffect, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   presenting: state.display_options.consumption_formatting
 });

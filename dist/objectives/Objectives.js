@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {MainArea} from "../layout/MainArea.js";
 import {performance_logger} from "../utils/performance.js";
 import {ObjectivesGraph} from "./ObjectivesGraph.js";

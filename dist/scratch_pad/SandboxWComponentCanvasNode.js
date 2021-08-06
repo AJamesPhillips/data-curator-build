@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect, Provider} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect, Provider} from "../../snowpack/pkg/react-redux.js";
 import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
 import {prepare_new_VAP_set} from "../knowledge/multiple_values/utils.js";
 import {VAPsType} from "../shared/wcomponent/interfaces/generic_value.js";

@@ -1,8 +1,8 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useEffect, useRef, useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useEffect, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import "../Editable.css.proxy.js";
 import {get_store} from "../../state/store.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {RichMarkDown} from "../../sharedf/RichMarkDown.js";
 import {ACTIONS} from "../../state/actions.js";
 import {ConditionalWComponentSearchWindow} from "../ConditionalWComponentSearchWindow.js";

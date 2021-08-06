@@ -1,10 +1,10 @@
-import {Component, h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {Component, h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./Link.css.proxy.js";
 import {routing_state_to_string} from "../state/routing/routing.js";
 import {ACTIONS} from "../state/actions.js";
 import {merge_routing_state} from "../state/routing/merge_routing_state.js";
-import {Button} from "../../_snowpack/pkg/@material-ui/core.js";
+import {Button} from "../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state, own_props) => {
   const current_routing_state = state.routing;
   const {selected_on = new Set()} = own_props;

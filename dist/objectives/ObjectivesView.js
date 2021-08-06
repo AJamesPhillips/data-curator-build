@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Canvas} from "../canvas/Canvas.js";
 import {x, vertical_ordinal_to_y} from "../canvas/display.js";
 import {MainArea} from "../layout/MainArea.js";

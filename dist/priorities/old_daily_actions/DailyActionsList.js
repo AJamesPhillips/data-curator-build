@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {ObjectsListModal} from "../../objects/ObjectsListModal.js";
 export function DailyActionsList(props) {
   return /* @__PURE__ */ h(ObjectsListModal, {

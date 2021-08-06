@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {EditableNumber} from "../../form/EditableNumber.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {wcomponent_is_statev2} from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";

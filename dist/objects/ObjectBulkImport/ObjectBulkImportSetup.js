@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {LinkButton} from "../../sharedf/Link.js";
 import {remove_index} from "../../utils/list.js";
 import {ObjectBulkImportModel} from "./ObjectBulkImportModel.js";

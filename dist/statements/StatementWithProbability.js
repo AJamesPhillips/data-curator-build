@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {StatementProbability} from "./StatementProbability.js";
 import "./StatementWithProbability.css.proxy.js";
 export function StatementWithProbabililty(props) {

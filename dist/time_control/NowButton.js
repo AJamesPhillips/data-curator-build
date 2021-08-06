@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {Button} from "../sharedf/Button.js";
 export function NowButton(props) {
   return /* @__PURE__ */ h(Button, {

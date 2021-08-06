@@ -1,4 +1,4 @@
-import {createStore} from "../../_snowpack/pkg/redux.js";
+import {createStore} from "../../snowpack/pkg/redux.js";
 import {display_options_subscribers} from "./display_options/subscribers.js";
 import {record_keyupdown_activity} from "./global_keys/record_keyupdown_activity.js";
 import {render_all_objects, render_all_objects_and_update_store} from "./objects/rendering.js";

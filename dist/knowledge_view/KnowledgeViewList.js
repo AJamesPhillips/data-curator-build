@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {ExpandableListWithAddButton} from "../form/editable_list/ExpandableListWithAddButton.js";
 import {factory_render_list_content} from "../form/editable_list/render_list_content.js";
 import {Link} from "../sharedf/Link.js";

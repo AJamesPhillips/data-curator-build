@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {AboutSidePanel} from "../about/AboutSidePanel.js";
 import {CreationContextSidePanel} from "../creation_context/CreationContextSidePanel.js";
 import {DisplayOptionsSidePanel} from "../display_options/DisplayOptionsSidePanel.js";

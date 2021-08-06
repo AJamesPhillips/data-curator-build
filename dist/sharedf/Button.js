@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {Button as MaterialButton} from "../../_snowpack/pkg/@material-ui/core.js";
-import {Hidden} from "../../_snowpack/pkg/@material-ui/core.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {Button as MaterialButton} from "../../snowpack/pkg/@material-ui/core.js";
+import {Hidden} from "../../snowpack/pkg/@material-ui/core.js";
 export function Button(props) {
   return /* @__PURE__ */ h(Hidden, {
     xsUp: props.is_hidden

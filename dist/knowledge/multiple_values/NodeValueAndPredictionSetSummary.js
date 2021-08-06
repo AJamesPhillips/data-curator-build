@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {wcomponent_has_VAP_sets} from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_current_VAP_set} from "../../shared/wcomponent/value_and_prediction/get_value_v2.js";
 import {ConnectedValueAndPredictionSetSummary} from "./ConnectedValueAndPredictionSetSummary.js";

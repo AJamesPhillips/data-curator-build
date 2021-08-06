@@ -1,5 +1,5 @@
-import {Component, h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {Component, h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../../state/actions.js";
 import {LinkButton} from "../../sharedf/Link.js";
 import {get_data_from_air_table, replace_temp_ids, temp_id_factory} from "./get_data_from_air_table.js";

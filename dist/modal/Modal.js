@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./Modal.css.proxy.js";
 function map_state(state, own_props) {
   const is_escape = state.global_keys.last_key === "Escape";

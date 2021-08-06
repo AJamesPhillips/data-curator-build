@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {CanvasConnnection} from "../canvas/connections/CanvasConnnection.js";
 import {get_objective_node_position} from "./get_objective_nodes.js";
 const map_state = (state, own_props) => {

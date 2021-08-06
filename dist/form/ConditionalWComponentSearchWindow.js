@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useRef} from "../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useRef} from "../../snowpack/pkg/preact/hooks.js";
 import "./Editable.css.proxy.js";
 import {WComponentSearchWindow} from "../search/WComponentSearchWindow.js";
 export function ConditionalWComponentSearchWindow(props) {

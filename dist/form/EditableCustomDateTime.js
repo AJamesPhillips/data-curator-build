@@ -1,10 +1,10 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./Editable.css.proxy.js";
 import {date_to_string, correct_datetime_for_local_time_zone, valid_date} from "./datetime_utils.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
 import {date2str, get_today_str} from "../shared/utils/date_helpers.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 const map_state = (state) => ({
   time_resolution: state.display_options.time_resolution,
   presenting: state.display_options.consumption_formatting

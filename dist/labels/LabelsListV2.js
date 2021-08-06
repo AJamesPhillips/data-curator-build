@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {LabelV2} from "./LabelV2.js";
 export function LabelsListV2(props) {
   return /* @__PURE__ */ h("div", {

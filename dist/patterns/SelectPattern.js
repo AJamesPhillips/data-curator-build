@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {ItemSelect} from "../search/ItemSelect.js";
 export function SelectPattern(props) {
   return /* @__PURE__ */ h("div", null, props.disabled && /* @__PURE__ */ h(ItemSelect, {

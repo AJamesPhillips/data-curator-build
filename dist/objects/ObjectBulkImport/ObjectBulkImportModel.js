@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {SelectPattern} from "../../patterns/SelectPattern.js";
 export function ObjectBulkImportModel(props) {
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("input", {

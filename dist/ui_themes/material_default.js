@@ -1,4 +1,4 @@
-import {createMuiTheme} from "../../_snowpack/pkg/@material-ui/core/styles.js";
+import {createMuiTheme} from "../../snowpack/pkg/@material-ui/core/styles.js";
 const _default_theme_options = {
   breakpoints: {
     values: {

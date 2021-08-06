@@ -1,5 +1,5 @@
-import {Graph} from "../../../_snowpack/pkg/graphlib.js";
-import * as GraphLib from "../../../_snowpack/pkg/graphlib.js";
+import {Graph} from "../../../snowpack/pkg/graphlib.js";
+import * as GraphLib from "../../../snowpack/pkg/graphlib.js";
 const alg = (GraphLib.default || GraphLib).alg;
 import {test} from "./test.js";
 export function make_graph(args) {

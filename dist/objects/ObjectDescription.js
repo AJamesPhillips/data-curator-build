@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {ObjectLabels} from "./ObjectLabels.js";
 import {object_content} from "./object_content.js";
 export function ObjectDescription(props) {

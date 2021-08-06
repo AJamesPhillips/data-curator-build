@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
-import Markdown from "../../_snowpack/pkg/markdown-to-jsx.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
+import Markdown from "../../snowpack/pkg/markdown-to-jsx.js";
 import "./LabelV2.css.proxy.js";
 import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";

@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {KnowledgeGraphView} from "../knowledge_view/KnowledgeGraphView.js";
 import {ObjectivesView} from "../objectives/ObjectivesView.js";
 import {PrioritiesListView} from "../priorities_list_view/PrioritiesListView.js";

@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {ObjectAttributeListEntry} from "./ObjectAttributeListEntry.js";
 function _EditableObjectAttributesList(props) {
   const change_attribute = (index) => (attribute) => {

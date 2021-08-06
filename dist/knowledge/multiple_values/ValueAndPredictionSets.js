@@ -1,6 +1,6 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {partition_and_prune_items_by_datetimes} from "../../shared/wcomponent/utils_datetime.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {ValueAndPredictionSetsComponent} from "./ValueAndPredictionSetsComponent.js";
 import {get_wcomponent_VAP_set_counterfactuals} from "../../state/derived/accessor.js";
 const map_state = (state, own_props) => {

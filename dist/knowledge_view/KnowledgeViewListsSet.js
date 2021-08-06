@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {KnowledgeViewList} from "./KnowledgeViewList.js";
-import {useMemo} from "../../_snowpack/pkg/preact/hooks.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 export function KnowledgeViewListsSet(props) {
   const {priority, normal, hidden, archived} = useMemo(() => {
     const priority2 = [];

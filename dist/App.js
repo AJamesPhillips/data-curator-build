@@ -1,5 +1,5 @@
-import {h} from "../_snowpack/pkg/preact.js";
-import {AppBar, Box, CssBaseline, ThemeProvider, Toolbar} from "../_snowpack/pkg/@material-ui/core.js";
+import {h} from "../snowpack/pkg/preact.js";
+import {AppBar, Box, CssBaseline, ThemeProvider, Toolbar} from "../snowpack/pkg/@material-ui/core.js";
 import "./App.css.proxy.js";
 import {MainAreaRouter} from "./layout/MainAreaRouter.js";
 import {TabsContainer} from "./layout/TabsContainer.js";

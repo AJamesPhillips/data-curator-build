@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./Handles.css.proxy.js";
 import {ExploreButtonHandle} from "./ExploreButtonHandle.js";
 export function Handles(props) {

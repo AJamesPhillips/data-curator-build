@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {date2str} from "../shared/utils/date_helpers.js";
 import "./StatementProbabilityChange.css.proxy.js";
 export function StatementProbabilityChange(props) {

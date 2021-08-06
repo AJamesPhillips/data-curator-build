@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {EditableCustomDateTime} from "../form/EditableCustomDateTime.js";
 export function SandboxEditableCustomDateTime() {
   const [custom_date, set_custom_date] = useState(void 0);

@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {upsert_entry, remove_from_list_by_predicate} from "../../utils/list.js";
 import {EditableListEntry} from "./EditableListEntry.js";
 export function factory_render_list_content(own_props) {

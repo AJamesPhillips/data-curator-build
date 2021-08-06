@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./WComponentCanvasConnection.css.proxy.js";
 import {CanvasConnnection} from "../canvas/connections/CanvasConnnection.js";
 import {

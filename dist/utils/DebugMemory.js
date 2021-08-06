@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 const map_dispatch = {
   noop: () => ({type: "noop"}),

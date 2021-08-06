@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {StatementProbabilityChange} from "./StatementProbabilityChange.js";
 import "./StatementProbabilityExplorer.css.proxy.js";
 import {StatementProbability} from "./StatementProbability.js";

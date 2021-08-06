@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {get_wcomponent_validity_value} from "../shared/wcomponent/get_wcomponent_validity_value.js";
 import {DisplayValue} from "./multiple_values/DisplayValue.js";
 const map_state = (state) => {

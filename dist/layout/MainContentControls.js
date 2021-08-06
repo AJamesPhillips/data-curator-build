@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {KnowledgeContentControls} from "../knowledge_view/KnowledgeContentControls.js";
 import {ObjectivesContentControls} from "../objectives/ObjectivesContentControls.js";
 import {PrioritiesContentControls} from "../priorities/PrioritiesContentControls.js";

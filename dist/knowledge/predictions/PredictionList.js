@@ -1,9 +1,9 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useMemo, useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useMemo, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {get_new_prediction_id} from "../../shared/utils/ids.js";
 import {PredictionViewDetails, PredictionViewSummary} from "./PredictionView.js";
 import {partition_and_prune_items_by_datetimes} from "../../shared/wcomponent/utils_datetime.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {get_items_descriptor, ExpandableList} from "../../form/editable_list/ExpandableList.js";
 import {ListHeader} from "../../form/editable_list/ListHeader.js";
 import {ListHeaderAddButton} from "../../form/editable_list/ListHeaderAddButton.js";

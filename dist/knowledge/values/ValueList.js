@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useMemo} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import {get_new_value_id} from "../../shared/utils/ids.js";
 import {EditableList} from "../../form/editable_list/EditableList.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";

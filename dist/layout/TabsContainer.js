@@ -1,8 +1,8 @@
-import {Box, Button, Menu, MenuItem} from "../../_snowpack/pkg/@material-ui/core.js";
-import MenuIcon from "../../_snowpack/pkg/@material-ui/icons/Menu.js";
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {Box, Button, Menu, MenuItem} from "../../snowpack/pkg/@material-ui/core.js";
+import MenuIcon from "../../snowpack/pkg/@material-ui/icons/Menu.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ALLOWED_ROUTES} from "../state/routing/interfaces.js";
 import {Tab} from "./Tab.js";
 const map_state = (state) => ({

@@ -1,8 +1,8 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./CanvasConnnection.css.proxy.js";
 import {ConnectionEnd, ConnectionEndType} from "./ConnectionEnd.js";
 import {derive_coords} from "./derive_coords.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 export function CanvasConnnection(props) {
   const [hovered, set_hovered] = useState(false);
   const {from_node_position, to_node_position, from_connection_type, to_connection_type} = props;

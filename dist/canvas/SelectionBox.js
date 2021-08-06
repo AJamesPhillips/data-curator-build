@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./SelectionBox.css.proxy.js";
 export function SelectionBox(props) {
   const {

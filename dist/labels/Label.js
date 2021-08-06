@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./Label.css.proxy.js";
 const is_statement_props = (props) => {
   return props.hasOwnProperty("statement");

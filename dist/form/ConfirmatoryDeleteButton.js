@@ -1,11 +1,11 @@
-import {Box, ThemeProvider} from "../../_snowpack/pkg/@material-ui/core.js";
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {Box, ThemeProvider} from "../../snowpack/pkg/@material-ui/core.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {DefaultTheme, WarningTheme} from "../ui_themes/material_default.js";
 import {Button} from "../sharedf/Button.js";
-import {Tooltip} from "../../_snowpack/pkg/@material-ui/core.js";
-import DeleteIcon from "../../_snowpack/pkg/@material-ui/icons/Delete.js";
+import {Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
+import DeleteIcon from "../../snowpack/pkg/@material-ui/icons/Delete.js";
 const map_state = (state) => ({
   consumption_formatting: state.display_options.consumption_formatting
 });

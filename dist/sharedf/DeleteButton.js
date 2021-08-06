@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./DeleteButton.css.proxy.js";
 export function DeleteButton(props) {
   let value = "X";

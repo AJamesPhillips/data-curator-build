@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./DisplayValue.css.proxy.js";
 export function DisplayValue(props) {
   const {UI_value: {values_string, assumed, uncertain}} = props;

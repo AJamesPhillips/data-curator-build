@@ -1,10 +1,10 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import "./MultiAutocompleteText.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
 import {AutocompleteText} from "./AutocompleteText.js";
 import {SelectedOption} from "./SelectedOption.js";
-import {Box} from "../../../_snowpack/pkg/@material-ui/core.js";
+import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state, own_props) => ({
   editing: own_props.always_allow_editing || !state.display_options.consumption_formatting
 });

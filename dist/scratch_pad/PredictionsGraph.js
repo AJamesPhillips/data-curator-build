@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {ProbablitySelection} from "../probability/ProbabililtySelection.js";
 import {get_probability_option} from "../shared/uncertainty/probabilities.js";
 import {ProbabilityGraph} from "../probability/ProbabilityGraph.js";

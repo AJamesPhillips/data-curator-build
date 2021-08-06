@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {uncertain_datetime_is_eternal} from "../../form/datetime_utils.js";
 import {get_today_date} from "../../shared/utils/date_helpers.js";

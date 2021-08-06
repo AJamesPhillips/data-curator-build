@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {LabelsList} from "../labels/LabelsList.js";
 import {Link} from "../sharedf/Link.js";
 export function StatementListEntry(props) {

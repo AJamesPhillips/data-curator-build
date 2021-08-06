@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./common.css.proxy.js";
 import {EditablePercentage} from "../../form/EditablePercentage.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";

@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {useState} from "../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import "./ColorPicker.css.proxy.js";
 import {EditableNumber} from "../form/EditableNumber.js";
 import {bounded} from "../shared/utils/bounded.js";

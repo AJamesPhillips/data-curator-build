@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./Editable.css.proxy.js";
 import {bounded} from "../shared/utils/bounded.js";
 import {EditableTextSingleLine} from "./editable_text/EditableTextSingleLine.js";

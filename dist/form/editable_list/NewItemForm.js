@@ -1,9 +1,9 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useEffect, useState} from "../../../_snowpack/pkg/preact/hooks.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import "./NewItemForm.css.proxy.js";
 import {Button} from "../../sharedf/Button.js";
 import {EditableListEntry} from "./EditableListEntry.js";
-import {Box, Dialog, DialogTitle} from "../../../_snowpack/pkg/@material-ui/core.js";
+import {Box, Dialog, DialogTitle} from "../../../snowpack/pkg/@material-ui/core.js";
 export function NewItemForm(props) {
   const {new_item, set_new_item, item_descriptor, item_top_props, add_item} = props;
   const [adding_item, set_adding_item] = useState(false);

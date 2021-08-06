@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./ValueAndPredictions.css.proxy.js";
 import {EditableNumber} from "../../form/EditableNumber.js";
 import {EditablePercentage} from "../../form/EditablePercentage.js";
@@ -10,7 +10,7 @@ import {ListHeaderAddButton} from "../../form/editable_list/ListHeaderAddButton.
 import {factory_render_list_content} from "../../form/editable_list/render_list_content.js";
 import {prepare_new_VAP} from "./utils.js";
 import {PredictionBadge} from "../predictions/PredictionBadge.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {get_current_composed_knowledge_view_from_state} from "../../state/specialised_objects/accessors.js";
 import {ACTIONS} from "../../state/actions.js";
 import {is_counterfactual_active} from "../../shared/counterfactuals/active.js";

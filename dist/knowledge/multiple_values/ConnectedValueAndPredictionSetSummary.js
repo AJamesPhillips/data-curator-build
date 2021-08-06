@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {ValueAndPredictionSetSummary} from "./ValueAndPredictionSetSummary.js";
 import {get_counterfactual_v2_VAP_set} from "../../shared/wcomponent/value_and_prediction/get_value_v2.js";
 import {

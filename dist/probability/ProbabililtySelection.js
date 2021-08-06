@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {probabilities, probabilities_plus_anchors, probability_is_in_range} from "../shared/uncertainty/probabilities.js";
 export function ProbablitySelection(props) {
   const {probability, set_probability} = props;

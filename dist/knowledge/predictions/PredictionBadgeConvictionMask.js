@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./PredictionBadgeConvictionMask.css.proxy.js";
 export function PredictionsBadgeConvictionMask(props) {
   const {size, border_width, elements_width, conviction} = props;

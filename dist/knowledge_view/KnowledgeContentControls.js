@@ -1,10 +1,10 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {get_wcomponent_time_slider_data} from "../time_control/prepare_data/wcomponent.js";
 import {ContentControls} from "../sharedf/content_controls/ContentControls.js";
-import {useMemo} from "../../_snowpack/pkg/preact/hooks.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   selected_component_id: state.routing.item_id,
   wcomponents: state.derived.wcomponents,

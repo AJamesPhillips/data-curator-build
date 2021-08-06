@@ -1,8 +1,8 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {Button} from "../../sharedf/Button.js";
 import {color_to_opposite, color_to_string} from "../../sharedf/color.js";
-import {ButtonGroup, IconButton, Tooltip, Typography} from "../../../_snowpack/pkg/@material-ui/core.js";
-import ClearIcon from "../../../_snowpack/pkg/@material-ui/icons/Clear.js";
+import {ButtonGroup, IconButton, Tooltip, Typography} from "../../../snowpack/pkg/@material-ui/core.js";
+import ClearIcon from "../../../snowpack/pkg/@material-ui/icons/Clear.js";
 export function SelectedOption(props) {
   const {
     editing,

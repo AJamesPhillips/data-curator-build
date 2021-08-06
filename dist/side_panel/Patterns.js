@@ -1,9 +1,9 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {EditPatternForm} from "../patterns/EditPatternForm.js";
 import {PatternsList} from "../patterns/PatternsList.js";
 import {NewPatternForm} from "../patterns/NewPatternForm.js";
-import {Box, Typography} from "../../_snowpack/pkg/@material-ui/core.js";
+import {Box, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => ({
   pattern: state.patterns.find(({id}) => id === state.routing.item_id),
   pattern_count: state.patterns.length

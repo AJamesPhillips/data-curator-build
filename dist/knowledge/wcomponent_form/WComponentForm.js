@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {EditableCustomDateTime} from "../../form/EditableCustomDateTime.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";
@@ -34,7 +34,7 @@ import {WComponentFromTo} from "../WComponentFromTo.js";
 import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
 import {WComponentLatestPrediction} from "../WComponentLatestPrediction.js";
 import {JudgementFormFields} from "./JudgementFormFields.js";
-import {useEffect, useRef} from "../../../_snowpack/pkg/preact/hooks.js";
+import {useEffect, useRef} from "../../../snowpack/pkg/preact/hooks.js";
 import {WComponentEventAtFormField} from "./WComponentEventAtFormField.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {wcomponent_VAPs_represent} from "../../shared/wcomponent/value_and_prediction/utils.js";

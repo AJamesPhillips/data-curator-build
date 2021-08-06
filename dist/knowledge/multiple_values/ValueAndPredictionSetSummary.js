@@ -1,6 +1,6 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {useState} from "../../../_snowpack/pkg/preact/hooks.js";
-import {Box} from "../../../_snowpack/pkg/@material-ui/core.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./ValueAndPredictionSetSummary.css.proxy.js";
 import {wcomponent_VAPs_represent} from "../../shared/wcomponent/value_and_prediction/utils.js";
 import {WComponentJudgements} from "../judgements/WComponentJudgements.js";

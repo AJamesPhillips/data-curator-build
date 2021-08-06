@@ -1,9 +1,9 @@
 import "./index.css.proxy.js";
 import App from "./App.js";
 import "./shared/utils/monkey_patch.js";
-import {h, render} from "../_snowpack/pkg/preact.js";
-import "../_snowpack/pkg/preact/devtools.js";
-import {Provider} from "../_snowpack/pkg/react-redux.js";
+import {h, render} from "../snowpack/pkg/preact.js";
+import "../snowpack/pkg/preact/devtools.js";
+import {Provider} from "../snowpack/pkg/react-redux.js";
 import {APP_DETAILS} from "./shared/constants.js";
 import {get_store} from "./state/store.js";
 import {DemoPredictionsGraph} from "./scratch_pad/PredictionsGraph.js";

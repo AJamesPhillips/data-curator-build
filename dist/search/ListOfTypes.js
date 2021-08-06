@@ -1,5 +1,5 @@
-import {Component, h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {Component, h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {PatternListEntry} from "../patterns/PatternListEntry.js";
 import {StatementListEntry} from "../statements/StatementListEntry.js";
 import {CORE_IDS} from "../state/core_data.js";

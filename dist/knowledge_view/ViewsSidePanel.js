@@ -1,6 +1,6 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {TopLevelKnowledgeViewListsSet} from "./TopLevelKnowledgeViewListsSet.js";
-import {Box} from "../../_snowpack/pkg/@material-ui/core.js";
+import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 import {KnowledgeViewForm} from "./KnowledgeViewForm.js";
 export function ViewsSidePanel(props) {
   return /* @__PURE__ */ h(Box, {

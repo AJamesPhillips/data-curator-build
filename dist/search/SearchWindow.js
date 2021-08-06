@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import "./SearchWindow.css.proxy.js";
 import {Modal} from "../modal/Modal.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";

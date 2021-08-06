@@ -1,6 +1,6 @@
-import {Box, Typography} from "../../_snowpack/pkg/@material-ui/core.js";
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {Box, Typography} from "../../snowpack/pkg/@material-ui/core.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.js";
 import {get_wcomponent_search_options} from "../search/get_wcomponent_search_options.js";
 import {ACTIONS} from "../state/actions.js";

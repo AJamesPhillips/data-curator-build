@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import "./PredictionBadge.css.proxy.js";
 import {PredictionsBadgeConvictionMask} from "./PredictionBadgeConvictionMask.js";
 import {bounded} from "../../shared/utils/bounded.js";

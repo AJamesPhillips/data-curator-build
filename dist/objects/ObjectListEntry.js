@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {Link} from "../sharedf/Link.js";
 import {ObjectLabels} from "./ObjectLabels.js";
 import {object_content} from "./object_content.js";

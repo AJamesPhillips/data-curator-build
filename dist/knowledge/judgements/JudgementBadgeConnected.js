@@ -1,5 +1,5 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
-import {connect} from "../../../_snowpack/pkg/react-redux.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {wcomponent_is_judgement_or_objective} from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_wcomponent_counterfactuals} from "../../state/derived/accessor.js";
 import {calculate_judgement_value} from "./calculate_judgement_value.js";

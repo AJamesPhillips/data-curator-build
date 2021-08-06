@@ -1,5 +1,5 @@
-import {h} from "../../_snowpack/pkg/preact.js";
-import {connect} from "../../_snowpack/pkg/react-redux.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Canvas} from "../canvas/Canvas.js";
 import {performance_logger} from "../utils/performance.js";
 import {get_objective_connections_props_c} from "./get_objective_connections.js";

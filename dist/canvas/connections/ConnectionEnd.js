@@ -1,4 +1,4 @@
-import {h} from "../../../_snowpack/pkg/preact.js";
+import {h} from "../../../snowpack/pkg/preact.js";
 import {bounded} from "../../shared/utils/bounded.js";
 import {rads} from "../../utils/angles.js";
 import {add_vec, to_vec} from "./utils.js";

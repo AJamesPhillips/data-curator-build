@@ -1,4 +1,4 @@
-import {h} from "../../_snowpack/pkg/preact.js";
+import {h} from "../../snowpack/pkg/preact.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {EditableText} from "../form/editable_text/EditableText.js";
 import {EditableTextSingleLine} from "../form/editable_text/EditableTextSingleLine.js";
