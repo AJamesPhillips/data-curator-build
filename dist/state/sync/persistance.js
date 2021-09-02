@@ -15,7 +15,7 @@ export function sync_starting_state() {
     ready_for_writing: false,
     saving: false,
     error_message: "",
-    storage_type: void 0,
+    storage_type: "local_storage",
     copy_from_storage_type: false,
     retry_attempt: void 0,
     next_save_ms: void 0,
