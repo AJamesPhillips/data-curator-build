@@ -5,9 +5,9 @@ import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 const map_state = (state) => {
-  const sync_ready = state.sync.ready;
+  const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;
-  if (sync_ready && !current_composed_knowledge_view)
+  if (ready && !current_composed_knowledge_view)
     console.log(`No current_composed_knowledge_view`);
   const {selected_wcomponent_ids_map} = state.meta_wcomponents;
   let wcomponent_nodes = [];
@@ -15,7 +15,7 @@ const map_state = (state) => {
     wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes;
   }
   return {
-    sync_ready,
+    ready,
     wcomponent_nodes,
     wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
     presenting: state.display_options.consumption_formatting,
@@ -36,9 +36,9 @@ function _KnowledgeGraphView(props) {
 export const KnowledgeGraphView = connector(_KnowledgeGraphView);
 const no_children = [];
 const get_children = (props) => {
-  const {sync_ready} = props;
+  const {ready} = props;
   let {wcomponent_nodes} = props;
-  if (!sync_ready || !wcomponent_nodes)
+  if (!ready || !wcomponent_nodes)
     return no_children;
   const elements = wcomponent_nodes.map(({id}) => /* @__PURE__ */ h(WComponentCanvasNode, {
     key: id,

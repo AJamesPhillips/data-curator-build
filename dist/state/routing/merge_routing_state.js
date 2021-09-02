@@ -44,7 +44,8 @@ function run_tests() {
       subview_id: "kv7207606403961189",
       zoom: 100,
       x: 0,
-      y: 0
+      y: 0,
+      storage_location: ""
     }
   };
   let new_routing_state;

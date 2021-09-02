@@ -1,3 +1,69 @@
-.knowledge_time_view .node_container .value_and_prediction_set_summaries_container {
-  display: inline-flex;
+.scroll_area_x {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.scroll_area_y {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.time_view.timeline_spacing .vaps .vap {
+  transform: translate(-50%, 0);
+}
+.time_view .rotater {
+  white-space: nowrap;
+  transform: translate(50%, 0) rotate(90deg);
+  transform-origin: center bottom;
+}
+.time_view .tick {
+  border-left: 1px rgba(128, 128, 128, 0.5) dashed;
+}
+.time_view .seconds {
+  display: none;
+}
+.time_view.seconds .seconds {
+  display: initial;
+}
+.time_view .minutes {
+  display: none;
+}
+.time_view.minutes .minutes {
+  display: initial;
+}
+.time_view .hours {
+  display: none;
+}
+.time_view.hours .hours {
+  display: initial;
+}
+.time_view .days {
+  display: none;
+}
+.time_view.days .days {
+  display: initial;
+}
+.time_view .weeks {
+  display: none;
+}
+.time_view.weeks .weeks {
+  display: initial;
+}
+.time_view .months {
+  display: none;
+}
+.time_view.months .months {
+  display: initial;
+}
+.time_view .years {
+  display: none;
+}
+.time_view.years .years {
+  display: initial;
+}
+.time_view .vaps:empty {
+  display: none;
+}
+.time_view .vaps .vap:hover {
+  z-index: 9;
 }

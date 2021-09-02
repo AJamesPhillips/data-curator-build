@@ -1,4 +1,3 @@
-import {Box, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.js";
@@ -7,7 +6,7 @@ import {ACTIONS} from "../state/actions.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 const map_state = (state, {}) => {
   return {
-    ready: state.sync.ready,
+    ready: state.sync.ready_for_reading,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
     created_at_ms: state.routing.args.created_at_ms,
@@ -28,10 +27,8 @@ function _LabelsEditor(props) {
     created_at_ms: props.created_at_ms,
     sim_ms: props.sim_ms
   });
-  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Typography, {
-    component: "h3"
-  }, "Labels"), /* @__PURE__ */ h(MultiAutocompleteText, {
-    placeholder: "Labels...",
+  return /* @__PURE__ */ h(MultiAutocompleteText, {
+    placeholder: "Add Label",
     selected_option_ids: label_ids || [],
     options: wcomponent_id_options,
     allow_none: true,
@@ -41,6 +38,6 @@ function _LabelsEditor(props) {
     on_mouse_over_option: (id) => props.set_highlighted_wcomponent({id, highlighted: true}),
     on_mouse_leave_option: (id) => props.set_highlighted_wcomponent({id, highlighted: false}),
     always_allow_editing: props.always_allow_editing
-  }));
+  });
 }
 export const LabelsEditor = connector(_LabelsEditor);

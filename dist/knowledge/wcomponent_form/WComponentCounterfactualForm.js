@@ -141,8 +141,7 @@ function _WComponentCounterfactualForm(props) {
     }, value_text));
   })), counterfactual_VAP_set && knowledge_view && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Counterfactual activity on this knowledge view"), "  ", /* @__PURE__ */ h(EditableCheckbox, {
-    disabled: !props.editing,
+  }, "Apply counterfactual in this knowledge view"), "  ", /* @__PURE__ */ h(EditableCheckbox, {
     value: counterfactual_active_for_current_knowledge_view,
     on_change: () => {
       const {id} = wcomponent;

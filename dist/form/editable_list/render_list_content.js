@@ -32,6 +32,7 @@ export function factory_render_list_content(own_props) {
         const new_items = upsert_entry(items, item2, predicate_by_id, debug_item_descriptor);
         update_items(new_items);
       },
+      delete_button_text: "Delete Value & Prediction",
       delete_item: () => {
         const predicate_by_id = (other) => get_id(item) === get_id(other);
         const new_items = remove_from_list_by_predicate(items, predicate_by_id);

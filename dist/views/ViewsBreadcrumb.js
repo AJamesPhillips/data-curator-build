@@ -1,17 +1,13 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import Breadcrumbs from "../../snowpack/pkg/@material-ui/core/Breadcrumbs.js";
-import ToggleButton from "../../snowpack/pkg/@material-ui/lab/ToggleButton.js";
-import ToggleButtonGroup from "../../snowpack/pkg/@material-ui/lab/ToggleButtonGroup.js";
-import EditIcon from "../../snowpack/pkg/@material-ui/icons/Edit.js";
-import PresentToAllIcon from "../../snowpack/pkg/@material-ui/icons/PresentToAll.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {is_defined} from "../shared/utils/is_defined.js";
 import {ACTIONS} from "../state/actions.js";
+import {Box, Breadcrumbs, MenuItem, Select, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => {
   const kv_id = state.routing.args.subview_id;
   return {
-    ready: state.sync.ready,
+    ready_for_reading: state.sync.ready_for_reading,
     presenting: state.display_options.consumption_formatting,
     view: state.routing.args.view,
     kv_id,
@@ -31,7 +27,7 @@ function navigate_view(event, props) {
   props.change_route({args: {view}});
 }
 function _ViewsBreadcrumb(props) {
-  if (!props.ready)
+  if (!props.ready_for_reading)
     return null;
   const {kv_id, nested_kv_ids_map} = props;
   let nested_kv = nested_kv_ids_map.map[kv_id];
@@ -54,36 +50,24 @@ function _ViewsBreadcrumb(props) {
   }
   const top_level_options = nested_kv_ids_map.top_ids.map((id) => nested_kv_ids_map.map[id]).filter(is_defined).map(calc_if_is_hidden);
   levels.unshift({options: top_level_options, selected_id: last_parent_id, allow_none: false});
-  return /* @__PURE__ */ h("div", {
-    style: {display: "inline-flex"}
-  }, /* @__PURE__ */ h(ToggleButtonGroup, {
-    size: "small",
-    exclusive: true,
-    onChange: props.toggle_consumption_formatting,
-    value: props.presenting ? "presenting" : "editing",
-    "aria-label": "text formatting"
-  }, /* @__PURE__ */ h(ToggleButton, {
-    value: "editing",
-    "aria-label": "Editing"
-  }, /* @__PURE__ */ h(EditIcon, null)), /* @__PURE__ */ h(ToggleButton, {
-    value: "presenting",
-    "aria-label": "Presenting"
-  }, /* @__PURE__ */ h(PresentToAllIcon, null))), /* @__PURE__ */ h(Breadcrumbs, {
-    "aria-label": "breadcrumb",
-    style: {margin: "auto 0 auto 10px"}
-  }, /* @__PURE__ */ h("label", null, "View Type: ", /* @__PURE__ */ h("select", {
+  return /* @__PURE__ */ h(Breadcrumbs, null, /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Select, {
+    label: /* @__PURE__ */ h(Typography, {
+      noWrap: true
+    }, "View Type:"),
     name: "select_view",
-    onChange: (e) => navigate_view(e, props)
-  }, view_options.map((opt) => /* @__PURE__ */ h("option", {
+    onChange: (e) => navigate_view(e, props),
+    value: props.view
+  }, view_options.map((opt) => /* @__PURE__ */ h(MenuItem, {
     value: opt.id,
     selected: opt.id === props.view
-  }, opt.title)))), levels.map((level) => /* @__PURE__ */ h(AutocompleteText, {
+  }, opt.title)))), levels.map((level) => /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(AutocompleteText, {
     allow_none: level.allow_none,
     selected_option_id: level.selected_id,
     options: level.options,
     on_change: (subview_id) => props.change_route({args: {subview_id}}),
     on_choose_same: (subview_id) => props.change_route({args: {subview_id}}),
-    always_allow_editing: true
+    allow_editing_when_presenting: true,
+    threshold_minimum_score: false
   }))));
 }
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb);

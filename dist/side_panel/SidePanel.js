@@ -7,6 +7,7 @@ import {FiltersSidePanel} from "../filter_context/FiltersSidePanel.js";
 import {WComponentsSidePanel} from "../knowledge/WComponentsSidePanel.js";
 import {ViewsSidePanel} from "../knowledge_view/ViewsSidePanel.js";
 import {PerceptionsSidePanel} from "../perceptions/PerceptionsSidePanel.js";
+import {SearchSidePanel} from "../search/SearchSidePanel.js";
 import {Objects} from "./Objects.js";
 import {Patterns} from "./Patterns.js";
 import {Statements} from "./Statements.js";
@@ -23,6 +24,6 @@ function _SidePanel(props) {
         return /* @__PURE__ */ h("div", null, "TODO: can hide this");
     }
   }
-  return /* @__PURE__ */ h("div", null, props.route === "filter" && /* @__PURE__ */ h(FiltersSidePanel, null), props.route === "display" && /* @__PURE__ */ h(DisplayOptionsSidePanel, null), props.route === "statements" && /* @__PURE__ */ h(Statements, null), props.route === "objects" && /* @__PURE__ */ h(Objects, null), props.route === "patterns" && /* @__PURE__ */ h(Patterns, null), props.route === "creation_context" && /* @__PURE__ */ h(CreationContextSidePanel, null), props.route === "views" && /* @__PURE__ */ h(ViewsSidePanel, null), props.route === "perceptions" && /* @__PURE__ */ h(PerceptionsSidePanel, null), props.route === "wcomponents" && /* @__PURE__ */ h(WComponentsSidePanel, null), props.route === "about" && /* @__PURE__ */ h(AboutSidePanel, null));
+  return /* @__PURE__ */ h("div", null, props.route === "filter" && /* @__PURE__ */ h(FiltersSidePanel, null), props.route === "display" && /* @__PURE__ */ h(DisplayOptionsSidePanel, null), props.route === "statements" && /* @__PURE__ */ h(Statements, null), props.route === "objects" && /* @__PURE__ */ h(Objects, null), props.route === "patterns" && /* @__PURE__ */ h(Patterns, null), props.route === "creation_context" && /* @__PURE__ */ h(CreationContextSidePanel, null), props.route === "views" && /* @__PURE__ */ h(ViewsSidePanel, null), props.route === "perceptions" && /* @__PURE__ */ h(PerceptionsSidePanel, null), props.route === "wcomponents" && /* @__PURE__ */ h(WComponentsSidePanel, null), props.route === "about" && /* @__PURE__ */ h(AboutSidePanel, null), props.route === "search" && /* @__PURE__ */ h(SearchSidePanel, null));
 }
 export const SidePanel = connector(_SidePanel);

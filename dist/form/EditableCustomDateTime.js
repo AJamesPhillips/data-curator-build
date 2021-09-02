@@ -3,8 +3,9 @@ import "./Editable.css.proxy.js";
 import {date_to_string, correct_datetime_for_local_time_zone, valid_date} from "./datetime_utils.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
-import {date2str, get_today_str} from "../shared/utils/date_helpers.js";
+import {date2str} from "../shared/utils/date_helpers.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
+import {TextField} from "../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => ({
   time_resolution: state.display_options.time_resolution,
   presenting: state.display_options.consumption_formatting
@@ -24,44 +25,22 @@ function _EditableCustomDateTime(props) {
   const not_editable = props.always_allow_editing ? false : props.presenting;
   const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : ""}`;
   const title = (props.title || "DateTime") + (props.invariant_value && props.value ? " (custom)" : "");
-  return /* @__PURE__ */ h("div", {
+  return /* @__PURE__ */ h(TextField, {
     className: class_name,
-    title
-  }, /* @__PURE__ */ h("input", {
+    label: title,
+    size: "small",
+    variant: "outlined",
     disabled: not_editable,
-    type: "text",
     value: display_value,
-    onFocus: () => set_editing(true),
-    ref: (r) => {
-      if (!r || !editing)
-        return;
-      const date = props_value(props);
-      const new_working_value = date_to_string({date, time_resolution: "minute", trim_midnight: false});
-      r.value = new_working_value;
-      r.setSelectionRange(0, r.value.length);
-    },
+    type: "date",
     onChange: (e) => {
       const valid2 = is_value_valid(e.currentTarget.value);
       if (valid2)
         e.currentTarget.classList.remove("invalid");
       else
         e.currentTarget.classList.add("invalid");
-    },
-    onBlur: (e) => {
-      const working_value = e.currentTarget.value;
-      const new_value = handle_on_blur({working_value, invariant_value});
-      on_change(new_value);
-      set_editing(false);
     }
-  }), editing && show_now_shortcut_button && /* @__PURE__ */ h(NowButton, {
-    on_change
-  }), editing && show_today_shortcut_button && /* @__PURE__ */ h(Button, {
-    value: "Today",
-    onClick: () => {
-      const today_dt_str = get_today_str();
-      on_change(new Date(today_dt_str));
-    }
-  }));
+  });
 }
 export const EditableCustomDateTime = connector(_EditableCustomDateTime);
 function is_value_valid(str) {

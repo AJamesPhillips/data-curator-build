@@ -1,5 +1,5 @@
 import {pick} from "../../shared/utils/pick.js";
-import {get_persisted_state_object, persist_state_object} from "../utils/persistence_utils.js";
+import {get_persisted_state_object, persist_state_object} from "../persistence/persistence_utils.js";
 import {derive_validity_filter, derive_certainty_formatting} from "./util.js";
 export function display_options_persist(state) {
   const to_persist = pick([

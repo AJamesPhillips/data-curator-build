@@ -4,7 +4,7 @@ import {get_perception_from_state} from "../state/specialised_objects/accessors.
 import {PerceptionForm} from "./PerceptionForm.js";
 import {PerceptionsList} from "./PerceptionsList.js";
 const map_state = (state) => {
-  const ready = state.sync.ready;
+  const {ready_for_reading: ready} = state.sync;
   const id = state.routing.item_id;
   const perception = get_perception_from_state(state, id);
   return {ready, id, perception};

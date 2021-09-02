@@ -1,5 +1,5 @@
 import {get_items_by_id} from "../../../shared/utils/get_items.js";
-import {is_replace_all_specialised_objects} from "./actions.js";
+import {is_delete_all_specialised_objects, is_replace_all_specialised_objects} from "./actions.js";
 export const syncing_reducer = (state, action) => {
   if (is_replace_all_specialised_objects(action)) {
     const {
@@ -16,6 +16,16 @@ export const syncing_reducer = (state, action) => {
         perceptions_by_id,
         wcomponents_by_id,
         knowledge_views_by_id
+      }
+    };
+  }
+  if (is_delete_all_specialised_objects(action)) {
+    state = {
+      ...state,
+      specialised_objects: {
+        perceptions_by_id: {},
+        wcomponents_by_id: {},
+        knowledge_views_by_id: {}
       }
     };
   }

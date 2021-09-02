@@ -21,7 +21,11 @@ export function get_current_value(probabilities) {
   }
   return value;
 }
-export function get_current_counterfactual_VAP_sets(args) {
+export function get_current_values_and_probabilities(args) {
+  const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args);
+  return get_probable_VAP_values(counterfactual_VAPs, args.VAPs_represent);
+}
+function get_current_counterfactual_VAP_sets(args) {
   const {
     values_and_prediction_sets,
     VAPs_represent,
@@ -37,10 +41,6 @@ export function get_current_counterfactual_VAP_sets(args) {
   const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent);
   const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {});
   return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps);
-}
-export function get_current_values_and_probabilities(args) {
-  const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args);
-  return get_probable_VAP_values(counterfactual_VAPs, args.VAPs_represent);
 }
 export function clean_VAP_set_entries(VAP_set, VAPs_represent) {
   const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean ? VAP_set.entries.slice(0, 1) : VAP_set.entries;

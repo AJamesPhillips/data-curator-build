@@ -1,13 +1,14 @@
 export const ALLOWED_SUB_ROUTES = {
+  views: [],
+  wcomponents: ["wcomponents_edit_multiple"],
+  search: [],
   filter: [],
   display: [],
   statements: [],
   objects: ["objects_bulk_import", "objects_bulk_import/setup"],
   patterns: [],
   creation_context: [],
-  views: [],
   perceptions: [],
-  wcomponents: ["wcomponents_edit_multiple"],
   about: []
 };
 export const ALLOWED_ROUTES = Object.keys(ALLOWED_SUB_ROUTES);
@@ -25,6 +26,7 @@ const ALLOWED_ROUTE_ARG_KEYS = [
   "zoom",
   "x",
   "y",
+  "storage_location",
   "order",
   "rotation",
   "cdate",
@@ -32,6 +34,3 @@ const ALLOWED_ROUTE_ARG_KEYS = [
   "sdate",
   "stime"
 ];
-export function is_route_string_arg_number(key) {
-  return ["x", "y", "zoom"].includes(key);
-}

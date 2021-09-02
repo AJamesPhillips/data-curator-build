@@ -180,6 +180,7 @@ function get_connection_terminal_positions({wcomponent, wc_id_map}) {
 function calculate_effect(wcomponent, from_wc, state) {
   let connection_effect = void 0;
   if (wcomponent_is_causal_link(wcomponent)) {
+    connection_effect = wcomponent.effect_when_true;
     if (wcomponent_is_statev2(from_wc)) {
       const VAP_set = get_current_VAP_set({
         values_and_prediction_sets: from_wc.values_and_prediction_sets,

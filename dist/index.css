@@ -22,3 +22,15 @@ html body #root {
   display: flex;
   flex-direction: column;
 }
+
+@keyframes spinning {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate.spinning {
+  animation: spinning 1s linear infinite;
+}

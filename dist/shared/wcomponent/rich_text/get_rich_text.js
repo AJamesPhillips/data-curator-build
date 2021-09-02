@@ -1,6 +1,7 @@
 import {test} from "../../utils/test.js";
 import {get_new_wcomponent_object} from "../get_new_wcomponent_object.js";
 import {get_wcomponent_state_UI_value} from "../get_wcomponent_state_UI_value.js";
+import {wcomponent_is_plain_connection, wcomponent_is_counterfactual_v2} from "../interfaces/SpecialisedObjects.js";
 import {replace_function_ids_in_text} from "./replace_function_ids.js";
 import {replace_normal_ids} from "./replace_normal_ids.js";
 const DEFAULT_MAX_DEPTH_LIMIT = 3;
@@ -13,7 +14,22 @@ export function get_title(args) {
   } = args;
   if (!args.rich_text)
     return wcomponent.title;
-  const title = wcomponent.title;
+  let title = wcomponent.title;
+  if (!title) {
+    if (wcomponent_is_plain_connection(wcomponent)) {
+      const from_wc = args.wcomponents_by_id[wcomponent.from_id];
+      const to_wc = args.wcomponents_by_id[wcomponent.to_id];
+      const current_depth = (args.current_depth || 0) + 1;
+      const from_title = from_wc ? get_title({...args, current_depth, wcomponent: from_wc}) : "_";
+      const to_title = to_wc ? get_title({...args, current_depth, wcomponent: to_wc}) : "_";
+      title = `${from_title} -> ${to_title} <auto generated>`;
+    } else if (wcomponent_is_counterfactual_v2(wcomponent)) {
+      title = `Counterfactual (no target set) <auto generated>`;
+      const target_wc_id = wcomponent.target_wcomponent_id;
+      if (target_wc_id)
+        title = `Counterfactual of: @@${target_wc_id} <auto generated>`;
+    }
+  }
   const text = replace_value_in_text({text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms});
   return replace_ids_in_text({...args, text});
 }

@@ -1,5 +1,5 @@
 export const APP_DETAILS = {
-  NAME: "App name"
+  NAME: "CCI | Data Curator"
 };
 export const LOG_LEVELS = {
   NONE: 0,

@@ -1,10 +1,11 @@
 import {get_new_knowledge_view_object} from "../../../knowledge_view/create_new_knowledge_view.js";
 import {ACTIONS} from "../../actions.js";
+import {ensure_any_knowledge_view_displayed} from "../../routing/utils/ensure_any_knowledge_view_displayed.js";
 import {get_base_knowledge_view} from "../accessors.js";
 export function ensure_base_knowledge_view_subscriber(store) {
   return () => {
     const state = store.getState();
-    if (!state.sync.ready)
+    if (!state.sync.ready_for_reading)
       return;
     if (state.derived.base_knowledge_view)
       return;
@@ -15,5 +16,6 @@ export function ensure_base_knowledge_view_subscriber(store) {
     }
     const knowledge_view = get_new_knowledge_view_object({title: "Base", is_base: true}, state.creation_context);
     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({knowledge_view}));
+    ensure_any_knowledge_view_displayed(store);
   };
 }

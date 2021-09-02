@@ -6,7 +6,7 @@ import {ACTIONS} from "../state/actions.js";
 import {ConfirmatoryDeleteButton} from "../form/ConfirmatoryDeleteButton.js";
 const map_state = (state) => {
   return {
-    ready: state.sync.ready
+    ready: state.sync.ready_for_reading
   };
 };
 const map_dispatch = {

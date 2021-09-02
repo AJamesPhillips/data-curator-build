@@ -5,6 +5,7 @@ import "./LabelV2.css.proxy.js";
 import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {color_to_opposite, color_to_string} from "../sharedf/color.js";
+import {MARKDOWN_OPTIONS} from "../sharedf/RichMarkDown.js";
 function map_state(state, {wcomponent_id}) {
   const {wcomponents_by_id} = state.specialised_objects;
   const wcomponent = wcomponents_by_id[wcomponent_id];
@@ -36,6 +37,8 @@ function _LabelV2(props) {
       backgroundColor: color_to_string(wcomponent.label_color),
       color: color_to_string(color_to_opposite(wcomponent.label_color))
     }
-  }, /* @__PURE__ */ h(Markdown, null, title));
+  }, /* @__PURE__ */ h(Markdown, {
+    options: MARKDOWN_OPTIONS
+  }, title));
 }
 export const LabelV2 = connector(_LabelV2);

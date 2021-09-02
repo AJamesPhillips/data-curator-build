@@ -13,8 +13,8 @@ const connector = connect(map_state);
 function _WComponentSearchWindow(props) {
   const options = get_wcomponent_search_options(props);
   return /* @__PURE__ */ h(SearchWindow, {
-    search_window_title: "Search for Component",
-    placeholder: "WComponent...",
+    search_window_title: "Search for a Component",
+    placeholder: "Search for a Component...",
     selected_option_id: "",
     initial_search_term: props.initial_search_term,
     allow_none: true,

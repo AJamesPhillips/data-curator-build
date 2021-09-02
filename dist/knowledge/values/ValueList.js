@@ -2,9 +2,8 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import {get_new_value_id} from "../../shared/utils/ids.js";
 import {EditableList} from "../../form/editable_list/EditableList.js";
-import {EditableText} from "../../form/editable_text/EditableText.js";
-import {EditableTextSingleLine} from "../../form/editable_text/EditableTextSingleLine.js";
 import {get_new_created_ats} from "../../shared/utils/datetime.js";
+import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 export function ValueList(props) {
   const item_top_props = useMemo(() => {
     const props2 = {
@@ -39,22 +38,22 @@ const prepare_new_item = (creation_context) => () => {
   };
 };
 function get_summary(item, on_change) {
-  return /* @__PURE__ */ h("div", {
-    style: {display: "inline-flex"}
-  }, "Value:   ", /* @__PURE__ */ h(EditableTextSingleLine, {
-    placeholder: "value...",
-    value: item.value || "",
+  return /* @__PURE__ */ h(TextField, {
+    size: "small",
+    label: "Value",
+    variant: "outlined",
     conditional_on_change: (new_value) => {
       const value = new_value && new_value.trim();
       if (on_change)
         on_change({...item, value});
     }
-  }));
+  });
 }
 function get_details(item, on_change) {
-  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", null, "Description: ", /* @__PURE__ */ h(EditableText, {
-    placeholder: "Description...",
-    value: item.description,
+  return /* @__PURE__ */ h(TextField, {
+    size: "small",
+    label: "Description",
+    variant: "outlined",
     conditional_on_change: on_change && ((new_d) => on_change({...item, description: new_d}))
-  })));
+  });
 }

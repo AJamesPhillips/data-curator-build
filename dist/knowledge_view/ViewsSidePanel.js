@@ -7,5 +7,5 @@ export function ViewsSidePanel(props) {
     p: 1,
     pt: 5,
     class: "views_side_panel"
-  }, /* @__PURE__ */ h(KnowledgeViewForm, null), /* @__PURE__ */ h(TopLevelKnowledgeViewListsSet, null));
+  }, "Current View:", /* @__PURE__ */ h(KnowledgeViewForm, null), /* @__PURE__ */ h(TopLevelKnowledgeViewListsSet, null));
 }

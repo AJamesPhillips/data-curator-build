@@ -46,6 +46,7 @@ import {ColorPicker} from "../../sharedf/ColorPicker.js";
 import {EditableCheckbox} from "../../form/EditableCheckbox.js";
 import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
 import {WComponentCausalLinkForm} from "./WComponentCausalLinkForm.js";
+import {Box, FormControl, FormLabel} from "../../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -55,7 +56,7 @@ const map_state = (state, {wcomponent}) => {
   }
   const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state);
   return {
-    ready: state.sync.ready,
+    ready: state.sync.ready_for_reading,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     wc_id_counterfactuals_map,
     from_wcomponent,
@@ -103,9 +104,12 @@ function _WComponentForm(props) {
     UI_value = get_wcomponent_state_UI_value({wcomponent, wc_counterfactuals, created_at_ms, sim_ms});
     orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || [];
   }
-  return /* @__PURE__ */ h("div", {
-    key: wcomponent_id
-  }, /* @__PURE__ */ h("h2", null, /* @__PURE__ */ h(EditableText, {
+  return /* @__PURE__ */ h(Box, {
+    className: `editable-${wcomponent_id}`
+  }, /* @__PURE__ */ h(FormControl, {
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(EditableText, {
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms}),
     conditional_on_blur: (title) => upsert_wcomponent({title}),
@@ -118,10 +122,9 @@ function _WComponentForm(props) {
     className: "description_label"
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
     UI_value
-  })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "Type"), " ", /* @__PURE__ */ h("div", {
-    style: {width: "60%", display: "inline-block"}
+  })), /* @__PURE__ */ h(FormControl, {
+    fullWidth: true,
+    margin: "normal"
   }, /* @__PURE__ */ h(AutocompleteText, {
     placeholder: "Type...",
     selected_option_id: wcomponent.type,
@@ -134,7 +137,7 @@ function _WComponentForm(props) {
       new_wcomponent.type = type;
       upsert_wcomponent(new_wcomponent);
     }
-  }))), wcomponent_is_statev2(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), wcomponent_is_statev2(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Sub type"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}
@@ -143,7 +146,10 @@ function _WComponentForm(props) {
     selected_option_id: wcomponent.subtype,
     options: wcomponent_statev2_subtype_options,
     on_change: (option_id) => upsert_wcomponent({subtype: option_id})
-  }))), (editing || wcomponent.description) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(EditableText, {
+  }))), (editing || wcomponent.description) && /* @__PURE__ */ h(FormControl, {
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(EditableText, {
     placeholder: "Description...",
     value: wcomponent.description,
     conditional_on_blur: (description) => upsert_wcomponent({description})
@@ -181,7 +187,13 @@ function _WComponentForm(props) {
     upsert_wcomponent
   }), wcomponent_is_judgement_or_objective(wcomponent) && /* @__PURE__ */ h(JudgementFormFields, {
     ...{wcomponent, upsert_wcomponent}
-  }), (editing || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(LabelsEditor, {
+  }), (editing || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h(FormControl, {
+    component: "fieldset",
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(FormLabel, {
+    component: "legend"
+  }, "Labels"), /* @__PURE__ */ h(LabelsEditor, {
     label_ids: wcomponent.label_ids,
     on_change: (label_ids) => upsert_wcomponent({label_ids})
   })), wcomponent_is_event(wcomponent) && /* @__PURE__ */ h(WComponentEventAtFormField, {
@@ -215,12 +227,9 @@ function _WComponentForm(props) {
     creation_context
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_is_goal(wcomponent) && /* @__PURE__ */ h(GoalFormFields, {
     ...{wcomponent, upsert_wcomponent}
-  }), /* @__PURE__ */ h("p", {
-    title: (wcomponent.custom_created_at ? "Custom " : "") + "Created at",
-    style: {display: "inline-flex"}
-  }, /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "Created at"), "   ", /* @__PURE__ */ h(EditableCustomDateTime, {
+  }), /* @__PURE__ */ h(FormControl, {
+    fullWidth: true
+  }, /* @__PURE__ */ h(EditableCustomDateTime, {
     title: "Created at",
     invariant_value: wcomponent.created_at,
     value: wcomponent.custom_created_at,

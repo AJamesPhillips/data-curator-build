@@ -1,12 +1,10 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
-import {ToggleButtonGroup, ToggleButton} from "../../../snowpack/pkg/@material-ui/lab.js";
+import {Box, ButtonGroup, Button} from "../../../snowpack/pkg/@material-ui/core.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
 import {TimeResolutionOptions} from "../../display_options/TimeResolutionOptions.js";
 import {ACTIONS} from "../../state/actions.js";
 import {TimeSlider} from "../../time_control/TimeSlider.js";
-import {Button} from "../Button.js";
 const map_state = (state) => ({
   linked_datetime_sliders: state.controls.linked_datetime_sliders,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
@@ -22,6 +20,10 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _ContentControls(props) {
   const {created_events, sim_events, move_to_component_id} = props;
+  const set_knowledge_view_type = (e) => {
+    const display_by_simulated_time = JSON.parse(e.currentTarget.value);
+    props.set_display_by_simulated_time({display_by_simulated_time});
+  };
   return /* @__PURE__ */ h(Box, {
     p: 2,
     mb: 2,
@@ -38,21 +40,20 @@ function _ContentControls(props) {
     component: "label"
   }, /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h(Box, {
     component: "label"
-  }, /* @__PURE__ */ h(ToggleButtonGroup, {
-    size: "small",
-    exclusive: true,
-    onChange: (e) => {
-      const display_by_simulated_time = JSON.parse(e.currentTarget.value);
-      props.set_display_by_simulated_time({display_by_simulated_time});
-    },
-    value: props.display_by_simulated_time,
-    "aria-label": "text formatting"
-  }, /* @__PURE__ */ h(ToggleButton, {
+  }, /* @__PURE__ */ h(ButtonGroup, {
+    disableElevation: true,
+    variant: "contained",
+    value: props.display_by_simulated_time
+  }, /* @__PURE__ */ h(Button, {
     value: true,
-    "aria-label": "Display by simulated time"
-  }, "Time"), /* @__PURE__ */ h(ToggleButton, {
+    onClick: set_knowledge_view_type,
+    "aria-label": "Display by simulated time",
+    disabled: props.display_by_simulated_time
+  }, "Time"), /* @__PURE__ */ h(Button, {
     value: false,
-    "aria-label": "Display by relationships"
+    onClick: set_knowledge_view_type,
+    "aria-label": "Display by relationships",
+    disabled: !props.display_by_simulated_time
   }, "Relationships")))), /* @__PURE__ */ h(Box, {
     display: "flex",
     flexDirection: "row",

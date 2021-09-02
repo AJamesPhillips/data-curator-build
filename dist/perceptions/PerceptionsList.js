@@ -2,7 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Link} from "../sharedf/Link.js";
 const map_state = (state) => {
-  const ready = state.sync.ready;
+  const {ready_for_reading: ready} = state.sync;
   const perceptions = state.derived.perceptions;
   return {ready, perceptions};
 };

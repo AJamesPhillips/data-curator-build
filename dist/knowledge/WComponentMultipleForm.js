@@ -16,7 +16,7 @@ const map_state = (state) => {
   const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_set;
   const {wcomponents_by_id} = state.specialised_objects;
   return {
-    ready: state.sync.ready,
+    ready: state.sync.ready_for_reading,
     wcomponent_ids,
     wcomponents_by_id,
     knowledge_view_id: kv?.id,

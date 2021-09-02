@@ -2,6 +2,7 @@ import {Component, h} from "../../../snowpack/pkg/preact.js";
 import "./EditableListEntry.css.proxy.js";
 import {ConfirmatoryDeleteButton} from "../ConfirmatoryDeleteButton.js";
 import {EditableCustomDateTime} from "../EditableCustomDateTime.js";
+import {FormControl} from "../../../snowpack/pkg/@material-ui/core.js";
 export class EditableListEntry extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +28,8 @@ export class EditableListEntry extends Component {
       get_details3,
       disable_collapsable,
       on_change,
-      delete_item
+      delete_item,
+      delete_button_text
     } = this.props;
     const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : void 0;
     const {internal__expanded} = this.state;
@@ -52,12 +54,9 @@ export class EditableListEntry extends Component {
     }, get_details(item, on_change), /* @__PURE__ */ h("div", {
       className: "details2"
     }, get_details2 && get_details2(item, on_change)), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-      on_delete: delete_item
-    }), (get_created_at || get_custom_created_at) && /* @__PURE__ */ h("div", {
-      style: {display: "inline-flex"}
-    }, /* @__PURE__ */ h("span", {
-      className: "description_label"
-    }, "Created at"), "  ", /* @__PURE__ */ h(EditableCustomDateTime, {
+      on_delete: delete_item,
+      button_text: delete_button_text
+    }), (get_created_at || get_custom_created_at) && /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(EditableCustomDateTime, {
       title: "Created at",
       invariant_value: get_created_at && get_created_at(item),
       value: custom_created_at,

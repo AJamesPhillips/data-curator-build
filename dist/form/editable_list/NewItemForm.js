@@ -3,7 +3,7 @@ import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import "./NewItemForm.css.proxy.js";
 import {Button} from "../../sharedf/Button.js";
 import {EditableListEntry} from "./EditableListEntry.js";
-import {Box, Dialog, DialogTitle} from "../../../snowpack/pkg/@material-ui/core.js";
+import {Box, Dialog, DialogActions, DialogContent, DialogTitle} from "../../../snowpack/pkg/@material-ui/core.js";
 export function NewItemForm(props) {
   const {new_item, set_new_item, item_descriptor, item_top_props, add_item} = props;
   const [adding_item, set_adding_item] = useState(false);
@@ -22,7 +22,7 @@ export function NewItemForm(props) {
     onClose: () => set_new_item(void 0)
   }, /* @__PURE__ */ h(DialogTitle, {
     id: "new_item_title"
-  }, "New ", item_descriptor), /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(EditableListEntry, {
+  }, "New ", item_descriptor), /* @__PURE__ */ h(DialogContent, null, /* @__PURE__ */ h(EditableListEntry, {
     item: new_item,
     ...item_top_props,
     expanded: true,
@@ -30,11 +30,7 @@ export function NewItemForm(props) {
     on_change: (item) => {
       set_new_item(item);
     }
-  })), /* @__PURE__ */ h(Box, {
-    p: 2,
-    display: "flex",
-    justifyContent: "space-between"
-  }, /* @__PURE__ */ h(Button, {
+  })), /* @__PURE__ */ h(DialogActions, null, /* @__PURE__ */ h(Button, {
     onClick: () => set_adding_item(true)
   }, `Add ${item_descriptor}`), /* @__PURE__ */ h(Button, {
     onClick: () => set_new_item(void 0)

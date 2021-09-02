@@ -2,8 +2,7 @@ import {date2str} from "../../shared/utils/date_helpers.js";
 import {
   ALLOWED_ROUTES,
   ALLOWED_SUB_ROUTES,
-  is_routing_view_types,
-  is_route_string_arg_number
+  is_routing_view_types
 } from "./interfaces.js";
 import {routing_arg_datetime_strings_to_datetime} from "./datetime/routing_datetime.js";
 import {test} from "../../shared/utils/test.js";
@@ -30,10 +29,10 @@ export function routing_args_to_string(routing_args) {
     sdate: date2str(routing_args.sim_datetime, "yyyy-MM-dd"),
     stime: date2str(routing_args.sim_datetime, "hh:mm:ss")
   };
-  const routing_args_str = Object.keys(routing_args).filter((k) => !exclude_routing_keys.has(k)).sort().reverse().concat(["sdate", "stime", "cdate", "ctime"]).map((key) => `&${key}=${data[key]}`).join("");
+  const routing_args_str = Object.keys(routing_args).filter((k) => !exclude_routing_keys.has(k)).sort().concat(["sdate", "stime", "cdate", "ctime"]).map((key) => `&${key}=${data[key]}`).join("");
   return routing_args_str;
 }
-export function merge_route_params_prioritising_window_location(url, routing_state) {
+export function merge_route_params_prioritising_url_over_state(url, routing_state) {
   const hash = url.split("#")[1] || "";
   const main_parts = hash.split("&");
   const path = main_parts[0];
@@ -66,7 +65,6 @@ function update_args_from_url(args, args_from_url) {
   let stime = null;
   args_from_url.forEach((part) => {
     const [key, value] = part.split("=");
-    update_args_with_value(key, value, args);
     if (key === "cdate")
       cdate = value;
     else if (key === "ctime")
@@ -75,6 +73,8 @@ function update_args_from_url(args, args_from_url) {
       sdate = value;
     else if (key === "stime")
       stime = value;
+    else
+      update_args_with_value(args, key, value);
   });
   args.created_at_datetime = routing_arg_datetime_strings_to_datetime(cdate, ctime);
   args.sim_datetime = sdate ? routing_arg_datetime_strings_to_datetime(sdate, stime) : args.created_at_datetime;
@@ -82,14 +82,20 @@ function update_args_from_url(args, args_from_url) {
   args.sim_ms = args.sim_datetime.getTime();
   return args;
 }
-function update_args_with_value(key, value, args) {
+function update_args_with_value(args, key, value) {
   if (key === "view") {
     if (is_routing_view_types(value))
       args.view = value;
-  } else if (key === "subview_id")
-    args.subview_id = value;
-  else if (is_route_string_arg_number(key))
+  } else if (routing_arg_is_a_number(key))
     args[key] = parseInt(value);
+  else if (key === "subview_id")
+    args.subview_id = value;
+  else if (key === "storage_location")
+    args.storage_location = value;
+}
+const ROUTING_ARGS_WHICH_ARE_NUMBERS = new Set(["x", "y", "zoom"]);
+function routing_arg_is_a_number(key) {
+  return ROUTING_ARGS_WHICH_ARE_NUMBERS.has(key);
 }
 function run_tests() {
   console.log("running tests of routing_state_to_string");
@@ -105,6 +111,7 @@ function run_tests() {
       zoom: 100,
       x: 101,
       y: 158,
+      storage_location: "",
       created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
       created_at_ms: 1603299864e3,
       sim_datetime: new Date("2021-04-26T09:23:13.000Z"),

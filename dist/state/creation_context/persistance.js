@@ -1,5 +1,5 @@
 import {pick} from "../../shared/utils/pick.js";
-import {get_persisted_state_object, persist_state_object} from "../utils/persistence_utils.js";
+import {get_persisted_state_object, persist_state_object} from "../persistence/persistence_utils.js";
 export function creation_context_persist(state) {
   const to_persist = pick([
     "use_creation_context",

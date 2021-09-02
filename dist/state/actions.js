@@ -9,11 +9,15 @@ import {pattern_actions} from "./pattern_actions.js";
 import {routing_actions} from "./routing/actions.js";
 import {display_at_created_datetime_actions} from "./routing/datetime/display_at_created.js";
 import {display_at_sim_datetime_actions} from "./routing/datetime/display_at_sim_datetime.js";
+import {search_actions} from "./search/actions_reducer.js";
 import {specialised_object_actions} from "./specialised_objects/actions.js";
 import {statement_actions} from "./statements.js";
-import {sync_actions} from "./sync.js";
+import {sync_actions} from "./sync/actions_reducer.js";
+import {backup_actions} from "./sync/backup/actions_reducer.js";
 import {user_activity_actions} from "./user_activity/actions.js";
+import {user_info_actions} from "./user_info/actions.js";
 export const ACTIONS = {
+  backup: backup_actions,
   controls: controls_actions,
   creation_context: creation_context_actions,
   filter_context: filter_context_actions,
@@ -27,6 +31,8 @@ export const ACTIONS = {
   display_at_created_datetime: display_at_created_datetime_actions,
   display_at_sim_datetime: display_at_sim_datetime_actions,
   objectives: objectives_actions,
+  search: search_actions,
   specialised_object: specialised_object_actions,
-  user_activity: user_activity_actions
+  user_activity: user_activity_actions,
+  user_info: user_info_actions
 };

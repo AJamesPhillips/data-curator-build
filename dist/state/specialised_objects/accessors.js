@@ -89,19 +89,22 @@ function add_child_views(potential_children, map) {
   }
 }
 export function sort_nested_knowledge_map_ids_by_priority_then_title(map) {
-  const sort_type_to_prefix = {
-    priority: "0",
-    normal: "1",
-    hidden: "2",
-    archived: "3"
-  };
-  map.top_ids = sort_list(map.top_ids, (id) => {
-    const entry = map.map[id];
+  map.top_ids = sort_knowledge_map_ids_by_priority_then_title(map.top_ids, map.map);
+  Object.values(map.map).forEach((entry) => {
+    entry.child_ids = sort_knowledge_map_ids_by_priority_then_title(entry.child_ids, map.map);
+  });
+}
+const sort_type_to_prefix = {
+  priority: "0",
+  normal: "1",
+  hidden: "2",
+  archived: "3"
+};
+function sort_knowledge_map_ids_by_priority_then_title(ids, map) {
+  return sort_list(ids, (id) => {
+    const entry = map[id];
     return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase();
   }, "ascending");
-  Object.values(map.map).forEach((entry) => {
-    entry.child_ids = sort_list(entry.child_ids, (id) => map.map[id].title.toLowerCase(), "ascending");
-  });
 }
 export function wcomponent_has_knowledge_view(wcomponent_id, knowledge_views_by_id) {
   const kvwc_id = wcomponent_id_to_wcomponent_kv_id(wcomponent_id);

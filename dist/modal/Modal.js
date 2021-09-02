@@ -9,18 +9,22 @@ function map_state(state, own_props) {
 }
 const connector = connect(map_state);
 function _ModalCore(props) {
-  if (props.should_close)
-    setTimeout(() => props.on_close(), 0);
+  const {on_close} = props;
+  if (on_close && props.should_close)
+    setTimeout(() => on_close(), 0);
   return /* @__PURE__ */ h("div", {
     id: "modal_background",
-    onClick: () => props.on_close()
+    className: (props.size || "medium") + "_modal",
+    onClick: (e) => on_close && on_close(e)
   }, /* @__PURE__ */ h("div", {
     id: "modal_container",
     onClick: (e) => e.stopPropagation()
-  }, props.title, /* @__PURE__ */ h("div", {
+  }, /* @__PURE__ */ h("div", {
+    id: "modal_title"
+  }, props.title), on_close && /* @__PURE__ */ h("div", {
     id: "modal_close",
-    onClick: () => props.on_close()
-  }, /* @__PURE__ */ h("span", null, "X")), props.child()));
+    onClick: (e) => on_close(e)
+  }, /* @__PURE__ */ h("span", null, "X")), props.child));
 }
 const ModalCore = connector(_ModalCore);
 export function Modal(props) {

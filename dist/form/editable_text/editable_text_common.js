@@ -49,9 +49,13 @@ function _EditableTextCommon(props) {
     handle_text_field_focus({e, set_editing_text_flag});
   };
   const wrapped_conditional_on_change = (e) => {
+    if (id_insertion_point !== void 0)
+      return;
     handle_text_field_change({e, set_id_insertion_point, conditional_on_change});
   };
   const wrapped_on_blur = (e) => {
+    if (id_insertion_point !== void 0)
+      return;
     handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_editing_text_flag});
   };
   return /* @__PURE__ */ h("div", {
@@ -62,13 +66,15 @@ function _EditableTextCommon(props) {
     on_focus,
     on_change: wrapped_conditional_on_change,
     on_blur: wrapped_on_blur
-  }), id_insertion_point !== void 0 && /* @__PURE__ */ h(ConditionalWComponentSearchWindow, {
+  }), id_insertion_point !== void 0 && /* @__PURE__ */ h("div", {
+    style: {fontSize: "initial", fontWeight: "initial"}
+  }, /* @__PURE__ */ h(ConditionalWComponentSearchWindow, {
     value,
     id_insertion_point,
     set_id_insertion_point,
     on_focus_set_selection,
     conditional_on_change
-  }));
+  })));
 }
 export const EditableTextCommon = connector(_EditableTextCommon);
 function handle_text_field_render(args) {

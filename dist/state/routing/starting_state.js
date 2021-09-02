@@ -1,4 +1,4 @@
-import {merge_route_params_prioritising_window_location} from "./routing.js";
+import {merge_route_params_prioritising_url_over_state} from "./routing.js";
 export function get_routing_starting_state() {
   const now = new Date();
   const now_ms = now.getTime();
@@ -8,6 +8,7 @@ export function get_routing_starting_state() {
     zoom: 100,
     x: 0,
     y: 0,
+    storage_location: "",
     created_at_datetime: now,
     created_at_ms: now_ms,
     sim_datetime: now,
@@ -19,5 +20,5 @@ export function get_routing_starting_state() {
     item_id: null,
     args: routing_args
   };
-  return merge_route_params_prioritising_window_location(window.location.toString(), default_routing_state);
+  return merge_route_params_prioritising_url_over_state(window.location.toString(), default_routing_state);
 }

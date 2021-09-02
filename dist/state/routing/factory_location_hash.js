@@ -1,6 +1,6 @@
 import {throttle} from "../../utils/throttle.js";
 import {ACTIONS} from "../actions.js";
-import {merge_route_params_prioritising_window_location, routing_state_to_string} from "./routing.js";
+import {merge_route_params_prioritising_url_over_state, routing_state_to_string} from "./routing.js";
 export const factory_location_hash = (store) => {
   let routing_state;
   const throttled_update_location_hash = factory_throttled_update_location_hash();
@@ -47,7 +47,7 @@ function calc_changed_only_xy(current, next) {
 function record_location_hash_change(store) {
   window.onhashchange = (e) => {
     const state = store.getState();
-    if (!state.sync.ready) {
+    if (!state.sync.ready_for_reading) {
     } else {
       const route_from_hash = "#" + (e.newURL.split("#")[1] || "");
       const route_from_state = routing_state_to_string(state.routing);
@@ -60,7 +60,7 @@ function record_location_hash_change(store) {
       if (window.DEBUG_ROUTING)
         console.log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state);
       store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}));
-      const routing_params = merge_route_params_prioritising_window_location(e.newURL, state.routing);
+      const routing_params = merge_route_params_prioritising_url_over_state(e.newURL, state.routing);
       store.dispatch(ACTIONS.routing.change_route(routing_params));
     }
   };

@@ -49,6 +49,7 @@ class _Link extends Component {
   render() {
     const partial_routing_args = this.props.args || {};
     const on_pointer_down = (e) => {
+      console.log("on_pointer_down...", this.props.selected);
       if (this.props.selected)
         return;
       this.setState({clicked: true});

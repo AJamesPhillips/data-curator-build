@@ -1,4 +1,5 @@
 import {h} from "../../../snowpack/pkg/preact.js";
+import FlexSearch from "../../../snowpack/pkg/flexsearch.js";
 import fuzzysort from "../../../snowpack/pkg/fuzzysort.js";
 import "./AutocompleteText.css.proxy.js";
 import {sort_list} from "../../shared/utils/sort.js";
@@ -12,33 +13,40 @@ const map_state = (state) => ({
 const connector = connect(map_state);
 function _AutocompleteText(props) {
   const prepared_targets = useRef([]);
-  const options = useRef([]);
+  const flexsearch_index = useRef(FlexSearch.Index());
+  const internal_options = useRef([]);
   useEffect(() => {
-    const results = prepare_options_and_targets(props.options);
-    prepared_targets.current = results.prepared_targets;
-    options.current = results.new_internal_options;
-  });
+    const limited_new_internal_options = prepare_options(props.options, 200, props.search_fields);
+    const _prepared_targets = prepare_targets(limited_new_internal_options);
+    prepared_targets.current = _prepared_targets;
+    limited_new_internal_options.forEach((o) => {
+      flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.unlimited_total_text);
+    });
+    internal_options.current = limited_new_internal_options;
+  }, [props.options, props.search_fields]);
   const actively_selected_option = useRef({actively_chosen: false, id: void 0});
   const selected_title = get_selected_option_title_str();
   const [temp_value_str, set_temp_value_str] = useState("");
   useEffect(() => {
-    set_temp_value_str(props.initial_search_term || selected_title || "");
+    set_temp_value_str(props.initial_search_term || selected_title);
   }, [props.initial_search_term, selected_title]);
   const {throttled: handle_on_change, flush: flush_temp_value_str} = throttle(set_temp_value_str, 300);
   const [editing_options, set_editing_options] = useState(false);
   useEffect(() => {
     set_editing_options(!!props.start_expanded);
   }, [props.start_expanded]);
+  const {threshold_minimum_score = false} = props;
   const [options_to_display, set_options_to_display] = useState([]);
   useEffect(() => {
-    const options_to_display2 = get_options_to_display(temp_value_str, !!props.allow_none, options.current, prepared_targets.current);
-    set_options_to_display(options_to_display2);
+    const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "fuzzy", threshold_minimum_score);
+    set_options_to_display(result.options);
+    props.set_search_type_used && props.set_search_type_used(result.search_type_used);
     flush_temp_value_str();
-  }, [temp_value_str]);
+  }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score]);
   const [highlighted_option_index, set_highlighted_option_index] = useState(0);
   function get_selected_option_title_str() {
     const selected_option = get_selected_option(props, props.options);
-    return selected_option ? selected_option.title : "-";
+    return selected_option ? selected_option.title : "";
   }
   const handle_key_down = async (e, displayed_options) => {
     const key = e.key;
@@ -62,7 +70,7 @@ function _AutocompleteText(props) {
   };
   const set_to_not_editing = () => {
     set_editing_options(false);
-    set_temp_value_str(get_selected_option_title_str());
+    !props.retain_invalid_search_term_on_blur && set_temp_value_str(get_selected_option_title_str());
     set_highlighted_option_index(0);
   };
   const conditional_on_change = (id) => {
@@ -95,7 +103,7 @@ function _AutocompleteText(props) {
     class: "editable_field autocomplete " + (valid ? "" : "invalid "),
     style: props.extra_styles
   }, /* @__PURE__ */ h("input", {
-    disabled: props.always_allow_editing ? false : props.presenting,
+    disabled: props.allow_editing_when_presenting ? false : props.presenting,
     ref: (r) => {
       if (!r)
         return;
@@ -106,15 +114,10 @@ function _AutocompleteText(props) {
     },
     type: "text",
     placeholder,
-    value: temp_value_str,
+    value: temp_value_str || (editing_options ? "" : "-"),
     onFocus: (e) => {
       setTimeout(() => set_editing_options(true), 0);
-      const none_value_selected = !final_value || final_value.id === void 0;
-      if (none_value_selected && e.currentTarget.value === "-") {
-        set_temp_value_str("");
-      } else {
-        e.currentTarget.setSelectionRange(0, e.currentTarget.value.length);
-      }
+      e.currentTarget.setSelectionRange(0, e.currentTarget.value.length);
     },
     onChange: (e) => handle_on_change(e.currentTarget.value),
     onKeyDown: (e) => handle_key_down(e, options_to_display),
@@ -148,35 +151,73 @@ function get_valid_value(options, value_str) {
     return match;
   return options[0];
 }
-function prepare_options_and_targets(options) {
-  const new_internal_options = options.filter(({is_hidden}) => !is_hidden).map((o) => ({
-    ...o,
-    total_text: o.title + (o.subtitle ? " " + o.subtitle : "")
-  }));
-  const prepared_targets = new_internal_options.map(({total_text}) => {
-    return fuzzysort.prepare(total_text);
+function prepare_options(options, limit, search_fields = "all") {
+  let id_num = 1;
+  const all = search_fields === "all";
+  const new_internal_options = options.filter(({is_hidden}) => !is_hidden).map((o) => {
+    const limited_total_text = get_total_text(o, limit, all);
+    const unlimited_total_text = get_total_text(o, 0, all);
+    return {...o, limited_total_text, unlimited_total_text, id_num: id_num++};
   });
-  return {new_internal_options, prepared_targets};
+  return new_internal_options;
 }
-function get_options_to_display(temp_value_str, allow_none, options, prepared_targets) {
-  const option_none = {id: void 0, title: "-", total_text: ""};
+function get_total_text(o, limit, all) {
+  let total_text = limit_string_length(o.title, limit);
+  if (all)
+    total_text += o.subtitle ? " " + limit_string_length(o.subtitle, limit) : "";
+  else
+    total_text += o.raw_title ? " " + limit_string_length(o.raw_title, limit) : "";
+  return total_text;
+}
+function limit_string_length(str, limit) {
+  if (!limit)
+    return str;
+  return str.slice(0, limit) + (str.length > limit ? "..." : "");
+}
+function prepare_targets(new_internal_options) {
+  return new_internal_options.map(({limited_total_text: total_text}) => fuzzysort.prepare(total_text));
+}
+const OPTION_NONE = {
+  id: void 0,
+  id_num: 0,
+  title: "-",
+  limited_total_text: "",
+  unlimited_total_text: ""
+};
+function get_options_to_display(temp_value_str, allow_none, options, prepared_targets, flexsearch_index, search_type, threshold_minimum_score) {
+  let search_type_used = void 0;
   if (!temp_value_str) {
     if (allow_none)
-      return [option_none, ...options];
+      return {options: [OPTION_NONE, ...options], search_type_used};
     else
-      return options;
+      return {options, search_type_used};
   }
-  const search_options = {
-    limit: 100,
-    allowTypo: true,
-    threshold: -1e4
-  };
-  const results = fuzzysort.go(temp_value_str, prepared_targets, search_options);
-  const map_target_to_score = {};
-  results.forEach(({target, score}) => map_target_to_score[target] = score);
-  const options_to_display = sort_list(options, (o) => {
-    const score = map_target_to_score[o.total_text];
-    return score === void 0 ? -1e4 : score;
-  }, "descending");
-  return options_to_display;
+  let option_to_score = (option) => 0;
+  let exact_results = 0;
+  if (search_type === "best" || search_type === "exact") {
+    search_type_used = "exact";
+    const results = flexsearch_index.search(temp_value_str);
+    exact_results = results.length;
+    const id_num_to_score = {};
+    results.forEach((id, index) => id_num_to_score[id] = 1e4 - index);
+    option_to_score = (o) => id_num_to_score[o.id_num] || -1e4;
+  }
+  if (exact_results === 0 && (search_type === "best" || search_type === "fuzzy")) {
+    search_type_used = "fuzzy";
+    const search_options = {
+      limit: 100,
+      allowTypo: true,
+      threshold: -1e4
+    };
+    const results = fuzzysort.go(temp_value_str, prepared_targets, search_options);
+    const map_target_to_score = {};
+    results.forEach(({target, score}) => map_target_to_score[target] = score);
+    option_to_score = (o) => {
+      const score = map_target_to_score[o.limited_total_text];
+      return score === void 0 ? -1e4 : score;
+    };
+  }
+  const filterd_options = threshold_minimum_score === false ? options : options.filter((o) => option_to_score(o) > threshold_minimum_score);
+  const options_to_display = sort_list(filterd_options, option_to_score, "descending");
+  return {options: options_to_display, search_type_used};
 }

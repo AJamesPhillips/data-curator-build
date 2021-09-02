@@ -2,6 +2,7 @@ import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
+import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./WComponentCanvasNode.css.proxy.js";
 import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {
@@ -32,7 +33,7 @@ import {factory_on_pointer_down} from "../canvas_common.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
 import {get_store} from "../../state/store.js";
 import {NodeValueAndPredictionSetSummary} from "../multiple_values/NodeValueAndPredictionSetSummary.js";
-import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
+import {MARKDOWN_OPTIONS} from "../../sharedf/RichMarkDown.js";
 const map_state = (state, own_props) => {
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
   const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id);
@@ -158,8 +159,8 @@ function _WComponentCanvasNode(props) {
   const glow = is_highlighted ? "orange" : (is_selected || is_current_item) && "blue";
   const color = get_wcomponent_color(wcomponent);
   const show_validity_value = show_all_details && wcomponent_can_have_validity_predictions(wcomponent);
-  const show_state_value = is_editing && wcomponent_should_have_state(wcomponent) || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0 || is_current_item || props.have_judgements;
-  const terminals = !on_graph || !is_editing ? [] : is_highlighted && is_editing ? terminals_with_label : terminals_without_label;
+  const show_state_value = is_editing && wcomponent_should_have_state(wcomponent) || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0 || props.have_judgements;
+  const terminals = get_terminals({on_graph, is_editing, is_highlighted});
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0) || wcomponent_is_statev1(wcomponent);
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: on_graph ? kv_entry : void 0,
@@ -168,7 +169,7 @@ function _WComponentCanvasNode(props) {
     }, kv_entry_maybe === void 0 && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
       message: "Missing from this knowledge view"
     }), " "), (is_editing || !wcomponent.hide_title) && /* @__PURE__ */ h(Markdown, {
-      options: {forceInline: true}
+      options: {...MARKDOWN_OPTIONS, forceInline: true}
     }, title)), show_validity_value && /* @__PURE__ */ h("div", {
       className: "node_validity_container"
     }, /* @__PURE__ */ h("div", {
@@ -229,17 +230,25 @@ function _WComponentCanvasNode(props) {
   });
 }
 export const WComponentCanvasNode = connector(_WComponentCanvasNode);
+const no_terminals = [];
 const terminals_with_label = [];
-const terminals_without_label = [];
 connection_terminal_attributes.forEach((attribute) => {
   connection_terminal_directions.forEach((direction) => {
     const type = {attribute, direction};
     const connection_style = get_top_left_for_terminal_type(type);
     const label = type.attribute.slice(0, 1).toUpperCase();
     terminals_with_label.push({type, style: connection_style, label});
-    terminals_without_label.push({type, style: connection_style, label: ""});
   });
 });
+function get_terminals(args) {
+  if (!args.on_graph)
+    return no_terminals;
+  if (!args.is_editing)
+    return no_terminals;
+  if (!args.is_highlighted)
+    return no_terminals;
+  return terminals_with_label;
+}
 function get_wcomponent_color(wcomponent) {
   return wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)" : wcomponent_is_goal(wcomponent) ? "rgb(207, 255, 198)" : "";
 }

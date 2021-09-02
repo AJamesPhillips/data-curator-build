@@ -14,6 +14,7 @@ import {prepare_new_VAP_set} from "./utils.js";
 import {ValueAndPredictionSetOlderVersions} from "./ValueAndPredictionSetOlderVersions.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {new_value_and_prediction_set} from "./NewValueAndPredictionSet.js";
+import Box from "../../../snowpack/pkg/@material-ui/core/Box.js";
 export function ValueAndPredictionSetsComponent(props) {
   const [new_item, set_new_item] = useState(void 0);
   const {
@@ -168,6 +169,7 @@ function factory_render_list_content2(args) {
       expanded: expanded_item_rows,
       disable_collapsable: disable_partial_collapsed,
       on_change: factory_handle_change({all_VAP_sets, item, update_items}),
+      delete_button_text: "Delete Set of Value & Predictions",
       delete_item: () => {
         update_items(remove_from_list_by_predicate(all_VAP_sets, predicate_by_id(item.latest)));
       }
@@ -198,7 +200,7 @@ const get_details2 = (VAPs_represent, editing) => (versioned_VAP_set, on_change)
   return get_details2_for_single_VAP_set(VAPs_represent, editing)(latest_VAP_set, (latest) => on_change({latest, older}));
 };
 const get_details3 = (VAPs_represent, creation_context, editing) => (versioned_VAP_set, on_change) => {
-  return /* @__PURE__ */ h("div", {
+  return /* @__PURE__ */ h(Box, {
     className: "VAP_set_details"
   }, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(ValueAndPredictionSetOlderVersions, {
     VAPs_represent,

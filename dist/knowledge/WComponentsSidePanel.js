@@ -8,8 +8,8 @@ import {LinkButton} from "../sharedf/Link.js";
 import {Button} from "../sharedf/Button.js";
 import {ACTIONS} from "../state/actions.js";
 const map_state = (state) => {
-  const ready = state.sync.ready;
-  const sub_route = state.routing.sub_route;
+  const {ready_for_reading: ready} = state.sync;
+  const {sub_route} = state.routing;
   const id = state.routing.item_id;
   const wcomponent = get_wcomponent_from_state(state, id);
   const selected_ids = state.meta_wcomponents.selected_wcomponent_ids_list;

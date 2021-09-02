@@ -30,7 +30,7 @@ function _FoundationKnowledgeViewsList(props) {
   const exclude_ids = new Set(foundation_knowledge_view_ids_set);
   exclude_ids.add(owner_knowledge_view.id);
   const total = foundation_knowledge_views.length;
-  return /* @__PURE__ */ h("div", null, editing ? "Foundational Knowledge Views" : foundation_knowledge_views.length > 0 && "Foundations", editing && /* @__PURE__ */ h("span", null, "(", total, ")"), editing && /* @__PURE__ */ h(SelectKnowledgeView, {
+  return /* @__PURE__ */ h("div", null, editing ? "Foundational Views" : foundation_knowledge_views.length > 0 && "Foundations", editing && /* @__PURE__ */ h("span", null, "(", total, ")"), editing && /* @__PURE__ */ h(SelectKnowledgeView, {
     placeholder: "Search for knowledge view to add...",
     exclude_ids,
     on_change: (id) => {

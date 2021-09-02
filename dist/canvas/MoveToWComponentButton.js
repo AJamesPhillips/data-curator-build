@@ -10,20 +10,25 @@ import {lefttop_to_xy} from "../state/display_options/display.js";
 import {Box, IconButton} from "../../snowpack/pkg/@material-ui/core.js";
 import {get_created_at_ms} from "../shared/wcomponent/utils_datetime.js";
 const map_state = (state, own_props) => {
-  const {wcomponent_id} = own_props;
+  let {wcomponent_id} = own_props;
   let go_to_datetime_ms = state.routing.args.created_at_ms;
   let position = void 0;
   if (wcomponent_id) {
-    const wcomponent = get_wcomponent_from_state(state, wcomponent_id);
+    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
+    let view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id];
+    if (!view_entry) {
+      const an_id_entry = current_composed_knowledge_view && Object.entries(current_composed_knowledge_view.composed_wc_id_map)[0];
+      wcomponent_id = an_id_entry && an_id_entry[0];
+      view_entry = an_id_entry && an_id_entry[1];
+    }
+    const wcomponent = wcomponent_id && get_wcomponent_from_state(state, wcomponent_id);
     if (wcomponent) {
       const wcomponent_created_at_ms = get_created_at_ms(wcomponent);
       go_to_datetime_ms = Math.max(go_to_datetime_ms, wcomponent_created_at_ms);
     }
-    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
-    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id];
-    if (composed_knowledge_view_entry) {
+    if (view_entry) {
       position = {
-        ...composed_knowledge_view_entry,
+        ...view_entry,
         zoom: 100
       };
     }
@@ -43,17 +48,16 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _MoveToWComponentButton(props) {
-  const {wcomponent_id, position, go_to_datetime_ms} = props;
-  const moveable = wcomponent_id && position;
-  const move = () => moveable && props.move(go_to_datetime_ms, position);
+  const {position, go_to_datetime_ms} = props;
+  const move = () => position && props.move(go_to_datetime_ms, position);
   return /* @__PURE__ */ h(Box, {
     zIndex: 10,
     m: 2,
-    title: moveable ? "" : "No components present"
+    title: position ? "" : "No components present"
   }, /* @__PURE__ */ h(IconButton, {
     size: "small",
     onClick: move,
-    disabled: !moveable
+    disabled: !position
   }, /* @__PURE__ */ h(FilterCenterFocusIcon, null)));
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton);

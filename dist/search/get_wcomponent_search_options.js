@@ -1,7 +1,8 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {JudgementBadgeConnected} from "../knowledge/judgements/JudgementBadgeConnected.js";
 import {
-  wcomponent_is_judgement_or_objective
+  wcomponent_is_judgement_or_objective,
+  wcomponent_is_plain_connection
 } from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
 export function get_wcomponent_search_options(args) {
@@ -17,14 +18,10 @@ export function get_wcomponent_search_options(args) {
       created_at_ms,
       sim_ms
     });
-    const limit = 150;
-    let limited_title = title.slice(0, limit);
-    let limited_subtitle = wcomponent.title.slice(0, limit);
-    if (limited_title.length !== title.length)
-      limited_title += "...";
-    if (limited_subtitle.length !== wcomponent.title.length)
-      limited_subtitle += "...";
-    limited_subtitle += `-- @@${wcomponent.id}`;
+    let subtitle = `@@${wcomponent.id} -- ${wcomponent.title} -- ${wcomponent.description}`;
+    if (wcomponent_is_plain_connection(wcomponent)) {
+      subtitle += ` -- @@${wcomponent.from_id} -> @@${wcomponent.to_id}`;
+    }
     let jsx = void 0;
     if (wcomponent_is_judgement_or_objective(wcomponent)) {
       jsx = /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(JudgementBadgeConnected, {
@@ -33,9 +30,10 @@ export function get_wcomponent_search_options(args) {
     }
     return {
       id: wcomponent.id,
-      title: limited_title,
+      title,
       jsx,
-      subtitle: limited_subtitle,
+      raw_title: wcomponent.title,
+      subtitle,
       color: wcomponent.label_color
     };
   });
