@@ -1,9 +1,9 @@
-import { a as _objectWithoutProperties, _ as _extends, r as require$$4 } from './withStyles-9ad24414.js';
+import { a as _objectWithoutProperties, _ as _extends, c as clsx } from './withStyles-015222b5.js';
 import { k } from './compat.module-44e2e532.js';
 import './hoist-non-react-statics.cjs-c36e250e.js';
-import { w as withStyles, f as fade } from './withStyles-67c09166.js';
-import { c as capitalize } from './capitalize-37b8be70.js';
-import { r as require$$6 } from './ButtonBase-225da5ca.js';
+import { w as withStyles, f as fade } from './withStyles-b03a0fb3.js';
+import { c as capitalize } from './capitalize-fd5d619c.js';
+import { B as ButtonBase } from './ButtonBase-b910981c.js';
 import { v } from './preact.module-5693ab29.js';
 
 var styles = function styles(theme) {
@@ -118,8 +118,8 @@ var IconButton = /*#__PURE__*/k(function IconButton(props, ref) {
       size = _props$size === void 0 ? 'medium' : _props$size,
       other = _objectWithoutProperties(props, ["edge", "children", "classes", "className", "color", "disabled", "disableFocusRipple", "size"]);
 
-  return /*#__PURE__*/v(require$$6, _extends({
-    className: require$$4(classes.root, className, color !== 'default' && classes["color".concat(capitalize(color))], disabled && classes.disabled, size === "small" && classes["size".concat(capitalize(size))], {
+  return /*#__PURE__*/v(ButtonBase, _extends({
+    className: clsx(classes.root, className, color !== 'default' && classes["color".concat(capitalize(color))], disabled && classes.disabled, size === "small" && classes["size".concat(capitalize(size))], {
       'start': classes.edgeStart,
       'end': classes.edgeEnd
     }[edge]),
@@ -131,8 +131,8 @@ var IconButton = /*#__PURE__*/k(function IconButton(props, ref) {
     className: classes.label
   }, children));
 });
-var require$$9 = withStyles(styles, {
+var IconButton$1 = withStyles(styles, {
   name: 'MuiIconButton'
 })(IconButton);
 
-export { require$$9 as r };
+export { IconButton$1 as I };

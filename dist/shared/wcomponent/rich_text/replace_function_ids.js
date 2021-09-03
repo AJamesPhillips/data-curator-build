@@ -1,6 +1,8 @@
 import {format_wcomponent_url, format_wcomponent_link} from "./templates.js";
-export function replace_function_ids_in_text(text, wcomponents_by_id, render_links, root_url, get_title) {
+export function replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, get_title) {
   const functional_ids = get_functional_ids_from_text(text);
+  if (functional_ids.length === 0)
+    return text;
   functional_ids.forEach(({id, funktion}) => {
     const referenced_wcomponent = wcomponents_by_id[id];
     if (!is_supported_funktion(funktion))
@@ -20,6 +22,9 @@ export function replace_function_ids_in_text(text, wcomponents_by_id, render_lin
     const replacer = new RegExp(`@@${id}.${funktion}`, "g");
     text = text.replace(replacer, replacement);
   });
+  if (current_depth < depth_limit) {
+    text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth + 1, render_links, root_url, get_title);
+  }
   return text;
 }
 function get_functional_ids_from_text(text) {

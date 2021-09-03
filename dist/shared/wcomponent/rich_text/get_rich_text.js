@@ -85,7 +85,7 @@ function _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit
       wcomponent
     });
   }
-  text = replace_function_ids_in_text(text, wcomponents_by_id, render_links, root_url, _get_title);
+  text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title);
   text = replace_normal_ids(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title);
   return text;
 }

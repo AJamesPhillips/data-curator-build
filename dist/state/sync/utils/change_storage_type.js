@@ -10,7 +10,7 @@ export async function change_storage_type({new_storage_type, copy_from}) {
   if (promise_flush)
     await promise_flush;
   store.dispatch(ACTIONS.sync.update_sync_status({status: "LOADING"}));
-  store.dispatch(ACTIONS.specialised_object.delete_all_specialised_objects());
+  store.dispatch(ACTIONS.specialised_object.clear_from_mem_all_specialised_objects());
   store.dispatch(ACTIONS.sync.update_storage_type({storage_type: new_storage_type, copy_from}));
   if (new_storage_type === "solid" && !getDefaultSession().info.isLoggedIn) {
     return;

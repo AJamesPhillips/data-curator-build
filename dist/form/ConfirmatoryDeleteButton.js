@@ -10,6 +10,7 @@ function _ConfirmatoryDeleteButton(props) {
   if (props.consumption_formatting)
     return null;
   return /* @__PURE__ */ h(ConfirmatoryButton, {
+    disabled: props.disabled,
     on_click: props.on_delete,
     button_text: props.button_text ?? "Delete",
     button_icon: /* @__PURE__ */ h(DeleteIcon, null),

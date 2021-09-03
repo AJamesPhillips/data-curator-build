@@ -49,8 +49,8 @@ export function min_throttle(func, delay) {
     if (!will_flush) {
       will_flush = new Promise((resolve) => {
         setTimeout(() => {
-          will_flush = void 0;
           cancel();
+          will_flush = void 0;
           if (pending_args.args) {
             const args = pending_args.args;
             pending_args.args = void 0;

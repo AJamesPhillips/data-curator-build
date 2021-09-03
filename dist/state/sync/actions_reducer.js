@@ -5,8 +5,9 @@ export const sync_reducer = (state, action) => {
     const saving = status === "SAVING";
     const saved = status === "SAVED";
     const loaded_successfully = status === "LOADED";
+    const failed = status === "FAILED";
     const ready_for_reading = status !== void 0 && status !== "LOADING";
-    const ready_for_writing = saved || loaded_successfully;
+    const ready_for_writing = saved || loaded_successfully || failed;
     const sync = {
       ...state.sync,
       status,

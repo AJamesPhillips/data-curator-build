@@ -1,8 +1,8 @@
-import { a as _objectWithoutProperties, _ as _extends, r as require$$4 } from './withStyles-9ad24414.js';
+import { a as _objectWithoutProperties, _ as _extends, c as clsx } from './withStyles-015222b5.js';
 import { k, N } from './compat.module-44e2e532.js';
 import './hoist-non-react-statics.cjs-c36e250e.js';
-import { w as withStyles } from './withStyles-67c09166.js';
-import { c as capitalize } from './capitalize-37b8be70.js';
+import { w as withStyles } from './withStyles-b03a0fb3.js';
+import { c as capitalize } from './capitalize-fd5d619c.js';
 import { v, B } from './preact.module-5693ab29.js';
 import { F, l, A } from './hooks.module-b65ed191.js';
 import { i as isMuiElement } from './isMuiElement-c285a3f2.js';
@@ -175,11 +175,11 @@ var Typography = /*#__PURE__*/k(function Typography(props, ref) {
 
   var Component = component || (paragraph ? 'p' : variantMapping[variant] || defaultVariantMapping[variant]) || 'span';
   return /*#__PURE__*/v(Component, _extends({
-    className: require$$4(classes.root, className, variant !== 'inherit' && classes[variant], color !== 'initial' && classes["color".concat(capitalize(color))], noWrap && classes.noWrap, gutterBottom && classes.gutterBottom, paragraph && classes.paragraph, align !== 'inherit' && classes["align".concat(capitalize(align))], display !== 'initial' && classes["display".concat(capitalize(display))]),
+    className: clsx(classes.root, className, variant !== 'inherit' && classes[variant], color !== 'initial' && classes["color".concat(capitalize(color))], noWrap && classes.noWrap, gutterBottom && classes.gutterBottom, paragraph && classes.paragraph, align !== 'inherit' && classes["align".concat(capitalize(align))], display !== 'initial' && classes["display".concat(capitalize(display))]),
     ref: ref
   }, other));
 });
-var require$$6 = withStyles(styles, {
+var Typography$1 = withStyles(styles, {
   name: 'MuiTypography'
 })(Typography);
 
@@ -399,7 +399,7 @@ var FormControl = /*#__PURE__*/k(function FormControl(props, ref) {
   return /*#__PURE__*/v(FormControlContext.Provider, {
     value: childContext
   }, /*#__PURE__*/v(Component, _extends({
-    className: require$$4(classes.root, className, margin !== 'none' && classes["margin".concat(capitalize(margin))], fullWidth && classes.fullWidth),
+    className: clsx(classes.root, className, margin !== 'none' && classes["margin".concat(capitalize(margin))], fullWidth && classes.fullWidth),
     ref: ref
   }, other), children));
 });
@@ -407,4 +407,4 @@ var FormControl$1 = withStyles(styles$1, {
   name: 'MuiFormControl'
 })(FormControl);
 
-export { FormControlContext as F, useFormControl$1 as a, FormControl$1 as b, isFilled as i, require$$6 as r, useFormControl as u };
+export { FormControlContext as F, Typography$1 as T, useFormControl$1 as a, FormControl$1 as b, isFilled as i, useFormControl as u };

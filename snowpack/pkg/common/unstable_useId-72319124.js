@@ -1,6 +1,6 @@
-import { _ as _extends } from './withStyles-9ad24414.js';
+import { _ as _extends } from './withStyles-015222b5.js';
 import { R as React } from './compat.module-44e2e532.js';
-import { r as require$$2 } from './SvgIcon-11a4dc70.js';
+import { r as require$$2 } from './SvgIcon-ddfedf19.js';
 import { s, l, A, y } from './hooks.module-b65ed191.js';
 
 /**
@@ -48,44 +48,6 @@ function createSvgIcon(path, displayName) {
   return /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(Component));
 }
 
-// Corresponds to 10 frames at 60 Hz.
-// A few bytes payload overhead when lodash/debounce is ~3 kB and debounce ~300 B.
-function debounce(func) {
-  var wait = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 166;
-  var timeout;
-
-  function debounced() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    // eslint-disable-next-line consistent-this
-    var that = this;
-
-    var later = function later() {
-      func.apply(that, args);
-    };
-
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  }
-
-  debounced.clear = function () {
-    clearTimeout(timeout);
-  };
-
-  return debounced;
-}
-
-function ownerDocument(node) {
-  return node && node.ownerDocument || document;
-}
-
-function ownerWindow(node) {
-  var doc = ownerDocument(node);
-  return doc.defaultView || window;
-}
-
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 function useControlled(_ref) {
   var controlled = _ref.controlled,
@@ -131,4 +93,4 @@ function useId(idOverride) {
   return id;
 }
 
-export { ownerWindow as a, createChainedFunction as b, createSvgIcon as c, debounce as d, useId as e, ownerDocument as o, useControlled as u };
+export { createChainedFunction as a, useId as b, createSvgIcon as c, useControlled as u };

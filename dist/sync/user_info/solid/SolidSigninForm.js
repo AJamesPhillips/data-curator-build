@@ -52,8 +52,6 @@ function _SolidSigninForm(props) {
     onBlur: (e) => props.update_solid_oidc_provider({solid_oidc_provider: e.currentTarget.value})
   }), /* @__PURE__ */ h("br", null), "   Use:  ", /* @__PURE__ */ h(AutoFillOIDC, {
     solid_oidc_provider_root: "inrupt.com"
-  }), " ", /* @__PURE__ */ h(AutoFillOIDC, {
-    solid_oidc_provider_root: "solidcommunity.net"
   }), logged_in && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), "You are signed in as: ", /* @__PURE__ */ h("a", {
     href: solid_session.info.webId,
     target: "_blank"

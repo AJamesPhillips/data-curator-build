@@ -20,7 +20,8 @@ export async function load_solid_data(state) {
   return Promise.resolve({
     knowledge_views: knowledge_views_response.items,
     wcomponents: wcomponents_response.items,
-    perceptions: []
+    perceptions: [],
+    wcomponent_ids_to_delete: new Set()
   });
 }
 async function get_knowledge_views(solid_pod_URL) {

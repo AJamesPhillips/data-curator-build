@@ -4452,7 +4452,7 @@ function toVal(mix) {
 	return str;
 }
 
-function require$$4 () {
+function clsx () {
 	var i=0, tmp, x, str='';
 	while (i < arguments.length) {
 		if (tmp = arguments[i++]) {
@@ -4529,4 +4529,4 @@ var withStyles = function withStyles(stylesOrCreator) {
   };
 };
 
-export { sheetsManager as A, StylesContext as B, SheetsRegistry as S, ThemeContext as T, _extends as _, _objectWithoutProperties as a, _slicedToArray as b, _toConsumableArray as c, _createClass as d, _defineProperty as e, formatMuiErrorMessage as f, getThemeProps as g, _typeof as h, mergeClasses as i, deepmerge as j, handleBreakpoints as k, merge as l, makeStyles as m, nested as n, createUnarySpacing as o, _inheritsLoose as p, _objectWithoutPropertiesLoose as q, require$$4 as r, spacing as s, _assertThisInitialized as t, useTheme as u, breakpoints as v, withStyles as w, createGenerateClassName as x, StylesProvider as y, jssPreset as z };
+export { sheetsManager as A, StylesContext as B, SheetsRegistry as S, ThemeContext as T, _extends as _, _objectWithoutProperties as a, _slicedToArray as b, clsx as c, _toConsumableArray as d, _createClass as e, _defineProperty as f, getThemeProps as g, formatMuiErrorMessage as h, _typeof as i, mergeClasses as j, deepmerge as k, handleBreakpoints as l, makeStyles as m, merge as n, nested as o, createUnarySpacing as p, _inheritsLoose as q, _assertThisInitialized as r, spacing as s, _objectWithoutPropertiesLoose as t, useTheme as u, breakpoints as v, withStyles as w, createGenerateClassName as x, StylesProvider as y, jssPreset as z };

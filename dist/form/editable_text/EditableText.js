@@ -9,13 +9,21 @@ export function EditableText(props) {
     component: ({value, on_render, on_focus, on_change, on_blur}) => /* @__PURE__ */ h(TextField, {
       fullWidth: true,
       size: "small",
-      variant: "outlined",
+      variant: "standard",
       label: props.placeholder,
       multiline: true,
       value,
       onFocus: on_focus,
       onChange: on_change,
-      onBlur: on_blur
+      onBlur: on_blur,
+      ref: (el) => {
+        if (!el)
+          return;
+        const textarea = el.getElementsByTagName("textarea")[0];
+        if (!textarea)
+          return;
+        on_render(textarea);
+      }
     })
   });
 }

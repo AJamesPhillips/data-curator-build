@@ -111,9 +111,7 @@ const invalid_node_types = new Set([
   "causal_link",
   "relation_link",
   "counterfactual",
-  "prioritisation",
-  "judgement",
-  "objective"
+  "prioritisation"
 ]);
 const is_wcomponent_node = (wcomponent) => !invalid_node_types.has(wcomponent.type);
 function get_wc_id_counterfactuals_map(state, knowledge_view) {

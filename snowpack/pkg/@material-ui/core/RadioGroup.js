@@ -6,8 +6,8 @@ import { s as slicedToArray, b as useControlled_1 } from '../../common/useContro
 import { k, a as compat_module } from '../../common/compat.module-44e2e532.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-c36e250e.js';
 import { R as RadioGroupContext_1, u as useRadioGroup_1 } from '../../common/useRadioGroup-d271dd6a.js';
-import { a as _objectWithoutProperties, _ as _extends, r as require$$4 } from '../../common/withStyles-9ad24414.js';
-import { w as withStyles } from '../../common/withStyles-67c09166.js';
+import { a as _objectWithoutProperties, _ as _extends, c as clsx } from '../../common/withStyles-015222b5.js';
+import { w as withStyles } from '../../common/withStyles-b03a0fb3.js';
 import { v } from '../../common/preact.module-5693ab29.js';
 import '../../common/hooks.module-b65ed191.js';
 
@@ -38,7 +38,7 @@ var FormGroup = /*#__PURE__*/k(function FormGroup(props, ref) {
       other = _objectWithoutProperties(props, ["classes", "className", "row"]);
 
   return /*#__PURE__*/v("div", _extends({
-    className: require$$4(classes.root, className, row && classes.row),
+    className: clsx(classes.root, className, row && classes.row),
     ref: ref
   }, other));
 });

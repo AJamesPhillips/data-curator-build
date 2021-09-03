@@ -12,7 +12,8 @@ export function Options(props) {
   if (options_to_display.length === 0 || !editing_options)
     return null;
   return /* @__PURE__ */ h("div", {
-    className: "options_outer"
+    className: "options_outer",
+    style: {marginTop: 15}
   }, /* @__PURE__ */ h("div", {
     className: "options_inner"
   }, options_to_display.map((option, index) => /* @__PURE__ */ h("div", {

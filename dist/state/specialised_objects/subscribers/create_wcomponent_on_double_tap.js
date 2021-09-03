@@ -15,7 +15,7 @@ export function create_wcomponent_on_double_tap(store) {
     const position = round_canvas_point({left: double_tap.x - 20, top: -double_tap.y - 20}, "large");
     const add_to_knowledge_view = {id: current_knowledge_view.id, position};
     create_wcomponent({
-      wcomponent: {type: "state"},
+      wcomponent: {type: "statev2"},
       creation_context: state.creation_context,
       add_to_knowledge_view,
       store

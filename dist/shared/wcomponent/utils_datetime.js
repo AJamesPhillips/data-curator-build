@@ -1,10 +1,11 @@
 import {test} from "../utils/test.js";
 import {Tense} from "./interfaces/datetime.js";
+import {get_uncertain_datetime} from "../utils/datetime.js";
 export function get_created_at_ms(obj) {
   return (obj.custom_created_at || obj.created_at).getTime();
 }
 export function get_sim_datetime(item) {
-  return item.datetime.min || item.datetime.value || item.datetime.max;
+  return get_uncertain_datetime(item.datetime);
 }
 export function get_sim_datetime_ms(item) {
   const dt = get_sim_datetime(item);

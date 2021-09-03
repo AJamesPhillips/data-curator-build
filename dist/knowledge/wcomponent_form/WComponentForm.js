@@ -1,28 +1,38 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {Box, FormControl, FormLabel} from "../../../snowpack/pkg/@material-ui/core.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
+import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
+import {EditableCheckbox} from "../../form/EditableCheckbox.js";
 import {EditableCustomDateTime} from "../../form/EditableCustomDateTime.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";
 import {EditableTextSingleLine} from "../../form/editable_text/EditableTextSingleLine.js";
-import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
+import {LabelsEditor} from "../../labels/LabelsEditor.js";
+import {get_contextless_new_wcomponent_object} from "../../shared/wcomponent/get_new_wcomponent_object.js";
 import {get_updated_wcomponent} from "../../shared/wcomponent/get_updated_wcomponent.js";
 import {get_wcomponent_state_UI_value} from "../../shared/wcomponent/get_wcomponent_state_UI_value.js";
+import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {
   wcomponent_is_plain_connection,
-  wcomponent_is_statev1,
-  wcomponent_is_judgement_or_objective,
-  wcomponent_is_statev2,
-  wcomponent_has_existence_predictions,
-  wcomponent_is_event,
-  wcomponent_is_causal_link,
-  wcomponent_should_have_state_VAP_sets,
-  wcomponent_is_goal,
   wcomponent_can_have_validity_predictions,
+  wcomponent_should_have_state_VAP_sets,
+  wcomponent_is_statev2,
+  wcomponent_is_counterfactual_v2,
+  wcomponent_is_causal_link,
+  wcomponent_is_judgement_or_objective,
+  wcomponent_is_event,
   wcomponent_is_prioritisation,
-  wcomponent_is_counterfactual_v2
+  wcomponent_has_existence_predictions,
+  wcomponent_is_statev1,
+  wcomponent_is_goal
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {wcomponent_statev2_subtypes} from "../../shared/wcomponent/interfaces/state.js";
 import {wcomponent_types} from "../../shared/wcomponent/interfaces/wcomponent_base.js";
+import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
+import {wcomponent_VAPs_represent} from "../../shared/wcomponent/value_and_prediction/utils.js";
+import {wcomponent_type_to_text} from "../../shared/wcomponent/wcomponent_type_to_text.js";
+import {ColorPicker} from "../../sharedf/ColorPicker.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_wc_id_counterfactuals_map} from "../../state/derived/accessor.js";
 import {get_wcomponent_from_state} from "../../state/specialised_objects/accessors.js";
@@ -31,22 +41,14 @@ import {ValueAndPredictionSets} from "../multiple_values/ValueAndPredictionSets.
 import {PredictionList} from "../predictions/PredictionList.js";
 import {ValueList} from "../values/ValueList.js";
 import {WComponentFromTo} from "../WComponentFromTo.js";
-import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
 import {WComponentLatestPrediction} from "../WComponentLatestPrediction.js";
-import {JudgementFormFields} from "./JudgementFormFields.js";
-import {useEffect, useRef} from "../../../snowpack/pkg/preact/hooks.js";
-import {WComponentEventAtFormField} from "./WComponentEventAtFormField.js";
-import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
-import {wcomponent_VAPs_represent} from "../../shared/wcomponent/value_and_prediction/utils.js";
 import {GoalFormFields} from "./GoalFormFields.js";
-import {WComponentDateTimeFormField} from "./WComponentDateTimeFormField.js";
-import {get_contextless_new_wcomponent_object} from "../../shared/wcomponent/get_new_wcomponent_object.js";
-import {LabelsEditor} from "../../labels/LabelsEditor.js";
-import {ColorPicker} from "../../sharedf/ColorPicker.js";
-import {EditableCheckbox} from "../../form/EditableCheckbox.js";
-import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
+import {JudgementFormFields} from "./JudgementFormFields.js";
 import {WComponentCausalLinkForm} from "./WComponentCausalLinkForm.js";
-import {Box, FormControl, FormLabel} from "../../../snowpack/pkg/@material-ui/core.js";
+import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
+import {WComponentDateTimeFormField} from "./WComponentDateTimeFormField.js";
+import {WComponentEventAtFormField} from "./WComponentEventAtFormField.js";
+import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -64,7 +66,8 @@ const map_state = (state, {wcomponent}) => {
     editing: !state.display_options.consumption_formatting,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
-    creation_context: state.creation_context
+    creation_context: state.creation_context,
+    storage_type_supports_delete: state.sync.storage_type !== "local_server"
   };
 };
 const map_dispatch = {
@@ -73,7 +76,13 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentForm(props) {
-  const previous_id = useRef(void 0);
+  const [previous_id, set_previous_id] = useState(void 0);
+  const [focus_title, set_focus_title] = useState(true);
+  const wcomponent_id = props.wcomponent.id;
+  useEffect(() => {
+    set_previous_id(wcomponent_id);
+    set_focus_title(true);
+  }, [wcomponent_id]);
   if (!props.ready)
     return /* @__PURE__ */ h("div", null, "Loading...");
   const {
@@ -87,11 +96,12 @@ function _WComponentForm(props) {
     sim_ms,
     creation_context
   } = props;
-  const wcomponent_id = wcomponent.id;
   const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id];
-  useEffect(() => {
-    previous_id.current = wcomponent_id;
-  }, [wcomponent_id]);
+  if (previous_id !== wcomponent_id && previous_id !== void 0) {
+    return null;
+  }
+  if (focus_title)
+    set_focus_title(false);
   const upsert_wcomponent = (partial_wcomponent) => {
     const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent;
     props.upsert_wcomponent({wcomponent: updated});
@@ -108,12 +118,13 @@ function _WComponentForm(props) {
     className: `editable-${wcomponent_id}`
   }, /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
-    margin: "normal"
+    margin: "normal",
+    style: {fontWeight: 600, fontSize: 22}
   }, /* @__PURE__ */ h(EditableText, {
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms}),
     conditional_on_blur: (title) => upsert_wcomponent({title}),
-    force_focus: previous_id.current !== wcomponent_id
+    force_focus: focus_title
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
     wcomponent
   }), UI_value && (editing || UI_value.is_defined) && /* @__PURE__ */ h("div", {
@@ -123,10 +134,11 @@ function _WComponentForm(props) {
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
     UI_value
   })), /* @__PURE__ */ h(FormControl, {
+    component: "fieldset",
     fullWidth: true,
     margin: "normal"
   }, /* @__PURE__ */ h(AutocompleteText, {
-    placeholder: "Type...",
+    placeholder: "Type: ",
     selected_option_id: wcomponent.type,
     options: wcomponent_type_options,
     on_change: (type) => {
@@ -153,19 +165,21 @@ function _WComponentForm(props) {
     placeholder: "Description...",
     value: wcomponent.description,
     conditional_on_blur: (description) => upsert_wcomponent({description})
-  })), wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
-    style: {display: "inline-flex"}
-  }, /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "Boolean representation"), " ", /* @__PURE__ */ h(EditableTextSingleLine, {
+  })), wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) && /* @__PURE__ */ h(FormControl, {
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "True...",
     value: wcomponent.boolean_true_str || "",
     conditional_on_blur: (boolean_true_str) => upsert_wcomponent({boolean_true_str})
-  }), !editing && /* @__PURE__ */ h("div", null, "  |  "), /* @__PURE__ */ h(EditableTextSingleLine, {
+  })), wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_false_str) && /* @__PURE__ */ h(FormControl, {
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "False...",
     value: wcomponent.boolean_false_str || "",
     conditional_on_blur: (boolean_false_str) => upsert_wcomponent({boolean_false_str})
-  }))), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
+  })), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
     wcomponent,
     upsert_wcomponent
   }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
@@ -246,8 +260,13 @@ function _WComponentForm(props) {
     on_change: (hide_title) => upsert_wcomponent({hide_title})
   }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
     wcomponent_id
+  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    disabled: !props.storage_type_supports_delete,
+    button_text: "Permanently delete" + (props.storage_type_supports_delete ? "" : " (currently unsupported for local server)"),
+    tooltip_text: "Permanently remove from all knowledge views",
+    on_delete: () => props.delete_wcomponent({wcomponent_id})
   })), /* @__PURE__ */ h("br", null));
 }
 export const WComponentForm = connector(_WComponentForm);
-const wcomponent_type_options = wcomponent_types.map((type) => ({id: type, title: type}));
+const wcomponent_type_options = wcomponent_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
 const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map((type) => ({id: type, title: type}));

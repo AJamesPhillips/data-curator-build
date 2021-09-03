@@ -19,10 +19,8 @@ function _PrioritisableGoal(props) {
   }, /* @__PURE__ */ h(WComponentCanvasNode, {
     id: goal.id,
     on_graph: false
-  }), selected_prioritisation && (editing || !!effort) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
-    class: "description_label"
-  }, "Effort"), "  ", /* @__PURE__ */ h(EditableNumber, {
-    placeholder: "...",
+  }), selected_prioritisation && (editing || !!effort) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(EditableNumber, {
+    placeholder: "Effort",
     allow_undefined: true,
     value: effort,
     conditional_on_blur: (new_effort) => {

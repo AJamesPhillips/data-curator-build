@@ -20,6 +20,11 @@ export const wcomponents_reducer = (state, action) => {
       wcomponents_by_id = {...wcomponents_by_id};
       delete wcomponents_by_id[wcomponent_id];
       state = update_substate(state, "specialised_objects", "wcomponents_by_id", wcomponents_by_id);
+      if (!state.specialised_objects.wcomponent_ids_deleted.has(wcomponent_id)) {
+        const wcomponent_ids_deleted = new Set(state.specialised_objects.wcomponent_ids_deleted);
+        wcomponent_ids_deleted.add(wcomponent_id);
+        state = update_substate(state, "specialised_objects", "wcomponent_ids_deleted", wcomponent_ids_deleted);
+      }
     }
   }
   state = bulk_editing_wcomponents_reducer(state, action);

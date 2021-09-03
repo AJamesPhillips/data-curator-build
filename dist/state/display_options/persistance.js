@@ -18,7 +18,7 @@ export function display_options_starting_state() {
   const derived_validity_filter = derive_validity_filter(validity_filter);
   const derived_certainty_formatting = derive_certainty_formatting(certainty_formatting);
   const state = {
-    consumption_formatting: false,
+    consumption_formatting: true,
     focused_mode: false,
     time_resolution: "hour",
     display_by_simulated_time: false,

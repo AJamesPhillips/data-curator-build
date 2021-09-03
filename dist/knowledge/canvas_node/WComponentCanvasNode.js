@@ -10,6 +10,7 @@ import {
   connection_terminal_directions,
   wcomponent_can_have_validity_predictions,
   wcomponent_has_legitimate_non_empty_state,
+  wcomponent_has_validity_predictions,
   wcomponent_is_action,
   wcomponent_is_goal,
   wcomponent_is_judgement_or_objective,
@@ -34,6 +35,7 @@ import {SCALE_BY} from "../../canvas/zoom_utils.js";
 import {get_store} from "../../state/store.js";
 import {NodeValueAndPredictionSetSummary} from "../multiple_values/NodeValueAndPredictionSetSummary.js";
 import {MARKDOWN_OPTIONS} from "../../sharedf/RichMarkDown.js";
+import {wcomponent_type_to_text} from "../../shared/wcomponent/wcomponent_type_to_text.js";
 const map_state = (state, own_props) => {
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
   const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id);
@@ -105,6 +107,7 @@ function _WComponentCanvasNode(props) {
   const kv_entry = kv_entry_maybe || {left: 0, top: 0};
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const validity_value = calc_wcomponent_should_display({
+    is_editing,
     force_displaying,
     is_selected,
     wcomponent,
@@ -158,7 +161,7 @@ function _WComponentCanvasNode(props) {
   const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + ` node_is_type_${wcomponent.type} ` + (show_all_details ? " compact_title " : "");
   const glow = is_highlighted ? "orange" : (is_selected || is_current_item) && "blue";
   const color = get_wcomponent_color(wcomponent);
-  const show_validity_value = show_all_details && wcomponent_can_have_validity_predictions(wcomponent);
+  const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
   const show_state_value = is_editing && wcomponent_should_have_state(wcomponent) || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0 || props.have_judgements;
   const terminals = get_terminals({on_graph, is_editing, is_highlighted});
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0) || wcomponent_is_statev1(wcomponent);
@@ -172,7 +175,7 @@ function _WComponentCanvasNode(props) {
       options: {...MARKDOWN_OPTIONS, forceInline: true}
     }, title)), show_validity_value && /* @__PURE__ */ h("div", {
       className: "node_validity_container"
-    }, /* @__PURE__ */ h("div", {
+    }, is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
     }, "validity"), /* @__PURE__ */ h(WComponentValidityValue, {
       wcomponent
@@ -194,7 +197,7 @@ function _WComponentCanvasNode(props) {
       sim_ms
     }))), /* @__PURE__ */ h("div", {
       className: "description_label"
-    }, (is_editing || wcomponent.type === "actor") && wcomponent.type), /* @__PURE__ */ h(LabelsListV2, {
+    }, (is_editing || wcomponent.type === "actor") && wcomponent_type_to_text(wcomponent.type)), /* @__PURE__ */ h(LabelsListV2, {
       label_ids: wcomponent.label_ids
     })),
     extra_css_class,

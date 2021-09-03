@@ -18,26 +18,20 @@ export function ColorPicker(props) {
   };
   return /* @__PURE__ */ h("div", {
     className: "color_picker"
-  }, /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "r"), /* @__PURE__ */ h(EditableNumber, {
-    placeholder: "",
+  }, /* @__PURE__ */ h(EditableNumber, {
+    placeholder: "r",
     value: color.r,
     allow_undefined: false,
     conditional_on_change: (r) => set_color({r}),
     always_on_blur: (r) => on_blur({r})
-  }), /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "g"), /* @__PURE__ */ h(EditableNumber, {
-    placeholder: "",
+  }), /* @__PURE__ */ h(EditableNumber, {
+    placeholder: "g",
     value: color.g,
     allow_undefined: false,
     conditional_on_change: (g) => set_color({g}),
     always_on_blur: (g) => on_blur({g})
-  }), /* @__PURE__ */ h("span", {
-    className: "description_label"
-  }, "b"), /* @__PURE__ */ h(EditableNumber, {
-    placeholder: "",
+  }), /* @__PURE__ */ h(EditableNumber, {
+    placeholder: "b",
     value: color.b,
     allow_undefined: false,
     conditional_on_change: (b) => set_color({b}),

@@ -40,7 +40,7 @@ function _AppMenuItem(props) {
     style: "display:flex; justify-content:flex-start; padding:0.5em;",
     onPointerDown: (e) => {
       e.stopImmediatePropagation();
-      props.change_route({route: props.id});
+      props.change_route({route: props.id, sub_route: null, item_id: null});
       props.on_pointer_down();
     }
   }, /* @__PURE__ */ h(Link, {

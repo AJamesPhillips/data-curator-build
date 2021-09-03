@@ -86,7 +86,8 @@ export function wcomponent_has_event_at(wcomponent) {
   return wcomponent.event_at !== void 0;
 }
 export function wcomponent_has_validity_predictions(wcomponent) {
-  return wcomponent.validity !== void 0;
+  const {validity} = wcomponent;
+  return validity !== void 0 && validity.length > 0;
 }
 const types_without_validity = new Set([
   "prioritisation",
@@ -125,6 +126,7 @@ export function wcomponent_has_legitimate_non_empty_state(wcomponent) {
 const _specialised_objects_from_to_server_expected_keys = {
   perceptions: true,
   wcomponents: true,
-  knowledge_views: true
+  knowledge_views: true,
+  wcomponent_ids_to_delete: true
 };
 export const specialised_objects_from_to_server_expected_keys = Object.keys(_specialised_objects_from_to_server_expected_keys);

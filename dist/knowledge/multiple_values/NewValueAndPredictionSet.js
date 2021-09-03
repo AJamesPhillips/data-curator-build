@@ -1,8 +1,8 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
-import {uncertain_datetime_is_eternal} from "../../form/datetime_utils.js";
-import {get_today_date} from "../../shared/utils/date_helpers.js";
+import {get_uncertain_datetime} from "../../shared/utils/datetime.js";
+import {date2str_auto, get_today_date} from "../../shared/utils/date_helpers.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {ACTION_OPTIONS, get_action_status_of_VAP_set} from "../../shared/wcomponent/value_and_prediction/actions_value.js";
 import {Button} from "../../sharedf/Button.js";
@@ -33,7 +33,7 @@ function SimplifiedBooleanForm(props) {
     return null;
   const is_true = !!entry && entry.probability === 1 && entry.conviction === 1;
   const is_false = !!entry && entry.probability === 0 && entry.conviction === 1;
-  return /* @__PURE__ */ h("div", null, !is_true && /* @__PURE__ */ h(Button, {
+  return /* @__PURE__ */ h("div", null, is_true && "True", is_false && "False", /* @__PURE__ */ h("br", null), !is_true && /* @__PURE__ */ h(Button, {
     value: "Set to True",
     onClick: () => {
       on_change({...VAP_set, entries: [{...entry, probability: 1, conviction: 1}]});
@@ -71,8 +71,9 @@ function SimplifiedDatetimeForm(props) {
   const entry = VAP_set.entries[0];
   if (!entry)
     return null;
-  const is_eternal = uncertain_datetime_is_eternal(VAP_set.datetime);
-  return /* @__PURE__ */ h("div", null, is_eternal && /* @__PURE__ */ h(Button, {
+  const datetime = get_uncertain_datetime(VAP_set.datetime);
+  const is_eternal = datetime === void 0;
+  return /* @__PURE__ */ h("div", null, datetime ? date2str_auto({date: datetime, time_resolution: void 0}) : "Is Eternal", /* @__PURE__ */ h("br", null), is_eternal && /* @__PURE__ */ h(Button, {
     value: "Set to 'From today'",
     onClick: () => on_change({...VAP_set, datetime: {min: get_today_date()}})
   }), !is_eternal && /* @__PURE__ */ h(Button, {

@@ -38,10 +38,7 @@ export function StorageOptionsForm(props) {
     name: get_storage_type_name("solid"),
     description: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("a", {
       href: "https://solidproject.org/"
-    }, "Solid"), " is a data storage platform which puts you back in control of your data.  Once you retake ownership of your own data it enables you to use your data with any other application and do useful things; something the big tech companies don't let you do. Sign up for a free account here:   ", /* @__PURE__ */ h("a", {
-      href: "https://solidcommunity.net/",
-      target: "_blank"
-    }, "solidcommunity.net"), "  or here:   ", /* @__PURE__ */ h("a", {
+    }, "Solid"), " is a data storage platform which puts you back in control of your data.  Once you retake ownership of your own data it enables you to use your data with any other application and do useful things; something the big tech companies don't let you do. Sign up for a free account here:", "  ", /* @__PURE__ */ h("a", {
       href: "https://signup.pod.inrupt.com/",
       target: "_blank"
     }, "inrupt.com")),

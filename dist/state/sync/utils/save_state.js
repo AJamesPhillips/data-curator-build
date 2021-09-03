@@ -4,22 +4,10 @@ import {LOCAL_STORAGE_STATE_KEY} from "../../../constants.js";
 import {min_throttle} from "../../../utils/throttle.js";
 import {ACTIONS} from "../../actions.js";
 import {error_to_string} from "./errors.js";
-import {get_specialised_state_to_save, needs_save} from "./needs_save.js";
+import {get_specialised_state_to_save} from "./needs_save.js";
 import {save_solid_data} from "./solid_save_data.js";
-let last_attempted_state_to_save = void 0;
-export function conditionally_save_state(load_state_from_storage, dispatch, state) {
-  if (!load_state_from_storage)
-    return;
-  const {status, storage_type} = state.sync;
-  if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED" && status !== "RETRYING")
-    return;
-  if (!needs_save(state, last_attempted_state_to_save))
-    return;
-  if (!storage_type) {
-    const error_message = "Can not save.  No storage_type set";
-    dispatch(ACTIONS.sync.update_sync_status({status: "FAILED", error_message, attempt: 0}));
-    return;
-  }
+export function storage_dependent_save(dispatch, state) {
+  const {storage_type} = state.sync;
   if (storage_type !== "solid") {
     throttled_save_state.throttled({dispatch, state});
     throttled_save_state.flush();
@@ -39,35 +27,28 @@ export function conditionally_save_state(load_state_from_storage, dispatch, stat
       }
     }
   }
-}
-let allow_ctrl_s_to_flush_save = true;
-export function conditional_ctrl_s_save(load_state_from_storage, dispatch, state) {
-  if (!load_state_from_storage)
-    return;
-  const ctrl_s_flush_save = is_ctrl_s_flush_save(state);
-  if (ctrl_s_flush_save && allow_ctrl_s_to_flush_save) {
-    allow_ctrl_s_to_flush_save = false;
-    if (getDefaultSession().info.isLoggedIn) {
-      throttled_save_state.throttled({dispatch, state});
-      throttled_save_state.flush();
-      dispatch(ACTIONS.sync.set_next_sync_ms({next_save_ms: void 0}));
-    }
-  }
-  allow_ctrl_s_to_flush_save = !ctrl_s_flush_save;
+  return throttled_save_state;
 }
 const SAVE_THROTTLE_MS = 6e4;
 export const throttled_save_state = min_throttle(save_state, SAVE_THROTTLE_MS);
+export const last_attempted_state_to_save = {state: void 0};
 function save_state({dispatch, state}) {
-  last_attempted_state_to_save = state;
+  last_attempted_state_to_save.state = state;
+  if (!state.sync.ready_for_writing) {
+    console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`);
+    return Promise.reject();
+  }
   dispatch(ACTIONS.sync.update_sync_status({status: "SAVING"}));
+  dispatch(ACTIONS.sync.set_next_sync_ms({next_save_ms: void 0}));
   const storage_type = state.sync.storage_type;
   const data = get_specialised_state_to_save(state);
-  return attempt_save({storage_type, data, user_info: state.user_info, dispatch}).then(() => {
+  return retryable_save({storage_type, data, user_info: state.user_info, dispatch}).then(() => {
     dispatch(ACTIONS.sync.update_sync_status({status: "SAVED"}));
-  }).catch(() => last_attempted_state_to_save = void 0);
+    return state;
+  }).catch(() => last_attempted_state_to_save.state = void 0);
 }
 const MAX_ATTEMPTS = 5;
-export function attempt_save(args) {
+export function retryable_save(args) {
   const {
     storage_type,
     data,
@@ -79,7 +60,7 @@ export function attempt_save(args) {
   let {attempt = 0} = args;
   attempt += 1;
   const is_backup_str = is_backup ? " (backup)" : "";
-  console.log(`attempt_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`);
+  console.log(`retryable_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`);
   let promise_save_data;
   if (storage_type === "local_server") {
     const specialised_state_str = JSON.stringify(data);
@@ -115,12 +96,9 @@ export function attempt_save(args) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           console.log(`retrying save${is_backup_str} to ${storage_type}, attempt ${attempt}`);
-          attempt_save({storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup}).then(resolve).catch(reject);
+          retryable_save({storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup}).then(resolve).catch(reject);
         }, 1e3);
       });
     }
   });
-}
-function is_ctrl_s_flush_save(state) {
-  return state.global_keys.keys_down.has("s") && state.global_keys.keys_down.has("Control");
 }

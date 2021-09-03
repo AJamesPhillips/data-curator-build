@@ -4,12 +4,12 @@ import { i as interopRequireWildcard } from '../../common/interopRequireWildcard
 import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-4c19274d.js';
 import { a as compat_module } from '../../common/compat.module-44e2e532.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-c36e250e.js';
-import { r as require$$4 } from '../../common/withStyles-9ad24414.js';
-import { w as withStyles_1 } from '../../common/withStyles-ce4e4c70.js';
+import { c as clsx } from '../../common/withStyles-015222b5.js';
+import { w as withStyles_1 } from '../../common/withStyles-5d7eda42.js';
 import '../../common/hooks.module-b65ed191.js';
 import '../../common/preact.module-5693ab29.js';
-import '../../common/defaultTheme-606b3b98.js';
-import '../../common/ThemeProvider-77286515.js';
+import '../../common/defaultTheme-111296fa.js';
+import '../../common/ThemeProvider-002b8cd5.js';
 
 var AccordionDetails_1 = createCommonjsModule(function (module, exports) {
 
@@ -30,7 +30,7 @@ var React = interopRequireWildcard(compat_module);
 
 var _propTypes = interopRequireDefault(propTypes);
 
-var _clsx = interopRequireDefault(require$$4);
+var _clsx = interopRequireDefault(clsx);
 
 var _withStyles = interopRequireDefault(withStyles_1);
 

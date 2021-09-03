@@ -3,12 +3,12 @@ const replace_all_specialised_objects = (args) => ({type: replace_all_specialise
 export const is_replace_all_specialised_objects = (action) => {
   return action.type === replace_all_specialised_objects_type;
 };
-const delete_all_specialised_objects_type = "delete_all_specialised_objects";
-const delete_all_specialised_objects = () => ({type: delete_all_specialised_objects_type});
-export const is_delete_all_specialised_objects = (action) => {
-  return action.type === delete_all_specialised_objects_type;
+const clear_from_mem_all_specialised_objects_type = "clear_from_mem_all_specialised_objects";
+const clear_from_mem_all_specialised_objects = () => ({type: clear_from_mem_all_specialised_objects_type});
+export const is_clear_from_mem_all_specialised_objects = (action) => {
+  return action.type === clear_from_mem_all_specialised_objects_type;
 };
 export const syncing_actions = {
   replace_all_specialised_objects,
-  delete_all_specialised_objects
+  clear_from_mem_all_specialised_objects
 };

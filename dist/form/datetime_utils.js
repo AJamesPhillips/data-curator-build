@@ -1,5 +1,6 @@
 import {date2str_auto} from "../shared/utils/date_helpers.js";
 import {test} from "../shared/utils/test.js";
+import {uncertain_datetime_is_eternal} from "../shared/utils/datetime.js";
 export function str_to_date(date_str) {
   return new Date(date_str.trim());
 }
@@ -10,9 +11,6 @@ export function date_to_string(args) {
   const {date, time_resolution, trim_midnight} = args;
   const as_string = date && valid_date(date) ? date2str_auto({date, time_resolution, trim_midnight}) : "";
   return as_string;
-}
-export function uncertain_datetime_is_eternal(datetime) {
-  return (datetime.min || datetime.value || datetime.max) === void 0;
 }
 export function uncertain_date_to_string(datetime, time_resolution) {
   let str = "Eternal";

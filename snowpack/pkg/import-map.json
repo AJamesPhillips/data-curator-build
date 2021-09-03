@@ -34,6 +34,7 @@
     "@material-ui/icons/Save": "./@material-ui/icons/Save.js",
     "@material-ui/icons/SyncProblem": "./@material-ui/icons/SyncProblem.js",
     "@material-ui/icons/Warning": "./@material-ui/icons/Warning.js",
+    "@material-ui/lab": "./@material-ui/lab.js",
     "flexsearch": "./flexsearch.js",
     "fuzzysort": "./fuzzysort.js",
     "graphlib": "./graphlib.js",

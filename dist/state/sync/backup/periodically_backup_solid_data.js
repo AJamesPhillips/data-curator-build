@@ -10,15 +10,19 @@ import {sort_list} from "../../../shared/utils/sort.js";
 import {min_throttle} from "../../../utils/throttle.js";
 import {ACTIONS} from "../../actions.js";
 import {get_specialised_state_to_save, needs_save} from "../utils/needs_save.js";
-import {attempt_save} from "../utils/save_state.js";
+import {retryable_save} from "../utils/save_state.js";
 const BACKUPS_PATH = "data_curator_backups/";
 let last_attempted_state_to_backup = void 0;
 export function periodically_backup_solid_data(store) {
   const {dispatch} = store;
   store.subscribe(() => {
     const state = store.getState();
-    const {storage_type} = state.sync;
+    const {storage_type, ready_for_writing, status} = state.sync;
     if (storage_type !== "solid")
+      return;
+    if (!ready_for_writing)
+      return;
+    if (status === "FAILED")
       return;
     if (!needs_save(state, last_attempted_state_to_backup))
       return;
@@ -34,10 +38,14 @@ const BACKUP_THROTTLE_MS = 6e4 * 5;
 const backup_throttled_save_state = min_throttle(save_state, BACKUP_THROTTLE_MS);
 export function save_state({dispatch, state, user_info, original_solid_pod_URL}) {
   last_attempted_state_to_backup = state;
+  if (!state.sync.ready_for_writing) {
+    console.error(`State machine violation.  (Backing up) Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`);
+    return Promise.reject();
+  }
   dispatch(ACTIONS.backup.update_backup_status({status: "SAVING"}));
   const storage_type = state.sync.storage_type;
   const data = get_specialised_state_to_save(state);
-  return attempt_save({storage_type, data, user_info, dispatch, is_backup: true}).then(() => {
+  return retryable_save({storage_type, data, user_info, dispatch, is_backup: true}).then(() => {
     dispatch(ACTIONS.backup.update_backup_status({status: "SAVED"}));
     prune_backups(original_solid_pod_URL, user_info);
   }).catch(() => {

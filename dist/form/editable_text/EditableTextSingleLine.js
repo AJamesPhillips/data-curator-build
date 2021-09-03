@@ -13,7 +13,15 @@ export function EditableTextSingleLine(props) {
       value,
       onFocus: on_focus,
       onChange: on_change,
-      onBlur: on_blur
+      onBlur: on_blur,
+      ref: (el) => {
+        if (!el)
+          return;
+        const input_el = el.getElementsByTagName("input")[0];
+        if (!input_el)
+          return;
+        on_render(input_el);
+      }
     })
   });
 }

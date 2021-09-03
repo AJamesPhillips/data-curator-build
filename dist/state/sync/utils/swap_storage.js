@@ -1,6 +1,6 @@
 import {ACTIONS} from "../../actions.js";
 import {get_state_data} from "./load_state.js";
-import {attempt_save} from "./save_state.js";
+import {retryable_save} from "./save_state.js";
 export async function swap_storage_type(dispatch, state) {
   const {storage_type, copy_from_storage_type} = state.sync;
   if (!copy_from_storage_type)
@@ -11,7 +11,7 @@ export async function swap_storage_type(dispatch, state) {
     return Promise.reject();
   }
   console.log(`swap_storage_type from ${copy_from_storage_type} to ${storage_type}`);
-  dispatch(ACTIONS.sync.update_sync_status({status: "OVERWRITING"}));
+  dispatch(ACTIONS.sync.update_sync_status({status: "LOADING"}));
   const data = await get_state_data(copy_from_storage_type, state);
   if (!data) {
     const error_message = `Unable to get data from: ${copy_from_storage_type}`;
@@ -19,7 +19,7 @@ export async function swap_storage_type(dispatch, state) {
     return Promise.reject();
   }
   console.log(`swap_storage_type got data, saving to: ${storage_type}`, data);
-  await attempt_save({storage_type, data, user_info: state.user_info, dispatch});
+  await retryable_save({storage_type, data, user_info: state.user_info, dispatch});
   console.log(`swap_storage_type finished copying data`);
   dispatch(ACTIONS.sync.clear_storage_type_copy_from({}));
   return;

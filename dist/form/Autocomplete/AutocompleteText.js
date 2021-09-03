@@ -7,6 +7,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Options} from "./Options.js";
 import {throttle} from "../../utils/throttle.js";
 import {useEffect, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => ({
   presenting: state.display_options.consumption_formatting
 });
@@ -102,17 +103,19 @@ function _AutocompleteText(props) {
   return /* @__PURE__ */ h("div", {
     class: "editable_field autocomplete " + (valid ? "" : "invalid "),
     style: props.extra_styles
-  }, /* @__PURE__ */ h("input", {
+  }, /* @__PURE__ */ h(TextField, {
     disabled: props.allow_editing_when_presenting ? false : props.presenting,
-    ref: (r) => {
-      if (!r)
+    ref: (el) => {
+      if (!el)
         return;
-      else if (!editing_options)
-        setTimeout(() => r.blur(), 0);
+      const input_el = el.getElementsByTagName("input")[0];
+      if (!input_el)
+        return;
+      if (!editing_options)
+        setTimeout(() => input_el.blur(), 0);
       else
-        setTimeout(() => r.focus(), 0);
+        setTimeout(() => input_el.focus(), 0);
     },
-    type: "text",
     placeholder,
     value: temp_value_str || (editing_options ? "" : "-"),
     onFocus: (e) => {

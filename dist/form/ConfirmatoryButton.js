@@ -31,6 +31,7 @@ export function ConfirmatoryButton(props) {
     theme: DefaultTheme
   }, /* @__PURE__ */ h(Button, {
     color: "primary",
+    disabled: props.disabled,
     fullWidth: !progressing,
     is_hidden: !props.on_click,
     onClick: (e) => {

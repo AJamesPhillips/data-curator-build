@@ -3581,7 +3581,7 @@ async function triplesToTurtle(quads) {
   return rawTurtle;
 }
 async function loadN3() {
-  const n3Module = await import('./index-7ed01134.js');
+  const n3Module = await import('./index-8f467dca.js');
   if (typeof n3Module.default !== "undefined") {
     return n3Module.default;
   }
@@ -4177,4 +4177,4 @@ function addLiteralOfType(thing, property, value, type) {
   return updatedThing;
 }
 
-export { Buffer as B, _polyfillNode_buffer as _, getSolidDataset as a, getThing as b, getStringNoLocale as c, getContainedResourceUrlAll as d, deleteSolidDataset as e, getThingAll as f, getIri as g, addStringNoLocale as h, isContainer as i, createSolidDataset as j, createThing as k, setThing as l, saveSolidDatasetAt as s };
+export { Buffer as B, _polyfillNode_buffer as _, getSolidDataset as a, getStringNoLocale as b, getThingAll as c, deleteSolidDataset as d, addStringNoLocale as e, createSolidDataset as f, getContainedResourceUrlAll as g, createThing as h, isContainer as i, setThing as j, getIri as k, getThing as l, saveSolidDatasetAt as s };

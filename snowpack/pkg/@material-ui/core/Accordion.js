@@ -4,18 +4,19 @@ import { i as interopRequireWildcard } from '../../common/interopRequireWildcard
 import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-4c19274d.js';
 import { a as arrayWithHoles, u as unsupportedIterableToArray, n as nonIterableRest, s as slicedToArray, b as useControlled_1 } from '../../common/useControlled-dbb03576.js';
 import { k, a as compat_module } from '../../common/compat.module-44e2e532.js';
-import { u as useTheme, T as Transition, g as getTransitionProps, r as require$$8 } from '../../common/Paper-f8532cea.js';
+import { u as useTheme, T as Transition, g as getTransitionProps } from '../../common/utils-30547bf9.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-c36e250e.js';
-import { a as _objectWithoutProperties, _ as _extends, r as require$$4, b as _slicedToArray } from '../../common/withStyles-9ad24414.js';
-import { w as withStyles_1 } from '../../common/withStyles-ce4e4c70.js';
+import { a as _objectWithoutProperties, _ as _extends, c as clsx, b as _slicedToArray } from '../../common/withStyles-015222b5.js';
+import { w as withStyles_1 } from '../../common/withStyles-5d7eda42.js';
 import { A as AccordionContext_1 } from '../../common/AccordionContext-bf95cd61.js';
-import { w as withStyles, a as duration } from '../../common/withStyles-67c09166.js';
+import { w as withStyles, a as duration } from '../../common/withStyles-b03a0fb3.js';
 import { u as useForkRef } from '../../common/useForkRef-e701e1c9.js';
 import { s, y } from '../../common/hooks.module-b65ed191.js';
 import { v } from '../../common/preact.module-5693ab29.js';
+import { P as Paper } from '../../common/Paper-2cf9d63b.js';
 import '../../common/TransitionGroupContext-717896c3.js';
-import '../../common/defaultTheme-606b3b98.js';
-import '../../common/ThemeProvider-77286515.js';
+import '../../common/defaultTheme-111296fa.js';
+import '../../common/ThemeProvider-002b8cd5.js';
 
 var styles = function styles(theme) {
   return {
@@ -206,7 +207,7 @@ var Collapse = /*#__PURE__*/k(function Collapse(props, ref) {
     timeout: timeout === 'auto' ? null : timeout
   }, other), function (state, childProps) {
     return /*#__PURE__*/v(Component, _extends({
-      className: require$$4(classes.container, className, {
+      className: clsx(classes.container, className, {
         'entered': classes.entered,
         'exited': !inProp && collapsedHeight === '0px' && classes.hidden
       }[state]),
@@ -223,7 +224,7 @@ var Collapse = /*#__PURE__*/k(function Collapse(props, ref) {
   });
 });
 Collapse.muiSupportAuto = true;
-var require$$7 = withStyles(styles, {
+var Collapse$1 = withStyles(styles, {
   name: 'MuiCollapse'
 })(Collapse);
 
@@ -270,13 +271,13 @@ var React = interopRequireWildcard(compat_module);
 
 var _propTypes = interopRequireDefault(propTypes);
 
-var _clsx = interopRequireDefault(require$$4);
+var _clsx = interopRequireDefault(clsx);
 
 
 
-var _Collapse = interopRequireDefault(require$$7);
+var _Collapse = interopRequireDefault(Collapse$1);
 
-var _Paper = interopRequireDefault(require$$8);
+var _Paper = interopRequireDefault(Paper);
 
 var _withStyles = interopRequireDefault(withStyles_1);
 

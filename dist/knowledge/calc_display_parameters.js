@@ -4,17 +4,20 @@ import {
 } from "../shared/wcomponent/get_wcomponent_validity_value.js";
 import {Tense} from "../shared/wcomponent/interfaces/datetime.js";
 import {
-  wcomponent_has_event_at
+  wcomponent_has_event_at,
+  wcomponent_is_judgement_or_objective
 } from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms, get_tense_of_item} from "../shared/wcomponent/utils_datetime.js";
 export function calc_wcomponent_should_display(args) {
-  const {force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters} = args;
+  const {is_editing, force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters} = args;
   if (force_displaying || is_selected)
     return {display_certainty: 1};
   if (wc_ids_excluded_by_filters.has(wcomponent.id))
     return false;
   const is_not_created = wcomponent_is_not_yet_created(wcomponent, args.created_at_ms);
   if (is_not_created)
+    return false;
+  if (!is_editing && !is_selected && wcomponent_is_judgement_or_objective(wcomponent))
     return false;
   const validity_value = get_wcomponent_validity_value(args);
   const is_invalid_for_display = get_wcomponent_is_invalid_for_display({

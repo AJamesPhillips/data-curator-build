@@ -1,8 +1,8 @@
-import { a as _objectWithoutProperties, _ as _extends, r as require$$4 } from './withStyles-9ad24414.js';
+import { a as _objectWithoutProperties, _ as _extends, c as clsx } from './withStyles-015222b5.js';
 import { k } from './compat.module-44e2e532.js';
 import './hoist-non-react-statics.cjs-c36e250e.js';
-import { w as withStyles } from './withStyles-67c09166.js';
-import { c as capitalize } from './capitalize-37b8be70.js';
+import { w as withStyles } from './withStyles-b03a0fb3.js';
+import { c as capitalize } from './capitalize-fd5d619c.js';
 import { v } from './preact.module-5693ab29.js';
 
 var styles = function styles(theme) {
@@ -79,7 +79,7 @@ var SvgIcon = /*#__PURE__*/k(function SvgIcon(props, ref) {
       other = _objectWithoutProperties(props, ["children", "classes", "className", "color", "component", "fontSize", "htmlColor", "titleAccess", "viewBox"]);
 
   return /*#__PURE__*/v(Component, _extends({
-    className: require$$4(classes.root, className, color !== 'inherit' && classes["color".concat(capitalize(color))], fontSize !== 'default' && classes["fontSize".concat(capitalize(fontSize))]),
+    className: clsx(classes.root, className, color !== 'inherit' && classes["color".concat(capitalize(color))], fontSize !== 'default' && classes["fontSize".concat(capitalize(fontSize))]),
     focusable: "false",
     viewBox: viewBox,
     color: htmlColor,

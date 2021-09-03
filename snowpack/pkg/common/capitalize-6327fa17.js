@@ -1,5 +1,5 @@
 import { c as createCommonjsModule } from './_commonjsHelpers-c99fd594.js';
-import { b as esm } from './defaultTheme-606b3b98.js';
+import { b as esm } from './defaultTheme-111296fa.js';
 
 var capitalize_1 = createCommonjsModule(function (module, exports) {
 

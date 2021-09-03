@@ -19,13 +19,6 @@ const map_dispatch = {
   change_route: ACTIONS.routing.change_route
 };
 const connector = connect(map_state, map_dispatch);
-function navigate_view(event, props) {
-  const select_el = event.currentTarget;
-  if (!select_el)
-    return;
-  const view = select_el.value;
-  props.change_route({args: {view}});
-}
 function _ViewsBreadcrumb(props) {
   if (!props.ready_for_reading)
     return null;
@@ -55,11 +48,14 @@ function _ViewsBreadcrumb(props) {
       noWrap: true
     }, "View Type:"),
     name: "select_view",
-    onChange: (e) => navigate_view(e, props),
     value: props.view
   }, view_options.map((opt) => /* @__PURE__ */ h(MenuItem, {
     value: opt.id,
-    selected: opt.id === props.view
+    selected: opt.id === props.view,
+    onPointerDown: (e) => {
+      e.stopImmediatePropagation();
+      props.change_route({args: {view: opt.id}});
+    }
   }, opt.title)))), levels.map((level) => /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(AutocompleteText, {
     allow_none: level.allow_none,
     selected_option_id: level.selected_id,
@@ -73,7 +69,6 @@ function _ViewsBreadcrumb(props) {
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb);
 const view_options = [
   {id: "knowledge", title: "Knowledge"},
-  {id: "priorities", title: "Priorities"},
   {id: "priorities_list", title: "Priorities list"}
 ];
 function calc_if_is_hidden(entry) {

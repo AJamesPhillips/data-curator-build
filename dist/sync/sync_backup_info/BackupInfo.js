@@ -7,7 +7,8 @@ import CloudIcon from "../../../snowpack/pkg/@material-ui/icons/Cloud.js";
 import CloudUploadIcon from "../../../snowpack/pkg/@material-ui/icons/CloudUpload.js";
 const map_state = (state) => {
   return {
-    status: state.backup.status
+    status: state.backup.status,
+    not_solid: state.sync.storage_type !== "solid"
   };
 };
 const map_dispatch = {};
@@ -16,7 +17,9 @@ function _BackupInfo(props) {
   const timeout = useRef();
   clearTimeout(timeout.current);
   const [allow_showing, set_allow_showing] = useState(true);
-  const {status} = props;
+  const {status, not_solid} = props;
+  if (!not_solid)
+    return null;
   const failed = status === "FAILED";
   const saved = status === "SAVED";
   const saving = status === "SAVING";

@@ -1,4 +1,4 @@
-import { k as handleBreakpoints, e as _defineProperty, l as merge, _ as _extends, c as _toConsumableArray, a as _objectWithoutProperties, m as makeStyles, r as require$$4, u as useTheme, n as nested, T as ThemeContext } from './withStyles-9ad24414.js';
+import { l as handleBreakpoints, f as _defineProperty, n as merge, _ as _extends, d as _toConsumableArray, a as _objectWithoutProperties, m as makeStyles, c as clsx, u as useTheme, o as nested, T as ThemeContext } from './withStyles-015222b5.js';
 import { h as hoistNonReactStatics_cjs } from './hoist-non-react-statics.cjs-c36e250e.js';
 import { R as React } from './compat.module-44e2e532.js';
 
@@ -449,7 +449,7 @@ function styled(Component) {
           other = _objectWithoutProperties(props, ["children", "className", "clone", "component"]);
 
       var classes = useStyles(props);
-      var className = require$$4(classes.root, classNameProp);
+      var className = clsx(classes.root, classNameProp);
       var spread = other;
 
       if (filterProps) {
@@ -458,7 +458,7 @@ function styled(Component) {
 
       if (clone) {
         return /*#__PURE__*/React.cloneElement(children, _extends({
-          className: require$$4(children.props.className, className)
+          className: clsx(children.props.className, className)
         }, spread));
       }
 

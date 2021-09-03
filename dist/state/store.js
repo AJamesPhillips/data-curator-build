@@ -12,7 +12,7 @@ import {specialised_objects_subscribers} from "./specialised_objects/subscribers
 import {get_starting_state} from "./starting_state.js";
 import {periodically_backup_solid_data} from "./sync/backup/periodically_backup_solid_data.js";
 import {optionally_copy_then_load_data} from "./sync/utils/optionally_copy_then_load_data.js";
-import {conditionally_save_state, conditional_ctrl_s_save} from "./sync/utils/save_state.js";
+import {conditionally_save_state, conditional_ctrl_s_save} from "./sync/utils/conditional_save_state.js";
 let cached_store;
 export function get_store(args = {}) {
   const {
