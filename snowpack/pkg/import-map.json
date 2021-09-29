@@ -45,11 +45,8 @@
     "graphlib": "./graphlib.js",
     "markdown-to-jsx": "./markdown-to-jsx.js",
     "preact": "./preact.js",
-    "preact/compat": "./preact/compat.js",
     "preact/devtools": "./preact/devtools.js",
     "preact/hooks": "./preact/hooks.js",
-    "react": "./preact/compat.js",
-    "react-dom": "./preact/compat.js",
     "react-redux": "./react-redux.js",
     "redux": "./redux.js",
     "uuid": "./uuid.js"

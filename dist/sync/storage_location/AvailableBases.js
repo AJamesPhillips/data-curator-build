@@ -1,11 +1,11 @@
 import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {StorageOption} from "./StorageOption.js";
 import {ACTIONS} from "../../state/actions.js";
 import {sort_list} from "../../shared/utils/sort.js";
 import {refresh_bases_for_current_user} from "../../state/user_info/utils.js";
 import {SyncButton} from "../../sharedf/SyncButton.js";
-import {useState} from "../../../snowpack/pkg/preact/compat.js";
 import {DisplaySupabasePostgrestError} from "../user_info/DisplaySupabaseErrors.js";
 const map_state = (state) => {
   return {
