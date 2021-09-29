@@ -22,6 +22,7 @@ import { T as Typography, u as useFormControl, i as isFilled, F as FormControlCo
 export { b as FormControl, T as Typography } from '../common/FormControl-6fe9ec72.js';
 import { i as isMuiElement } from '../common/isMuiElement-c285a3f2.js';
 import { B as ButtonBase } from '../common/ButtonBase-1fe6d2b0.js';
+export { r as FormGroup } from '../common/FormGroup-25ae9e03.js';
 import '../common/_commonjsHelpers-4f955397.js';
 import '../common/TransitionGroupContext-717896c3.js';
 import '../common/SvgIcon-ca3dcf8d.js';

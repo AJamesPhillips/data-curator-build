@@ -97,9 +97,13 @@ const get_summary = (args) => (VAP, crud) => {
   }, /* @__PURE__ */ h(EditableNumber, {
     disabled: disabled_rel_prob,
     placeholder: "Relative probability",
+    size: "medium",
     value: is_boolean ? void 0 : VAP.relative_probability,
     allow_undefined: true,
-    conditional_on_blur: (relative_probability) => crud.update_item({...VAP, relative_probability})
+    conditional_on_blur: (relative_probability) => {
+      relative_probability = is_boolean ? void 0 : relative_probability || 0;
+      crud.update_item({...VAP, relative_probability});
+    }
   }), /* @__PURE__ */ h("br", null)), is_boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditablePercentage, {
     placeholder: "Confidence",
     value: conviction,

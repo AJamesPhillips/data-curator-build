@@ -1,6 +1,7 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
+import {Box, Button, FormControl, FormGroup, makeStyles, TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import "../common.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
@@ -33,29 +34,53 @@ function _UserAccountInfoChangePasswordForm(props) {
       on_close();
     }
   }
-  return /* @__PURE__ */ h("div", {
+  const classes = use_styles();
+  return /* @__PURE__ */ h(FormGroup, {
     className: "section"
-  }, need_to_handle_password_recovery && /* @__PURE__ */ h("div", null, "Please set a new passowrd"), /* @__PURE__ */ h("form", null, /* @__PURE__ */ h("input", {
-    type: "password",
-    placeholder: "password",
-    value: password,
-    onKeyUp: (e) => set_password(e.currentTarget.value),
+  }, need_to_handle_password_recovery && /* @__PURE__ */ h("p", null, "Please set a new password."), /* @__PURE__ */ h(Box, {
+    className: classes.root
+  }, /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(TextField, {
+    inputProps: {
+      type: "password"
+    },
+    onBlur: (e) => set_password(e.currentTarget.value),
     onChange: (e) => set_password(e.currentTarget.value),
-    onBlur: (e) => set_password(e.currentTarget.value)
-  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("input", {
-    type: "button",
+    onKeyUp: (e) => set_password(e.currentTarget.value),
+    label: "password",
+    size: "small",
+    value: password,
+    variant: "outlined"
+  })), /* @__PURE__ */ h(Box, {
+    className: classes.update_button_container
+  }, /* @__PURE__ */ h(Button, {
+    className: classes.update_button,
     disabled: !user?.email || !password,
     onClick: update_password,
-    value: "Update password"
-  }), /* @__PURE__ */ h("br", null), !need_to_handle_password_recovery && /* @__PURE__ */ h("input", {
-    type: "button",
+    variant: "contained"
+  }, "Update password")), /* @__PURE__ */ h(Box, null, !need_to_handle_password_recovery && /* @__PURE__ */ h(Button, {
+    variant: "contained",
     onClick: () => {
       on_close();
       set_supabase_session_error(null);
-    },
-    value: "Cancel"
-  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(DisplaySupabaseSessionError, {
+    }
+  }, "Cancel"))), /* @__PURE__ */ h(DisplaySupabaseSessionError, {
     error: supabase_session_error
   }));
 }
+const use_styles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignContent: "center"
+  },
+  update_button_container: {
+    flexGrow: 1,
+    textAlign: "left",
+    marginLeft: 15
+  },
+  update_button: {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0
+  }
+}));
 export const UserAccountInfoChangePasswordForm = connector(_UserAccountInfoChangePasswordForm);

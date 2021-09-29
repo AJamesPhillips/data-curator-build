@@ -18,6 +18,8 @@ export function uncertain_date_to_string(datetime, time_resolution) {
     const min = date_to_string({date: datetime.min, time_resolution});
     const value = date_to_string({date: datetime.value, time_resolution});
     const max = date_to_string({date: datetime.max, time_resolution});
+    if (value && !min && !max)
+      return value;
     const strs = [
       min,
       min ? " " : "",

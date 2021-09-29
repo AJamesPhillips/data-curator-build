@@ -16,9 +16,5 @@ export function supabase_item_to_app(item) {
   let {json, id, base_id, modified_at} = item;
   const modified_at_date = modified_at ? new Date(modified_at + "Z") : void 0;
   json = {...json, id, base_id, modified_at: modified_at_date};
-  json = clean_base_object_of_sync_meta_fields(json);
-  json.created_at = json.created_at && new Date(json.created_at);
-  json.custom_created_at = json.custom_created_at && new Date(json.custom_created_at);
-  json.deleted_at = json.deleted_at && new Date(json.deleted_at);
   return json;
 }

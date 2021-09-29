@@ -3,49 +3,15 @@ import { i as interopRequireDefault } from '../../common/interopRequireDefault-1
 import { i as interopRequireWildcard } from '../../common/interopRequireWildcard-4c12a3b0.js';
 import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-ecdc3a69.js';
 import { s as slicedToArray, b as useControlled_1 } from '../../common/useControlled-f31ead54.js';
-import { k, a as compat_module } from '../../common/compat.module-44e2e532.js';
+import { a as compat_module } from '../../common/compat.module-44e2e532.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-d740ad2c.js';
 import { R as RadioGroupContext_1, u as useRadioGroup_1 } from '../../common/useRadioGroup-bb708613.js';
-import { e as _objectWithoutProperties, _ as _extends } from '../../common/withStyles-f3a61d13.js';
-import { _ as __pika_web_default_export_for_treeshaking__$1 } from '../../common/clsx.m-e1755476.js';
-import { w as withStyles } from '../../common/withStyles-92c33e5b.js';
-import { v } from '../../common/preact.module-5693ab29.js';
+import { r as require$$5 } from '../../common/FormGroup-25ae9e03.js';
 import '../../common/hooks.module-b65ed191.js';
-
-var styles = {
-  /* Styles applied to the root element. */
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap'
-  },
-
-  /* Styles applied to the root element if `row={true}`. */
-  row: {
-    flexDirection: 'row'
-  }
-};
-/**
- * `FormGroup` wraps controls such as `Checkbox` and `Switch`.
- * It provides compact row layout.
- * For the `Radio`, you should be using the `RadioGroup` component instead of this one.
- */
-
-var FormGroup = /*#__PURE__*/k(function FormGroup(props, ref) {
-  var classes = props.classes,
-      className = props.className,
-      _props$row = props.row,
-      row = _props$row === void 0 ? false : _props$row,
-      other = _objectWithoutProperties(props, ["classes", "className", "row"]);
-
-  return /*#__PURE__*/v("div", _extends({
-    className: __pika_web_default_export_for_treeshaking__$1(classes.root, className, row && classes.row),
-    ref: ref
-  }, other));
-});
-var require$$5 = withStyles(styles, {
-  name: 'MuiFormGroup'
-})(FormGroup);
+import '../../common/preact.module-5693ab29.js';
+import '../../common/withStyles-f3a61d13.js';
+import '../../common/clsx.m-e1755476.js';
+import '../../common/withStyles-92c33e5b.js';
 
 var setRef_1 = createCommonjsModule(function (module, exports) {
 

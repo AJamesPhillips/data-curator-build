@@ -6,7 +6,7 @@ import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNod
 import {MainArea} from "../layout/MainArea.js";
 import {sort_list} from "../shared/utils/sort.js";
 import {wcomponent_has_VAP_sets} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_created_at_ms, get_sim_datetime_ms} from "../shared/utils_datetime/utils_datetime.js";
+import {get_created_at_ms, get_sim_datetime} from "../shared/utils_datetime/utils_datetime.js";
 import {ConnectedValueAndPredictionSetSummary} from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
@@ -163,7 +163,7 @@ class DateRange {
   }
   render(wcomponent_nodes) {
     if (wcomponent_nodes.length === 0)
-      return;
+      return null;
     const current_date = new Date(this.range_start_date.getTime());
     const all_range_dates = [];
     all_range_dates.push(new Date(current_date.getTime()));
@@ -288,31 +288,28 @@ class DateRange {
         display: `${this.timeline_spacing ? "block" : "flex"}`,
         flexDirection: "row",
         justifyContent: "start"
-      }, VAP_sets.map((VAP) => {
-        const sim_datetime_ms = get_sim_datetime_ms(VAP);
-        if (sim_datetime_ms) {
-          const sim_datetime = new Date(sim_datetime_ms);
-          const vap_percent = this.get_date_offset_percent(sim_datetime);
-          return /* @__PURE__ */ h(Box, {
-            className: "vap",
-            flexGrow: 0,
-            flexShrink: 1,
-            flexBasis: "auto",
-            display: "inline-block",
-            border: 1,
-            minHeight: "100%",
-            height: "100%",
-            maxHeight: "100%",
-            position: `${this.timeline_spacing ? "absolute" : "static"}`,
-            zIndex: 1,
-            left: `${vap_percent}%`
-          }, /* @__PURE__ */ h(ConnectedValueAndPredictionSetSummary, {
-            wcomponent: wc,
-            VAP_set: VAP
-          }));
-        } else {
-          return;
-        }
+      }, VAP_sets.map((VAP_set) => {
+        const sim_datetime = get_sim_datetime(VAP_set);
+        if (!sim_datetime)
+          return null;
+        const vap_percent = this.get_date_offset_percent(sim_datetime);
+        return /* @__PURE__ */ h(Box, {
+          className: "vap",
+          flexGrow: 0,
+          flexShrink: 1,
+          flexBasis: "auto",
+          display: "inline-block",
+          border: 1,
+          minHeight: "100%",
+          height: "100%",
+          maxHeight: "100%",
+          position: `${this.timeline_spacing ? "absolute" : "static"}`,
+          zIndex: 1,
+          left: `${vap_percent}%`
+        }, /* @__PURE__ */ h(ConnectedValueAndPredictionSetSummary, {
+          wcomponent: wc,
+          VAP_set
+        }));
       })));
     })))));
   }
@@ -331,13 +328,13 @@ function _KnowledgeTimeView(props) {
   wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending");
   wcomponent_nodes.forEach((wc) => {
     const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : [];
-    dates.push(wc.created_at);
-    VAP_sets.forEach((VAP) => {
-      dates.push(VAP.created_at);
+    VAP_sets.forEach((VAP_set) => {
+      const dt = get_sim_datetime(VAP_set);
+      dt && dates.push(dt);
     });
   });
-  let date_range = new DateRange(dates, props);
-  let content = date_range.render(wcomponent_nodes);
+  const date_range = new DateRange(dates, props);
+  const content = date_range.render(wcomponent_nodes);
   return /* @__PURE__ */ h(MainArea, {
     main_content: content ? content : /* @__PURE__ */ h(Box, null)
   });

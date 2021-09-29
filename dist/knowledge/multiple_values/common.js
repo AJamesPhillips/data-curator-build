@@ -4,7 +4,7 @@ import {EditablePercentage} from "../../form/EditablePercentage.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";
 import {get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction} from "../../sharedf/wcomponent_state.js";
 import {merge_counterfactuals_into_VAPs} from "../../shared/counterfactuals/merge.js";
-import {SummaryForPrediction} from "../predictions/common.js";
+import {PredictionSummary} from "../predictions/PredictionSummary.js";
 import {UncertainDateTime} from "../uncertainty/datetime.js";
 import {ValueAndPredictions} from "./ValueAndPredictions.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
@@ -14,11 +14,11 @@ export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) 
   VAPs = merge_counterfactuals_into_VAPs(VAPs);
   VAP_set = {...VAP_set, entries: VAPs};
   const values = get_probable_VAP_set_values(VAP_set, VAPs_represent);
-  const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + " %";
-  const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + " %";
-  return /* @__PURE__ */ h(SummaryForPrediction, {
+  const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + "%";
+  const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + "%";
+  return /* @__PURE__ */ h(PredictionSummary, {
     created_at: show_created_at ? VAP_set.custom_created_at || VAP_set.created_at : void 0,
-    value: VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.number ? values : "",
+    value: values,
     datetime: VAP_set.datetime,
     probability: prob,
     conviction: conv

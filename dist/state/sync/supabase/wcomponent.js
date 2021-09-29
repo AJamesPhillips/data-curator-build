@@ -1,3 +1,4 @@
+import {parse_wcomponent} from "../../../shared/wcomponent/parse_json/parse_wcomponent.js";
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
 import {app_item_to_supabase, supabase_item_to_app} from "./item_convertion.js";
@@ -41,5 +42,7 @@ export function wcomponent_app_to_supabase(item, base_id) {
   return app_item_to_supabase(item, base_id);
 }
 export function wcomponent_supabase_to_app(item) {
-  return supabase_item_to_app(item);
+  let wc = supabase_item_to_app(item);
+  wc = parse_wcomponent(wc);
+  return wc;
 }

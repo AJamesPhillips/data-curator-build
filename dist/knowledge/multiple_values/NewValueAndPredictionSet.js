@@ -76,7 +76,7 @@ function SimplifiedDatetimeForm(props) {
   const is_eternal = datetime === void 0;
   return /* @__PURE__ */ h("div", null, datetime ? date2str_auto({date: datetime, time_resolution: void 0}) : "Is Eternal", /* @__PURE__ */ h("br", null), is_eternal && /* @__PURE__ */ h(Button, {
     value: "Set to 'From today'",
-    onClick: () => on_change({...VAP_set, datetime: {min: get_today_date()}})
+    onClick: () => on_change({...VAP_set, datetime: {value: get_today_date()}})
   }), !is_eternal && /* @__PURE__ */ h(Button, {
     value: "Set to Eternal",
     onClick: () => on_change({...VAP_set, datetime: {}})

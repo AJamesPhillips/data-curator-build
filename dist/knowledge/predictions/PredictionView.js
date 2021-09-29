@@ -2,11 +2,11 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {EditablePercentage} from "../../form/EditablePercentage.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";
 import {UncertainDateTime} from "../uncertainty/datetime.js";
-import {SummaryForPrediction} from "./common.js";
+import {PredictionSummary} from "./PredictionSummary.js";
 export function PredictionViewSummary(props) {
   const {prediction, on_change} = props;
   const {datetime, probability, conviction} = prediction;
-  return /* @__PURE__ */ h(SummaryForPrediction, {
+  return /* @__PURE__ */ h(PredictionSummary, {
     datetime,
     probability: /* @__PURE__ */ h(EditablePercentage, {
       placeholder: "...",

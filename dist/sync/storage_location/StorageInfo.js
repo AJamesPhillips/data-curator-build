@@ -31,14 +31,14 @@ function _StorageInfo(props) {
     onClick: () => set_show_select_storage(true),
     size: "small",
     endIcon: /* @__PURE__ */ h(PermDataSettingIcon, {
-      titleAccess: "Set Data Storage Location"
+      titleAccess: "Create and Select Knowledge Bases"
     }),
     style: {textTransform: "none"},
     variant: "contained"
   }, /* @__PURE__ */ h("span", {
     class: "storage_name"
   }, props.base_name || "Choose store")), show_select_storage && /* @__PURE__ */ h(SelectStorage, {
-    on_close: () => set_show_select_storage(false)
+    on_close: need_to_create_a_base ? void 0 : () => set_show_select_storage(false)
   }));
 }
 export const StorageInfo = connector(_StorageInfo);

@@ -65,7 +65,10 @@ function _StorageOptionsForm(props) {
     value: "Create new base"
   }), "  ", async_status_to_text(base_creation_state), "  ", newly_created_base && /* @__PURE__ */ h("input", {
     type: "button",
-    onClick: () => update_chosen_base_id({base_id: newly_created_base.id}),
+    onClick: () => {
+      update_chosen_base_id({base_id: newly_created_base.id});
+      on_close && on_close();
+    },
     value: "Select new base"
   }));
 }

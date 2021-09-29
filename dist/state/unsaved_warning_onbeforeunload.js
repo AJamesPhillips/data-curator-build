@@ -9,6 +9,8 @@ export function setup_warning_of_unsaved_data_beforeunload(load_state_from_stora
       const outside_threshold = performance.now() - last_unload_warning > development_warning_threshold_ms;
       warn = outside_threshold;
     }
+    if (warn)
+      last_unload_warning = performance.now();
     return warn;
   };
 }

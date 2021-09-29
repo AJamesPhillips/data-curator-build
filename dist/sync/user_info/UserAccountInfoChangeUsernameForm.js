@@ -1,6 +1,7 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
+import {Box, Button, FormControl, FormGroup, makeStyles, TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import "../common.css.proxy.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {DisplaySupabasePostgrestError} from "./DisplaySupabaseErrors.js";
@@ -36,30 +37,55 @@ function _UserAccountInfoChangeUsernameForm(props) {
       pub_sub.user.pub("stale_users_by_id", true);
     set_save_state(error ? "error" : "success");
   }
-  return /* @__PURE__ */ h("div", {
+  const classes = use_styles();
+  return /* @__PURE__ */ h(FormGroup, {
     className: "section"
-  }, /* @__PURE__ */ h("form", null, /* @__PURE__ */ h("input", {
-    type: "text",
-    placeholder: "Username",
-    value: username,
+  }, /* @__PURE__ */ h(Box, {
+    className: classes.root
+  }, /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(TextField, {
     disabled: is_saving,
     onKeyUp: (e) => set_username(e.currentTarget.value),
     onChange: (e) => set_username(e.currentTarget.value),
-    onBlur: async (e) => set_username(e.currentTarget.value)
-  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("input", {
-    type: "button",
+    onBlur: async (e) => set_username(e.currentTarget.value),
+    placeholder: "Username",
+    size: "small",
+    value: username,
+    variant: "outlined"
+  })), /* @__PURE__ */ h(Box, {
+    className: classes.update_button_container
+  }, /* @__PURE__ */ h(Button, {
+    className: classes.update_button,
     disabled: !username || is_saving,
     onClick: update_username,
-    value: `${need_to_set_user_name ? "Set" : "Change"} username`
-  }), /* @__PURE__ */ h("br", null), is_saving && "Saving...", save_state === "success" && "Saved.", /* @__PURE__ */ h("br", null), !need_to_set_user_name && /* @__PURE__ */ h("input", {
-    type: "button",
+    variant: "contained"
+  }, need_to_set_user_name ? "Set" : "Change", " username")), /* @__PURE__ */ h(Box, null, !need_to_set_user_name && /* @__PURE__ */ h(Button, {
+    variant: "contained",
     onClick: () => {
       on_close();
       set_postgrest_error(null);
-    },
-    value: "Close"
-  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
+    }
+  }, "Close"))), is_saving && "Saving...", save_state === "success" && "Saved.", /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
     error: postgrest_error
   }));
 }
+const use_styles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignContent: "center"
+  },
+  username_input: {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0
+  },
+  update_button_container: {
+    flexGrow: 1,
+    textAlign: "left",
+    marginLeft: 15
+  },
+  update_button: {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0
+  }
+}));
 export const UserAccountInfoChangeUsernameForm = connector(_UserAccountInfoChangeUsernameForm);

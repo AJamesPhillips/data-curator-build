@@ -1,8 +1,9 @@
-export function parse_dates(o) {
+export function parse_base_dates(o) {
   return {
     ...o,
     created_at: new Date(o.created_at),
     custom_created_at: optional_date(o.custom_created_at),
+    modified_at: optional_date(o.modified_at),
     datetime: optional_datetime_temporal_uncertainty(o.datetime || {})
   };
 }

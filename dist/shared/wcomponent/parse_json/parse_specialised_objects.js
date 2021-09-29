@@ -1,4 +1,4 @@
-import {parse_dates} from "./parse_dates.js";
+import {parse_base_dates} from "./parse_dates.js";
 import {parse_knowledge_view} from "./parse_knowledge_view.js";
 import {parse_wcomponent} from "./parse_wcomponent.js";
 export function parse_specialised_objects_fromto_server(data) {
@@ -31,4 +31,4 @@ export function parse_specialised_objects_fromto_server(data) {
   };
   return specialised_objects;
 }
-const parse_perception = (perception) => parse_dates(perception);
+const parse_perception = (perception) => parse_base_dates(perception);

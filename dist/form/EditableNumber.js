@@ -29,7 +29,9 @@ function _EditableNumber(props) {
     className: class_name
   }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: props.placeholder,
+    size: props.size || "small",
     value,
+    select_all_on_focus: true,
     conditional_on_change: (new_value) => {
       if (!conditional_on_change)
         return;
@@ -48,8 +50,7 @@ function _EditableNumber(props) {
       if (!always_on_blur)
         return;
       handle_blur({value: value2, default_value_when_invalid, on_blur: always_on_blur, allow_undefined});
-    },
-    size: "small"
+    }
   }));
 }
 export const EditableNumber = connector(_EditableNumber);

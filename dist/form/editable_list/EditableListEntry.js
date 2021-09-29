@@ -58,7 +58,7 @@ export class EditableListEntry extends Component {
     }, get_details2 && get_details2(item, crud)), /* @__PURE__ */ h("div", null, on_delete && /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
       on_delete,
       button_text: delete_button_text
-    }), (get_created_at || get_custom_created_at) && /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(EditableCustomDateTime, {
+    }), /* @__PURE__ */ h("br", null), (get_created_at || get_custom_created_at) && /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(EditableCustomDateTime, {
       title: "Created at",
       invariant_value: get_created_at && get_created_at(item),
       value: custom_created_at,

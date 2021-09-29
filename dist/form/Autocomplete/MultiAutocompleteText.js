@@ -5,6 +5,7 @@ import {ACTIONS} from "../../state/actions.js";
 import {AutocompleteText} from "./AutocompleteText.js";
 import {SelectedOption} from "./SelectedOption.js";
 import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
+import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 const map_state = (state, own_props) => ({
   editable: own_props.always_allow_editing || !state.display_options.consumption_formatting
 });
@@ -14,9 +15,12 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _MultiAutocompleteText(props) {
   const {editable, options, selected_option_ids} = props;
-  const filtered_options = options.filter(({id}) => !selected_option_ids.includes(id));
-  const option_by_id = {};
-  options.forEach((option) => option_by_id[option.id] = option);
+  const filtered_options = useMemo(() => options.filter(({id}) => !selected_option_ids.includes(id)), [options, selected_option_ids]);
+  const option_by_id = useMemo(() => {
+    const inner_option_by_id = {};
+    options.forEach((option) => inner_option_by_id[option.id] = option);
+    return inner_option_by_id;
+  }, [options]);
   return /* @__PURE__ */ h(Box, {
     width: "100%",
     overflowX: "hidden"

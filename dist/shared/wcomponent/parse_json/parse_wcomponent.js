@@ -1,24 +1,28 @@
+import {
+  clean_base_object_of_sync_meta_fields
+} from "../../../state/sync/supabase/clean_base_object_for_supabase.js";
 import {get_new_VAP_id} from "../../utils/ids.js";
 import {
   wcomponent_has_validity_predictions,
-  wcomponent_has_existence_predictions,
   wcomponent_has_statev1_values,
   wcomponent_has_VAP_sets,
   wcomponent_has_event_at,
   wcomponent_is_plain_connection,
   wcomponent_has_started_stopped_at,
   wcomponent_is_process,
+  wcomponent_has_existence_predictions,
   wcomponent_is_action,
   wcomponent_is_goal
 } from "../interfaces/SpecialisedObjects.js";
-import {parse_dates, optional_date} from "./parse_dates.js";
+import {parse_base_dates, optional_date} from "./parse_dates.js";
 export function parse_wcomponent(wcomponent) {
+  wcomponent = clean_base_object_of_sync_meta_fields(wcomponent);
   wcomponent = upgrade_2021_05_19_process_actions(wcomponent);
   wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent);
   wcomponent = upgrade_2021_05_24_action(wcomponent);
   wcomponent = upgrade_2021_06_12_goal(wcomponent);
   wcomponent = {
-    ...parse_dates(wcomponent)
+    ...parse_base_dates(wcomponent)
   };
   if (wcomponent_has_validity_predictions(wcomponent)) {
     wcomponent.validity = wcomponent.validity.map(parse_prediction);
@@ -31,7 +35,7 @@ export function parse_wcomponent(wcomponent) {
     wcomponent.values_and_prediction_sets = VAP_sets && VAP_sets.map(parse_values_and_predictions_set);
   }
   if (wcomponent_has_event_at(wcomponent)) {
-    wcomponent.event_at = wcomponent.event_at.map(parse_dates);
+    wcomponent.event_at = wcomponent.event_at.map(parse_base_dates);
   }
   if (wcomponent_is_plain_connection(wcomponent)) {
     wcomponent.from_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.from_type);
@@ -118,6 +122,6 @@ function upgrade_2021_06_12_goal(wcomponent) {
   }
   return wcomponent;
 }
-const parse_prediction = (prediction) => parse_dates(prediction);
-const parse_values = (value) => parse_dates(value);
-const parse_values_and_predictions_set = (VAP_set) => parse_dates(VAP_set);
+const parse_prediction = (prediction) => parse_base_dates(prediction);
+const parse_values = (value) => parse_base_dates(value);
+const parse_values_and_predictions_set = (VAP_set) => parse_base_dates(VAP_set);
