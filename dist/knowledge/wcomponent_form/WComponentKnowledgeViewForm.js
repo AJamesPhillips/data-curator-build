@@ -1,4 +1,4 @@
-import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
+import {Box, FormControl, FormLabel, Slider} from "../../../snowpack/pkg/@material-ui/core.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
@@ -69,10 +69,29 @@ function _WComponentKnowledgeViewForm(props) {
       knowledge_view_id: knowledge_view_id2
     });
   }
-  return /* @__PURE__ */ h("div", null, !knowledge_view_entry && knowledge_view_id && /* @__PURE__ */ h("div", null, "Not present in this knowledge view", composed_knowledge_view_entry && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
+  return /* @__PURE__ */ h("div", null, knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, "Not present in this knowledge view", composed_knowledge_view_entry && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
     value: "Add to current knowledge view",
     extra_class_names: "left",
     onClick: () => update(knowledge_view_id)
+  })), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h(FormControl, {
+    component: "fieldset",
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(FormLabel, {
+    component: "legend"
+  }, "Size"), /* @__PURE__ */ h(Slider, {
+    color: "secondary",
+    defaultValue: 1,
+    marks: true,
+    min: 0.25,
+    max: 2,
+    onChange: (e, val) => {
+      knowledge_view_entry.s = val;
+      update(knowledge_view_id);
+    },
+    step: 0.25,
+    value: knowledge_view_entry.s ? knowledge_view_entry.s : 1,
+    valueLabelDisplay: "on"
   })), composed_knowledge_view_entry && /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
@@ -85,7 +104,7 @@ function _WComponentKnowledgeViewForm(props) {
     wcomponent_id: wcomponent.id,
     wcomponent_current_kv_entry: composed_knowledge_view_entry,
     is_highlighted: true
-  }))), editing && knowledge_view_id && knowledge_view_entry && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  }))), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Remove from knowledge view",
     tooltip_text: "Remove from current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => delete_entry(knowledge_view_id)

@@ -11,6 +11,7 @@ const default_VAP = {
 const possible_d3_dice_rolling = {
   id: "",
   created_at: d0,
+  base_id: -1,
   type: "statev2",
   subtype: "other",
   title: "Possible value of D3 roll: ${value}",
@@ -18,8 +19,8 @@ const possible_d3_dice_rolling = {
   values_and_prediction_sets: [
     {
       id: "1",
-      version: 1,
       created_at: d0,
+      base_id: -1,
       datetime: {},
       entries: [
         {...default_VAP, value: "1", relative_probability: 0.8},
@@ -32,8 +33,8 @@ const possible_d3_dice_rolling = {
     },
     {
       id: "2",
-      version: 2,
-      created_at: d0,
+      created_at: d1,
+      base_id: -1,
       datetime: {},
       entries: [
         {...default_VAP, relative_probability: 1},
@@ -46,6 +47,7 @@ const possible_d3_dice_rolling = {
 const Person_A_rolled_a_2_on_a_d3_dice = {
   id: "890",
   created_at: d1,
+  base_id: -1,
   type: "event",
   title: "Person A rolled a 2 on a d3 dice",
   description: ""
@@ -53,6 +55,7 @@ const Person_A_rolled_a_2_on_a_d3_dice = {
 const specific_dice_roll = {
   id: "",
   created_at: d0,
+  base_id: -1,
   type: "statev2",
   subtype: "other",
   title: "Possible value of D3 roll: ${value}",
@@ -60,8 +63,8 @@ const specific_dice_roll = {
   values_and_prediction_sets: [
     {
       id: "1",
-      version: 1,
       created_at: d0,
+      base_id: -1,
       datetime: {
         min: d0,
         explanation: "We think Person A will roll the dice at some point in the future but we don't know when"
@@ -78,8 +81,8 @@ const specific_dice_roll = {
     },
     {
       id: "2",
-      version: 1,
       created_at: d1,
+      base_id: -1,
       datetime: {value: d1},
       shared_entry_values: {
         explanation: `@@${Person_A_rolled_a_2_on_a_d3_dice.id}`

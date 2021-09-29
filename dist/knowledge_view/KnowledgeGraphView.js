@@ -1,9 +1,9 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
 import {WComponentCanvasConnection} from "../knowledge/WComponentCanvasConnection.js";
 import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
 import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
-import {connect} from "../../snowpack/pkg/react-redux.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;
@@ -38,7 +38,7 @@ const no_children = [];
 const get_children = (props) => {
   const {ready} = props;
   let {wcomponent_nodes} = props;
-  if (!ready || !wcomponent_nodes)
+  if (!ready || wcomponent_nodes.length === 0)
     return no_children;
   const elements = wcomponent_nodes.map(({id}) => /* @__PURE__ */ h(WComponentCanvasNode, {
     key: id,

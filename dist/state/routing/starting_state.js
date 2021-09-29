@@ -8,7 +8,7 @@ export function get_routing_starting_state() {
     zoom: 100,
     x: 0,
     y: 0,
-    storage_location: "",
+    storage_location: void 0,
     created_at_datetime: now,
     created_at_ms: now_ms,
     sim_datetime: now,

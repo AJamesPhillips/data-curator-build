@@ -15,6 +15,7 @@ const default_VAP = {
 const political_pressure_on_state_dph = {
   id: "a",
   created_at: april20th,
+  base_id: -1,
   type: "statev2",
   subtype: "boolean",
   title: "Political pressure ${value}",
@@ -24,8 +25,8 @@ const political_pressure_on_state_dph = {
   values_and_prediction_sets: [
     {
       id: "1",
-      version: 1,
       created_at: april20th,
+      base_id: -1,
       datetime: {
         value: feb12th
       },
@@ -42,8 +43,8 @@ const political_pressure_on_state_dph = {
     },
     {
       id: "1",
-      version: 2,
       created_at: april21st,
+      base_id: -1,
       datetime: {
         value: feb12th
       },
@@ -62,6 +63,7 @@ const political_pressure_on_state_dph = {
 const state_dph_mis_reporting = {
   id: "a",
   created_at: april20th,
+  base_id: -1,
   type: "statev2",
   subtype: "boolean",
   title: "State DPH ${value} fradulently increase test count",
@@ -71,8 +73,8 @@ const state_dph_mis_reporting = {
   values_and_prediction_sets: [
     {
       id: "1",
-      version: 1,
       created_at: april20th,
+      base_id: -1,
       datetime: {
         value: feb12th,
         max: april1st
@@ -89,8 +91,8 @@ const state_dph_mis_reporting = {
     },
     {
       id: "1",
-      version: 2,
       created_at: april28th,
+      base_id: -1,
       datetime: {
         value: feb12th,
         max: april1st
@@ -110,6 +112,7 @@ const state_dph_mis_reporting = {
 const number_of_tests = {
   id: "123",
   created_at: march1st,
+  base_id: -1,
   type: "state",
   title: "Number of tests in region _a_",
   description: "",
@@ -117,6 +120,7 @@ const number_of_tests = {
     {
       id: "",
       created_at: march1st,
+      base_id: -1,
       start_datetime: march1st,
       description: "As reported by news outlet ABC here: http://...",
       value: "10"
@@ -124,6 +128,7 @@ const number_of_tests = {
     {
       id: "",
       created_at: april1st,
+      base_id: -1,
       start_datetime: march1st,
       description: "Official figure from http://...",
       value: "30"
@@ -131,6 +136,7 @@ const number_of_tests = {
     {
       id: "",
       created_at: april1st,
+      base_id: -1,
       start_datetime: april1st,
       description: "Official figure from http://...",
       value: "50"
@@ -140,6 +146,7 @@ const number_of_tests = {
 const number_of_testsv2 = {
   id: "123",
   created_at: march1st,
+  base_id: -1,
   type: "statev2",
   subtype: "number",
   title: "Number of tests in region _a_",
@@ -147,8 +154,8 @@ const number_of_testsv2 = {
   values_and_prediction_sets: [
     {
       id: "1",
-      version: 1,
       created_at: march1st,
+      base_id: -1,
       datetime: {
         value: march1st
       },
@@ -165,8 +172,8 @@ const number_of_testsv2 = {
     },
     {
       id: "1",
-      version: 2,
       created_at: april1st,
+      base_id: -1,
       datetime: {
         value: march1st
       },
@@ -191,8 +198,8 @@ const number_of_testsv2 = {
     },
     {
       id: "2",
-      version: 1,
       created_at: april1st,
+      base_id: -1,
       datetime: {
         value: april1st
       },
@@ -210,8 +217,8 @@ const number_of_testsv2 = {
     },
     {
       id: "1",
-      version: 3,
       created_at: april20th,
+      base_id: -1,
       datetime: {
         value: march1st
       },
@@ -239,8 +246,8 @@ const number_of_testsv2 = {
     },
     {
       id: "2",
-      version: 2,
       created_at: april20th,
+      base_id: -1,
       datetime: {
         value: april1st
       },

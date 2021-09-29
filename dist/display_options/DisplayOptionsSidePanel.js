@@ -9,13 +9,13 @@ const map_state = (state) => ({
   validity_filter: state.display_options.validity_filter,
   certainty_formatting: state.display_options.certainty_formatting,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
-  display_created_at_time_slider: state.controls.display_created_at_time_slider
+  display_time_sliders: state.controls.display_time_sliders
 });
 const map_dispatch = {
   set_validity_filter: ACTIONS.display.set_validity_filter,
   set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
   set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
-  set_display_created_at_time_slider: ACTIONS.controls.set_display_created_at_time_slider
+  set_display_time_sliders: ACTIONS.controls.set_display_time_sliders
 };
 const connector = connect(map_state, map_dispatch);
 function _DisplayOptionsSidePanel(props) {
@@ -64,10 +64,10 @@ function _DisplayOptionsSidePanel(props) {
     }
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("h3", null, "Controls"), /* @__PURE__ */ h("p", {
     className: "section"
-  }, /* @__PURE__ */ h("b", null, 'Whilst presenting, display time slider for "created at time"'), /* @__PURE__ */ h(EditableCheckbox, {
-    value: props.display_created_at_time_slider,
-    on_change: (display_created_at_time_slider) => {
-      props.set_display_created_at_time_slider(display_created_at_time_slider);
+  }, /* @__PURE__ */ h("b", null, 'Whilst presenting, display time sliders for "created at" and "simulated" time'), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.display_time_sliders,
+    on_change: (display_time_sliders) => {
+      props.set_display_time_sliders(display_time_sliders);
     }
   })));
 }

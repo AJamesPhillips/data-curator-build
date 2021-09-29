@@ -25,10 +25,12 @@ function _EditableTextCommon(props) {
     always_on_blur,
     disabled,
     presenting,
+    always_allow_editing,
+    select_all_on_focus,
     force_focus,
     set_editing_text_flag
   } = props;
-  if (!user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting) {
+  if (!user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting && !always_allow_editing) {
     const class_name2 = disabled ? "disabled" : "";
     return /* @__PURE__ */ h("div", {
       className: class_name2
@@ -46,7 +48,7 @@ function _EditableTextCommon(props) {
     handle_text_field_render({id_insertion_point, on_focus_set_selection, el, force_focus});
   };
   const on_focus = (e) => {
-    handle_text_field_focus({e, set_editing_text_flag});
+    handle_text_field_focus({e, set_editing_text_flag, select_all_on_focus});
   };
   const wrapped_conditional_on_change = (e) => {
     if (id_insertion_point !== void 0)
@@ -93,6 +95,10 @@ function handle_text_field_render(args) {
 }
 function handle_text_field_focus(args) {
   args.set_editing_text_flag(true);
+  if (args.select_all_on_focus) {
+    const el = args.e.currentTarget;
+    el.setSelectionRange(0, el.value.length);
+  }
 }
 function handle_text_field_change(args) {
   const id_insertion_point = get_id_insertion_point(args.e.currentTarget);

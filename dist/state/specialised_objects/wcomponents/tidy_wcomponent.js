@@ -6,7 +6,7 @@ import {
   wcomponent_has_VAP_sets,
   wcomponent_is_statev1
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_created_at_ms} from "../../../shared/wcomponent/utils_datetime.js";
+import {get_created_at_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 export function tidy_wcomponent(wcomponent) {
   if (wcomponent_has_validity_predictions(wcomponent)) {
     const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, "ascending");

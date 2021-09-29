@@ -1,23 +1,20 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
+import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 import "./KnowledgeTimeView.css.proxy.js";
 import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
 import {MainArea} from "../layout/MainArea.js";
-import {connect} from "../../snowpack/pkg/react-redux.js";
 import {sort_list} from "../shared/utils/sort.js";
 import {wcomponent_has_VAP_sets} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_created_at_ms, get_sim_datetime_ms} from "../shared/wcomponent/utils_datetime.js";
-import {Box} from "../../snowpack/pkg/@material-ui/core.js";
+import {get_created_at_ms, get_sim_datetime_ms} from "../shared/utils_datetime/utils_datetime.js";
 import {ConnectedValueAndPredictionSetSummary} from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;
   if (ready && !current_composed_knowledge_view)
-    console.log(`No current_composed_knowledge_view`);
+    console.log("No current_composed_knowledge_view");
   const {selected_wcomponent_ids_map} = state.meta_wcomponents;
-  const cdate = new Date(state.routing.args.created_at_ms);
-  const sdate = new Date(state.routing.args.sim_ms);
-  const minute_time_resolution = "minute";
-  const default_time_resolution = "day";
+  const {created_at_ms, sim_ms} = state.routing.args;
   let wcomponent_nodes = [];
   if (current_composed_knowledge_view) {
     wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes;
@@ -28,9 +25,8 @@ const map_state = (state) => {
     wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
     presenting: state.display_options.consumption_formatting,
     selected_wcomponent_ids_map,
-    cdate,
-    sdate,
-    time_resolution: default_time_resolution
+    created_at_ms,
+    sim_ms
   };
 };
 const connector = connect(map_state);
@@ -46,10 +42,10 @@ class DateRange {
     this.timeline_spacing = true;
     if (dates.length === 0)
       return;
-    this.time_resolution = props.time_resolution;
+    this.time_resolution = "day";
     this.scale = this.time_resolution + "s";
-    this.cdate = props.cdate;
-    this.sdate = props.sdate;
+    this.cdate = new Date(props.created_at_ms);
+    this.sdate = new Date(props.sim_ms);
     this.dates = dates.sort((a, b) => a.getTime() - b.getTime());
   }
   _ms(ms, convert = true) {
@@ -80,34 +76,34 @@ class DateRange {
     return this.scales.indexOf(this.scale);
   }
   increment(date, count = 1, scale = this.scale) {
-    let new_date = new Date(date.getTime());
-    let fn = this.get_date_prop_func_names(scale);
+    const new_date = new Date(date.getTime());
+    const fn = this.get_date_prop_func_names(scale);
     Object(new_date)[fn.set](Object(new_date)[fn.get]() + count);
     return new_date;
   }
   get range_dates() {
     const dates = [];
     const end_date = this.round_date(this.increment(this.end_date, 1), true, this.scale);
-    let current_date = this.round_date(this.increment(this.start_date, -1), false, this.scale);
+    const current_date = this.round_date(this.increment(this.start_date, -1), false, this.scale);
     dates.push(current_date);
     dates.push(end_date);
     return dates;
   }
   get start_date() {
-    const d = this.dates.slice(0)[0];
-    return typeof d === typeof new Date() ? d : new Date();
+    const d = this.dates.first();
+    return ensure_date(d);
   }
   get end_date() {
-    const d = this.dates.slice(-1)[0];
-    return typeof d === typeof new Date() ? d : new Date();
+    const d = this.dates.last();
+    return ensure_date(d);
   }
   get range_start_date() {
-    const d = this.range_dates.slice(0)[0];
-    return typeof d === typeof new Date() ? d : new Date();
+    const d = this.range_dates.first();
+    return ensure_date(d);
   }
   get range_end_date() {
-    const d = this.range_dates.slice(-1)[0];
-    return typeof d === typeof new Date() ? d : new Date();
+    const d = this.range_dates.last();
+    return ensure_date(d);
   }
   get_date_offset_percent(date) {
     let percent = 0;
@@ -142,7 +138,7 @@ class DateRange {
     };
   }
   round_date(date, round_up = false, scale = this.scale) {
-    let rounded_date = new Date(date.getTime());
+    const rounded_date = new Date(date.getTime());
     this.scales.forEach((scale2, i) => {
       const date_prop_fns = this.get_date_prop_func_names(scale2);
       const adjusted_value = scale2 === "days" ? 1 : 0;
@@ -168,8 +164,8 @@ class DateRange {
   render(wcomponent_nodes) {
     if (wcomponent_nodes.length === 0)
       return;
-    let current_date = new Date(this.range_start_date.getTime());
-    let all_range_dates = [];
+    const current_date = new Date(this.range_start_date.getTime());
+    const all_range_dates = [];
     all_range_dates.push(new Date(current_date.getTime()));
     while (current_date.getTime() <= this.range_end_date.getTime()) {
       let fns = this.get_date_prop_func_names(this.scale);
@@ -177,7 +173,7 @@ class DateRange {
       Object(current_date)[fns.set](current_value + 1);
       all_range_dates.push(new Date(current_date.getTime()));
     }
-    let max_width = this.timeline_spacing ? `${100 + all_range_dates.length * 1.42}%` : "100%";
+    const max_width = this.timeline_spacing ? `${100 + all_range_dates.length * 1.42}%` : "100%";
     return /* @__PURE__ */ h(Box, {
       id: "knowledge_time_view",
       className: `time_view scroll_area_x ${this.scale} ${this.timeline_spacing ? "timeline_spacing" : "event_spacing"}`,
@@ -351,3 +347,6 @@ const no_svg_upper_children = [];
 const get_svg_upper_children = ({wcomponent_connections}) => {
   return null;
 };
+function ensure_date(date) {
+  return date instanceof Date ? date : new Date();
+}

@@ -15,8 +15,7 @@ export const syncing_reducer = (state, action) => {
       specialised_objects: {
         perceptions_by_id,
         wcomponents_by_id,
-        knowledge_views_by_id,
-        wcomponent_ids_deleted: new Set()
+        knowledge_views_by_id
       }
     };
   }
@@ -26,8 +25,7 @@ export const syncing_reducer = (state, action) => {
       specialised_objects: {
         perceptions_by_id: {},
         wcomponents_by_id: {},
-        knowledge_views_by_id: {},
-        wcomponent_ids_deleted: new Set()
+        knowledge_views_by_id: {}
       }
     };
   }

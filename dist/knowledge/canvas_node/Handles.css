@@ -4,8 +4,9 @@
   top: 0;
   right: auto;
   bottom: auto;
-  left: -12px;
+  left: -24px;
   font-size: 1em;
+  width: 25px;
 }
 
 .node_handle {
@@ -13,7 +14,6 @@
   min-width: 1.5em;
   border-radius: 3px;
   transition: background-color 0.2s, color 0.2s;
-  text-align: center;
   cursor: pointer;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .node_handle.movement {
-  left: 0.5em;
+  cursor: move;
 }
 
 .node_handle.explore.has_nested_knowledge_view {

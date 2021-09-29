@@ -29,7 +29,7 @@ export function routing_args_to_string(routing_args) {
     sdate: date2str(routing_args.sim_datetime, "yyyy-MM-dd"),
     stime: date2str(routing_args.sim_datetime, "hh:mm:ss")
   };
-  const routing_args_str = Object.keys(routing_args).filter((k) => !exclude_routing_keys.has(k)).sort().concat(["sdate", "stime", "cdate", "ctime"]).map((key) => `&${key}=${data[key]}`).join("");
+  const routing_args_str = Object.keys(routing_args).filter((k) => !exclude_routing_keys.has(k)).sort().concat(["sdate", "stime", "cdate", "ctime"]).map((key) => `&${key}=${data[key] ?? ""}`).join("");
   return routing_args_str;
 }
 export function merge_route_params_prioritising_url_over_state(url, routing_state) {
@@ -91,11 +91,15 @@ function update_args_with_value(args, key, value) {
   else if (key === "subview_id")
     args.subview_id = value;
   else if (key === "storage_location")
-    args.storage_location = value;
+    args.storage_location = parse_int_or_undefined(value);
 }
 const ROUTING_ARGS_WHICH_ARE_NUMBERS = new Set(["x", "y", "zoom"]);
 function routing_arg_is_a_number(key) {
   return ROUTING_ARGS_WHICH_ARE_NUMBERS.has(key);
+}
+function parse_int_or_undefined(val) {
+  const int = parseInt(val);
+  return Number.isNaN(int) ? void 0 : int;
 }
 function run_tests() {
   console.log("running tests of routing_state_to_string");
@@ -111,7 +115,7 @@ function run_tests() {
       zoom: 100,
       x: 101,
       y: 158,
-      storage_location: "",
+      storage_location: void 0,
       created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
       created_at_ms: 1603299864e3,
       sim_datetime: new Date("2021-04-26T09:23:13.000Z"),

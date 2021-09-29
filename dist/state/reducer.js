@@ -15,8 +15,7 @@ import {search_reducer} from "./search/actions_reducer.js";
 import {derived_meta_wcomponents_state_reducer} from "./specialised_objects/meta_wcomponents/selecting/derived.js";
 import {specialised_objects_reducer} from "./specialised_objects/reducer.js";
 import {statements_reducer} from "./statements.js";
-import {sync_reducer} from "./sync/actions_reducer.js";
-import {backup_reducer} from "./sync/backup/actions_reducer.js";
+import {sync_reducer} from "./sync/reducer.js";
 import {user_activity_reducer} from "./user_activity/reducer.js";
 import {user_info_reducer} from "./user_info/reducer.js";
 export const root_reducer = (state, action) => {
@@ -37,7 +36,6 @@ export const root_reducer = (state, action) => {
   state = filter_context_reducer(state, action);
   state = user_activity_reducer(state, action);
   state = user_info_reducer(state, action);
-  state = backup_reducer(state, action);
   state = search_reducer(state, action);
   state = {...state, last_action: action};
   state = derived_state_reducer(initial_state, state);

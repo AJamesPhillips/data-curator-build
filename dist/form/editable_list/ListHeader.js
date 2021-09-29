@@ -6,7 +6,10 @@ export function ListHeader(props) {
     other_content = () => null
   } = props;
   return /* @__PURE__ */ h("div", {
-    onClick: on_click_header,
+    onClick: (e) => {
+      e.stopImmediatePropagation();
+      on_click_header && on_click_header();
+    },
     style: {cursor: on_click_header ? "pointer" : "default"}
   }, other_content(), /* @__PURE__ */ h("div", {
     className: "item_descriptors"

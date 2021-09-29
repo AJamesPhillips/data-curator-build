@@ -48,7 +48,8 @@ function _EditableNumber(props) {
       if (!always_on_blur)
         return;
       handle_blur({value: value2, default_value_when_invalid, on_blur: always_on_blur, allow_undefined});
-    }
+    },
+    size: "small"
   }));
 }
 export const EditableNumber = connector(_EditableNumber);

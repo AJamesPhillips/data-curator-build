@@ -1,7 +1,7 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
-import {get_uncertain_datetime} from "../../shared/utils/datetime.js";
+import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
 import {date2str_auto, get_today_date} from "../../shared/utils/date_helpers.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {ACTION_OPTIONS, get_action_status_of_VAP_set} from "../../shared/wcomponent/value_and_prediction/actions_value.js";
@@ -10,20 +10,21 @@ import {get_details2_for_single_VAP_set, get_details_for_single_VAP_set, get_sum
 import {prepare_new_VAP_set_entries} from "./utils.js";
 export const new_value_and_prediction_set = (VAPs_represent) => {
   const [show_advanced, set_show_advanced] = useState(false);
-  return (VAP_set, on_change) => {
+  return (VAP_set, crud) => {
+    const {update_item} = crud;
     return /* @__PURE__ */ h("div", null, VAPs_represent === VAPsType.boolean && /* @__PURE__ */ h(SimplifiedBooleanForm, {
       VAP_set,
-      on_change
+      on_change: update_item
     }), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(SimplifiedActionForm, {
       VAP_set,
-      on_change
+      on_change: update_item
     }), /* @__PURE__ */ h(SimplifiedDatetimeForm, {
       VAP_set,
-      on_change
+      on_change: update_item
     }), /* @__PURE__ */ h(Button, {
       value: (show_advanced ? "Hide" : "Show") + " advanced options",
       onClick: () => set_show_advanced(!show_advanced)
-    }), show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null), get_summary_for_single_VAP_set(VAPs_represent, false, void 0)(VAP_set, on_change), get_details_for_single_VAP_set(VAPs_represent)(VAP_set, on_change), get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, on_change)));
+    }), show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null), get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud), get_details_for_single_VAP_set(VAPs_represent)(VAP_set, crud), get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)));
   };
 };
 function SimplifiedBooleanForm(props) {

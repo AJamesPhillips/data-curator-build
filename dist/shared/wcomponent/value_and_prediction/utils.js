@@ -1,53 +1,35 @@
-import {make_graph, find_leaf_groups} from "../../utils/graph.js";
 import {sort_list} from "../../utils/sort.js";
 import {VAPsType} from "../interfaces/generic_value.js";
 import {wcomponent_is_action, wcomponent_is_statev2} from "../interfaces/SpecialisedObjects.js";
-import {get_created_at_ms, get_sim_datetime} from "../utils_datetime.js";
-const get_id = (VAP_set) => `${VAP_set.id}.${VAP_set.version}`;
-const get_head_ids = (VAP_set) => [];
-const get_tail_ids = (VAP_set) => {
-  return VAP_set.version > 1 ? [get_id({...VAP_set, version: VAP_set.version - 1})] : [];
-};
-export function group_VAP_sets_by_version(VAP_sets) {
-  const graph = make_graph({items: VAP_sets, get_id, get_head_ids, get_tail_ids});
-  const groups = find_leaf_groups({graph});
-  const versioned = groups.map((group) => {
-    return {
-      latest: group[0],
-      older: group.slice(1)
-    };
-  });
-  return versioned;
-}
-export function sort_grouped_VAP_sets(grouped_VAP_sets) {
-  const get_sort_key = (grouped_VAP_set) => {
-    return get_VAP_datetime_sort_key(grouped_VAP_set.latest);
+import {get_created_at_ms, partition_items_by_created_at_datetime} from "../../utils_datetime/utils_datetime.js";
+import {
+  partition_and_sort_by_uncertain_event_datetimes
+} from "../../utils_datetime/partition_by_uncertain_datetime.js";
+export function partition_and_prune_items_by_datetimes_and_versions(args) {
+  const result = partition_items_by_created_at_datetime(args);
+  const {latest, previous_versions_by_id} = group_versions_by_id(result.current_items);
+  const partition_by_temporal = partition_and_sort_by_uncertain_event_datetimes({items: latest, sim_ms: args.sim_ms});
+  return {
+    invalid_future_items: result.invalid_future_items,
+    ...partition_by_temporal,
+    previous_versions_by_id
   };
-  return sort_list(grouped_VAP_sets, get_sort_key, "descending");
 }
-export function ungroup_VAP_sets_by_version(grouped_VAP_sets) {
-  const VAP_sets = [];
-  grouped_VAP_sets.forEach((grouped_VAP_set) => {
-    VAP_sets.push(grouped_VAP_set.latest, ...grouped_VAP_set.older);
+function group_versions_by_id(items) {
+  const by_id = {};
+  items.forEach((item) => {
+    const sub_items = by_id[item.id] || [];
+    sub_items.push(item);
+    by_id[item.id] = sub_items;
   });
-  return VAP_sets;
-}
-export function get_latest_versions_of_VAP_sets(VAP_sets) {
-  const graph = make_graph({items: VAP_sets, get_id, get_head_ids, get_tail_ids});
-  const groups = find_leaf_groups({graph});
-  const versioned = groups.map((group) => {
-    return {
-      latest: group[0],
-      older: group.slice(1)
-    };
+  const previous_versions_by_id = {};
+  const latest = Object.values(by_id).map((sub_items) => {
+    const sorted = sort_list(sub_items, get_created_at_ms, "descending");
+    const latest2 = sorted[0];
+    previous_versions_by_id[latest2.id] = sorted.slice(1);
+    return latest2;
   });
-  return versioned;
-}
-function get_VAP_datetime_sort_key(VAP) {
-  const dt = get_sim_datetime(VAP);
-  if (dt !== void 0)
-    return dt.getTime();
-  return get_created_at_ms(VAP);
+  return {latest, previous_versions_by_id};
 }
 export function get_VAPs_ordered_by_prob(VAPs, VAPs_represent) {
   const first_VAP = VAPs[0];

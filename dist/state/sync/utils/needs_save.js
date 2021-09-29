@@ -1,12 +1,20 @@
-export function needs_save(state, last_attempted_state_to_save) {
-  return !last_attempted_state_to_save || last_attempted_state_to_save.specialised_objects !== state.specialised_objects;
+export function needs_save(state) {
+  const {wcomponent_ids, knowledge_view_ids} = state.sync.specialised_object_ids_pending_save;
+  return wcomponent_ids.size + knowledge_view_ids.size > 0;
 }
-export function get_specialised_state_to_save(state) {
-  const specialised_state = {
-    perceptions: state.derived.perceptions,
-    wcomponents: state.derived.wcomponents,
-    knowledge_views: state.derived.knowledge_views,
-    wcomponent_ids_to_delete: state.specialised_objects.wcomponent_ids_deleted
-  };
-  return specialised_state;
+export function get_next_specialised_state_id_to_save(state) {
+  const {wcomponent_ids, knowledge_view_ids} = state.sync.specialised_object_ids_pending_save;
+  const knowledge_view_ids_iterator = knowledge_view_ids.values();
+  const knowledge_view_id = knowledge_view_ids_iterator.next();
+  if (!knowledge_view_id.done) {
+    const id = knowledge_view_id.value;
+    return {id, object_type: "knowledge_view"};
+  }
+  const wcomponent_ids_iterator = wcomponent_ids.values();
+  const wcomponent_id = wcomponent_ids_iterator.next();
+  if (!wcomponent_id.done) {
+    const id = wcomponent_id.value;
+    return {id, object_type: "wcomponent"};
+  }
+  return void 0;
 }

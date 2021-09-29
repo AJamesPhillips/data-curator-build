@@ -195,6 +195,7 @@ function get_options_to_display(temp_value_str, allow_none, options, prepared_ta
     else
       return {options, search_type_used};
   }
+  let option_to_exact_score = (option) => 0;
   let option_to_score = (option) => 0;
   let exact_results = 0;
   if (search_type === "best" || search_type === "exact") {
@@ -203,9 +204,9 @@ function get_options_to_display(temp_value_str, allow_none, options, prepared_ta
     exact_results = results.length;
     const id_num_to_score = {};
     results.forEach((id, index) => id_num_to_score[id] = 1e4 - index);
-    option_to_score = (o) => id_num_to_score[o.id_num] || -1e4;
+    option_to_exact_score = (o) => id_num_to_score[o.id_num] || -1e4;
   }
-  if (exact_results === 0 && (search_type === "best" || search_type === "fuzzy")) {
+  if (exact_results < 10 && (search_type === "best" || search_type === "fuzzy")) {
     search_type_used = "fuzzy";
     const search_options = {
       limit: 100,
@@ -217,9 +218,10 @@ function get_options_to_display(temp_value_str, allow_none, options, prepared_ta
     results.forEach(({target, score}) => map_target_to_score[target] = score);
     option_to_score = (o) => {
       const score = map_target_to_score[o.limited_total_text];
-      return score === void 0 ? -1e4 : score;
+      return score === void 0 ? option_to_exact_score(o) : score;
     };
-  }
+  } else
+    option_to_score = option_to_exact_score;
   const filterd_options = threshold_minimum_score === false ? options : options.filter((o) => option_to_score(o) > threshold_minimum_score);
   const options_to_display = sort_list(filterd_options, option_to_score, "descending");
   return {options: options_to_display, search_type_used};

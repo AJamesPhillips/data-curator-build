@@ -12,7 +12,8 @@ import {Prioritisation} from "./Prioritisation.js";
 import {ACTIONS} from "../state/actions.js";
 import {PrioritisableGoal} from "./PrioritisableGoal.js";
 import {sort_list} from "../shared/utils/sort.js";
-import {get_created_at_ms} from "../shared/wcomponent/utils_datetime.js";
+import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
+import {selector_chosen_base_id} from "../state/user_info/selector.js";
 export function PrioritiesListView(props) {
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(PrioritiesListViewContent, null)
@@ -51,7 +52,8 @@ const map_state = (state) => {
     prioritisations,
     editing: !state.display_options.consumption_formatting,
     creation_context: state.creation_context,
-    selected_prioritisation
+    selected_prioritisation,
+    base_id: selector_chosen_base_id(state)
   };
 };
 const map_dispatch = {
@@ -59,9 +61,11 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _PrioritiesListViewContent(props) {
-  const {goals, prioritisations, editing, knowledge_view_id, selected_prioritisation} = props;
+  const {goals, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id} = props;
   const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals;
   const {potential_goals, prioritised_goals, deprioritised_goals} = partition_and_sort_goals(goals, goal_prioritisation_attributes);
+  if (base_id === void 0)
+    return /* @__PURE__ */ h("div", null, "No base id chosen");
   return /* @__PURE__ */ h("div", {
     className: "priorities_list_view_content"
   }, /* @__PURE__ */ h("div", {
@@ -83,7 +87,7 @@ function _PrioritiesListViewContent(props) {
     new_item_descriptor: "Prioritisation",
     on_pointer_down_new_list_entry: () => {
       create_wcomponent({
-        wcomponent: {type: "prioritisation", goals: goal_prioritisation_attributes || {}},
+        wcomponent: {base_id, type: "prioritisation", goals: goal_prioritisation_attributes || {}},
         creation_context: props.creation_context,
         add_to_knowledge_view: {
           id: knowledge_view_id,

@@ -56,7 +56,7 @@ function handle_bulk_remove_from_knowledge_view(state, action) {
     console.error("There should always be a current knowledge view if bulk editing (removing) positions of world components");
   } else {
     const new_wc_id_map = {...kv.wc_id_map};
-    wcomponent_ids.forEach((id) => delete new_wc_id_map[id]);
+    wcomponent_ids.forEach((id) => new_wc_id_map[id] = {...new_wc_id_map[id], deleted: true});
     const new_kv = {...kv, wc_id_map: new_wc_id_map};
     state = handle_upsert_knowledge_view(state, new_kv);
   }

@@ -14,8 +14,8 @@ import {
   sort_nested_knowledge_map_ids_by_priority_then_title
 } from "../accessors.js";
 import {get_wcomponent_ids_by_type} from "../../derived/get_wcomponent_ids_by_type.js";
-import {is_knowledge_view_id} from "../../../shared/utils/ids.js";
-import {get_sim_datetime_ms} from "../../../shared/wcomponent/utils_datetime.js";
+import {is_uuid_v4} from "../../../shared/utils/ids.js";
+import {get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 import {is_defined} from "../../../shared/utils/is_defined.js";
 export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id;
@@ -23,9 +23,9 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
     state = update_derived_knowledge_view_state(state);
   }
   let initial_kv_id = initial_state.routing.args.subview_id;
-  initial_kv_id = is_knowledge_view_id(initial_kv_id) ? initial_kv_id : "";
+  initial_kv_id = is_uuid_v4(initial_kv_id) ? initial_kv_id : "";
   let current_kv_id = state.routing.args.subview_id;
-  current_kv_id = is_knowledge_view_id(current_kv_id) ? current_kv_id : "";
+  current_kv_id = is_uuid_v4(current_kv_id) ? current_kv_id : "";
   const kv_object_id_changed = initial_kv_id !== current_kv_id;
   if (kv_object_id_changed) {
     state = update_substate(state, "derived", "current_composed_knowledge_view", void 0);
@@ -70,6 +70,7 @@ function get_knowledge_view(state, id) {
 }
 function update_current_composed_knowledge_view_state(state, current_kv) {
   const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id);
+  remove_deleted_wcomponents(composed_wc_id_map, state.specialised_objects.wcomponents_by_id);
   const wcomponent_ids = Object.keys(composed_wc_id_map);
   const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids);
   const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined);
@@ -100,12 +101,25 @@ export function get_composed_wc_id_map(knowledge_view, knowledge_views_by_id) {
   const foundation_knowledge_view_ids = knowledge_view.foundation_knowledge_view_ids || [];
   foundation_knowledge_view_ids.forEach((id) => {
     const new_kv = knowledge_views_by_id[id];
-    if (new_kv)
-      to_compose.push(new_kv.wc_id_map);
+    if (!new_kv)
+      return;
+    to_compose.push(new_kv.wc_id_map);
   });
   to_compose.push(knowledge_view.wc_id_map);
-  const composed_wc_id_map = Object.assign({}, ...to_compose);
+  const composed_wc_id_map = {};
+  to_compose.forEach((map) => {
+    Object.entries(map).forEach(([id, entry]) => !entry.deleted && (composed_wc_id_map[id] = entry));
+  });
   return composed_wc_id_map;
+}
+function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
+  Object.keys(composed_wc_id_map).forEach((id) => {
+    const wcomponent = wcomponents_by_id[id];
+    if (!wcomponent)
+      delete composed_wc_id_map[id];
+    else if (wcomponent.deleted_at)
+      delete composed_wc_id_map[id];
+  });
 }
 const invalid_node_types = new Set([
   "causal_link",

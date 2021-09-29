@@ -10,6 +10,9 @@ export function ListHeaderAddButton(props) {
     mb: 2
   }, /* @__PURE__ */ h(Button, {
     fullWidth: true,
-    onClick: () => on_pointer_down_new_list_entry()
+    onClick: (e) => {
+      e.stopImmediatePropagation();
+      on_pointer_down_new_list_entry();
+    }
   }, `New ${new_item_descriptor}`));
 }

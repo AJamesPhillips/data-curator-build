@@ -7,7 +7,8 @@ import {
   wcomponent_has_event_at,
   wcomponent_is_judgement_or_objective
 } from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_created_at_ms, get_tense_of_item} from "../shared/wcomponent/utils_datetime.js";
+import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
+import {get_tense_of_uncertain_datetime} from "../shared/utils_datetime/get_tense_of_uncertain_datetime.js";
 export function calc_wcomponent_should_display(args) {
   const {is_editing, force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters} = args;
   if (force_displaying || is_selected)
@@ -58,7 +59,7 @@ function get_certainty_for_wcomponent_event_at(args) {
   const event_prediction = event_at[0];
   if (!event_prediction)
     return void 0;
-  const tense = get_tense_of_item(event_prediction, sim_ms);
+  const tense = get_tense_of_uncertain_datetime(event_prediction, sim_ms);
   return tense === Tense.future ? 0 : 1;
 }
 export function calc_connection_wcomponent_should_display(args) {

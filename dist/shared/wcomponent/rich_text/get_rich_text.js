@@ -1,7 +1,10 @@
 import {test} from "../../utils/test.js";
 import {get_new_wcomponent_object} from "../get_new_wcomponent_object.js";
 import {get_wcomponent_state_UI_value} from "../get_wcomponent_state_UI_value.js";
-import {wcomponent_is_plain_connection, wcomponent_is_counterfactual_v2} from "../interfaces/SpecialisedObjects.js";
+import {
+  wcomponent_is_plain_connection,
+  wcomponent_is_counterfactual_v2
+} from "../interfaces/SpecialisedObjects.js";
 import {replace_function_ids_in_text} from "./replace_function_ids.js";
 import {replace_normal_ids} from "./replace_normal_ids.js";
 const DEFAULT_MAX_DEPTH_LIMIT = 3;
@@ -97,9 +100,9 @@ function test_replace_ids_in_text() {
     label_ids: []
   }};
   const wcomponents_by_id = {
-    "123": get_new_wcomponent_object({id: "123", title: "@@789 was told @@456 is here"}, creation_context),
-    "456": get_new_wcomponent_object({id: "456", title: "Person A"}, creation_context),
-    "789": get_new_wcomponent_object({id: "789", title: "Person B"}, creation_context)
+    "123": get_new_wcomponent_object({base_id: -1, id: "123", title: "@@789 was told @@456 is here"}, creation_context),
+    "456": get_new_wcomponent_object({base_id: -1, id: "456", title: "Person A"}, creation_context),
+    "789": get_new_wcomponent_object({base_id: -1, id: "789", title: "Person B"}, creation_context)
   };
   let result;
   const args = {
@@ -139,8 +142,8 @@ function test_rendering_title() {
   const get_statev2 = (args) => {
     const VAP_set = {
       id: "vps" + args.id,
-      version: 1,
       created_at: dt,
+      base_id: -1,
       datetime: {},
       entries: [{
         id: "VAP" + args.id,
@@ -153,6 +156,7 @@ function test_rendering_title() {
     };
     return get_new_wcomponent_object({
       ...args,
+      base_id: -1,
       type: "statev2",
       subtype: "boolean",
       values_and_prediction_sets: [VAP_set]
@@ -233,6 +237,7 @@ function test_rendering_title() {
           VAP333: {
             id: "wc999000",
             created_at: dt,
+            base_id: -1,
             title: "",
             description: "",
             type: "counterfactual",

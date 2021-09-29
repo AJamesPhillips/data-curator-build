@@ -1,5 +1,5 @@
-import {get_angle} from "../../utils/angles.js";
 import {bounded} from "../../shared/utils/bounded.js";
+import {get_angle} from "../../utils/angles.js";
 import {get_magnitude} from "../../utils/vector.js";
 import {get_angle_from_start_connector, get_angle_from_end_connector} from "./angles.js";
 import {get_connection_point} from "./terminal.js";

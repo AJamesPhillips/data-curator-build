@@ -1,9 +1,9 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
+import {Box, Breadcrumbs, MenuItem, Select, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {is_defined} from "../shared/utils/is_defined.js";
 import {ACTIONS} from "../state/actions.js";
-import {Box, Breadcrumbs, MenuItem, Select, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => {
   const kv_id = state.routing.args.subview_id;
   return {

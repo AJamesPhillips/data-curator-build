@@ -9,9 +9,9 @@ import {UncertainDateTime} from "../uncertainty/datetime.js";
 import {ValueAndPredictions} from "./ValueAndPredictions.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
 import {set_VAP_probabilities} from "./utils.js";
-export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at, VAP_counterfactuals_map) => (VAP_set, on_change) => {
+export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) => (VAP_set, crud) => {
   let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
-  VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map);
+  VAPs = merge_counterfactuals_into_VAPs(VAPs);
   VAP_set = {...VAP_set, entries: VAPs};
   const values = get_probable_VAP_set_values(VAP_set, VAPs_represent);
   const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + " %";
@@ -24,59 +24,48 @@ export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at, 
     conviction: conv
   });
 };
-export const get_details_for_single_VAP_set = (VAPs_represent, wcomponent_id, VAP_set_counterfactuals_map) => (VAP_set, on_change) => {
+export const get_details_for_single_VAP_set = (VAPs_represent) => (VAP_set, crud) => {
   const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
-  const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id];
   return /* @__PURE__ */ h("div", {
     className: "VAP_set_details"
   }, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(UncertainDateTime, {
     datetime: VAP_set.datetime,
-    on_change: (datetime) => on_change({...VAP_set, datetime})
-  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValueAndPredictions, {
-    wcomponent_id,
-    VAP_set_id: VAP_set.id,
-    created_at: get_custom_created_at(VAP_set) || get_created_at(VAP_set),
+    on_change: (datetime) => crud.update_item({...VAP_set, datetime})
+  }), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(ValueAndPredictions, {
     VAPs_represent,
     values_and_predictions: VAPs,
-    VAP_counterfactuals_map,
     update_values_and_predictions: (VAPs2) => {
       const vanilla_entries = merge_entries(VAPs2, VAP_set, VAPs_represent);
       const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent);
       const new_VAP_set = {...VAP_set, entries: entries_with_probabilities};
-      on_change(new_VAP_set);
+      crud.update_item(new_VAP_set);
     }
-  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null));
+  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("br", null));
 };
-export const get_details2_for_single_VAP_set = (VAPs_represent, editing) => (VAP_set, on_change) => {
+export const get_details2_for_single_VAP_set = (VAPs_represent, editing) => (VAP_set, crud) => {
   const shared_entry_values = VAP_set.shared_entry_values || {};
   const VAP_explanations = VAP_set.entries.map(({explanation: explanation2}) => explanation2.trim()).filter((explanation2) => explanation2).join("\n\n");
   const explanation = shared_entry_values.explanation || VAP_explanations || "";
   const conviction = shared_entry_values.conviction || 1;
+  const VAPs_not_boolean = VAPs_represent !== VAPsType.boolean;
   const display_explanation = !!(editing || explanation);
   return /* @__PURE__ */ h("div", {
     className: "shared_VAP_set_details"
-  }, /* @__PURE__ */ h("div", {
-    className: "row_one"
-  }, /* @__PURE__ */ h("div", {
-    className: "description_label"
-  }, display_explanation && "Explanation:"), VAPs_represent !== VAPsType.boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("div", {
-    className: "description_label",
-    style: {display: "inline"}
-  }, "Cn:"), "  ", /* @__PURE__ */ h(EditablePercentage, {
+  }, VAPs_not_boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditablePercentage, {
     disabled: false,
-    placeholder: "...",
+    placeholder: "Confidence",
     value: conviction,
     conditional_on_blur: (conviction2) => {
       const shared_entry_values2 = {...VAP_set.shared_entry_values, conviction: conviction2};
       const entries = VAP_set.entries.map((e) => ({...e, conviction: conviction2}));
-      on_change({...VAP_set, entries, shared_entry_values: shared_entry_values2});
+      crud.update_item({...VAP_set, entries, shared_entry_values: shared_entry_values2});
     }
-  }))), display_explanation && /* @__PURE__ */ h(EditableText, {
-    placeholder: "...",
+  })), display_explanation && /* @__PURE__ */ h(EditableText, {
+    placeholder: "Explanation",
     value: explanation,
     conditional_on_blur: (explanation2) => {
       const shared_entry_values2 = {...VAP_set.shared_entry_values, explanation: explanation2};
-      on_change({...VAP_set, shared_entry_values: shared_entry_values2});
+      crud.update_item({...VAP_set, shared_entry_values: shared_entry_values2});
     }
   }), /* @__PURE__ */ h("br", null));
 };

@@ -12,13 +12,13 @@ const _default_theme_options = {
   palette: {
     type: "light",
     primary: {
-      main: "#e0e0e0"
+      main: "#cecece"
     },
     secondary: {
       main: "#b3e5fc"
     },
     warning: {
-      main: "#f57c00"
+      main: "#e56717"
     },
     error: {
       main: "#b71c1c"

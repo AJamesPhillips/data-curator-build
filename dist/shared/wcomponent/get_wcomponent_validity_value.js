@@ -1,6 +1,6 @@
 import {wcomponent_has_validity_predictions} from "./interfaces/SpecialisedObjects.js";
-import {partition_and_prune_items_by_datetimes} from "./utils_datetime.js";
 import {calc_is_uncertain} from "./uncertainty_utils.js";
+import {partition_and_prune_items_by_datetimes_and_versions} from "./value_and_prediction/utils.js";
 const default_value = () => ({
   probabilities: [],
   is_defined: false,
@@ -15,7 +15,7 @@ export function get_wcomponent_validity_value(args) {
   const {wcomponent, created_at_ms, sim_ms} = args;
   if (!wcomponent_has_validity_predictions(wcomponent))
     return default_value();
-  const active_validity = partition_and_prune_items_by_datetimes({items: wcomponent.validity, created_at_ms, sim_ms}).present_items.last();
+  const active_validity = partition_and_prune_items_by_datetimes_and_versions({items: wcomponent.validity, created_at_ms, sim_ms}).present_items.last();
   if (!active_validity)
     return default_value();
   const {probability, conviction} = active_validity;

@@ -1,10 +1,11 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {connect} from "../../snowpack/pkg/react-redux.js";
+import {TextField} from "../../snowpack/pkg/@material-ui/core.js";
 import "./Editable.css.proxy.js";
 import {date_to_string, correct_datetime_for_local_time_zone, valid_date} from "./datetime_utils.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
 import {date2str, get_today_str} from "../shared/utils/date_helpers.js";
-import {connect} from "../../snowpack/pkg/react-redux.js";
 const map_state = (state) => ({
   time_resolution: state.display_options.time_resolution,
   presenting: state.display_options.consumption_formatting
@@ -27,12 +28,13 @@ function _EditableCustomDateTime(props) {
   return /* @__PURE__ */ h("div", {
     className: class_name,
     title
-  }, /* @__PURE__ */ h("input", {
+  }, /* @__PURE__ */ h(TextField, {
     disabled: not_editable,
     type: "text",
+    label: title,
     value: display_value,
     onFocus: () => set_editing(true),
-    ref: (r) => {
+    inputRef: (r) => {
       if (!r || !editing)
         return;
       const date = props_value(props);
@@ -52,7 +54,10 @@ function _EditableCustomDateTime(props) {
       const new_value = handle_on_blur({working_value, invariant_value});
       on_change(new_value);
       set_editing(false);
-    }
+    },
+    size: "small",
+    variant: "outlined",
+    fullWidth: true
   }), editing && show_now_shortcut_button && /* @__PURE__ */ h(NowButton, {
     on_change
   }), editing && show_today_shortcut_button && /* @__PURE__ */ h(Button, {

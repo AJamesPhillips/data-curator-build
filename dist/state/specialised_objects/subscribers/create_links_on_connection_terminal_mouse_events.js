@@ -1,5 +1,6 @@
 import {create_wcomponent} from "../../../knowledge/create_wcomponent_type.js";
 import {ACTIONS} from "../../actions.js";
+import {selector_chosen_base_id} from "../../user_info/selector.js";
 import {is_pointerup_on_connection_terminal} from "../meta_wcomponents/selecting/actions.js";
 export function create_links_on_connection_terminal_mouse_events(store) {
   return () => {
@@ -14,6 +15,9 @@ export function create_links_on_connection_terminal_mouse_events(store) {
     if (!state.last_action)
       return;
     if (!is_pointerup_on_connection_terminal(state.last_action))
+      return;
+    const base_id = selector_chosen_base_id(state);
+    if (base_id === void 0)
       return;
     const {terminal_type: start_terminal_type, wcomponent_id: start_wcomponent_id} = last_pointer_down_connection_terminal;
     const {terminal_type: end_terminal_type, wcomponent_id: end_wcomponent_id} = state.last_action;
@@ -32,7 +36,7 @@ export function create_links_on_connection_terminal_mouse_events(store) {
     const to_type = start_is_effector ? end_type : start_type;
     const either_meta = start_type === "meta" || end_type === "meta";
     const connection_type = either_meta ? "relation_link" : "causal_link";
-    const wcomponent = {type: connection_type, from_id, to_id, from_type, to_type};
+    const wcomponent = {base_id, type: connection_type, from_id, to_id, from_type, to_type};
     create_wcomponent({wcomponent, creation_context: state.creation_context});
   };
 }

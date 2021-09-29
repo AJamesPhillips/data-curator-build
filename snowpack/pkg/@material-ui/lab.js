@@ -1,26 +1,27 @@
-import { a as _objectWithoutProperties, c as clsx, _ as _extends, b as _slicedToArray, f as _defineProperty } from '../common/withStyles-015222b5.js';
+import { e as _objectWithoutProperties, _ as _extends, f as _slicedToArray, j as _defineProperty } from '../common/withStyles-f3a61d13.js';
 import { k, r as rn, u as un } from '../common/compat.module-44e2e532.js';
-import '../common/hoist-non-react-statics.cjs-c36e250e.js';
-import { s as styles$3 } from '../common/index-c56078b6.js';
-import { c as createSvgIcon, b as useId, u as useControlled } from '../common/unstable_useId-72319124.js';
+import '../common/hoist-non-react-statics.cjs-d740ad2c.js';
+import { _ as __pika_web_default_export_for_treeshaking__ } from '../common/clsx.m-e1755476.js';
+import { s as styles$3 } from '../common/index-c2bd3945.js';
+import { c as createSvgIcon, b as useId, u as useControlled } from '../common/unstable_useId-30b38119.js';
 import { v, p } from '../common/preact.module-5693ab29.js';
 import { u as useEventCallback } from '../common/useIsFocusVisible-7e963aeb.js';
 import { u as useForkRef, s as setRef } from '../common/useForkRef-e701e1c9.js';
 import { s, l, y, A } from '../common/hooks.module-b65ed191.js';
-import { w as withStyles, f as fade, e as emphasize } from '../common/withStyles-b03a0fb3.js';
-import { c as capitalize } from '../common/capitalize-fd5d619c.js';
-import { B as ButtonBase } from '../common/ButtonBase-b910981c.js';
-import { I as IconButton } from '../common/IconButton-210aceb1.js';
-import { P as Paper } from '../common/Paper-2cf9d63b.js';
-import { a as Popper } from '../common/Popper-e6c5c7aa.js';
-import '../common/_commonjsHelpers-c99fd594.js';
-import '../common/interopRequireDefault-189da5a0.js';
-import '../common/defaultTheme-111296fa.js';
-import '../common/ThemeProvider-002b8cd5.js';
-import '../common/objectWithoutProperties-4c19274d.js';
-import '../common/styled-c8e87b89.js';
-import '../common/withStyles-5d7eda42.js';
-import '../common/SvgIcon-ddfedf19.js';
+import { w as withStyles, f as fade, e as emphasize } from '../common/withStyles-92c33e5b.js';
+import { c as capitalize } from '../common/capitalize-8176ed99.js';
+import { B as ButtonBase } from '../common/ButtonBase-1fe6d2b0.js';
+import { I as IconButton } from '../common/IconButton-767ad7c8.js';
+import { P as Paper } from '../common/Paper-6cc7d9f5.js';
+import { a as Popper } from '../common/Popper-5149e182.js';
+import '../common/_commonjsHelpers-4f955397.js';
+import '../common/interopRequireDefault-146b584c.js';
+import '../common/defaultTheme-8bd8d426.js';
+import '../common/ThemeProvider-2a63d6f4.js';
+import '../common/objectWithoutProperties-ecdc3a69.js';
+import '../common/styled-5539d5f6.js';
+import '../common/withStyles-737200e5.js';
+import '../common/SvgIcon-ca3dcf8d.js';
 import '../common/TransitionGroupContext-717896c3.js';
 import '../common/_polyfill-node:global-acbc543a.js';
 
@@ -390,12 +391,12 @@ var Chip = /*#__PURE__*/k(function Chip(props, ref) {
   var deleteIcon = null;
 
   if (onDelete) {
-    var customClasses = clsx(color !== 'default' && (variant === "default" ? classes["deleteIconColor".concat(capitalize(color))] : classes["deleteIconOutlinedColor".concat(capitalize(color))]), small && classes.deleteIconSmall);
+    var customClasses = __pika_web_default_export_for_treeshaking__(color !== 'default' && (variant === "default" ? classes["deleteIconColor".concat(capitalize(color))] : classes["deleteIconOutlinedColor".concat(capitalize(color))]), small && classes.deleteIconSmall);
     deleteIcon = deleteIconProp && /*#__PURE__*/rn(deleteIconProp) ? /*#__PURE__*/un(deleteIconProp, {
-      className: clsx(deleteIconProp.props.className, classes.deleteIcon, customClasses),
+      className: __pika_web_default_export_for_treeshaking__(deleteIconProp.props.className, classes.deleteIcon, customClasses),
       onClick: handleDeleteIconClick
     }) : /*#__PURE__*/v(CancelIcon, {
-      className: clsx(classes.deleteIcon, customClasses),
+      className: __pika_web_default_export_for_treeshaking__(classes.deleteIcon, customClasses),
       onClick: handleDeleteIconClick
     });
   }
@@ -404,7 +405,7 @@ var Chip = /*#__PURE__*/k(function Chip(props, ref) {
 
   if (avatarProp && /*#__PURE__*/rn(avatarProp)) {
     avatar = /*#__PURE__*/un(avatarProp, {
-      className: clsx(classes.avatar, avatarProp.props.className, small && classes.avatarSmall, color !== 'default' && classes["avatarColor".concat(capitalize(color))])
+      className: __pika_web_default_export_for_treeshaking__(classes.avatar, avatarProp.props.className, small && classes.avatarSmall, color !== 'default' && classes["avatarColor".concat(capitalize(color))])
     });
   }
 
@@ -412,13 +413,13 @@ var Chip = /*#__PURE__*/k(function Chip(props, ref) {
 
   if (iconProp && /*#__PURE__*/rn(iconProp)) {
     icon = /*#__PURE__*/un(iconProp, {
-      className: clsx(classes.icon, iconProp.props.className, small && classes.iconSmall, color !== 'default' && classes["iconColor".concat(capitalize(color))])
+      className: __pika_web_default_export_for_treeshaking__(classes.icon, iconProp.props.className, small && classes.iconSmall, color !== 'default' && classes["iconColor".concat(capitalize(color))])
     });
   }
 
   return /*#__PURE__*/v(Component, _extends({
     role: clickable || onDelete ? 'button' : undefined,
-    className: clsx(classes.root, className, color !== 'default' && [classes["color".concat(capitalize(color))], clickable && classes["clickableColor".concat(capitalize(color))], onDelete && classes["deletableColor".concat(capitalize(color))]], variant !== "default" && [classes.outlined, {
+    className: __pika_web_default_export_for_treeshaking__(classes.root, className, color !== 'default' && [classes["color".concat(capitalize(color))], clickable && classes["clickableColor".concat(capitalize(color))], onDelete && classes["deletableColor".concat(capitalize(color))]], variant !== "default" && [classes.outlined, {
       'primary': classes.outlinedPrimary,
       'secondary': classes.outlinedSecondary
     }[color]], disabled && classes.disabled, small && classes.sizeSmall, clickable && classes.clickable, onDelete && classes.deletable),
@@ -429,7 +430,7 @@ var Chip = /*#__PURE__*/k(function Chip(props, ref) {
     onKeyUp: handleKeyUp,
     ref: handleRef
   }, moreProps, other), avatar || icon, /*#__PURE__*/v("span", {
-    className: clsx(classes.label, small && classes.labelSmall)
+    className: __pika_web_default_export_for_treeshaking__(classes.label, small && classes.labelSmall)
   }, label), deleteIcon);
 });
 var Chip$1 = withStyles(styles, {
@@ -495,7 +496,7 @@ var ListSubheader = /*#__PURE__*/k(function ListSubheader(props, ref) {
       other = _objectWithoutProperties(props, ["classes", "className", "color", "component", "disableGutters", "disableSticky", "inset"]);
 
   return /*#__PURE__*/v(Component, _extends({
-    className: clsx(classes.root, className, color !== 'default' && classes["color".concat(capitalize(color))], inset && classes.inset, !disableSticky && classes.sticky, !disableGutters && classes.gutters),
+    className: __pika_web_default_export_for_treeshaking__(classes.root, className, color !== 'default' && classes["color".concat(capitalize(color))], inset && classes.inset, !disableSticky && classes.sticky, !disableGutters && classes.gutters),
     ref: ref
   }, other));
 });
@@ -1920,7 +1921,7 @@ var Autocomplete = /*#__PURE__*/k(function Autocomplete(props, ref) {
   if (multiple && value.length > 0) {
     var getCustomizedTagProps = function getCustomizedTagProps(params) {
       return _extends({
-        className: clsx(classes.tag, size === 'small' && classes.tagSizeSmall),
+        className: __pika_web_default_export_for_treeshaking__(classes.tag, size === 'small' && classes.tagSizeSmall),
         disabled: disabled
       }, getTagProps(params));
     };
@@ -1982,7 +1983,7 @@ var Autocomplete = /*#__PURE__*/k(function Autocomplete(props, ref) {
   var hasPopupIcon = (!freeSolo || forcePopupIcon === true) && forcePopupIcon !== false;
   return /*#__PURE__*/v(p, null, /*#__PURE__*/v("div", _extends({
     ref: ref,
-    className: clsx(classes.root, className, focused && classes.focused, fullWidth && classes.fullWidth, hasClearIcon && classes.hasClearIcon, hasPopupIcon && classes.hasPopupIcon)
+    className: __pika_web_default_export_for_treeshaking__(classes.root, className, focused && classes.focused, fullWidth && classes.fullWidth, hasClearIcon && classes.hasClearIcon, hasPopupIcon && classes.hasPopupIcon)
   }, getRootProps(other)), renderInput({
     id: id,
     disabled: disabled,
@@ -1998,20 +1999,20 @@ var Autocomplete = /*#__PURE__*/k(function Autocomplete(props, ref) {
       }, hasClearIcon ? /*#__PURE__*/v(IconButton, _extends({}, getClearProps(), {
         "aria-label": clearText,
         title: clearText,
-        className: clsx(classes.clearIndicator, dirty && classes.clearIndicatorDirty)
+        className: __pika_web_default_export_for_treeshaking__(classes.clearIndicator, dirty && classes.clearIndicatorDirty)
       }), closeIcon) : null, hasPopupIcon ? /*#__PURE__*/v(IconButton, _extends({}, getPopupIndicatorProps(), {
         disabled: disabled,
         "aria-label": popupOpen ? closeText : openText,
         title: popupOpen ? closeText : openText,
-        className: clsx(classes.popupIndicator, popupOpen && classes.popupIndicatorOpen)
+        className: __pika_web_default_export_for_treeshaking__(classes.popupIndicator, popupOpen && classes.popupIndicatorOpen)
       }), popupIcon) : null)
     },
     inputProps: _extends({
-      className: clsx(classes.input, focusedTag === -1 && classes.inputFocused),
+      className: __pika_web_default_export_for_treeshaking__(classes.input, focusedTag === -1 && classes.inputFocused),
       disabled: disabled
     }, getInputProps())
   })), popupOpen && anchorEl ? /*#__PURE__*/v(PopperComponent, {
-    className: clsx(classes.popper, disablePortal && classes.popperDisablePortal),
+    className: __pika_web_default_export_for_treeshaking__(classes.popper, disablePortal && classes.popperDisablePortal),
     style: {
       width: anchorEl ? anchorEl.clientWidth : null
     },

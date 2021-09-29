@@ -9,7 +9,6 @@ import {get_routing_starting_state} from "./routing/starting_state.js";
 import {search_starting_state} from "./search/persistance.js";
 import {get_meta_wcomponents_starting_state} from "./specialised_objects/meta_wcomponents/starting_state.js";
 import {get_specialised_objects_starting_state} from "./specialised_objects/starting_state.js";
-import {backup_starting_state} from "./sync/backup/persistance.js";
 import {sync_starting_state} from "./sync/persistance.js";
 import {user_activity_starting_state} from "./user_activity/starting_state.js";
 import {user_info_starting_state} from "./user_info/persistance.js";
@@ -133,7 +132,6 @@ export function get_starting_state() {
   const routing = get_routing_starting_state();
   const user_info = user_info_starting_state(routing.args.storage_location);
   const starting_state = {
-    backup: backup_starting_state(),
     controls: controls_starting_state(),
     creation_context: creation_context_starting_state(),
     filter_context: filter_context_starting_state(),

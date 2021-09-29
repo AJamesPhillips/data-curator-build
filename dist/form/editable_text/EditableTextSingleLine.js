@@ -14,13 +14,11 @@ export function EditableTextSingleLine(props) {
       onFocus: on_focus,
       onChange: on_change,
       onBlur: on_blur,
-      ref: (el) => {
+      size: props.size,
+      inputRef: (el) => {
         if (!el)
           return;
-        const input_el = el.getElementsByTagName("input")[0];
-        if (!input_el)
-          return;
-        on_render(input_el);
+        on_render(el);
       }
     })
   });

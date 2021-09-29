@@ -45,7 +45,7 @@ function run_tests() {
       zoom: 100,
       x: 0,
       y: 0,
-      storage_location: ""
+      storage_location: void 0
     }
   };
   let new_routing_state;

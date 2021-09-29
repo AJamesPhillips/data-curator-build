@@ -126,7 +126,6 @@ export function wcomponent_has_legitimate_non_empty_state(wcomponent) {
 const _specialised_objects_from_to_server_expected_keys = {
   perceptions: true,
   wcomponents: true,
-  knowledge_views: true,
-  wcomponent_ids_to_delete: true
+  knowledge_views: true
 };
 export const specialised_objects_from_to_server_expected_keys = Object.keys(_specialised_objects_from_to_server_expected_keys);

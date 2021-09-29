@@ -1,0 +1,75 @@
+import {h} from "../../../snowpack/pkg/preact.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
+import "../common.css.proxy.js";
+import {ACTIONS} from "../../state/actions.js";
+import {get_supabase} from "../../supabase/get_supabase.js";
+import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
+import {UserAccountInfoChangePasswordForm} from "./UserAccountInfoChangePasswordForm.js";
+import {useEffect} from "../../../snowpack/pkg/preact/hooks.js";
+import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
+import {UserAccountInfoChangeUsernameForm} from "./UserAccountInfoChangeUsernameForm.js";
+import {signout} from "../../state/user_info/signout.js";
+const map_state = (state) => {
+  return {
+    user: state.user_info.user,
+    user_name: state.user_info.user_name,
+    need_to_set_user_name: selector_need_to_set_user_name(state),
+    need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery
+  };
+};
+const map_dispatch = {
+  set_user: ACTIONS.user_info.set_user
+};
+const connector = connect(map_state, map_dispatch);
+function _UserAccountInfoForm(props) {
+  const {user, user_name, need_to_set_user_name, need_to_handle_password_recovery, set_user} = props;
+  const [form_state, set_form_state] = useState("initial");
+  const [supabase_session_error, set_supabase_session_error] = useState(null);
+  useEffect(() => {
+    if (need_to_set_user_name)
+      set_form_state("updating_username");
+  }, [need_to_set_user_name, form_state]);
+  if (!user)
+    return null;
+  async function log_out() {
+    const supabase = get_supabase();
+    try {
+      signout();
+    } catch (err) {
+    }
+    const {error} = await supabase.auth.signOut();
+    set_supabase_session_error(error);
+    set_user({user: supabase.auth.user()});
+  }
+  if (form_state === "updating_password" || need_to_handle_password_recovery) {
+    return /* @__PURE__ */ h(UserAccountInfoChangePasswordForm, {
+      on_close: () => set_form_state("initial")
+    });
+  }
+  if (form_state === "updating_username") {
+    return /* @__PURE__ */ h(UserAccountInfoChangeUsernameForm, {
+      on_close: () => set_form_state("initial")
+    });
+  }
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("div", {
+    className: "section"
+  }, "Logged in with ", user.email, /* @__PURE__ */ h("br", null), "user id:   ", user.id, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    type: "button",
+    onClick: log_out,
+    value: "Log out"
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    type: "button",
+    onClick: () => set_form_state("updating_password"),
+    value: "Change password"
+  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("div", {
+    className: "section"
+  }, "User name ", user_name ? `: ${user_name}` : "", " ", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    type: "button",
+    onClick: () => set_form_state("updating_username"),
+    value: `${need_to_set_user_name ? "Set" : "Change"} username`
+  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h(DisplaySupabaseSessionError, {
+    error: supabase_session_error
+  }));
+}
+export const UserAccountInfoForm = connector(_UserAccountInfoForm);

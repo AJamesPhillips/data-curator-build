@@ -2,7 +2,7 @@ import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
+import {Box, makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./WComponentCanvasNode.css.proxy.js";
 import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {
@@ -158,7 +158,14 @@ function _WComponentCanvasNode(props) {
   ];
   const title = get_title({wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms});
   const show_all_details = is_editing || is_current_item;
-  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + ` node_is_type_${wcomponent.type} ` + (show_all_details ? " compact_title " : "");
+  const use_styles = makeStyles((theme) => ({
+    sizer: {
+      transform: `scale(${kv_entry.s ? kv_entry.s : 1})`,
+      transformOrigin: "left top"
+    }
+  }));
+  const classes = use_styles();
+  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + ` node_is_type_${wcomponent.type} ` + (show_all_details ? " compact_title " : "") + classes.sizer;
   const glow = is_highlighted ? "orange" : (is_selected || is_current_item) && "blue";
   const color = get_wcomponent_color(wcomponent);
   const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
@@ -167,6 +174,7 @@ function _WComponentCanvasNode(props) {
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0) || wcomponent_is_statev1(wcomponent);
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: on_graph ? kv_entry : void 0,
+    cover_image: wcomponent.summary_image,
     node_main_content: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("div", {
       className: "node_title"
     }, kv_entry_maybe === void 0 && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
@@ -221,8 +229,9 @@ function _WComponentCanvasNode(props) {
         const scale = zoom / SCALE_BY;
         const top_fudge = -8 * (scale / 2);
         const left_fudge = 6 / (scale / 2);
-        const top = kv_entry.top + e.offsetY + top_fudge;
-        const left = kv_entry.left + e.offsetX + left_fudge;
+        const node_size_fudge = kv_entry.s || 1;
+        const top = kv_entry.top + e.offsetY * node_size_fudge + top_fudge;
+        const left = kv_entry.left + e.offsetX * node_size_fudge + left_fudge;
         update_position(round_canvas_point({
           top,
           left

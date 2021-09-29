@@ -1,104 +1,196 @@
-import {getDefaultSession} from "../../../../snowpack/pkg/@inrupt/solid-client-authn-browser.js";
-import {setItem} from "../../../../snowpack/pkg/localforage.js";
-import {LOCAL_STORAGE_STATE_KEY} from "../../../constants.js";
-import {min_throttle} from "../../../utils/throttle.js";
 import {ACTIONS} from "../../actions.js";
-import {error_to_string} from "./errors.js";
-import {get_specialised_state_to_save} from "./needs_save.js";
-import {save_solid_data} from "./solid_save_data.js";
-export function storage_dependent_save(dispatch, state) {
-  const {storage_type} = state.sync;
-  if (storage_type !== "solid") {
-    throttled_save_state.throttled({dispatch, state});
-    throttled_save_state.flush();
-  } else {
-    const solid_session = getDefaultSession();
-    if (!solid_session.info.isLoggedIn) {
-      throttled_save_state.cancel();
-      const error_message = "Can not save.  Not logged in";
-      dispatch(ACTIONS.sync.update_sync_status({status: "FAILED", error_message, attempt: 0}));
-      if (state.sync.next_save_ms !== void 0) {
-        dispatch(ACTIONS.sync.set_next_sync_ms({next_save_ms: void 0}));
-      }
-    } else {
-      const next_call_at_ms = throttled_save_state.throttled({dispatch, state});
-      if (state.sync.next_save_ms !== next_call_at_ms) {
-        dispatch(ACTIONS.sync.set_next_sync_ms({next_save_ms: next_call_at_ms}));
-      }
-    }
-  }
-  return throttled_save_state;
-}
-const SAVE_THROTTLE_MS = 6e4;
-export const throttled_save_state = min_throttle(save_state, SAVE_THROTTLE_MS);
-export const last_attempted_state_to_save = {state: void 0};
-function save_state({dispatch, state}) {
-  last_attempted_state_to_save.state = state;
+import {get_next_specialised_state_id_to_save} from "./needs_save.js";
+import {get_knowledge_view_from_state, get_wcomponent_from_state} from "../../specialised_objects/accessors.js";
+import {get_supabase} from "../../../supabase/get_supabase.js";
+import {supabase_upsert_wcomponent} from "../supabase/wcomponent.js";
+import {merge_wcomponent} from "../merge/merge_wcomponents.js";
+import {
+  get_last_source_of_truth_knowledge_view_from_state,
+  get_last_source_of_truth_wcomponent_from_state
+} from "../selector.js";
+import {supabase_upsert_knowledge_view} from "../supabase/knowledge_view.js";
+import {merge_knowledge_view} from "../merge/merge_knowledge_views.js";
+let global_attempts = 0;
+export async function save_state(store) {
+  const state = store.getState();
   if (!state.sync.ready_for_writing) {
-    console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`);
+    console.error(`Inconsistent state violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`);
     return Promise.reject();
   }
-  dispatch(ACTIONS.sync.update_sync_status({status: "SAVING"}));
-  dispatch(ACTIONS.sync.set_next_sync_ms({next_save_ms: void 0}));
-  const storage_type = state.sync.storage_type;
-  const data = get_specialised_state_to_save(state);
-  return retryable_save({storage_type, data, user_info: state.user_info, dispatch}).then(() => {
-    dispatch(ACTIONS.sync.update_sync_status({status: "SAVED"}));
-    return state;
-  }).catch(() => last_attempted_state_to_save.state = void 0);
-}
-const MAX_ATTEMPTS = 5;
-export function retryable_save(args) {
-  const {
-    storage_type,
-    data,
-    user_info,
-    dispatch,
-    max_attempts = MAX_ATTEMPTS,
-    is_backup
-  } = args;
-  let {attempt = 0} = args;
-  attempt += 1;
-  const is_backup_str = is_backup ? " (backup)" : "";
-  console.log(`retryable_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`);
-  let promise_save_data;
-  if (storage_type === "local_server") {
-    const specialised_state_str = JSON.stringify(data);
-    promise_save_data = fetch("http://localhost:4000/api/v1/specialised_state/", {
-      method: "post",
-      body: specialised_state_str
-    });
-  } else if (storage_type === "solid") {
-    promise_save_data = save_solid_data(user_info, data);
-  } else if (storage_type === "local_storage") {
-    promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, data);
+  const next_id_to_save = get_next_specialised_state_id_to_save(state);
+  if (!next_id_to_save) {
+    const {wcomponent_ids, knowledge_view_ids} = state.sync.specialised_object_ids_pending_save;
+    const wc_ids = JSON.stringify(Array.from(wcomponent_ids));
+    const kv_ids = JSON.stringify(Array.from(knowledge_view_ids));
+    console.error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`);
+    return Promise.reject();
+  }
+  store.dispatch(ACTIONS.sync.update_sync_status({status: "SAVING", data_type: "specialised_objects"}));
+  let promise_response;
+  if (next_id_to_save.object_type === "knowledge_view") {
+    promise_response = save_knowledge_view(next_id_to_save.id, store);
   } else {
-    console.error(`Returning from save_state${is_backup_str}.  storage_type "${storage_type}" unsupported.`);
-    return Promise.reject();
+    promise_response = save_wcomponent(next_id_to_save.id, store);
   }
-  return promise_save_data.catch((error) => {
-    let error_message = error_to_string(error);
-    if (attempt >= max_attempts) {
-      error_message = `Stopping after ${attempt} attempts at resaving${is_backup_str}: ${error_message}`;
-      console.error(error_message);
-      const action = is_backup ? ACTIONS.backup.update_backup_status({status: "FAILED"}) : ACTIONS.sync.update_sync_status({status: "FAILED", error_message, attempt: 0});
-      dispatch(action);
-      return Promise.reject();
+  try {
+    global_attempts += 1;
+    const successfully_finished_upsert = await promise_response;
+    if (successfully_finished_upsert)
+      global_attempts = 0;
+    if (global_attempts < 10) {
+      store.dispatch(ACTIONS.sync.update_sync_status({status: "SAVED", data_type: "specialised_objects"}));
     } else {
-      error_message = `Retrying${is_backup_str} attempt ${attempt}; ${error_message}`;
-      console.error(error_message);
-      const action = is_backup ? ACTIONS.backup.update_backup_status({status: "FAILED"}) : ACTIONS.sync.update_sync_status({
+      store.dispatch(ACTIONS.sync.update_sync_status({
         status: "FAILED",
-        error_message,
-        attempt
-      });
-      dispatch(action);
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log(`retrying save${is_backup_str} to ${storage_type}, attempt ${attempt}`);
-          retryable_save({storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup}).then(resolve).catch(reject);
-        }, 1e3);
-      });
+        data_type: "specialised_objects",
+        error_message: `Try manually saving or refresh the page.  Failing that contact the team.`,
+        attempt: global_attempts
+      }));
     }
+  } catch (err) {
+    console.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err}`);
+    store.dispatch(ACTIONS.sync.update_sync_status({
+      status: "FAILED",
+      data_type: "specialised_objects",
+      error_message: `${err}`,
+      attempt: global_attempts
+    }));
+  }
+  return Promise.resolve();
+}
+async function save_knowledge_view(id, store) {
+  const object_type = "knowledge_view";
+  const maybe_initial_item = get_knowledge_view_from_state(store.getState(), id);
+  const pre_upsert_check_result = pre_upsert_check(id, store, object_type, maybe_initial_item);
+  if (pre_upsert_check_result.error)
+    return pre_upsert_check_result.error;
+  const initial_item = pre_upsert_check_result.initial_item;
+  const supabase = get_supabase();
+  const response = await supabase_upsert_knowledge_view({supabase, knowledge_view: initial_item});
+  const post_upsert_check_result = post_upsert_check(id, store, object_type, response);
+  if (post_upsert_check_result.error)
+    return post_upsert_check_result.error;
+  const {create_successful, update_successful, latest_source_of_truth} = post_upsert_check_result;
+  const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id);
+  const current_value = get_knowledge_view_from_state(store.getState(), id);
+  store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+    knowledge_view: latest_source_of_truth,
+    source_of_truth: true
+  }));
+  const check_merge_args_result = check_merge_args({
+    object_type,
+    initial_item,
+    last_source_of_truth,
+    current_value
   });
+  if (check_merge_args_result.error)
+    return check_merge_args_result.error;
+  if (check_merge_args_result.merge_args) {
+    const merge = merge_knowledge_view({
+      ...check_merge_args_result.merge_args,
+      source_of_truth: latest_source_of_truth,
+      update_successful
+    });
+    if (merge.needs_save) {
+      store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+        knowledge_view: {
+          ...merge.value
+        },
+        source_of_truth: false
+      }));
+    }
+    if (merge.unresolvable_conflicted_fields.length) {
+    }
+  }
+  return Promise.resolve(create_successful || update_successful);
+}
+async function save_wcomponent(id, store) {
+  const object_type = "wcomponent";
+  const maybe_initial_item = get_wcomponent_from_state(store.getState(), id);
+  const pre_upsert_check_result = pre_upsert_check(id, store, object_type, maybe_initial_item);
+  if (pre_upsert_check_result.error)
+    return pre_upsert_check_result.error;
+  const initial_item = pre_upsert_check_result.initial_item;
+  const supabase = get_supabase();
+  const response = await supabase_upsert_wcomponent({supabase, wcomponent: initial_item});
+  const post_upsert_check_result = post_upsert_check(id, store, object_type, response);
+  if (post_upsert_check_result.error)
+    return post_upsert_check_result.error;
+  const {create_successful, update_successful, latest_source_of_truth} = post_upsert_check_result;
+  const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id);
+  const current_value = get_wcomponent_from_state(store.getState(), id);
+  store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
+    wcomponent: latest_source_of_truth,
+    source_of_truth: true
+  }));
+  const check_merge_args_result = check_merge_args({
+    object_type,
+    initial_item,
+    last_source_of_truth,
+    current_value
+  });
+  if (check_merge_args_result.error)
+    return check_merge_args_result.error;
+  if (check_merge_args_result.merge_args) {
+    const merge = merge_wcomponent({
+      ...check_merge_args_result.merge_args,
+      source_of_truth: latest_source_of_truth,
+      update_successful
+    });
+    if (merge.needs_save) {
+      store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
+        wcomponent: {
+          ...merge.value
+        },
+        source_of_truth: false
+      }));
+    }
+    if (merge.unresolvable_conflicted_fields.length) {
+    }
+  }
+  return Promise.resolve(create_successful || update_successful);
+}
+function pre_upsert_check(id, store, object_type, initial_item) {
+  if (!initial_item) {
+    store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save());
+    const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" but no item for id: "${id}".  Updating all specialised_object_ids_pending_save.`);
+    return {error, initial_item: void 0};
+  }
+  store.dispatch(ACTIONS.sync.update_specialised_object_sync_info({
+    id: initial_item.id,
+    object_type,
+    saving: true
+  }));
+  return {error: void 0, initial_item};
+}
+function post_upsert_check(id, store, object_type, response) {
+  const create_successful = response.status === 201;
+  const update_successful = response.status === 200;
+  if (!create_successful && !update_successful && response.status !== 409) {
+    const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${response.error}"`);
+    return {error, create_successful, update_successful, latest_source_of_truth: void 0};
+  }
+  const latest_source_of_truth = response.item;
+  if (!latest_source_of_truth) {
+    const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth item.  Error: "${response.error}".`);
+    return {error, create_successful, update_successful, latest_source_of_truth};
+  }
+  return {error: void 0, create_successful, update_successful, latest_source_of_truth};
+}
+function check_merge_args(args) {
+  const {object_type, initial_item, last_source_of_truth, current_value} = args;
+  if (!last_source_of_truth) {
+    if (initial_item.modified_at) {
+      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`);
+      return {error, merge_args: void 0};
+    } else {
+    }
+  } else {
+    if (!current_value) {
+      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth but no current_value for id "${initial_item.id}".`);
+      return {error, merge_args: void 0};
+    }
+    return {error: void 0, merge_args: {last_source_of_truth, current_value}};
+  }
+  return {error: void 0, merge_args: void 0};
 }

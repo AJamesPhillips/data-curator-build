@@ -16,13 +16,10 @@ export function EditableText(props) {
       onFocus: on_focus,
       onChange: on_change,
       onBlur: on_blur,
-      ref: (el) => {
+      inputRef: (el) => {
         if (!el)
           return;
-        const textarea = el.getElementsByTagName("textarea")[0];
-        if (!textarea)
-          return;
-        on_render(textarea);
+        on_render(el);
       }
     })
   });

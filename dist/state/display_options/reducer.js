@@ -5,7 +5,8 @@ import {
   is_set_certainty_formatting,
   is_toggle_consumption_formatting,
   is_set_display_by_simulated_time,
-  is_toggle_focused_mode
+  is_toggle_focused_mode,
+  is_set_show_help_menu
 } from "./actions.js";
 import {derive_validity_filter, derive_certainty_formatting} from "./util.js";
 export const display_reducer = (state, action) => {
@@ -30,6 +31,9 @@ export const display_reducer = (state, action) => {
   }
   if (is_set_display_by_simulated_time(action)) {
     state = update_substate(state, "display_options", "display_by_simulated_time", action.display_by_simulated_time);
+  }
+  if (is_set_show_help_menu(action)) {
+    state = update_substate(state, "display_options", "show_help_menu", action.show);
   }
   return state;
 };

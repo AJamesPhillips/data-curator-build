@@ -1,16 +1,16 @@
 import {h} from "../../../snowpack/pkg/preact.js";
-import {Button} from "../../sharedf/Button.js";
-import {color_to_opposite, color_to_string} from "../../sharedf/color.js";
 import {ButtonGroup, IconButton, Tooltip, Typography} from "../../../snowpack/pkg/@material-ui/core.js";
 import ClearIcon from "../../../snowpack/pkg/@material-ui/icons/Clear.js";
+import {Button} from "../../sharedf/Button.js";
+import {color_to_opposite, color_to_string} from "../../sharedf/color.js";
 export function SelectedOption(props) {
   const {
     editing,
     option,
     on_remove_option,
+    on_pointer_down_selected_option: pointer_down,
     on_mouse_over_option,
-    on_mouse_leave_option,
-    on_pointer_down_selected_option: pointer_down
+    on_mouse_leave_option
   } = props;
   if (!option)
     return null;

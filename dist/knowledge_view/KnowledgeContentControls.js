@@ -1,17 +1,17 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {get_wcomponent_time_slider_data} from "../time_control/prepare_data/wcomponent.js";
 import {ContentControls} from "../sharedf/content_controls/ContentControls.js";
-import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   selected_component_id: state.routing.item_id,
   wcomponents: state.derived.wcomponents,
   current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
   linked_datetime_sliders: state.controls.linked_datetime_sliders,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
-  display_created_at_time_slider: state.controls.display_created_at_time_slider,
+  display_time_sliders: state.controls.display_time_sliders,
   editing: !state.display_options.consumption_formatting
 });
 const map_dispatch = {

@@ -1,9 +1,9 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {ACTIONS} from "../state/actions.js";
-import {optional_view_type} from "../views/optional_view_type.js";
 import {Box, IconButton} from "../../snowpack/pkg/@material-ui/core.js";
 import FilterCenterFocusIcon from "../../snowpack/pkg/@material-ui/icons/FilterCenterFocus.js";
+import {ACTIONS} from "../state/actions.js";
+import {optional_view_type} from "../views/optional_view_type.js";
 const map_state = (state) => ({
   view: state.routing.args.view
 });

@@ -22,7 +22,8 @@ const map_state = (state, {wcomponent}) => {
     target_wcomponent,
     target_counterfactuals,
     created_at_ms: state.routing.args.created_at_ms,
-    sim_ms: state.routing.args.sim_ms
+    sim_ms: state.routing.args.sim_ms,
+    is_editing: !state.display_options.consumption_formatting
   };
 };
 const connector = connect(map_state);
@@ -79,7 +80,7 @@ function _JudgementFormFields(props) {
         return;
       upsert_wcomponent({judgement_comparator_value});
     }
-  }))), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
+  }))), (props.is_editing || selected_option_id_for_manual !== void 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, "Manual:   ", /* @__PURE__ */ h(AutocompleteText, {
     placeholder: "Manual override...",

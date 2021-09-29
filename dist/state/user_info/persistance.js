@@ -1,36 +1,27 @@
 import {pick} from "../../shared/utils/pick.js";
 import {get_persisted_state_object, persist_state_object} from "../persistence/persistence_utils.js";
-import {ensure_chosen_index_is_valid} from "./utils.js";
+import {random_animal} from "../../utils/list_of_animals.js";
+import {get_supabase} from "../../supabase/get_supabase.js";
 export function user_info_persist(state) {
   const to_persist = pick([
-    "solid_oidc_provider",
-    "custom_solid_pod_URLs",
-    "chosen_custom_solid_pod_URL_index"
+    "chosen_base_id"
   ], state.user_info);
   persist_state_object("user_info", to_persist);
 }
 export function user_info_starting_state(storage_location) {
   const obj = get_persisted_state_object("user_info");
+  const need_to_handle_password_recovery = document.location.hash.includes("type=recovery");
+  const chosen_base_id = storage_location !== void 0 ? storage_location : obj.chosen_base_id;
   let state = {
-    solid_oidc_provider: "",
-    user_name: "",
-    default_solid_pod_URL: "",
-    custom_solid_pod_URLs: [],
-    chosen_custom_solid_pod_URL_index: 0,
-    ...obj
+    user: get_supabase().auth.user(),
+    need_to_handle_password_recovery,
+    users_by_id: void 0,
+    bases_by_id: void 0,
+    ...obj,
+    user_name: void 0,
+    chosen_base_id
   };
-  if (storage_location) {
-    const index = state.custom_solid_pod_URLs.findIndex((url) => url === storage_location);
-    if (state.default_solid_pod_URL === storage_location) {
-      state.chosen_custom_solid_pod_URL_index = 0;
-      state.custom_solid_pod_URLs = state.custom_solid_pod_URLs.filter((url) => url !== storage_location);
-    } else if (index >= 0) {
-      state.chosen_custom_solid_pod_URL_index = index + 1;
-    } else {
-      state.custom_solid_pod_URLs.push(storage_location);
-      state.chosen_custom_solid_pod_URL_index = state.custom_solid_pod_URLs.length;
-    }
-  }
-  state = ensure_chosen_index_is_valid(state);
   return state;
 }
+const get_anonymous_user_name = () => "Anonymous " + random_animal();
+export const ensure_user_name = (user_name = "") => user_name.trim() || get_anonymous_user_name();

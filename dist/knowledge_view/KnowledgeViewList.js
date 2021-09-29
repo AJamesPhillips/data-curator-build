@@ -14,17 +14,16 @@ export function KnowledgeViewList(props) {
   const render_list_content = factory_render_list_content({
     items: knowledge_views,
     get_id: (kv) => kv.id,
-    update_items: (new_kvs) => {
-      const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv);
-      if (!changed_kv)
-        return;
-      props.upsert_knowledge_view({knowledge_view: changed_kv});
-    },
-    item_top_props: {
+    item_props: {
       get_summary: factory_get_summary(current_view),
       get_details: factory_get_kv_details(props),
       get_details3,
-      calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props)
+      calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props),
+      crud: {
+        update_item: (modified_kv) => {
+          props.upsert_knowledge_view({knowledge_view: modified_kv});
+        }
+      }
     },
     debug_item_descriptor: "View"
   });
@@ -59,7 +58,7 @@ export function KnowledgeViewList(props) {
 }
 function factory_get_summary(current_view) {
   const view = optional_view_type(current_view);
-  return (knowledge_view, on_change) => /* @__PURE__ */ h(Link, {
+  return (knowledge_view, crud) => /* @__PURE__ */ h(Link, {
     route: void 0,
     sub_route: void 0,
     item_id: void 0,
@@ -70,7 +69,7 @@ function factory_get_summary(current_view) {
 function get_knowledge_view_title(knowledge_view) {
   if (!knowledge_view.is_base)
     return knowledge_view.title;
-  return knowledge_view.title !== "Base" ? `Base (${knowledge_view.title})` : "Base";
+  return knowledge_view.title !== "All" ? `All (${knowledge_view.title})` : "All";
 }
 function get_details3() {
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null));

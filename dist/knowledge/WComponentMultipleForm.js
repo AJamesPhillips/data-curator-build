@@ -71,10 +71,10 @@ function _WComponentMultipleForm(props) {
       snap_to_grid_knowledge_view_entries({wcomponent_ids, knowledge_view_id});
     },
     is_left: true
-  })), (editing || label_ids.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(LabelsEditor, {
+  })), (editing || label_ids.length > 0) && /* @__PURE__ */ h("p", null, "Label", /* @__PURE__ */ h(LabelsEditor, {
     label_ids,
     on_change: (label_ids2) => bulk_edit_wcomponents({wcomponent_ids, change: {label_ids: label_ids2}})
-  })), /* @__PURE__ */ h("hr", null), editing && /* @__PURE__ */ h("p", null, "Add to knowledge view", all_wcomponent_ids_present_in_current_kv ? /* @__PURE__ */ h(SelectKnowledgeView, {
+  })), editing && /* @__PURE__ */ h("p", null, "Add to knowledge view", all_wcomponent_ids_present_in_current_kv ? /* @__PURE__ */ h(SelectKnowledgeView, {
     exclude_ids: new Set(knowledge_view_id ? [knowledge_view_id] : []),
     on_change: (knowledge_view_id2) => {
       if (!knowledge_view_id2)
@@ -84,7 +84,9 @@ function _WComponentMultipleForm(props) {
         knowledge_view_id: knowledge_view_id2
       });
     }
-  }) : " (Disabled - not all components present in current view)"), editing && /* @__PURE__ */ h("p", null, "Remove from current knowledge view", /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  }) : " (Disabled - not all components present in current view)"), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Remove from knowledge view",
+    tooltip_text: "Remove from current knowledge view",
     on_delete: () => {
       bulk_remove_from_knowledge_view({wcomponent_ids: Array.from(wcomponent_ids)});
     }

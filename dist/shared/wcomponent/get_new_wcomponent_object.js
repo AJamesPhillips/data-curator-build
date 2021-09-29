@@ -1,10 +1,12 @@
 import {get_new_created_ats} from "../utils/datetime.js";
 import {date2str_auto} from "../utils/date_helpers.js";
 import {get_new_wcomponent_id} from "../utils/ids.js";
+import {wcomponent_is_causal_link} from "./interfaces/SpecialisedObjects.js";
 export function get_contextless_new_wcomponent_object(partial_wcomponent) {
   const base = {
     id: get_new_wcomponent_id(),
     created_at: new Date(),
+    base_id: partial_wcomponent.base_id,
     title: "",
     description: "",
     type: "process"
@@ -12,7 +14,7 @@ export function get_contextless_new_wcomponent_object(partial_wcomponent) {
   const when = partial_wcomponent.custom_created_at || partial_wcomponent.created_at || base.custom_created_at || base.created_at;
   let wcomponent;
   if (partial_wcomponent.type === "causal_link" || partial_wcomponent.type === "relation_link") {
-    const causal_link = {
+    let link = {
       from_id: "",
       to_id: "",
       from_type: "state",
@@ -21,12 +23,19 @@ export function get_contextless_new_wcomponent_object(partial_wcomponent) {
       ...partial_wcomponent,
       type: partial_wcomponent.type
     };
-    wcomponent = causal_link;
+    if (wcomponent_is_causal_link(link)) {
+      link = {
+        effect_when_true: 1,
+        effect_when_false: -1,
+        ...link
+      };
+    }
+    wcomponent = link;
   } else if (partial_wcomponent.type === "judgement" || partial_wcomponent.type === "objective") {
     const judgement = {
       judgement_target_wcomponent_id: "",
-      judgement_operator: "!=",
-      judgement_comparator_value: "",
+      judgement_operator: "==",
+      judgement_comparator_value: "True",
       judgement_manual: void 0,
       ...base,
       ...partial_wcomponent,

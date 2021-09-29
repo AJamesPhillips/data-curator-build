@@ -1,6 +1,6 @@
 import {date2str_auto} from "../shared/utils/date_helpers.js";
 import {test} from "../shared/utils/test.js";
-import {uncertain_datetime_is_eternal} from "../shared/utils/datetime.js";
+import {uncertain_datetime_is_eternal} from "../shared/uncertainty/datetime.js";
 export function str_to_date(date_str) {
   return new Date(date_str.trim());
 }

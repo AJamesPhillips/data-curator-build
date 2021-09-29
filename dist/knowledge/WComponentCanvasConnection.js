@@ -17,8 +17,13 @@ import {
   calc_judgement_connection_wcomponent_should_display
 } from "./calc_display_parameters.js";
 import {factory_on_pointer_down} from "./canvas_common.js";
-import {get_props_for_get_counterfactual_v2_VAP_set} from "../state/specialised_objects/counterfactuals/get_props_for_state_v2.js";
-import {get_counterfactual_v2_VAP_set, get_current_VAP_set} from "../shared/wcomponent/value_and_prediction/get_value_v2.js";
+import {
+  get_props_for_get_counterfactual_v2_VAP_set
+} from "../state/specialised_objects/counterfactuals/get_props_for_state_v2.js";
+import {
+  get_counterfactual_v2_VAP_set,
+  get_current_VAP_set
+} from "../shared/wcomponent/value_and_prediction/get_value_v2.js";
 import {get_VAP_visuals_data} from "../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets.js";
 import {wcomponent_VAPs_represent} from "../shared/wcomponent/value_and_prediction/utils.js";
 import {VAPsType} from "../shared/wcomponent/interfaces/generic_value.js";

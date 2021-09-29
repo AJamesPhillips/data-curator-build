@@ -1,0 +1,31 @@
+.base_option {
+  cursor: pointer;
+}
+.base_option:hover .edit_title {
+  opacity: 0.1;
+}
+.base_option td {
+  min-width: 100px;
+  text-align: center;
+}
+.base_option td.narrow {
+  min-width: 30px;
+}
+.base_option td.edit_title {
+  transition: opacity 0.25s ease-in-out;
+  opacity: 0;
+  margin-left: 3px;
+  float: right;
+}
+.base_option td.edit_title:hover {
+  opacity: 1;
+}
+
+.base_option.selected {
+  border: thin solid #290;
+  background-color: #efd;
+}
+
+.base_option:hover {
+  border: thin solid #2f0;
+}

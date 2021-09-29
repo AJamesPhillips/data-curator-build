@@ -1,3 +1,4 @@
+import {old_ids_and_functions_regex, uuids_and_functions_regex} from "./id_regexs.js";
 import {format_wcomponent_url, format_wcomponent_link} from "./templates.js";
 export function replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, get_title) {
   const functional_ids = get_functional_ids_from_text(text);
@@ -28,7 +29,11 @@ export function replace_function_ids_in_text(text, wcomponents_by_id, depth_limi
   return text;
 }
 function get_functional_ids_from_text(text) {
-  return [...text.matchAll(/.*?(@@\w*\d+)\.([\w]+)/g)].map((entry) => ({id: entry[1].slice(2), funktion: entry[2]}));
+  const matches = [
+    ...text.matchAll(uuids_and_functions_regex),
+    ...text.matchAll(old_ids_and_functions_regex)
+  ];
+  return matches.map((entry) => ({id: entry[1].slice(2), funktion: entry[2]}));
 }
 const _supported_functions = {
   url: true,

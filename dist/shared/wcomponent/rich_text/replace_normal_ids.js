@@ -1,4 +1,5 @@
 import {test} from "../../utils/test.js";
+import {old_ids_regex, uuids_regex} from "./id_regexs.js";
 import {format_wcomponent_id_error, format_wcomponent_link} from "./templates.js";
 export function replace_normal_ids(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, get_title) {
   const ids = get_ids_from_text(text);
@@ -16,7 +17,8 @@ export function replace_normal_ids(text, wcomponents_by_id, depth_limit, current
   return text;
 }
 function get_ids_from_text(text) {
-  return [...text.matchAll(/.*?(@@\w*\d+)/g)].map((entry) => entry[1].slice(2));
+  const matches = [...text.matchAll(uuids_regex), ...text.matchAll(old_ids_regex)];
+  return matches.map((entry) => entry[1].slice(2));
 }
 function test_get_ids_from_text() {
   console.log("running tests of get_ids_from_text");

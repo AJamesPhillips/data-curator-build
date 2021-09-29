@@ -5,7 +5,7 @@ import {filter_context_persist} from "../filter_context/persistance.js";
 import {search_persist} from "../search/persistance.js";
 import {sync_persist} from "../sync/persistance.js";
 import {user_info_persist} from "../user_info/persistance.js";
-export function persist_all_state(state) {
+export function persist_relevant_state(state) {
   creation_context_persist(state);
   controls_persist(state);
   display_options_persist(state);

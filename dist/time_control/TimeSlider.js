@@ -1,13 +1,13 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
+import {Box, ButtonGroup, IconButton, Slider} from "../../snowpack/pkg/@material-ui/core.js";
+import NavigateBeforeIcon from "../../snowpack/pkg/@material-ui/icons/NavigateBefore.js";
+import NavigateNextIcon from "../../snowpack/pkg/@material-ui/icons/NavigateNext.js";
 import "./time_slider.css.proxy.js";
 import {EditableCustomDateTime} from "../form/EditableCustomDateTime.js";
 import {find_nearest_index_in_sorted_list} from "../utils/binary_search.js";
 import {NowButton} from "./NowButton.js";
 import {floor_mseconds_to_resolution} from "../shared/utils/datetime.js";
-import {Box, ButtonGroup, IconButton, Slider} from "../../snowpack/pkg/@material-ui/core.js";
-import NavigateBeforeIcon from "../../snowpack/pkg/@material-ui/icons/NavigateBefore.js";
-import NavigateNextIcon from "../../snowpack/pkg/@material-ui/icons/NavigateNext.js";
 import {date2str_auto} from "../shared/utils/date_helpers.js";
 const map_state = (state, {get_handle_ms}) => ({
   handle_datetime_ms: get_handle_ms(state),

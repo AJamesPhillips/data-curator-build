@@ -3,8 +3,7 @@ import {
 } from "../../counterfactuals/merge.js";
 import {VAPsType} from "../interfaces/generic_value.js";
 import {calc_is_uncertain} from "../uncertainty_utils.js";
-import {partition_and_prune_items_by_datetimes} from "../utils_datetime.js";
-import {get_VAPs_ordered_by_prob} from "./utils.js";
+import {get_VAPs_ordered_by_prob, partition_and_prune_items_by_datetimes_and_versions} from "./utils.js";
 export function get_current_value(probabilities) {
   let value = {
     probabilities,
@@ -33,7 +32,7 @@ function get_current_counterfactual_VAP_sets(args) {
     created_at_ms,
     sim_ms
   } = args;
-  const {present_items} = partition_and_prune_items_by_datetimes({
+  const {present_items} = partition_and_prune_items_by_datetimes_and_versions({
     items: values_and_prediction_sets || [],
     created_at_ms,
     sim_ms

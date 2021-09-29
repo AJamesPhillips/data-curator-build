@@ -66,7 +66,7 @@ function _AppMenuItemsContainer(props) {
     on_pointer_down: handleClose
   })), /* @__PURE__ */ h(MaterialMenuItem, {
     onClick: () => set_show_all_routes(!show_all_routes),
-    style: "display:flex; justify-content:flex-start; padding:0.5em;"
+    style: {display: "flex", justifyContent: "flex-start", padding: "0.5em"}
   }, show_all_routes ? "Hide" : "Show", " all options")));
 }
 export const AppMenuItemsContainer = connector(_AppMenuItemsContainer);

@@ -5,7 +5,7 @@ import {
   wcomponent_is_state,
   wcomponent_is_statev2
 } from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_created_at_ms} from "../shared/wcomponent/utils_datetime.js";
+import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_middle_of_screen} from "../state/display_options/display.js";
 import {

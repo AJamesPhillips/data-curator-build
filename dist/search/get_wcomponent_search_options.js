@@ -6,9 +6,9 @@ import {
 } from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
 export function get_wcomponent_search_options(args) {
-  const {wcomponents: wcs, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms} = args;
+  const {wcomponents: wcs, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms, include_deleted} = args;
   const wcomponents = wcs || Object.values(wcomponents_by_id);
-  const options = wcomponents.map((wcomponent) => {
+  const options = wcomponents.filter((wc) => include_deleted || !wc.deleted_at).map((wcomponent) => {
     const title = get_title({
       wcomponent,
       rich_text: true,

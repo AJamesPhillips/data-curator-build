@@ -5,7 +5,6 @@ import {
   navigate_to_knowledge_view_or_kvwcomponent
 } from "../../knowledge_view/create_new_knowledge_view.js";
 import {get_today_str} from "../../shared/utils/date_helpers.js";
-import {wcomponent_id_to_wcomponent_kv_id} from "../../shared/utils/ids.js";
 import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_wc_id_counterfactuals_map} from "../../state/derived/accessor.js";
@@ -13,7 +12,7 @@ import {get_current_composed_knowledge_view_from_state, get_wcomponent_from_stat
 import {get_store} from "../../state/store.js";
 const map_state = (state, own_props) => {
   const wcomponent = get_wcomponent_from_state(state, own_props.wcomponent_id);
-  const kvwc_id = wcomponent_id_to_wcomponent_kv_id(own_props.wcomponent_id);
+  const kvwc_id = own_props.wcomponent_id;
   return {
     wcomponent,
     kvwc_id,
@@ -76,6 +75,7 @@ function prepare_wcomponent_knowledge_view(props, store) {
   const current_kv_id = current_kv && current_kv.id;
   const partial_knowledge_view_wcomponent = {
     id: props.kvwc_id,
+    base_id: props.wcomponent.base_id,
     wc_id_map,
     title,
     sort_type: current_kv_id ? "normal" : "hidden",

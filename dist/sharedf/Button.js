@@ -19,9 +19,16 @@ export function Button(props) {
     startIcon: props.startIcon,
     variant: props.variant || "contained",
     onPointerDown: (e) => {
+      e.currentTarget.focus();
       e.stopImmediatePropagation();
       e.preventDefault();
-      props.onPointerDown ? props.onPointerDown(e) : props.onClick && props.onClick(e);
+      props.onPointerDown && props.onPointerDown(e);
+    },
+    onClick: (e) => {
+      e.currentTarget.focus();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      props.onClick && props.onClick(e);
     }
   }, props.children || props.value));
 }

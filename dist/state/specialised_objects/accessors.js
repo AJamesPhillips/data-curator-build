@@ -1,5 +1,4 @@
 import {sort_list} from "../../shared/utils/sort.js";
-import {wcomponent_id_to_wcomponent_kv_id} from "../../shared/utils/ids.js";
 export function get_wcomponent_from_state(state, id) {
   return id ? state.specialised_objects.wcomponents_by_id[id] : void 0;
 }
@@ -107,6 +106,5 @@ function sort_knowledge_map_ids_by_priority_then_title(ids, map) {
   }, "ascending");
 }
 export function wcomponent_has_knowledge_view(wcomponent_id, knowledge_views_by_id) {
-  const kvwc_id = wcomponent_id_to_wcomponent_kv_id(wcomponent_id);
-  return !!knowledge_views_by_id[kvwc_id];
+  return !!knowledge_views_by_id[wcomponent_id];
 }

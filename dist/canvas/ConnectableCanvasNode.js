@@ -1,4 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {Card, CardContent, CardMedia, makeStyles} from "../../snowpack/pkg/@material-ui/core.js";
 import "./ConnectableCanvasNode.css.proxy.js";
 import {CanvasNode} from "./CanvasNode.js";
 import {COLOURS} from "./display.js";
@@ -21,6 +22,7 @@ export function ConnectableCanvasNode(props) {
     }
   } = props;
   const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "");
+  const classes = use_styles();
   return /* @__PURE__ */ h(CanvasNode, {
     get_ref: (ref) => props.get_ref && props.get_ref(ref),
     position: props.position,
@@ -31,10 +33,18 @@ export function ConnectableCanvasNode(props) {
     extra_css_class,
     extra_styles: extra_node_styles,
     extra_args: props.extra_args
-  }, /* @__PURE__ */ h("div", {
-    className: "node_main_content",
+  }, /* @__PURE__ */ h(Card, {
+    className: `node_main_content ${classes.card}`,
+    variant: "outlined",
     style: main_content_styles
-  }, props.node_main_content), props.terminals.map(({type, style, label}) => {
+  }, props.cover_image && /* @__PURE__ */ h(CardMedia, {
+    component: "img",
+    image: props.cover_image,
+    className: classes.image,
+    onContextMenu: (e) => {
+      e.stopImmediatePropagation();
+    }
+  }), /* @__PURE__ */ h(CardContent, null, props.node_main_content)), props.terminals.map(({type, style, label}) => {
     return /* @__PURE__ */ h("div", {
       className: "connection_terminal",
       style: {...connection_style_common, ...style},
@@ -49,6 +59,17 @@ export function ConnectableCanvasNode(props) {
     }, label);
   }), props.other_children);
 }
+const use_styles = makeStyles((theme) => ({
+  card: {
+    borderColor: "black"
+  },
+  image: {
+    maxHeight: "200px",
+    maxWidth: "100%",
+    margin: "0 auto",
+    width: "initial"
+  }
+}));
 const connection_diameter = connection_radius * 2;
 const connection_style_common = {
   width: connection_diameter,

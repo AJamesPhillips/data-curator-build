@@ -6,6 +6,7 @@ const day5 = new Date("2021-04-25");
 const two_time_dimensional_trees = {
   id: "node1_id",
   created_at: day1,
+  base_id: -1,
   type: "statev2",
   subtype: "other",
   title: "",
@@ -13,8 +14,8 @@ const two_time_dimensional_trees = {
   values_and_prediction_sets: [
     {
       id: "VAP_set_id1",
-      version: 1,
       created_at: day1,
+      base_id: -1,
       datetime: {value: day1},
       entries: [{
         id: "",
@@ -27,8 +28,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id2",
-      version: 1,
       created_at: day1,
+      base_id: -1,
       datetime: {value: day2},
       entries: [{
         id: "",
@@ -42,8 +43,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id1",
-      version: 2,
       created_at: day2,
+      base_id: -1,
       datetime: {value: day1},
       entries: [{
         id: "",
@@ -56,8 +57,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id2",
-      version: 2,
       created_at: day2,
+      base_id: -1,
       datetime: {value: day2},
       entries: [{
         id: "",
@@ -71,8 +72,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id3",
-      version: 1,
       created_at: day3,
+      base_id: -1,
       datetime: {value: day4},
       entries: [
         {
@@ -96,8 +97,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id4",
-      version: 1,
       created_at: day3,
+      base_id: -1,
       datetime: {value: day4},
       entries: [
         {
@@ -121,8 +122,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id5",
-      version: 1,
       created_at: day3,
+      base_id: -1,
       datetime: {value: day5},
       entries: [{
         id: "",
@@ -136,8 +137,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id3",
-      version: 2,
       created_at: day4,
+      base_id: -1,
       datetime: {value: day4},
       entries: [
         {
@@ -161,8 +162,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id4",
-      version: 2,
       created_at: day4,
+      base_id: -1,
       datetime: {value: day4},
       entries: [
         {
@@ -186,8 +187,8 @@ const two_time_dimensional_trees = {
     },
     {
       id: "VAP_set_id5",
-      version: 2,
       created_at: day4,
+      base_id: -1,
       datetime: {value: day5},
       entries: [{
         id: "",

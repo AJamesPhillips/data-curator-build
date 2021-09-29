@@ -3,6 +3,7 @@ import {update_substate} from "../../../../utils/update_state.js";
 import {
   get_wcomponents_from_state
 } from "../../accessors.js";
+import {update_modified_by} from "../../update_modified_by.js";
 import {tidy_wcomponent} from "../tidy_wcomponent.js";
 import {
   is_bulk_edit_wcomponents
@@ -20,7 +21,8 @@ function handle_bulk_edit_wcomponents(state, action) {
     const wcomponents_by_id = {...state.specialised_objects.wcomponents_by_id};
     wcomponents.forEach((wcomponent) => {
       const edited_wcomponent = {...wcomponent, ...change};
-      const updated = tidy_wcomponent(edited_wcomponent);
+      const tidied = tidy_wcomponent(edited_wcomponent);
+      const updated = update_modified_by(tidied, state);
       wcomponents_by_id[wcomponent.id] = updated;
     });
     state = update_substate(state, "specialised_objects", "wcomponents_by_id", wcomponents_by_id);

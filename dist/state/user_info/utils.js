@@ -1,19 +1,18 @@
-import {bounded} from "../../shared/utils/bounded.js";
-import {update_state} from "../../utils/update_state.js";
-export function ensure_chosen_index_is_valid(user_info, new_index) {
-  const custom_solid_pod_URLs = user_info.custom_solid_pod_URLs.filter((u) => !!u);
-  if (custom_solid_pod_URLs.length !== user_info.custom_solid_pod_URLs.length) {
-    user_info = update_state(user_info, "custom_solid_pod_URLs", custom_solid_pod_URLs);
+import {get_all_bases} from "../../supabase/bases.js";
+import {ACTIONS} from "../actions.js";
+import {get_store} from "../store.js";
+export async function refresh_bases_for_current_user(store) {
+  if (!store)
+    store = get_store();
+  const {user} = store.getState().user_info;
+  if (!user) {
+    store.dispatch(ACTIONS.user_info.update_bases({bases: void 0}));
+    return {error: void 0};
   }
-  const index = new_index === void 0 ? user_info.chosen_custom_solid_pod_URL_index : new_index;
-  let bounded_index = bounded(index, 0, user_info.custom_solid_pod_URLs.length);
-  if (bounded_index !== index)
-    bounded_index = 0;
-  user_info = update_state(user_info, "chosen_custom_solid_pod_URL_index", bounded_index);
-  return user_info;
-}
-export function ensure_chosen_index_is_valid_using_root(state, new_index) {
-  const user_info = ensure_chosen_index_is_valid(state.user_info, new_index);
-  state = update_state(state, "user_info", user_info);
-  return state;
+  store.dispatch(ACTIONS.sync.update_sync_status({status: "LOADING", data_type: "bases"}));
+  const {data, error} = await get_all_bases();
+  store.dispatch(ACTIONS.user_info.update_bases({bases: data}));
+  const status = error ? "FAILED" : "LOADED";
+  store.dispatch(ACTIONS.sync.update_sync_status({status, data_type: "bases"}));
+  return {error: error || void 0};
 }

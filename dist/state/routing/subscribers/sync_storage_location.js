@@ -1,31 +1,24 @@
 import {ACTIONS} from "../../actions.js";
-import {get_solid_pod_URL_or_error} from "../../sync/utils/solid.js";
 export function sync_storage_location_subscriber(store) {
   const starting_state = store.getState();
-  let solid_pod_URL = get_solid_pod_URL_or_error(starting_state.user_info, "reducer-sync").solid_pod_URL;
+  let {chosen_base_id: base_id} = starting_state.user_info;
   store.subscribe(() => {
     const state = store.getState();
-    const {solid_pod_URL: new_solid_pod_URL, promised_error} = get_solid_pod_URL_or_error(state.user_info, "reducer-sync");
-    if (promised_error)
-      return;
-    const new_routing_args_storage_location = state.routing.args.storage_location;
-    if (!new_routing_args_storage_location) {
-      if (new_solid_pod_URL) {
-        const storage_location = new_solid_pod_URL;
-        console.log(`Change storage_location in route to "${storage_location}" as nothing was set`);
-        store.dispatch(ACTIONS.routing.change_route({args: {storage_location}}));
+    const {chosen_base_id: new_base_id} = state.user_info;
+    const {storage_location: new_routing_args_storage_location} = state.routing.args;
+    if (new_routing_args_storage_location === void 0) {
+      if (new_routing_args_storage_location !== new_base_id) {
+        console.log(`Change storage_location in route to "${new_base_id}" as nothing was set`);
+        store.dispatch(ACTIONS.routing.change_route({args: {storage_location: new_base_id}}));
       }
-    } else if (new_routing_args_storage_location !== new_solid_pod_URL) {
-      if (solid_pod_URL !== new_solid_pod_URL) {
-        const storage_location = new_solid_pod_URL;
-        console.log("Change route: ", storage_location);
-        store.dispatch(ACTIONS.routing.change_route({args: {storage_location}}));
+    } else if (new_routing_args_storage_location !== new_base_id) {
+      if (base_id !== new_base_id) {
+        console.log("Change route: ", new_base_id);
+        store.dispatch(ACTIONS.routing.change_route({args: {storage_location: new_base_id}}));
       } else {
-        const chosen_solid_pod_URL = new_routing_args_storage_location;
-        console.log("ensure_solid_pod_URL_is_chosen: ", chosen_solid_pod_URL);
-        store.dispatch(ACTIONS.user_info.ensure_solid_pod_URL_is_chosen({chosen_solid_pod_URL}));
+        store.dispatch(ACTIONS.user_info.update_chosen_base_id({base_id: new_routing_args_storage_location}));
       }
     }
-    solid_pod_URL = new_solid_pod_URL;
+    base_id = new_base_id;
   });
 }

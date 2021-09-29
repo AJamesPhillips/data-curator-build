@@ -78,9 +78,10 @@ function upgrade_2021_05_19_existence_predictions(wcomponent) {
   if (wcomponent_has_VAP_sets(wcomponent))
     return wcomponent;
   const values_and_prediction_sets = wcomponent.existence.map((e) => {
-    return {
+    const vap_set = {
       id: e.id.replace("pr", "vps"),
       created_at: e.created_at,
+      base_id: e.base_id,
       custom_created_at: e.custom_created_at,
       datetime: e.datetime || {},
       entries: [
@@ -92,9 +93,9 @@ function upgrade_2021_05_19_existence_predictions(wcomponent) {
           probability: e.probability,
           conviction: e.conviction
         }
-      ],
-      version: 1
+      ]
     };
+    return vap_set;
   });
   const upgraded_wcomponent = {
     ...wcomponent,

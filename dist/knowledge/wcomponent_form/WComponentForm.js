@@ -1,6 +1,6 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useMemo, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {Box, FormControl, FormLabel} from "../../../snowpack/pkg/@material-ui/core.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
@@ -31,7 +31,7 @@ import {wcomponent_statev2_subtypes} from "../../shared/wcomponent/interfaces/st
 import {wcomponent_types} from "../../shared/wcomponent/interfaces/wcomponent_base.js";
 import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
 import {wcomponent_VAPs_represent} from "../../shared/wcomponent/value_and_prediction/utils.js";
-import {wcomponent_type_to_text} from "../../shared/wcomponent/wcomponent_type_to_text.js";
+import {DEPRECATED_WCOMPONENT_TYPES, wcomponent_type_to_text} from "../../shared/wcomponent/wcomponent_type_to_text.js";
 import {ColorPicker} from "../../sharedf/ColorPicker.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_wc_id_counterfactuals_map} from "../../state/derived/accessor.js";
@@ -49,6 +49,9 @@ import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
 import {WComponentDateTimeFormField} from "./WComponentDateTimeFormField.js";
 import {WComponentEventAtFormField} from "./WComponentEventAtFormField.js";
 import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
+import {WComponentImageForm} from "./WComponentImageForm.js";
+import {Button} from "../../sharedf/Button.js";
+import {selector_chosen_base_id} from "../../state/user_info/selector.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -59,6 +62,7 @@ const map_state = (state, {wcomponent}) => {
   const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state);
   return {
     ready: state.sync.ready_for_reading,
+    base_id: selector_chosen_base_id(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     wc_id_counterfactuals_map,
     from_wcomponent,
@@ -66,8 +70,7 @@ const map_state = (state, {wcomponent}) => {
     editing: !state.display_options.consumption_formatting,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
-    creation_context: state.creation_context,
-    storage_type_supports_delete: state.sync.storage_type !== "local_server"
+    creation_context: state.creation_context
   };
 };
 const map_dispatch = {
@@ -83,8 +86,18 @@ function _WComponentForm(props) {
     set_previous_id(wcomponent_id);
     set_focus_title(true);
   }, [wcomponent_id]);
-  if (!props.ready)
+  const filtered_wcomponent_type_options = useMemo(() => {
+    return wcomponent_type_options.filter((option) => {
+      const not_deprecated = !DEPRECATED_WCOMPONENT_TYPES.has(option.id);
+      const current_type = option.id === props.wcomponent.type;
+      return not_deprecated || current_type;
+    });
+  }, [props.wcomponent.type]);
+  const {ready, base_id} = props;
+  if (!ready)
     return /* @__PURE__ */ h("div", null, "Loading...");
+  if (base_id === void 0)
+    return /* @__PURE__ */ h("div", null, "Choose a base first.");
   const {
     wcomponent,
     wcomponents_by_id,
@@ -140,11 +153,11 @@ function _WComponentForm(props) {
   }, /* @__PURE__ */ h(AutocompleteText, {
     placeholder: "Type: ",
     selected_option_id: wcomponent.type,
-    options: wcomponent_type_options,
+    options: filtered_wcomponent_type_options,
     on_change: (type) => {
       if (!type)
         return;
-      const vanilla = get_contextless_new_wcomponent_object({type});
+      const vanilla = get_contextless_new_wcomponent_object({base_id, type});
       const new_wcomponent = {...vanilla, ...wcomponent};
       new_wcomponent.type = type;
       upsert_wcomponent(new_wcomponent);
@@ -236,9 +249,8 @@ function _WComponentForm(props) {
       upsert_wcomponent({values_and_prediction_sets});
     }
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ValueList, {
-    values: wcomponent.values || [],
-    update_values: (new_values) => upsert_wcomponent({values: new_values}),
-    creation_context
+    base_id,
+    values: wcomponent.values || []
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_is_goal(wcomponent) && /* @__PURE__ */ h(GoalFormFields, {
     ...{wcomponent, upsert_wcomponent}
   }), /* @__PURE__ */ h(FormControl, {
@@ -247,25 +259,32 @@ function _WComponentForm(props) {
     title: "Created at",
     invariant_value: wcomponent.created_at,
     value: wcomponent.custom_created_at,
-    on_change: (new_custom_created_at) => upsert_wcomponent({custom_created_at: new_custom_created_at})
-  })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+    on_change: (new_custom_created_at) => {
+      upsert_wcomponent({custom_created_at: new_custom_created_at});
+    }
+  }), /* @__PURE__ */ h("br", null)), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Label color"), /* @__PURE__ */ h(ColorPicker, {
     color: wcomponent.label_color,
     conditional_on_blur: (color) => upsert_wcomponent({label_color: color})
-  })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), editing && /* @__PURE__ */ h(WComponentImageForm, {
+    wcomponent,
+    upsert_wcomponent
+  }), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Hide (node) title"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_title,
     on_change: (hide_title) => upsert_wcomponent({hide_title})
   }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
     wcomponent_id
-  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    disabled: !props.storage_type_supports_delete,
-    button_text: "Permanently delete" + (props.storage_type_supports_delete ? "" : " (currently unsupported for local server)"),
-    tooltip_text: "Permanently remove from all knowledge views",
+  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Delete",
+    tooltip_text: "Remove from all knowledge views",
     on_delete: () => props.delete_wcomponent({wcomponent_id})
-  })), /* @__PURE__ */ h("br", null));
+  })), editing && wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
+    title: "Undo delete",
+    onClick: () => props.upsert_wcomponent({wcomponent: {...wcomponent, deleted_at: void 0}})
+  }, "Restore")), /* @__PURE__ */ h("br", null));
 }
 export const WComponentForm = connector(_WComponentForm);
 const wcomponent_type_options = wcomponent_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));

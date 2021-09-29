@@ -37,7 +37,7 @@ const connector = connect(map_state, map_dispatch);
 function _AppMenuItem(props) {
   const title = get_title(props.id);
   return /* @__PURE__ */ h(MaterialMenuItem, {
-    style: "display:flex; justify-content:flex-start; padding:0.5em;",
+    style: {display: "flex", justifyContent: "flex-start", padding: "0.5em"},
     onPointerDown: (e) => {
       e.stopImmediatePropagation();
       props.change_route({route: props.id, sub_route: null, item_id: null});

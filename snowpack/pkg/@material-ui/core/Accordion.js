@@ -1,232 +1,23 @@
-import { c as createCommonjsModule, b as getDefaultExportFromCjs } from '../../common/_commonjsHelpers-c99fd594.js';
-import { i as interopRequireDefault } from '../../common/interopRequireDefault-189da5a0.js';
-import { i as interopRequireWildcard } from '../../common/interopRequireWildcard-b04711e4.js';
-import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-4c19274d.js';
-import { a as arrayWithHoles, u as unsupportedIterableToArray, n as nonIterableRest, s as slicedToArray, b as useControlled_1 } from '../../common/useControlled-dbb03576.js';
-import { k, a as compat_module } from '../../common/compat.module-44e2e532.js';
-import { u as useTheme, T as Transition, g as getTransitionProps } from '../../common/utils-30547bf9.js';
-import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-c36e250e.js';
-import { a as _objectWithoutProperties, _ as _extends, c as clsx, b as _slicedToArray } from '../../common/withStyles-015222b5.js';
-import { w as withStyles_1 } from '../../common/withStyles-5d7eda42.js';
-import { A as AccordionContext_1 } from '../../common/AccordionContext-bf95cd61.js';
-import { w as withStyles, a as duration } from '../../common/withStyles-b03a0fb3.js';
-import { u as useForkRef } from '../../common/useForkRef-e701e1c9.js';
-import { s, y } from '../../common/hooks.module-b65ed191.js';
-import { v } from '../../common/preact.module-5693ab29.js';
-import { P as Paper } from '../../common/Paper-2cf9d63b.js';
+import { c as createCommonjsModule, g as getDefaultExportFromCjs } from '../../common/_commonjsHelpers-4f955397.js';
+import { i as interopRequireDefault } from '../../common/interopRequireDefault-146b584c.js';
+import { i as interopRequireWildcard } from '../../common/interopRequireWildcard-4c12a3b0.js';
+import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-ecdc3a69.js';
+import { a as arrayWithHoles, u as unsupportedIterableToArray, n as nonIterableRest, s as slicedToArray, b as useControlled_1 } from '../../common/useControlled-f31ead54.js';
+import { a as compat_module } from '../../common/compat.module-44e2e532.js';
+import { C as Collapse } from '../../common/Collapse-f1497ec7.js';
+import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-d740ad2c.js';
+import { _ as __pika_web_default_export_for_treeshaking__$1 } from '../../common/clsx.m-e1755476.js';
+import { w as withStyles_1 } from '../../common/withStyles-737200e5.js';
+import { A as AccordionContext_1 } from '../../common/AccordionContext-0dc48847.js';
+import { P as Paper } from '../../common/Paper-6cc7d9f5.js';
+import '../../common/hooks.module-b65ed191.js';
+import '../../common/preact.module-5693ab29.js';
+import '../../common/withStyles-f3a61d13.js';
+import '../../common/withStyles-92c33e5b.js';
+import '../../common/useForkRef-e701e1c9.js';
 import '../../common/TransitionGroupContext-717896c3.js';
-import '../../common/defaultTheme-111296fa.js';
-import '../../common/ThemeProvider-002b8cd5.js';
-
-var styles = function styles(theme) {
-  return {
-    /* Styles applied to the container element. */
-    container: {
-      height: 0,
-      overflow: 'hidden',
-      transition: theme.transitions.create('height')
-    },
-
-    /* Styles applied to the container element when the transition has entered. */
-    entered: {
-      height: 'auto',
-      overflow: 'visible'
-    },
-
-    /* Styles applied to the container element when the transition has exited and `collapsedHeight` != 0px. */
-    hidden: {
-      visibility: 'hidden'
-    },
-
-    /* Styles applied to the outer wrapper element. */
-    wrapper: {
-      // Hack to get children with a negative margin to not falsify the height computation.
-      display: 'flex'
-    },
-
-    /* Styles applied to the inner wrapper element. */
-    wrapperInner: {
-      width: '100%'
-    }
-  };
-};
-/**
- * The Collapse transition is used by the
- * [Vertical Stepper](/components/steppers/#vertical-stepper) StepContent component.
- * It uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.
- */
-
-var Collapse = /*#__PURE__*/k(function Collapse(props, ref) {
-  var children = props.children,
-      classes = props.classes,
-      className = props.className,
-      _props$collapsedHeigh = props.collapsedHeight,
-      collapsedHeightProp = _props$collapsedHeigh === void 0 ? '0px' : _props$collapsedHeigh,
-      _props$component = props.component,
-      Component = _props$component === void 0 ? 'div' : _props$component,
-      _props$disableStrictM = props.disableStrictModeCompat,
-      disableStrictModeCompat = _props$disableStrictM === void 0 ? false : _props$disableStrictM,
-      inProp = props.in,
-      onEnter = props.onEnter,
-      onEntered = props.onEntered,
-      onEntering = props.onEntering,
-      onExit = props.onExit,
-      onExited = props.onExited,
-      onExiting = props.onExiting,
-      style = props.style,
-      _props$timeout = props.timeout,
-      timeout = _props$timeout === void 0 ? duration.standard : _props$timeout,
-      _props$TransitionComp = props.TransitionComponent,
-      TransitionComponent = _props$TransitionComp === void 0 ? Transition : _props$TransitionComp,
-      other = _objectWithoutProperties(props, ["children", "classes", "className", "collapsedHeight", "component", "disableStrictModeCompat", "in", "onEnter", "onEntered", "onEntering", "onExit", "onExited", "onExiting", "style", "timeout", "TransitionComponent"]);
-
-  var theme = useTheme();
-  var timer = s();
-  var wrapperRef = s(null);
-  var autoTransitionDuration = s();
-  var collapsedHeight = typeof collapsedHeightProp === 'number' ? "".concat(collapsedHeightProp, "px") : collapsedHeightProp;
-  y(function () {
-    return function () {
-      clearTimeout(timer.current);
-    };
-  }, []);
-  var enableStrictModeCompat = theme.unstable_strictMode && !disableStrictModeCompat;
-  var nodeRef = s(null);
-  var handleRef = useForkRef(ref, enableStrictModeCompat ? nodeRef : undefined);
-
-  var normalizedTransitionCallback = function normalizedTransitionCallback(callback) {
-    return function (nodeOrAppearing, maybeAppearing) {
-      if (callback) {
-        var _ref = enableStrictModeCompat ? [nodeRef.current, nodeOrAppearing] : [nodeOrAppearing, maybeAppearing],
-            _ref2 = _slicedToArray(_ref, 2),
-            node = _ref2[0],
-            isAppearing = _ref2[1]; // onEnterXxx and onExitXxx callbacks have a different arguments.length value.
-
-
-        if (isAppearing === undefined) {
-          callback(node);
-        } else {
-          callback(node, isAppearing);
-        }
-      }
-    };
-  };
-
-  var handleEnter = normalizedTransitionCallback(function (node, isAppearing) {
-    node.style.height = collapsedHeight;
-
-    if (onEnter) {
-      onEnter(node, isAppearing);
-    }
-  });
-  var handleEntering = normalizedTransitionCallback(function (node, isAppearing) {
-    var wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
-
-    var _getTransitionProps = getTransitionProps({
-      style: style,
-      timeout: timeout
-    }, {
-      mode: 'enter'
-    }),
-        transitionDuration = _getTransitionProps.duration;
-
-    if (timeout === 'auto') {
-      var duration2 = theme.transitions.getAutoHeightDuration(wrapperHeight);
-      node.style.transitionDuration = "".concat(duration2, "ms");
-      autoTransitionDuration.current = duration2;
-    } else {
-      node.style.transitionDuration = typeof transitionDuration === 'string' ? transitionDuration : "".concat(transitionDuration, "ms");
-    }
-
-    node.style.height = "".concat(wrapperHeight, "px");
-
-    if (onEntering) {
-      onEntering(node, isAppearing);
-    }
-  });
-  var handleEntered = normalizedTransitionCallback(function (node, isAppearing) {
-    node.style.height = 'auto';
-
-    if (onEntered) {
-      onEntered(node, isAppearing);
-    }
-  });
-  var handleExit = normalizedTransitionCallback(function (node) {
-    var wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
-    node.style.height = "".concat(wrapperHeight, "px");
-
-    if (onExit) {
-      onExit(node);
-    }
-  });
-  var handleExited = normalizedTransitionCallback(onExited);
-  var handleExiting = normalizedTransitionCallback(function (node) {
-    var wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
-
-    var _getTransitionProps2 = getTransitionProps({
-      style: style,
-      timeout: timeout
-    }, {
-      mode: 'exit'
-    }),
-        transitionDuration = _getTransitionProps2.duration;
-
-    if (timeout === 'auto') {
-      var duration2 = theme.transitions.getAutoHeightDuration(wrapperHeight);
-      node.style.transitionDuration = "".concat(duration2, "ms");
-      autoTransitionDuration.current = duration2;
-    } else {
-      node.style.transitionDuration = typeof transitionDuration === 'string' ? transitionDuration : "".concat(transitionDuration, "ms");
-    }
-
-    node.style.height = collapsedHeight;
-
-    if (onExiting) {
-      onExiting(node);
-    }
-  });
-
-  var addEndListener = function addEndListener(nodeOrNext, maybeNext) {
-    var next = enableStrictModeCompat ? nodeOrNext : maybeNext;
-
-    if (timeout === 'auto') {
-      timer.current = setTimeout(next, autoTransitionDuration.current || 0);
-    }
-  };
-
-  return /*#__PURE__*/v(TransitionComponent, _extends({
-    in: inProp,
-    onEnter: handleEnter,
-    onEntered: handleEntered,
-    onEntering: handleEntering,
-    onExit: handleExit,
-    onExited: handleExited,
-    onExiting: handleExiting,
-    addEndListener: addEndListener,
-    nodeRef: enableStrictModeCompat ? nodeRef : undefined,
-    timeout: timeout === 'auto' ? null : timeout
-  }, other), function (state, childProps) {
-    return /*#__PURE__*/v(Component, _extends({
-      className: clsx(classes.container, className, {
-        'entered': classes.entered,
-        'exited': !inProp && collapsedHeight === '0px' && classes.hidden
-      }[state]),
-      style: _extends({
-        minHeight: collapsedHeight
-      }, style),
-      ref: handleRef
-    }, childProps), /*#__PURE__*/v("div", {
-      className: classes.wrapper,
-      ref: wrapperRef
-    }, /*#__PURE__*/v("div", {
-      className: classes.wrapperInner
-    }, children)));
-  });
-});
-Collapse.muiSupportAuto = true;
-var Collapse$1 = withStyles(styles, {
-  name: 'MuiCollapse'
-})(Collapse);
+import '../../common/defaultTheme-8bd8d426.js';
+import '../../common/ThemeProvider-2a63d6f4.js';
 
 var iterableToArray = createCommonjsModule(function (module) {
 function _iterableToArray(iter) {
@@ -271,11 +62,11 @@ var React = interopRequireWildcard(compat_module);
 
 var _propTypes = interopRequireDefault(propTypes);
 
-var _clsx = interopRequireDefault(clsx);
+var _clsx = interopRequireDefault(__pika_web_default_export_for_treeshaking__$1);
 
 
 
-var _Collapse = interopRequireDefault(Collapse$1);
+var _Collapse = interopRequireDefault(Collapse);
 
 var _Paper = interopRequireDefault(Paper);
 

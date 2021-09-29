@@ -26,11 +26,20 @@ function _KnowledgeViewForm(props) {
     return /* @__PURE__ */ h("div", null, "No knowledge view selected");
   const possible_parent_knowledge_view_options = props.knowledge_views.map((kv) => ({id: kv.id, title: kv.title}));
   const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id);
-  const on_change = (knowledge_view2) => upsert_knowledge_view({knowledge_view: knowledge_view2});
+  const update_item = (knowledge_view2) => upsert_knowledge_view({knowledge_view: knowledge_view2});
+  const crud = {
+    create_item: () => {
+      throw new Error("Not implemented create knowledge view");
+    },
+    update_item,
+    delete_item: () => {
+      throw new Error("Not implemented delete knowledge view");
+    }
+  };
   return factory_get_kv_details({
     ...props,
     possible_parent_knowledge_view_options,
     current_kv_parent_ids
-  })(knowledge_view, on_change);
+  })(knowledge_view, crud);
 }
 export const KnowledgeViewForm = connector(_KnowledgeViewForm);

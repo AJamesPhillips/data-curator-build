@@ -1,59 +1,58 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
+import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import {get_new_value_id} from "../../shared/utils/ids.js";
 import {EditableList} from "../../form/editable_list/EditableList.js";
 import {get_new_created_ats} from "../../shared/utils/datetime.js";
-import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 export function ValueList(props) {
-  const item_top_props = useMemo(() => {
-    const props2 = {
-      get_created_at,
-      get_custom_created_at,
-      get_summary,
-      get_details
-    };
-    return props2;
-  }, []);
+  const item_props = useMemo(() => ({
+    get_created_at,
+    get_custom_created_at,
+    get_summary,
+    get_details,
+    crud: {
+      update_item: () => {
+      },
+      create_item: () => {
+      }
+    }
+  }), []);
   return /* @__PURE__ */ h(EditableList, {
     items: props.values,
     item_descriptor: "Value",
     get_id,
-    item_top_props,
-    prepare_new_item: prepare_new_item(props.creation_context),
-    update_items: (items) => props.update_values(items),
+    item_props,
+    prepare_new_item: () => prepare_new_item(props.base_id),
     disable_collapsed: true
   });
 }
 const get_id = (item) => item.id;
 const get_created_at = (item) => item.created_at;
 const get_custom_created_at = (item) => item.custom_created_at;
-const prepare_new_item = (creation_context) => () => {
-  const created_ats = get_new_created_ats(creation_context);
+const prepare_new_item = (base_id) => {
+  const created_ats = get_new_created_ats();
   return {
     id: get_new_value_id(),
     ...created_ats,
+    base_id,
     value: "",
     start_datetime: created_ats.custom_created_at || created_ats.created_at,
     description: ""
   };
 };
-function get_summary(item, on_change) {
+function get_summary(item, crud) {
   return /* @__PURE__ */ h(TextField, {
     size: "small",
     label: "Value",
     variant: "outlined",
-    conditional_on_change: (new_value) => {
-      const value = new_value && new_value.trim();
-      if (on_change)
-        on_change({...item, value});
-    }
+    value: item.value
   });
 }
-function get_details(item, on_change) {
+function get_details(item, crud) {
   return /* @__PURE__ */ h(TextField, {
     size: "small",
     label: "Description",
     variant: "outlined",
-    conditional_on_change: on_change && ((new_d) => on_change({...item, description: new_d}))
+    value: item.description
   });
 }

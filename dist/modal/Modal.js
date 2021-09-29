@@ -15,7 +15,10 @@ function _ModalCore(props) {
   return /* @__PURE__ */ h("div", {
     id: "modal_background",
     className: (props.size || "medium") + "_modal",
-    onClick: (e) => on_close && on_close(e)
+    onClick: (e) => {
+      e.stopImmediatePropagation();
+      on_close && on_close(e);
+    }
   }, /* @__PURE__ */ h("div", {
     id: "modal_container",
     onClick: (e) => e.stopPropagation()

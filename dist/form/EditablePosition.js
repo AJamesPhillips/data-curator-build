@@ -28,7 +28,7 @@ export function EditablePosition(props) {
     type: "button",
     value: "→",
     onClick: () => update({left: round_coordinate_small_step(left + grid_small_step)})
-  }), /* @__PURE__ */ h("br", null), "Move Top: ", /* @__PURE__ */ h(EditableNumber, {
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), "Move Top: ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "Top",
     value: top,
     allow_undefined: false,
