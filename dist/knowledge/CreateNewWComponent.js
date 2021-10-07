@@ -33,7 +33,7 @@ function _CreateNewWComponent(props) {
     return /* @__PURE__ */ h("div", {
       class: "create_new_wcomponent"
     }, /* @__PURE__ */ h("h3", null, "Create new component"), /* @__PURE__ */ h("p", null, "Please select a knowledge view first"));
-  const exclude = new Set(["counterfactual", "state"]);
+  const exclude = new Set(["counterfactual", "state", "sub_state"]);
   const types = wcomponent_types.filter((t) => !exclude.has(t));
   return /* @__PURE__ */ h("div", {
     class: "create_new_wcomponent"

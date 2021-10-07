@@ -1,4 +1,5 @@
 const _time_resolution_types = {
+  second: true,
   minute: true,
   hour: true,
   day: true

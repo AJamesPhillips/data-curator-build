@@ -42,7 +42,7 @@ function _SyncInfo(props) {
     onClick: async (e) => {
       e.currentTarget.blur();
       const store = get_store();
-      await save_state(store);
+      await save_state(store, true);
     },
     startIcon: failed ? /* @__PURE__ */ h(SyncProblemIcon, {
       color: "error"

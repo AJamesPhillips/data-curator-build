@@ -16,10 +16,11 @@ import {DemoProjectDashboard} from "./scratch_pad/DemoProjectDashboard.js";
 import {SandboxWComponentCanvasNode} from "./scratch_pad/SandboxWComponentCanvasNode.js";
 import {SandBoxConnected} from "./scratch_pad/SandBoxConnected.js";
 import {SandBoxSupabase} from "./scratch_pad/SandBoxSupabase.js";
+import {setup_window_on_focus_listener} from "./utils/window_on_focus_listener.js";
 const root = document.getElementById("root");
 const title = document.getElementsByTagName("title")[0];
 if (root) {
-  const in_production = window.location.hostname.endsWith("datacurator.org");
+  const in_production = window.location.hostname === "datacurator.org";
   if (window.location.pathname === "" || window.location.pathname === "/") {
     let content = `
         <style>
@@ -103,3 +104,4 @@ if (root) {
 if (title) {
   title.innerHTML = APP_DETAILS.NAME;
 }
+setup_window_on_focus_listener();

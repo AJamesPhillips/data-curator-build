@@ -73,6 +73,9 @@ export function alert_wcomponent_is_judgement_or_objective(wcomponent, log_error
 export function wcomponent_is_objective(wcomponent) {
   return wcomponent.type === "objective";
 }
+export function wcomponent_is_sub_state(wcomponent, log_error_id = "") {
+  return wcomponent_is_a("sub_state", wcomponent, log_error_id);
+}
 export function wcomponent_is_counterfactual(wcomponent, log_error_id = "") {
   return wcomponent_is_a("counterfactual", wcomponent, log_error_id);
 }
@@ -91,7 +94,8 @@ export function wcomponent_has_validity_predictions(wcomponent) {
 }
 const types_without_validity = new Set([
   "prioritisation",
-  "counterfactual"
+  "counterfactual",
+  "sub_state"
 ]);
 export function wcomponent_can_have_validity_predictions(wcomponent) {
   return !types_without_validity.has(wcomponent.type);

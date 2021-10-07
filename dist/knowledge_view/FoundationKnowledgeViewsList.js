@@ -2,7 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Button} from "../sharedf/Button.js";
 import {ACTIONS} from "../state/actions.js";
-import {remove_from_list_by_predicate} from "../utils/list.js";
+import {remove_element} from "../utils/list.js";
 import {SelectKnowledgeView} from "./SelectKnowledgeView.js";
 const map_state = (state) => ({
   knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
@@ -51,7 +51,7 @@ function _FoundationKnowledgeViewsList(props) {
     }, editing && /* @__PURE__ */ h(Button, {
       value: "remove",
       onClick: () => {
-        on_change(remove_from_list_by_predicate(foundation_knowledge_view_ids, (id) => id === foundation_knowledge_view.id));
+        on_change(remove_element(foundation_knowledge_view_ids, (id) => id === foundation_knowledge_view.id));
       }
     })));
   }), unfound_ids.length > 0 && /* @__PURE__ */ h("div", null, "Could not find ", unfound_ids.length, " knowledge views"));

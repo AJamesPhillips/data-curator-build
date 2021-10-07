@@ -25,6 +25,9 @@ async function supabase_create_wcomponent(args) {
 async function supabase_update_wcomponent(args) {
   const item = wcomponent_app_to_supabase(args.wcomponent);
   const result = await args.supabase.rpc("update_wcomponent", {item});
+  if (result.status === 401) {
+    return {status: result.status, error: {message: "JWT expired"}, item: void 0};
+  }
   let new_item = void 0;
   let error = result.error || void 0;
   try {

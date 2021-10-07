@@ -34,7 +34,7 @@ export function upsert_entry(existing, new_item, predicate, debug_item_descripto
 export function remove_index(list, index) {
   return list.slice(0, index).concat(list.slice(index + 1));
 }
-export function remove_from_list_by_predicate(list, predicate) {
+export function remove_element(list, predicate) {
   const filtered = list.filter((i) => !predicate(i));
   return filtered.length === list.length ? list : filtered;
 }

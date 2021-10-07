@@ -1,4 +1,4 @@
-import {percentage_to_string} from "../UI/percentages.js";
+import {percentage_to_string} from "../../sharedf/percentages.js";
 import {get_wcomponent_state_value} from "./get_wcomponent_state_value.js";
 import {wcomponent_is_statev2} from "./interfaces/SpecialisedObjects.js";
 export function get_wcomponent_state_UI_value(args) {

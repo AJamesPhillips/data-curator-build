@@ -13,7 +13,6 @@ export function sync_storage_location_subscriber(store) {
       }
     } else if (new_routing_args_storage_location !== new_base_id) {
       if (base_id !== new_base_id) {
-        console.log("Change route: ", new_base_id);
         store.dispatch(ACTIONS.routing.change_route({args: {storage_location: new_base_id}}));
       } else {
         store.dispatch(ACTIONS.user_info.update_chosen_base_id({base_id: new_routing_args_storage_location}));

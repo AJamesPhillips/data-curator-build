@@ -1,4 +1,4 @@
-import {percentage_to_string} from "../shared/UI/percentages.js";
+import {percentage_to_string} from "./percentages.js";
 import {VAPsType} from "../shared/wcomponent/interfaces/generic_value.js";
 import {get_VAPs_ordered_by_prob} from "../shared/wcomponent/value_and_prediction/utils.js";
 export function get_probable_VAP_set_values(VAP_set, VAPs_represent) {

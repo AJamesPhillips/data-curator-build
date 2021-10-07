@@ -6,7 +6,7 @@ import {
   is_replace_all_specialised_objects
 } from "../specialised_objects/syncing/actions.js";
 import {is_upsert_wcomponent} from "../specialised_objects/wcomponents/actions.js";
-import {is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save} from "./actions.js";
+import {is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save, is_update_network_status} from "./actions.js";
 import {update_knowledge_view_last_source_of_truth, update_wcomponent_last_source_of_truth} from "./utils.js";
 export const sync_reducer = (state, action) => {
   if (is_update_sync_status(action)) {
@@ -30,6 +30,8 @@ export const sync_reducer = (state, action) => {
     state = update_specialised_object_ids_pending_save(state, {knowledge_view_ids: new Set(), wcomponent_ids: new Set()});
     const last = {wcomponents: {}, knowledge_views: {}};
     state = update_substate(state, "sync", "last_source_of_truth_specialised_objects_by_id", last);
+    state = update_substate(state, "sync", "specialised_objects", {status: void 0, error_message: "", retry_attempt: 0});
+    state = update_ready_for_fields(state);
   }
   if (is_replace_all_specialised_objects(action)) {
     const {wcomponents, knowledge_views} = action.specialised_objects;
@@ -46,6 +48,10 @@ export const sync_reducer = (state, action) => {
   }
   if (is_upsert_knowledge_view(action) && action.source_of_truth) {
     state = update_knowledge_view_last_source_of_truth(state, action.knowledge_view);
+  }
+  if (is_update_network_status(action)) {
+    state = update_substate(state, "sync", "network_functional", action.network_functional);
+    state = update_substate(state, "sync", "network_function_last_checked", action.last_checked);
   }
   return state;
 };

@@ -41,5 +41,6 @@ export const root_reducer = (state, action) => {
   state = derived_state_reducer(initial_state, state);
   state = derived_meta_wcomponents_state_reducer(initial_state, state);
   state = derived_filter_context_state_reducer(initial_state, state);
+  window.debug_state = state;
   return state;
 };

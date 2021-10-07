@@ -9,85 +9,78 @@ import {ListHeader} from "../../form/editable_list/ListHeader.js";
 import {ListHeaderAddButton} from "../../form/editable_list/ListHeaderAddButton.js";
 import {NewItemForm} from "../../form/editable_list/NewItemForm.js";
 import {Tense} from "../../shared/wcomponent/interfaces/datetime.js";
-import {replace_element, remove_from_list_by_predicate} from "../../utils/list.js";
+import {replace_element, remove_element} from "../../utils/list.js";
 import {
   get_summary_for_single_VAP_set,
   get_details_for_single_VAP_set,
   get_details2_for_single_VAP_set
 } from "./common.js";
 import {new_value_and_prediction_set} from "./NewValueAndPredictionSet.js";
-import {prepare_new_VAP_set} from "./utils.js";
 import {ValueAndPredictionSetOlderVersions} from "./ValueAndPredictionSetOlderVersions.js";
+import {prepare_new_VAP_set} from "./value_and_prediction/prepare_new_VAP_set.js";
 export function ValueAndPredictionSetsComponent(props) {
   const [new_item, set_new_item] = useState(void 0);
   const {
     wcomponent_id,
-    VAP_set_counterfactuals_map,
     item_descriptor,
     VAPs_represent,
-    update_items,
+    update_values_and_predictions,
+    value_possibilities,
     values_and_prediction_sets: all_VAP_sets,
     invalid_future_items,
     future_items,
     present_items,
     past_items,
     previous_versions_by_id,
-    creation_context,
     editing
   } = props;
   const render_future_list_content = factory_render_VAP_set_list_content({
+    value_possibilities,
     subset_VAP_sets: future_items,
     previous_versions_by_id,
     all_VAP_sets,
-    update_items,
+    update_values_and_predictions,
     wcomponent_id,
-    VAP_set_counterfactuals_map,
     VAPs_represent,
     tense: Tense.future,
-    creation_context,
     editing
   });
   const render_present_list_content = factory_render_VAP_set_list_content({
+    value_possibilities,
     subset_VAP_sets: present_items,
     previous_versions_by_id,
     all_VAP_sets,
-    update_items,
+    update_values_and_predictions,
     wcomponent_id,
-    VAP_set_counterfactuals_map,
     VAPs_represent,
     tense: Tense.present,
-    creation_context,
     editing
   });
   const render_past_list_content = factory_render_VAP_set_list_content({
+    value_possibilities,
     subset_VAP_sets: past_items,
     previous_versions_by_id,
     all_VAP_sets,
-    update_items,
+    update_values_and_predictions,
     wcomponent_id,
-    VAP_set_counterfactuals_map,
     VAPs_represent,
     tense: Tense.past,
-    creation_context,
     editing
   });
   const new_VAP_set_form_item_props = {
     get_created_at: get_actual_created_at_datetime,
     get_custom_created_at: get_actual_custom_created_at_datetime,
-    get_summary: new_value_and_prediction_set(VAPs_represent),
+    get_summary: new_value_and_prediction_set(VAPs_represent, value_possibilities),
     get_details: () => /* @__PURE__ */ h("div", null),
     get_details2: () => /* @__PURE__ */ h("div", null),
     extra_class_names: `value_and_prediction_set new`,
     crud: {
       create_item: (new_VAP_set) => {
-        update_items([...all_VAP_sets, new_VAP_set]);
+        const updated_VAP_sets = [...all_VAP_sets, new_VAP_set];
+        update_values_and_predictions(updated_VAP_sets);
         set_new_item(void 0);
       },
-      update_item: (modified_VAP_set) => {
-        const predicate = predicate_by_id_and_created_at(modified_VAP_set);
-        const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate);
-        update_items(updated_VAP_sets);
-      }
+      update_item: set_new_item
     }
   };
   const title = editing ? get_items_descriptor(item_descriptor, all_VAP_sets.length, editing) : item_descriptor;
@@ -102,7 +95,7 @@ export function ValueAndPredictionSetsComponent(props) {
     other_content: () => !editing ? null : /* @__PURE__ */ h(ListHeaderAddButton, {
       new_item_descriptor: item_descriptor,
       on_pointer_down_new_list_entry: () => {
-        const new_VAP_set = prepare_new_VAP_set(VAPs_represent, all_VAP_sets, props.base_id, props.creation_context);
+        const new_VAP_set = prepare_new_VAP_set(VAPs_represent, value_possibilities, all_VAP_sets, props.base_id, props.creation_context);
         set_new_item(new_VAP_set);
       }
     })
@@ -139,7 +132,16 @@ function count_and_versions(title, all_latest, previous_versions_by_id, editing)
   return `${title} (${all_latest.length} (${all_latest.length + previous_version_count}))`;
 }
 function factory_render_VAP_set_list_content(args) {
-  const {subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_items, VAPs_represent, tense, editing} = args;
+  const {
+    value_possibilities,
+    subset_VAP_sets,
+    all_VAP_sets,
+    previous_versions_by_id,
+    update_values_and_predictions,
+    VAPs_represent,
+    tense,
+    editing
+  } = args;
   const render_VAP_set_list_content = (list_content_props) => {
     const {
       disable_partial_collapsed,
@@ -147,16 +149,19 @@ function factory_render_VAP_set_list_content(args) {
       expanded_item_rows
     } = list_content_props;
     const crud = {
-      create_item: (item) => update_items([...all_VAP_sets, item]),
+      create_item: (item) => {
+        const updated_VAP_sets = [...all_VAP_sets, item];
+        update_values_and_predictions(updated_VAP_sets);
+      },
       update_item: (modified_VAP_set) => {
         const predicate = predicate_by_id_and_created_at(modified_VAP_set);
         const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate);
-        update_items(updated_VAP_sets);
+        update_values_and_predictions(updated_VAP_sets);
       },
       delete_item: (item) => {
         const predicate = predicate_by_id_and_created_at(item);
-        const updated_VAP_sets = remove_from_list_by_predicate(all_VAP_sets, predicate);
-        update_items(updated_VAP_sets);
+        const updated_VAP_sets = remove_element(all_VAP_sets, predicate);
+        update_values_and_predictions(updated_VAP_sets);
       }
     };
     return /* @__PURE__ */ h("div", {
@@ -171,12 +176,11 @@ function factory_render_VAP_set_list_content(args) {
       get_created_at: get_actual_created_at_datetime,
       get_custom_created_at: get_actual_custom_created_at_datetime,
       get_summary: get_summary_for_single_VAP_set(VAPs_represent, false),
-      get_details: get_details_for_single_VAP_set(VAPs_represent),
+      get_details: get_details_for_single_VAP_set(value_possibilities, VAPs_represent),
       get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
-      get_details3: get_details3(VAPs_represent, previous_versions_by_id),
+      get_details3: get_details3(value_possibilities, VAPs_represent, previous_versions_by_id),
       extra_class_names: `value_and_prediction_set ${tense === Tense.future ? "future" : tense === Tense.present ? "present" : "past"}`,
       expanded: expanded_item_rows,
-      disable_collapsable: disable_partial_collapsed,
       crud,
       delete_button_text: "Delete Set of Value & Predictions"
     }))));
@@ -188,10 +192,11 @@ const get_actual_custom_created_at_datetime = (item) => item.custom_created_at;
 const predicate_by_id_and_created_at = (i1) => (i2) => {
   return i1.id === i2.id && i1.created_at.getTime() === i2.created_at.getTime();
 };
-const get_details3 = (VAPs_represent, previous_versions_by_id) => (latest_VAP_set, crud) => {
+const get_details3 = (value_possibilities, VAPs_represent, previous_versions_by_id) => (latest_VAP_set, crud) => {
   return /* @__PURE__ */ h(Box, {
     className: "VAP_set_details"
   }, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(ValueAndPredictionSetOlderVersions, {
+    value_possibilities,
     VAPs_represent,
     current_VAP_set: latest_VAP_set,
     older_VAP_sets: previous_versions_by_id[latest_VAP_set.id] || [],

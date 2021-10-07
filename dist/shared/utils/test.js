@@ -5,12 +5,12 @@ function Set_toJSON(key, value) {
     return [...value].sort();
   return value;
 }
-export function test(got, expected, sort_items = true) {
+export function test(got, expected, description = "", sort_items = true) {
   const str_got = sort_items ? JSON.stringify(got, Set_toJSON) : JSON.stringify(got);
   const str_expected = sort_items ? JSON.stringify(expected, Set_toJSON) : JSON.stringify(expected);
   const pass = str_got === str_expected;
   if (pass)
-    console.log("pass");
+    console.log("pass  " + description);
   else
-    console.error(`fail: "${str_got}" !== "${str_expected}"`);
+    console.error(`fail: "${str_got}" !== "${str_expected}"  ${description}`);
 }

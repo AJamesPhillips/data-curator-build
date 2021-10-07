@@ -25,6 +25,9 @@ async function supabase_create_knowledge_view(args) {
 async function supabase_update_knowledge_view(args) {
   const item = knowledge_view_app_to_supabase(args.knowledge_view);
   const result = await args.supabase.rpc("update_knowledge_view", {item});
+  if (result.status === 401) {
+    return {status: result.status, error: {message: "JWT expired"}, item: void 0};
+  }
   let new_item = void 0;
   let error = result.error || void 0;
   try {

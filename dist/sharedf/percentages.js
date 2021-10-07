@@ -1,4 +1,4 @@
-import {bounded} from "../utils/bounded.js";
+import {bounded} from "../shared/utils/bounded.js";
 export function percentage_to_string(value) {
   if (value === void 0)
     return "";

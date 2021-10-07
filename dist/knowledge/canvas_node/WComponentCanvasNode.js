@@ -4,7 +4,6 @@ import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Box, makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./WComponentCanvasNode.css.proxy.js";
-import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {
   connection_terminal_attributes,
   connection_terminal_directions,
@@ -16,26 +15,29 @@ import {
   wcomponent_is_judgement_or_objective,
   wcomponent_is_statev1,
   wcomponent_is_statev2,
+  wcomponent_is_sub_state,
   wcomponent_should_have_state
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {ACTIONS} from "../../state/actions.js";
-import {get_wcomponent_from_state, is_on_current_knowledge_view} from "../../state/specialised_objects/accessors.js";
-import {calc_display_opacity, calc_wcomponent_should_display} from "../calc_display_parameters.js";
-import {WComponentJudgements} from "../judgements/WComponentJudgements.js";
-import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
-import {round_canvas_point} from "../../canvas/position_utils.js";
-import {Handles} from "./Handles.js";
-import {get_wc_id_counterfactuals_map} from "../../state/derived/accessor.js";
-import {WComponentValidityValue} from "../WComponentValidityValue.js";
+import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {get_top_left_for_terminal_type} from "../../canvas/connections/terminal.js";
-import {WarningTriangle} from "../../sharedf/WarningTriangle.js";
-import {LabelsListV2} from "../../labels/LabelsListV2.js";
-import {factory_on_pointer_down} from "../canvas_common.js";
+import {round_canvas_point} from "../../canvas/position_utils.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
-import {get_store} from "../../state/store.js";
-import {NodeValueAndPredictionSetSummary} from "../multiple_values/NodeValueAndPredictionSetSummary.js";
-import {MARKDOWN_OPTIONS} from "../../sharedf/RichMarkDown.js";
+import {LabelsListV2} from "../../labels/LabelsListV2.js";
+import {get_title} from "../../shared/wcomponent/rich_text/get_rich_text.js";
 import {wcomponent_type_to_text} from "../../shared/wcomponent/wcomponent_type_to_text.js";
+import {MARKDOWN_OPTIONS} from "../../sharedf/RichMarkDown.js";
+import {WarningTriangle} from "../../sharedf/WarningTriangle.js";
+import {ACTIONS} from "../../state/actions.js";
+import {get_wc_id_counterfactuals_map} from "../../state/derived/accessor.js";
+import {is_on_current_knowledge_view, get_wcomponent_from_state} from "../../state/specialised_objects/accessors.js";
+import {get_store} from "../../state/store.js";
+import {calc_wcomponent_should_display, calc_display_opacity} from "../calc_display_parameters.js";
+import {factory_on_pointer_down} from "../canvas_common.js";
+import {WComponentJudgements} from "../judgements/WComponentJudgements.js";
+import {NodeValueAndPredictionSetSummary} from "../multiple_values/NodeValueAndPredictionSetSummary.js";
+import {WComponentValidityValue} from "../WComponentValidityValue.js";
+import {Handles} from "./Handles.js";
+import {NodeSubStateSummary} from "../multiple_values/NodeSubStateSummary.js";
 const map_state = (state, own_props) => {
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
   const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id);
@@ -105,6 +107,8 @@ function _WComponentCanvasNode(props) {
   if (!kv_entry_maybe && on_graph)
     return /* @__PURE__ */ h("div", null, "Could not find knowledge view entry for id ", id);
   const kv_entry = kv_entry_maybe || {left: 0, top: 0};
+  if (kv_entry.deleted)
+    return null;
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const validity_value = calc_wcomponent_should_display({
     is_editing,
@@ -170,12 +174,15 @@ function _WComponentCanvasNode(props) {
   const color = get_wcomponent_color(wcomponent);
   const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
   const show_state_value = is_editing && wcomponent_should_have_state(wcomponent) || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0 || props.have_judgements;
+  const sub_state_wcomponent = wcomponent_is_sub_state(wcomponent) && wcomponent;
   const terminals = get_terminals({on_graph, is_editing, is_highlighted});
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0) || wcomponent_is_statev1(wcomponent);
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: on_graph ? kv_entry : void 0,
     cover_image: wcomponent.summary_image,
-    node_main_content: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("div", {
+    node_main_content: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("img", {
+      className: "background_image"
+    }), /* @__PURE__ */ h("div", {
       className: "node_title"
     }, kv_entry_maybe === void 0 && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
       message: "Missing from this knowledge view"
@@ -201,6 +208,18 @@ function _WComponentCanvasNode(props) {
       overflow: "hidden"
     }, /* @__PURE__ */ h(NodeValueAndPredictionSetSummary, {
       wcomponent,
+      created_at_ms,
+      sim_ms
+    }))), sub_state_wcomponent && /* @__PURE__ */ h(Box, {
+      display: "flex",
+      maxWidth: "100%",
+      overflow: "hidden"
+    }, /* @__PURE__ */ h(Box, {
+      flexGrow: 1,
+      flexShrink: 1,
+      overflow: "hidden"
+    }, /* @__PURE__ */ h(NodeSubStateSummary, {
+      wcomponent: sub_state_wcomponent,
       created_at_ms,
       sim_ms
     }))), /* @__PURE__ */ h("div", {

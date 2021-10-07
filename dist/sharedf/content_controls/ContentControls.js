@@ -1,6 +1,7 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse} from "../../../snowpack/pkg/@material-ui/core.js";
+import "./ContentControls.css.proxy.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
 import {TimeResolutionOptions} from "../../display_options/TimeResolutionOptions.js";
 import {ACTIONS} from "../../state/actions.js";
@@ -22,6 +23,7 @@ const map_dispatch = {
   set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time
 };
 const connector = connect(map_state, map_dispatch);
+let displayed_pulse_circle_on_move_to_components = false;
 function _ContentControls(props) {
   const invert_classes = invert_disabled_appearance();
   const {created_events, sim_events, move_to_component_id} = props;
@@ -31,6 +33,7 @@ function _ContentControls(props) {
   };
   const display_sliders = props.editing || props.display_time_sliders;
   const classes = use_styles();
+  displayed_pulse_circle_on_move_to_components = true;
   return /* @__PURE__ */ h(Box, {
     p: 2,
     mb: 2,
@@ -62,6 +65,9 @@ function _ContentControls(props) {
     variant: "dense"
   }, /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(MoveToWComponentButton, {
     wcomponent_id: move_to_component_id
+  }), /* @__PURE__ */ h("div", {
+    className: !move_to_component_id || displayed_pulse_circle_on_move_to_components ? "" : "pulsating_circle",
+    ref: (e) => setTimeout(() => e?.classList.remove("pulsating_circle"), 6e3)
   })), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(Box, {
     component: "label",
     title: props.editing ? "Time sliders always shown whilst editing" : ""

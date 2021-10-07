@@ -26,7 +26,8 @@ export function ValueAndPredictionSetSummary(props) {
     alignItems: "stretch",
     alignContent: "stretch",
     className: `value_and_prediction_set_summary items-${data.length} visible-${data_with_non_zero_certainty.length}`,
-    s: true
+    onPointerOver: () => set_show_all_judgements(true),
+    onPointerLeave: () => set_show_all_judgements(false)
   }, data.map((vap_visual, index) => {
     const certainty_percent_num = vap_visual.certainty * 100;
     const certainty_percent_str = `${certainty_percent_num}%`;
@@ -43,7 +44,7 @@ export function ValueAndPredictionSetSummary(props) {
       p: 2,
       boxSizing: "border-box",
       position: "relative",
-      bgcolor: VAP_set.is_counterfactual ? "warning.main" : "primary.main",
+      bgcolor: VAP_set.has_counterfactual_applied ? "warning.main" : "primary.main",
       flexGrow: 1,
       flexShrink: 1,
       flexBasis: "auto",
@@ -70,7 +71,11 @@ export function ValueAndPredictionSetSummary(props) {
       wcomponent: props.wcomponent,
       target_VAPs_represent: VAPs_represent,
       value: vap_visual.value
-    })));
+    }), cf_entries.map((entry) => /* @__PURE__ */ h(CounterfactualLink, {
+      any_active: VAP_set.has_counterfactual_applied,
+      counterfactual: entry,
+      active_counterfactual_v2_id: VAP_set.active_counterfactual_v2_id
+    }))));
   }));
 }
 function CounterfactualLink(props) {

@@ -27,6 +27,8 @@ export function sync_starting_state() {
     },
     ready_for_reading: false,
     ready_for_writing: false,
+    network_functional: true,
+    network_function_last_checked: void 0,
     bases: {...default_sync_state_for_one_data_type},
     specialised_objects: {...default_sync_state_for_one_data_type},
     ...obj

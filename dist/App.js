@@ -1,9 +1,8 @@
 import {h} from "../snowpack/pkg/preact.js";
-import {useState} from "../snowpack/pkg/preact/hooks.js";
+import {useEffect} from "../snowpack/pkg/preact/hooks.js";
+import {connect} from "../snowpack/pkg/react-redux.js";
 import clsx from "../snowpack/pkg/clsx.js";
-import {AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar} from "../snowpack/pkg/@material-ui/core.js";
-import MenuIcon from "../snowpack/pkg/@material-ui/icons/Menu.js";
-import CloseIcon from "../snowpack/pkg/@material-ui/icons/Close.js";
+import {AppBar, Box, CssBaseline, Drawer, makeStyles, ThemeProvider, Toolbar, Typography} from "../snowpack/pkg/@material-ui/core.js";
 import "./App.css.proxy.js";
 import {MainAreaRouter} from "./layout/MainAreaRouter.js";
 import {AppMenuItemsContainer} from "./layout/AppMenuItemsContainer.js";
@@ -18,20 +17,38 @@ import {HelpMenu} from "./help_menu/HelpMenu.js";
 import {ActiveCreatedAtFilterWarning} from "./sharedf/ActiveCreatedAtFilterWarning.js";
 import {ActiveCreationContextWarning} from "./sharedf/ActiveCreationContextWarning.js";
 import {ActiveFilterWarning} from "./sharedf/ActiveFilterWarning.js";
-function App() {
+import {SidePanelOrMenuButton} from "./side_panel/SidePanelOrMenuButton.js";
+import {Modal} from "./modal/Modal.js";
+import {get_store} from "./state/store.js";
+import {check_and_handle_connection_and_session} from "./sync/user_info/window_focus_session_check.js";
+import {date_to_string} from "./form/datetime_utils.js";
+const map_state = (state) => ({
+  display_side_panel: state.controls.display_side_panel,
+  network_functional: state.sync.network_functional,
+  network_function_last_checked: state.sync.network_function_last_checked
+});
+const connector = connect(map_state);
+function App(props) {
   const classes = use_styles();
-  const [side_panel_open, set_side_panel_open] = useState(true);
-  const handle_open_side_panel = () => {
-    set_side_panel_open(true);
-    console.log("open");
-  };
-  const handle_close_side_panel = () => {
-    set_side_panel_open(false);
-    console.log("closed");
-  };
+  useEffect(() => {
+    if (props.network_functional)
+      return;
+    setTimeout(() => check_and_handle_connection_and_session(get_store()), 1e3);
+  }, [props.network_functional, props.network_function_last_checked]);
   return /* @__PURE__ */ h(ThemeProvider, {
     theme: DefaultTheme
-  }, /* @__PURE__ */ h(CssBaseline, null), /* @__PURE__ */ h(Box, {
+  }, /* @__PURE__ */ h(CssBaseline, null), !props.network_functional && /* @__PURE__ */ h(Modal, {
+    title: "",
+    size: "small",
+    child: /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Typography, {
+      id: "modal-modal-title",
+      variant: "h6",
+      component: "h2"
+    }, "Reconnecting..."), /* @__PURE__ */ h(Typography, {
+      id: "modal-modal-description",
+      sx: {mt: 2}
+    }, "Last attempt: ", date_to_string({date: props.network_function_last_checked, time_resolution: "second"})))
+  }), /* @__PURE__ */ h(Box, {
     id: "app",
     className: classes.root
   }, /* @__PURE__ */ h(AppBar, {
@@ -65,20 +82,14 @@ function App() {
     className: `${classes.toolbar_item}`
   }, /* @__PURE__ */ h(UserInfo, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`
-  }, /* @__PURE__ */ h(IconButton, {
-    "aria-label": "open side panel",
-    color: "inherit",
-    edge: "end",
-    onClick: side_panel_open ? handle_close_side_panel : handle_open_side_panel,
-    size: "small"
-  }, side_panel_open && /* @__PURE__ */ h(CloseIcon, null), !side_panel_open && /* @__PURE__ */ h(MenuIcon, null)))))), /* @__PURE__ */ h(Box, {
+  }, /* @__PURE__ */ h(SidePanelOrMenuButton, null))))), /* @__PURE__ */ h(Box, {
     id: "app_content",
     component: "main",
-    className: clsx(classes.content, {[classes.content_with_open_side_panel]: side_panel_open})
+    className: clsx(classes.content, {[classes.content_with_open_side_panel]: props.display_side_panel})
   }, /* @__PURE__ */ h(MainAreaRouter, null)), /* @__PURE__ */ h(Drawer, {
     anchor: "right",
     className: classes.drawer,
-    open: side_panel_open,
+    open: props.display_side_panel,
     variant: "persistent"
   }, /* @__PURE__ */ h(Box, {
     component: "aside",
@@ -91,8 +102,8 @@ function App() {
     className: classes.help_popup
   }, /* @__PURE__ */ h(HelpMenu, null))));
 }
-export default App;
-const drawerWidth = 340;
+export default connector(App);
+const drawerWidth = 440;
 const use_styles = makeStyles((theme) => ({
   root: {
     width: "100%",

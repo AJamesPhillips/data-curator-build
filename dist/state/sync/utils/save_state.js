@@ -1,17 +1,18 @@
-import {ACTIONS} from "../../actions.js";
-import {get_next_specialised_state_id_to_save} from "./needs_save.js";
-import {get_knowledge_view_from_state, get_wcomponent_from_state} from "../../specialised_objects/accessors.js";
 import {get_supabase} from "../../../supabase/get_supabase.js";
-import {supabase_upsert_wcomponent} from "../supabase/wcomponent.js";
+import {ACTIONS} from "../../actions.js";
+import {get_knowledge_view_from_state, get_wcomponent_from_state} from "../../specialised_objects/accessors.js";
+import {merge_knowledge_view} from "../merge/merge_knowledge_views.js";
 import {merge_wcomponent} from "../merge/merge_wcomponents.js";
 import {
   get_last_source_of_truth_knowledge_view_from_state,
   get_last_source_of_truth_wcomponent_from_state
 } from "../selector.js";
 import {supabase_upsert_knowledge_view} from "../supabase/knowledge_view.js";
-import {merge_knowledge_view} from "../merge/merge_knowledge_views.js";
+import {supabase_upsert_wcomponent} from "../supabase/wcomponent.js";
+import {error_to_string} from "./errors.js";
+import {get_next_specialised_state_id_to_save} from "./needs_save.js";
 let global_attempts = 0;
-export async function save_state(store) {
+export async function save_state(store, is_manual_save = false) {
   const state = store.getState();
   if (!state.sync.ready_for_writing) {
     console.error(`Inconsistent state violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`);
@@ -22,6 +23,11 @@ export async function save_state(store) {
     const {wcomponent_ids, knowledge_view_ids} = state.sync.specialised_object_ids_pending_save;
     const wc_ids = JSON.stringify(Array.from(wcomponent_ids));
     const kv_ids = JSON.stringify(Array.from(knowledge_view_ids));
+    store.dispatch(ACTIONS.sync.update_sync_status({status: "SAVED", data_type: "specialised_objects"}));
+    if (is_manual_save) {
+      console.log(`No ids need to be saved: "${wc_ids}", "${kv_ids}"`);
+      return Promise.resolve();
+    }
     console.error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`);
     return Promise.reject();
   }
@@ -167,7 +173,8 @@ function post_upsert_check(id, store, object_type, response) {
   const create_successful = response.status === 201;
   const update_successful = response.status === 200;
   if (!create_successful && !update_successful && response.status !== 409) {
-    const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${response.error}"`);
+    const error_string = error_to_string(response.error);
+    const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${error_string}"`);
     return {error, create_successful, update_successful, latest_source_of_truth: void 0};
   }
   const latest_source_of_truth = response.item;

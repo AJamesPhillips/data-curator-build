@@ -8,7 +8,7 @@ import {
 } from "./common.js";
 import {factory_render_list_content} from "../../form/editable_list/render_list_content.js";
 import {ExpandableListWithAddButton} from "../../form/editable_list/ExpandableListWithAddButton.js";
-import {create_new_VAP_set_version} from "./utils.js";
+import {create_new_VAP_set_version} from "./value_and_prediction/utils.js";
 const map_state = (state) => {
   return {
     creation_context: state.creation_context,
@@ -17,7 +17,15 @@ const map_state = (state) => {
 };
 const connector = connect(map_state);
 function _ValueAndPredictionSetOlderVersions(props) {
-  const {VAPs_represent, older_VAP_sets, create_item, update_item, delete_item, editing} = props;
+  const {
+    editing,
+    value_possibilities,
+    VAPs_represent,
+    older_VAP_sets,
+    create_item,
+    update_item,
+    delete_item
+  } = props;
   const item_descriptor = "Older version";
   const make_new_version = useMemo(() => () => {
     const new_versioned_VAP_set = create_new_VAP_set_version(props.current_VAP_set, props.creation_context);
@@ -31,7 +39,7 @@ function _ValueAndPredictionSetOlderVersions(props) {
       get_created_at,
       get_custom_created_at,
       get_summary: get_summary_for_single_VAP_set(VAPs_represent, true),
-      get_details: get_details_for_single_VAP_set(VAPs_represent),
+      get_details: get_details_for_single_VAP_set(value_possibilities, VAPs_represent),
       get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
       extra_class_names: "value_and_prediction_set",
       crud: {

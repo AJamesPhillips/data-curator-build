@@ -1,6 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import Sync from "../../snowpack/pkg/@material-ui/icons/Sync.js";
-import SyncProblem from "../../snowpack/pkg/@material-ui/icons/SyncProblem.js";
+import SyncIcon from "../../snowpack/pkg/@material-ui/icons/Sync.js";
+import SyncProblemIcon from "../../snowpack/pkg/@material-ui/icons/SyncProblem.js";
 export function SyncButton(props) {
   const {state, text = "Refresh", title = "Refresh", on_click, style} = props;
   const error = state === "error";
@@ -8,7 +8,7 @@ export function SyncButton(props) {
     title,
     onClick: on_click,
     style
-  }, text, !error && /* @__PURE__ */ h(Sync, {
+  }, text, !error && /* @__PURE__ */ h(SyncIcon, {
     className: state === "in_progress" ? "animate spinning" : ""
-  }), error && /* @__PURE__ */ h(SyncProblem, null));
+  }), error && /* @__PURE__ */ h(SyncProblemIcon, null));
 }

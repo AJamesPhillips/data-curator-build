@@ -1,6 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {useState, useEffect} from "../../snowpack/pkg/preact/hooks.js";
 import {v4 as uuid_v4} from "../../snowpack/pkg/uuid.js";
+import SyncIcon from "../../snowpack/pkg/@material-ui/icons/Sync.js";
 import "./SandBox.css.proxy.js";
 import {get_new_knowledge_view_object} from "../knowledge_view/create_new_knowledge_view.js";
 import {get_contextless_new_wcomponent_object} from "../shared/wcomponent/get_new_wcomponent_object.js";
@@ -11,8 +12,12 @@ import {
   DisplaySupabasePostgrestError,
   DisplaySupabaseSessionError
 } from "../sync/user_info/DisplaySupabaseErrors.js";
-import {supabase_get_knowledge_views, knowledge_view_app_to_supabase, knowledge_view_supabase_to_app} from "../state/sync/supabase/knowledge_view.js";
-import {get_all_bases, get_an_owned_base_optionally_create, modify_base} from "../supabase/bases.js";
+import {
+  supabase_get_knowledge_views,
+  knowledge_view_app_to_supabase,
+  knowledge_view_supabase_to_app
+} from "../state/sync/supabase/knowledge_view.js";
+import {create_a_base, get_all_bases, modify_base} from "../supabase/bases.js";
 import {get_user_name_for_display} from "../supabase/users.js";
 import {get_access_controls_for_base} from "../supabase/access_controls.js";
 import {AccessControlEntry} from "../access_controls/AccessControlEntry.js";
@@ -32,6 +37,7 @@ export function SandBoxSupabase() {
   const [waiting_user_registration_email, set_waiting_user_registration_email] = useState(false);
   const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false);
   const [updating_password, set_updating_password] = useState(is_supabase_recovery_email);
+  const [async_request_in_progress, set_async_request_in_progress] = useState(false);
   const [postgrest_error, set_postgrest_error] = useState(null);
   const [bases, set_bases] = useState(void 0);
   const [current_base_id, set_current_base_id] = useState(void 0);
@@ -77,30 +83,40 @@ export function SandBoxSupabase() {
     return unsubscribe;
   }, []);
   async function register() {
+    set_async_request_in_progress(true);
     const {user: new_user, error} = await supabase.auth.signUp({email, password});
+    set_async_request_in_progress(false);
     set_supabase_session_error(error);
     set_waiting_user_registration_email(true);
   }
   async function sign_in() {
+    set_async_request_in_progress(true);
     const {user: user2, error} = await supabase.auth.signIn({email, password});
+    set_async_request_in_progress(false);
     set_supabase_session_error(error);
     set_user(user2);
   }
   async function forgot_password() {
+    set_async_request_in_progress(true);
     const {data, error} = await supabase.auth.api.resetPasswordForEmail(email);
+    set_async_request_in_progress(false);
     set_supabase_session_error(error);
     set_waiting_password_reset_email(!error);
   }
   async function update_password() {
     const email2 = user?.email;
+    set_async_request_in_progress(true);
     const result = await supabase.auth.update({email: email2, password});
+    set_async_request_in_progress(false);
     set_supabase_session_error(result.error);
     set_user(result.user);
     set_updating_password(!!result.error);
     is_supabase_recovery_email = false;
   }
   async function log_out() {
+    set_async_request_in_progress(true);
     const {error} = await supabase.auth.signOut();
+    set_async_request_in_progress(false);
     set_supabase_session_error(error);
     set_user(supabase.auth.user());
     set_password("");
@@ -127,39 +143,46 @@ export function SandBoxSupabase() {
       onKeyUp: (e) => set_password(e.currentTarget.value),
       onChange: (e) => set_password(e.currentTarget.value),
       onBlur: (e) => set_password(e.currentTarget.value)
-    }), /* @__PURE__ */ h("br", null)), updating_password && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("input", {
+    }), /* @__PURE__ */ h("br", null)), updating_password && /* @__PURE__ */ h("div", null, async_request_in_progress && /* @__PURE__ */ h(SyncIcon, {
+      className: "animate spinning"
+    }), /* @__PURE__ */ h("input", {
       type: "button",
-      disabled: !user?.email || !password,
-      onClick: update_password,
-      value: "Update password"
+      value: "Update password",
+      disabled: async_request_in_progress || !user?.email || !password,
+      onClick: update_password
     }), /* @__PURE__ */ h("br", null), !is_supabase_recovery_email && /* @__PURE__ */ h("input", {
       type: "button",
       onClick: () => set_updating_password(false),
       value: "Cancel"
-    }), /* @__PURE__ */ h("br", null)), !updating_password && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("input", {
-      type: "button",
-      disabled: !email || !password,
-      onClick: sign_in,
-      value: "Signin"
+    }), /* @__PURE__ */ h("br", null)), !updating_password && /* @__PURE__ */ h("div", null, async_request_in_progress && /* @__PURE__ */ h(SyncIcon, {
+      className: "animate spinning"
     }), /* @__PURE__ */ h("input", {
       type: "button",
-      disabled: !email || !password,
-      onClick: register,
-      value: "Register"
+      value: "Signin",
+      disabled: async_request_in_progress || !email || !password,
+      onClick: sign_in
+    }), /* @__PURE__ */ h("input", {
+      type: "button",
+      value: "Register",
+      disabled: async_request_in_progress || !email || !password,
+      onClick: register
     }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
       type: "button",
-      disabled: !email,
-      onClick: forgot_password,
-      value: "Forgot password?"
+      value: "Forgot password?",
+      disabled: async_request_in_progress || !email,
+      onClick: forgot_password
     }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h(DisplaySupabaseSessionError, {
       error: supabase_session_error
     }));
   if (waiting_user_registration_email)
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", null, "Registered"), /* @__PURE__ */ h("br", null), "Please check your email");
-  return /* @__PURE__ */ h("div", null, "Logged in with ", user.email, " ", user.id, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+  return /* @__PURE__ */ h("div", null, "Logged in with ", user.email, " ", user.id, /* @__PURE__ */ h("br", null), async_request_in_progress && /* @__PURE__ */ h(SyncIcon, {
+    className: "animate spinning"
+  }), /* @__PURE__ */ h("input", {
     type: "button",
-    onClick: log_out,
-    value: "Log out"
+    value: "Log out",
+    disabled: async_request_in_progress,
+    onClick: log_out
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
     onClick: () => set_updating_password(true),
@@ -311,6 +334,23 @@ async function get_or_create_an_owned_base(args) {
   const {base, error: postgrest_error} = await get_an_owned_base_optionally_create(args.user_id);
   args.set_postgrest_error(postgrest_error);
   args.set_current_base_id(base?.id);
+}
+async function get_an_owned_base_optionally_create(user_id) {
+  const first_get_result = await get_an_owned_base(user_id);
+  if (first_get_result.error)
+    return first_get_result;
+  if (first_get_result.base)
+    return first_get_result;
+  const res = await create_a_base({owner_user_id: user_id});
+  if (res.error)
+    return res;
+  return await get_an_owned_base(user_id);
+}
+async function get_an_owned_base(user_id) {
+  const supabase2 = get_supabase();
+  const {data: knowledge_bases, error} = await supabase2.from("bases").select("*").eq("owner_user_id", user_id).order("inserted_at", {ascending: true});
+  const base = knowledge_bases && knowledge_bases[0] || void 0;
+  return {base, error};
 }
 async function get_all_bases2(args) {
   const res = await get_all_bases();

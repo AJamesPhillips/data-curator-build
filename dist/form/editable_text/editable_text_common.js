@@ -32,9 +32,12 @@ function _EditableTextCommon(props) {
   } = props;
   if (!user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting && !always_allow_editing) {
     const class_name2 = disabled ? "disabled" : "";
+    const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
       className: class_name2
-    }, /* @__PURE__ */ h(RichMarkDown, {
+    }, have_value && !props.hide_label && /* @__PURE__ */ h("span", {
+      className: "description_label"
+    }, props.placeholder, " "), /* @__PURE__ */ h(RichMarkDown, {
       text: value || placeholder
     }));
   }

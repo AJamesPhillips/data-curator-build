@@ -3,6 +3,7 @@ export const get_empty_wcomponent_ids_by_type = () => ({
   event: new Set(),
   state: new Set(),
   statev2: new Set(),
+  sub_state: new Set(),
   process: new Set(),
   action: new Set(),
   actor: new Set(),

@@ -1,7 +1,16 @@
+import {get_supabase} from "../../supabase/get_supabase.js";
 import {get_store} from "../store.js";
 import {conditionally_save_state} from "../sync/utils/conditionally_save_state.js";
-export async function signout() {
+export async function save_and_signout() {
   const store = get_store();
-  const load_state_from_storage = store.load_state_from_storage;
-  await conditionally_save_state(load_state_from_storage, store);
+  const supabase = get_supabase();
+  try {
+    await conditionally_save_state(store);
+  } catch (err) {
+  }
+  try {
+    const {error} = await supabase.auth.signOut();
+  } catch (err) {
+  }
+  window.location.reload();
 }

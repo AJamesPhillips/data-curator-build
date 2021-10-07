@@ -8,7 +8,7 @@ import {PredictionSummary} from "../predictions/PredictionSummary.js";
 import {UncertainDateTime} from "../uncertainty/datetime.js";
 import {ValueAndPredictions} from "./ValueAndPredictions.js";
 import {VAPsType} from "../../shared/wcomponent/interfaces/generic_value.js";
-import {set_VAP_probabilities} from "./utils.js";
+import {set_VAP_probabilities} from "./value_and_prediction/utils.js";
 export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) => (VAP_set, crud) => {
   let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
   VAPs = merge_counterfactuals_into_VAPs(VAPs);
@@ -24,7 +24,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) 
     conviction: conv
   });
 };
-export const get_details_for_single_VAP_set = (VAPs_represent) => (VAP_set, crud) => {
+export const get_details_for_single_VAP_set = (value_possibilities, VAPs_represent) => (VAP_set, crud) => {
   const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
   return /* @__PURE__ */ h("div", {
     className: "VAP_set_details"
@@ -32,6 +32,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent) => (VAP_set, crud
     datetime: VAP_set.datetime,
     on_change: (datetime) => crud.update_item({...VAP_set, datetime})
   }), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(ValueAndPredictions, {
+    value_possibilities,
     VAPs_represent,
     values_and_predictions: VAPs,
     update_values_and_predictions: (VAPs2) => {

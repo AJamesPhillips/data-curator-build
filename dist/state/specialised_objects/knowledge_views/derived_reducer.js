@@ -108,7 +108,7 @@ export function get_composed_wc_id_map(knowledge_view, knowledge_views_by_id) {
   to_compose.push(knowledge_view.wc_id_map);
   const composed_wc_id_map = {};
   to_compose.forEach((map) => {
-    Object.entries(map).forEach(([id, entry]) => !entry.deleted && (composed_wc_id_map[id] = entry));
+    Object.entries(map).forEach(([id, entry]) => composed_wc_id_map[id] = entry);
   });
   return composed_wc_id_map;
 }
@@ -156,11 +156,11 @@ function get_wc_id_counterfactuals_v2_map(args) {
     const {target_wcomponent_id, target_VAP_set_id} = counterfactual_v2;
     if (!target_wcomponent_id || !target_VAP_set_id)
       return;
-    const level_VAP_set_ids = map[target_wcomponent_id] || {VAP_set: {}};
+    const level_VAP_set_ids = map[target_wcomponent_id] || {VAP_sets: {}};
     map[target_wcomponent_id] = level_VAP_set_ids;
-    const counterfactual_v2s = level_VAP_set_ids.VAP_set[target_VAP_set_id] || [];
+    const counterfactual_v2s = level_VAP_set_ids.VAP_sets[target_VAP_set_id] || [];
     counterfactual_v2s.push(counterfactual_v2);
-    level_VAP_set_ids.VAP_set[target_VAP_set_id] = counterfactual_v2s;
+    level_VAP_set_ids.VAP_sets[target_VAP_set_id] = counterfactual_v2s;
   });
   return map;
 }

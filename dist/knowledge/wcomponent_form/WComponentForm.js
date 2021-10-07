@@ -25,7 +25,8 @@ import {
   wcomponent_is_prioritisation,
   wcomponent_has_existence_predictions,
   wcomponent_is_statev1,
-  wcomponent_is_goal
+  wcomponent_is_goal,
+  wcomponent_is_sub_state
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
 import {wcomponent_statev2_subtypes} from "../../shared/wcomponent/interfaces/state.js";
 import {wcomponent_types} from "../../shared/wcomponent/interfaces/wcomponent_base.js";
@@ -52,6 +53,9 @@ import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
 import {WComponentImageForm} from "./WComponentImageForm.js";
 import {Button} from "../../sharedf/Button.js";
 import {selector_chosen_base_id} from "../../state/user_info/selector.js";
+import {ValuePossibilitiesComponent} from "../multiple_values/ValuePossibilitiesComponent.js";
+import {update_VAPs_with_possibilities} from "../multiple_values/value_possibilities/update_VAPs_with_possibilities.js";
+import {WComponentSubStateForm} from "./WComponentSubStateForm.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -123,9 +127,11 @@ function _WComponentForm(props) {
   const VAPs_represent = wcomponent_VAPs_represent(wcomponent);
   let UI_value = void 0;
   let orig_values_and_prediction_sets = void 0;
+  let orig_value_possibilities = void 0;
   if (wcomponent_should_have_state_VAP_sets(wcomponent)) {
     UI_value = get_wcomponent_state_UI_value({wcomponent, wc_counterfactuals, created_at_ms, sim_ms});
     orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || [];
+    orig_value_possibilities = wcomponent.value_possibilities;
   }
   return /* @__PURE__ */ h(Box, {
     className: `editable-${wcomponent_id}`
@@ -137,11 +143,15 @@ function _WComponentForm(props) {
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms}),
     conditional_on_blur: (title) => upsert_wcomponent({title}),
-    force_focus: focus_title
+    force_focus: focus_title,
+    hide_label: true
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
     wcomponent
-  }), UI_value && (editing || UI_value.is_defined) && /* @__PURE__ */ h("div", {
-    style: {cursor: "not-allowed"}
+  }), UI_value && (editing || UI_value.is_defined) && /* @__PURE__ */ h("a", {
+    style: {color: "#bbb", textDecoration: "none"},
+    title: "This is broken for counterfactuals at the moment.  See issue 81",
+    href: "https://github.com/centerofci/data-curator2/issues/81",
+    target: "_blank"
   }, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
@@ -177,7 +187,8 @@ function _WComponentForm(props) {
   }, /* @__PURE__ */ h(EditableText, {
     placeholder: "Description...",
     value: wcomponent.description,
-    conditional_on_blur: (description) => upsert_wcomponent({description})
+    conditional_on_blur: (description) => upsert_wcomponent({description}),
+    hide_label: true
   })), wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) && /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal"
@@ -192,7 +203,10 @@ function _WComponentForm(props) {
     placeholder: "False...",
     value: wcomponent.boolean_false_str || "",
     conditional_on_blur: (boolean_false_str) => upsert_wcomponent({boolean_false_str})
-  })), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
+  })), wcomponent_is_sub_state(wcomponent) && /* @__PURE__ */ h(WComponentSubStateForm, {
+    wcomponent,
+    upsert_wcomponent
+  }), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
     wcomponent,
     upsert_wcomponent
   }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
@@ -244,11 +258,21 @@ function _WComponentForm(props) {
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Values: Set subtype to view"), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
     wcomponent_id: wcomponent.id,
     VAPs_represent,
+    value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
-    update_values_and_predictions: (values_and_prediction_sets) => {
-      upsert_wcomponent({values_and_prediction_sets});
+    update_values_and_predictions: ({value_possibilities, values_and_prediction_sets}) => {
+      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ValueList, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), VAPs_represent !== VAPsType.undefined && VAPs_represent !== VAPsType.boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
+    editing,
+    VAPs_represent,
+    value_possibilities: orig_value_possibilities,
+    values_and_prediction_sets: orig_values_and_prediction_sets,
+    update_value_possibilities: (value_possibilities) => {
+      const values_and_prediction_sets = update_VAPs_with_possibilities(orig_values_and_prediction_sets, value_possibilities);
+      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
+    }
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ValueList, {
     base_id,
     values: wcomponent.values || []
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_is_goal(wcomponent) && /* @__PURE__ */ h(GoalFormFields, {

@@ -7,6 +7,7 @@ import {
   is_update_chosen_base_id,
   is_set_users
 } from "./actions.js";
+import {selector_editable_bases} from "./selector.js";
 export const user_info_reducer = (state, action) => {
   if (is_set_user(action)) {
     state = update_substate(state, "user_info", "user", action.user);
@@ -29,7 +30,7 @@ export const user_info_reducer = (state, action) => {
     const bases_by_id = build_bases_by_id_map(bases);
     state = update_substate(state, "user_info", "bases_by_id", bases_by_id);
     const initial_chosen_base_id = state.user_info.chosen_base_id;
-    state = ensure_valid_chosen_base_id(state, bases);
+    state = ensure_valid_chosen_base_id(state);
     const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id;
     pub_sub.user.pub("changed_bases", true);
     if (changed_chosen_base_id)
@@ -63,10 +64,11 @@ function build_bases_by_id_map(bases) {
   }
   return bases_by_id;
 }
-function ensure_valid_chosen_base_id(state, bases) {
+function ensure_valid_chosen_base_id(state) {
   const {bases_by_id, chosen_base_id} = state.user_info;
-  if (bases_by_id && (!chosen_base_id || !bases_by_id[chosen_base_id])) {
-    const random_base_id = bases && bases[0]?.id;
+  if (bases_by_id && (chosen_base_id === void 0 || !bases_by_id[chosen_base_id])) {
+    const editable_bases = selector_editable_bases(state);
+    const random_base_id = editable_bases && editable_bases[0]?.id;
     state = update_substate(state, "user_info", "chosen_base_id", random_base_id);
   }
   return state;

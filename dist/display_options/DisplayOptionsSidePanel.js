@@ -25,7 +25,7 @@ function _DisplayOptionsSidePanel(props) {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Validity filter"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
-  }, "Show: ", /* @__PURE__ */ h(AutocompleteText, {
+  }, "Show:   ", /* @__PURE__ */ h(AutocompleteText, {
     placeholder: "",
     options: validity_filter_display_options,
     selected_option_id: props.validity_filter,
@@ -34,14 +34,15 @@ function _DisplayOptionsSidePanel(props) {
       if (!validity_filter)
         return;
       props.set_validity_filter({validity_filter});
-    }
+    },
+    allow_editing_when_presenting: true
   })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     className: "description"
   }, "Show only nodes and connections with validity ", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("i", null, "certainty ", validity_filter_descriptions[props.validity_filter]), " ", description_of_certainty, ".")), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Validity formatting"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
-  }, "Opacity: ", /* @__PURE__ */ h(AutocompleteText, {
+  }, "Opacity:   ", /* @__PURE__ */ h(AutocompleteText, {
     placeholder: "",
     options: certainty_formatting_display_options,
     selected_option_id: props.certainty_formatting,
@@ -50,7 +51,8 @@ function _DisplayOptionsSidePanel(props) {
       if (!certainty_formatting)
         return;
       props.set_certainty_formatting({certainty_formatting});
-    }
+    },
+    allow_editing_when_presenting: true
   })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     className: "description"
   }, "Show nodes and connection opacity as ", /* @__PURE__ */ h("i", null, certainty_formatting_descriptions[props.certainty_formatting]), " ", description_of_certainty, ".")), /* @__PURE__ */ h("p", {

@@ -12,6 +12,10 @@
   transition-property: all;
   transition-timing-function: linear;
   max-height: 1.75em;
+  overflow: hidden;
+}
+.value_and_prediction_set_summary .value_and_prediction.prob-0 {
+  padding: 0;
 }
 .value_and_prediction_set_summary .value_and_prediction:before {
   content: "";
@@ -22,19 +26,19 @@
   left: 0;
 }
 .value_and_prediction_set_summary.visible-2 {
-  min-height: 3.15em;
+  min-height: 3.5em;
 }
 .value_and_prediction_set_summary.visible-3 {
-  min-height: 4.725em;
+  min-height: 5.25em;
 }
 .value_and_prediction_set_summary.visible-4 {
-  min-height: 6.3em;
+  min-height: 7em;
 }
 .value_and_prediction_set_summary.visible-5 {
-  min-height: 7.875em;
+  min-height: 8.75em;
 }
 .value_and_prediction_set_summary.visible-6 {
-  min-height: 9.45em;
+  min-height: 10.5em;
 }
 .value_and_prediction_set_summary .value_and_prediction:nth-child(1):before {
   background-color: rgba(255, 255, 255, 0.6666666667);

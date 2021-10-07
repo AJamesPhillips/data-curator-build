@@ -69,8 +69,8 @@ function _WComponentKnowledgeViewForm(props) {
       knowledge_view_id: knowledge_view_id2
     });
   }
-  return /* @__PURE__ */ h("div", null, knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, "Not present in this knowledge view", composed_knowledge_view_entry && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
-    value: "Add to current knowledge view",
+  return /* @__PURE__ */ h("div", null, knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
+    value: (knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view",
     extra_class_names: "left",
     onClick: () => update(knowledge_view_id)
   })), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h(FormControl, {

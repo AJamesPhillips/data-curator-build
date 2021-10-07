@@ -9,7 +9,6 @@ export function factory_render_list_content(own_props) {
   } = own_props;
   const render_list_content = (list_content_props) => {
     const {
-      disable_partial_collapsed,
       expanded_items,
       expanded_item_rows
     } = list_content_props;
@@ -23,8 +22,7 @@ export function factory_render_list_content(own_props) {
     }), /* @__PURE__ */ h(EditableListEntry, {
       item,
       ...item_props,
-      expanded: expanded_item_rows,
-      disable_collapsable: disable_partial_collapsed
+      expanded: expanded_item_rows
     }))));
   };
   return render_list_content;

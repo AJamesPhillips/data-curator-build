@@ -20,7 +20,6 @@ export function NewItemForm(props) {
     item: new_item,
     ...item_props,
     expanded: true,
-    disable_collapsable: true,
     crud: modified_crud
   })), /* @__PURE__ */ h(DialogActions, null, /* @__PURE__ */ h(Button, {
     onClick: () => {

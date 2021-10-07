@@ -2,6 +2,7 @@ const _wcomponent_types = {
   event: true,
   state: true,
   statev2: true,
+  sub_state: true,
   process: true,
   action: true,
   actor: true,

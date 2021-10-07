@@ -26,6 +26,7 @@
     "@material-ui/icons/Filter": "./@material-ui/icons/Filter.js",
     "@material-ui/icons/FilterCenterFocus": "./@material-ui/icons/FilterCenterFocus.js",
     "@material-ui/icons/FilterNone": "./@material-ui/icons/FilterNone.js",
+    "@material-ui/icons/LinkOff": "./@material-ui/icons/LinkOff.js",
     "@material-ui/icons/Menu": "./@material-ui/icons/Menu.js",
     "@material-ui/icons/NavigateBefore": "./@material-ui/icons/NavigateBefore.js",
     "@material-ui/icons/NavigateNext": "./@material-ui/icons/NavigateNext.js",

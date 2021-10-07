@@ -21,9 +21,12 @@ function _EditableNumber(props) {
   let class_name = "editable_number";
   if (!editing || !conditional_on_change && !conditional_on_blur && !always_on_blur || disabled) {
     class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "");
+    const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
       className: class_name
-    }, props.value === void 0 ? props.placeholder : props.value);
+    }, have_value && /* @__PURE__ */ h("span", {
+      className: "description_label"
+    }, props.placeholder), have_value ? props.value : props.placeholder);
   }
   return /* @__PURE__ */ h("div", {
     className: class_name

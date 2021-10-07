@@ -1,6 +1,7 @@
 export const DEPRECATED_WCOMPONENT_TYPES = new Set([
   "counterfactual",
-  "state"
+  "state",
+  "sub_state"
 ]);
 export function wcomponent_type_to_text(type) {
   if (type === "counterfactual")

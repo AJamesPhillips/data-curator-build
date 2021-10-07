@@ -8,7 +8,7 @@ import {
 import {ACTIONS} from "../state/actions.js";
 import {get_wcomponent_search_options} from "../search/get_wcomponent_search_options.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
-import {ExternalLinkIcon} from "../sharedf/ExternalLinkIcon.js";
+import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {Link} from "../sharedf/Link.js";
 const map_state = (state) => ({
   wcomponents: state.derived.wcomponents,

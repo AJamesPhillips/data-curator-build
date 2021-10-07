@@ -35,7 +35,7 @@ function _HelpMenu(props) {
     }, /* @__PURE__ */ h(AccordionSummary, null, /* @__PURE__ */ h(Typography, {
       component: "h2",
       variant: "h6"
-    }, "Commands / shortcuts")), /* @__PURE__ */ h(AccordionDetails, null, /* @__PURE__ */ h(Box, null, "These shortcuts only work when you are not editing text.  Some may only work when you are on the Map (Knowledge) canvas view.", keyboard_shortcuts.map((args) => /* @__PURE__ */ h(KeyboardShortcutCommand, {
+    }, "Commands / shortcuts")), /* @__PURE__ */ h(AccordionDetails, null, /* @__PURE__ */ h(Box, null, "These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.", keyboard_shortcuts.map((args) => /* @__PURE__ */ h(KeyboardShortcutCommand, {
       ...args
     }))))), /* @__PURE__ */ h(Accordion, {
       expanded: expanded === "linking-tips",
@@ -73,7 +73,9 @@ export const HelpMenu = connector(_HelpMenu);
 const keyboard_shortcuts = [
   {keyboard_shortcut: ["?"], outcome: "Opens this help menu"},
   {keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes"},
-  {keyboard_shortcut: ["Ctrl", "d"], outcome: `Toggle "focused" mode on and off`},
+  {keyboard_shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off`},
+  {keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders`},
+  {keyboard_shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel`},
   {keyboard_shortcut: ["Shift"], outcome: "Shows all hidden nodes (hidden due to filters or being invalid)"},
   {keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes"},
   {keyboard_shortcut: ["Ctrl", "click", "drag"], outcome: "Deselect multiple nodes"},
@@ -121,7 +123,11 @@ const general_tips = [
   /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {
     component: "h3",
     variant: "h6"
-  }, '"Should" word usage'), 'If you yourself writing states with "should", e.g. "People ', /* @__PURE__ */ h("b", null, "should"), ' listen more and be less reductionist" then you might consider seperating this out into its 4 seperate parts and phrasing as the positive or desired state.  Specifically:', /* @__PURE__ */ h("ol", null, /* @__PURE__ */ h("li", null, `the attribute, e.g.: "People listen more and be less reductionist".  Note it's usually easier to express this as the desired state instead of the pure attribute of "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".`), /* @__PURE__ */ h("li", null, 'the current value, e.g.: "False"'), /* @__PURE__ */ h("li", null, "the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values."), /* @__PURE__ */ h("li", null, "the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator")))
+  }, '"Should" word usage'), 'If you yourself writing states with "should", e.g. "People ', /* @__PURE__ */ h("b", null, "should"), ' listen more and be less reductionist" then you might consider seperating this out into its 4 seperate parts and phrasing as the positive or desired state.  Specifically:', /* @__PURE__ */ h("ol", null, /* @__PURE__ */ h("li", null, `the attribute, e.g.: "People listen more and be less reductionist".  Note it's usually easier to express this as the desired state instead of the pure attribute of "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".`), /* @__PURE__ */ h("li", null, 'the current value, e.g.: "False"'), /* @__PURE__ */ h("li", null, "the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values."), /* @__PURE__ */ h("li", null, "the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator"))),
+  /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {
+    component: "h3",
+    variant: "h6"
+  }, '"Action" node type versus "State"'), "The action and state node types are very similar.  The former can be used to draw attention to the areas were you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.")
 ];
 const detailed_tips = [
   /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {

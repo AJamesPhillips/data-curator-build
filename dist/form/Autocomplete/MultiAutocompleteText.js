@@ -1,6 +1,5 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import "./MultiAutocompleteText.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
 import {AutocompleteText} from "./AutocompleteText.js";
 import {SelectedOption} from "./SelectedOption.js";
