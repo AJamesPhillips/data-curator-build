@@ -1,8 +1,8 @@
-import {prepare_new_VAP_set} from "../../../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set.js";
-import {prepare_new_VAP} from "../../../knowledge/multiple_values/value_and_prediction/utils.js";
+import {prepare_new_VAP_set} from "../../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
+import {prepare_new_VAP} from "../../../wcomponent/CRUD_helpers/prepare_new_VAP.js";
 import {test} from "../../../shared/utils/test.js";
-import {get_new_wcomponent_object} from "../../../shared/wcomponent/get_new_wcomponent_object.js";
-import {VAPsType} from "../../../shared/wcomponent/interfaces/generic_value.js";
+import {prepare_new_wcomponent_object} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
+import {VAPsType} from "../../../wcomponent/interfaces/VAPsType.js";
 import {update_subsubstate, update_substate} from "../../../utils/update_state.js";
 import {is_update_specialised_object_sync_info} from "../../sync/actions.js";
 import {update_specialised_object_ids_pending_save} from "../../sync/utils.js";
@@ -53,14 +53,14 @@ function run_tests() {
   let tidied;
   let tidied_VAPs;
   const base_id = -1;
-  wcomponent = get_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
+  wcomponent = prepare_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
   wcomponent.values_and_prediction_sets = [
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps2", created_at: dt2, custom_created_at: void 0},
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps1", created_at: dt1, custom_created_at: void 0}
   ];
   tidied = tidy_wcomponent(wcomponent);
   test(tidied.values_and_prediction_sets.map(({id}) => id), ["vps1", "vps2"], "", sort_list);
-  wcomponent = get_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
+  wcomponent = prepare_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
   VAPs = [
     {...prepare_new_VAP(), id: "VAP1", relative_probability: 5},
     {...prepare_new_VAP(), id: "VAP2", relative_probability: 0}

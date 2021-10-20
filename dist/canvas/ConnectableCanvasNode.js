@@ -3,6 +3,7 @@ import {Card, CardContent, CardMedia, makeStyles} from "../../snowpack/pkg/@mate
 import "./ConnectableCanvasNode.css.proxy.js";
 import {CanvasNode} from "./CanvasNode.js";
 import {COLOURS} from "./display.js";
+import "./display_colors.css.proxy.js";
 import {connection_radius} from "./connections/terminal.js";
 export function ConnectableCanvasNode(props) {
   let {opacity} = props;
@@ -44,7 +45,9 @@ export function ConnectableCanvasNode(props) {
     onContextMenu: (e) => {
       e.stopImmediatePropagation();
     }
-  }), /* @__PURE__ */ h(CardContent, null, props.node_main_content)), props.terminals.map(({type, style, label}) => {
+  }), /* @__PURE__ */ h(CardContent, {
+    style: {padding: 16}
+  }, props.node_main_content)), props.terminals.map(({type, style, label}) => {
     return /* @__PURE__ */ h("div", {
       className: "connection_terminal",
       style: {...connection_style_common, ...style},

@@ -11,7 +11,7 @@ export function EditablePosition(props) {
     placeholder: "Left",
     value: left,
     allow_undefined: false,
-    conditional_on_change: (new_left) => update({left: round_coordinate_small_step(new_left)})
+    conditional_on_blur: (new_left) => update({left: round_coordinate_small_step(new_left)})
   }), /* @__PURE__ */ h("input", {
     type: "button",
     value: "←",
@@ -32,7 +32,7 @@ export function EditablePosition(props) {
     placeholder: "Top",
     value: top,
     allow_undefined: false,
-    conditional_on_change: (new_top) => update({top: round_coordinate_small_step(new_top)})
+    conditional_on_blur: (new_top) => update({top: round_coordinate_small_step(new_top)})
   }), /* @__PURE__ */ h("input", {
     type: "button",
     value: "↑",

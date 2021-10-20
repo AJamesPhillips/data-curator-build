@@ -1,12 +1,12 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {calculate_judgement_value} from "../knowledge/judgements/calculate_judgement_value.js";
-import {JudgementBadge} from "../knowledge/judgements/JudgementBadge.js";
-import {get_wcomponent_state_UI_value} from "../shared/wcomponent/get_wcomponent_state_UI_value.js";
-import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
-import {format_wcomponent_url} from "../shared/wcomponent/rich_text/templates.js";
+import {calculate_judgement_value} from "../sharedf/judgement_badge/calculate_judgement_value.js";
+import {JudgementBadge} from "../sharedf/judgement_badge/JudgementBadge.js";
+import {get_wcomponent_state_UI_value} from "../wcomponent_derived/get_wcomponent_state_UI_value.js";
+import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
+import {format_wcomponent_url} from "../wcomponent_derived/rich_text/templates.js";
 import {RichMarkDown} from "../sharedf/RichMarkDown.js";
-import {get_wc_id_counterfactuals_map} from "../state/derived/accessor.js";
+import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 import {lefttop_to_xy} from "../state/display_options/display.js";
 const map_state = (state, {judgement}) => {
   const target_wc_id = judgement.judgement_target_wcomponent_id;
@@ -14,15 +14,15 @@ const map_state = (state, {judgement}) => {
   return {
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     target_wcomponent,
-    wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state)
+    wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state)
   };
 };
 const connector = connect(map_state);
 const _ProjectJudgementEntry = (props) => {
   if (!props.target_wcomponent)
     return /* @__PURE__ */ h("div", null, "Can not find judgement's target wcomponent of id: ", props.judgement.judgement_target_wcomponent_id);
-  const {knowledge_view, judgement, target_wcomponent, wc_id_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms} = props;
-  const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[target_wcomponent.id];
+  const {knowledge_view, judgement, target_wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms} = props;
+  const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[target_wcomponent.id]?.VAP_sets;
   return /* @__PURE__ */ h("div", {
     style: {display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa"}
   }, /* @__PURE__ */ h("div", {
@@ -33,10 +33,10 @@ const _ProjectJudgementEntry = (props) => {
       window.location.href = url;
     }
   }, /* @__PURE__ */ h(RichMarkDown, {
-    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms})
+    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms})
   })), /* @__PURE__ */ h("div", {
     style: {flex: "1", textAlign: "right"}
-  }, get_wcomponent_state_UI_value({wcomponent: target_wcomponent, wc_counterfactuals, created_at_ms, sim_ms}).values_string), /* @__PURE__ */ h("div", {
+  }, get_wcomponent_state_UI_value({wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms}).values_string), /* @__PURE__ */ h("div", {
     style: {flex: "1"}
   }, " ", judgement.judgement_operator, " ", judgement.judgement_comparator_value), /* @__PURE__ */ h("a", {
     style: {flex: "4", cursor: "pointer", display: "flex", textDecoration: "inherit", color: "inherit"},
@@ -45,9 +45,9 @@ const _ProjectJudgementEntry = (props) => {
       return get_url_for_wcomponent({knowledge_view, wcomponent_id});
     })()
   }, /* @__PURE__ */ h(JudgementBadge, {
-    judgement: calculate_judgement_value({judgement_wcomponent: judgement, target_wcomponent, target_counterfactuals: void 0, created_at_ms, sim_ms})
+    judgement: calculate_judgement_value({judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms})
   }), /* @__PURE__ */ h(RichMarkDown, {
-    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_counterfactuals_map: void 0, created_at_ms, sim_ms})
+    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms})
   })));
 };
 export const ProjectJudgementEntry = connector(_ProjectJudgementEntry);

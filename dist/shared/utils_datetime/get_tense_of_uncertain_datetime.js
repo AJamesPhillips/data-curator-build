@@ -1,5 +1,5 @@
 import {test} from "../utils/test.js";
-import {Tense} from "../wcomponent/interfaces/datetime.js";
+import {Tense} from "../../wcomponent/interfaces/datetime.js";
 export function get_tense_of_uncertain_datetime(item, sim_ms) {
   const {min, value, max} = item.datetime || {};
   const [have_min, min_ms] = min === void 0 ? [false, 0] : [true, min.getTime()];

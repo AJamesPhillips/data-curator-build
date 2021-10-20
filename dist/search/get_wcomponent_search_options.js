@@ -1,12 +1,12 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import {JudgementBadgeConnected} from "../knowledge/judgements/JudgementBadgeConnected.js";
+import {JudgementBadgeConnected} from "../sharedf/judgement_badge/JudgementBadgeConnected.js";
 import {
   wcomponent_is_judgement_or_objective,
   wcomponent_is_plain_connection
-} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
-import {get_title} from "../shared/wcomponent/rich_text/get_rich_text.js";
+} from "../wcomponent/interfaces/SpecialisedObjects.js";
+import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 export function get_wcomponent_search_options(args) {
-  const {wcomponents: wcs, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms, include_deleted} = args;
+  const {wcomponents: wcs, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms, include_deleted} = args;
   const wcomponents = wcs || Object.values(wcomponents_by_id);
   const options = wcomponents.filter((wc) => include_deleted || !wc.deleted_at).map((wcomponent) => {
     const title = get_title({
@@ -14,7 +14,7 @@ export function get_wcomponent_search_options(args) {
       rich_text: true,
       render_links: false,
       wcomponents_by_id,
-      wc_id_counterfactuals_map,
+      wc_id_to_counterfactuals_map,
       created_at_ms,
       sim_ms
     });

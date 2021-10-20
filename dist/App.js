@@ -22,6 +22,7 @@ import {Modal} from "./modal/Modal.js";
 import {get_store} from "./state/store.js";
 import {check_and_handle_connection_and_session} from "./sync/user_info/window_focus_session_check.js";
 import {date_to_string} from "./form/datetime_utils.js";
+import {ActiveUserWidget} from "./sharedf/ActiveUserWidget.js";
 const map_state = (state) => ({
   display_side_panel: state.controls.display_side_panel,
   network_functional: state.sync.network_functional,
@@ -75,6 +76,8 @@ function App(props) {
   }, /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`
   }, /* @__PURE__ */ h(ActiveFilterWarning, null)), /* @__PURE__ */ h(Box, {
+    className: `${classes.toolbar_item}`
+  }, /* @__PURE__ */ h(ActiveUserWidget, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`
   }, /* @__PURE__ */ h(SyncInfo, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`

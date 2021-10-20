@@ -1,8 +1,10 @@
-export function throttle(func, delay) {
+export function throttle(func, delay_ms) {
   let timeout = void 0;
   const cancel = () => {
-    if (timeout)
+    if (timeout) {
       clearTimeout(timeout);
+      timeout = void 0;
+    }
   };
   let pending_args = void 0;
   const throttled = (...args) => {
@@ -11,7 +13,7 @@ export function throttle(func, delay) {
     timeout = setTimeout(() => {
       func(...args);
       pending_args = void 0;
-    }, delay);
+    }, delay_ms);
   };
   const flush = () => {
     cancel();
@@ -22,7 +24,7 @@ export function throttle(func, delay) {
   };
   return {throttled, cancel, flush};
 }
-export function min_throttle(func, delay) {
+export function min_throttle(func, delay_ms) {
   let timeout = void 0;
   const cancel = () => {
     if (timeout) {
@@ -39,8 +41,8 @@ export function min_throttle(func, delay) {
         func(...pending_args.args);
         pending_args.args = void 0;
         timeout = void 0;
-      }, delay);
-      next_call_at_ms = performance.now() + delay;
+      }, delay_ms);
+      next_call_at_ms = performance.now() + delay_ms;
     }
     return next_call_at_ms;
   };

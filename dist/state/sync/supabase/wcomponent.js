@@ -1,4 +1,4 @@
-import {parse_wcomponent} from "../../../shared/wcomponent/parse_json/parse_wcomponent.js";
+import {parse_wcomponent} from "../../../wcomponent/parse_json/parse_wcomponent.js";
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
 import {app_item_to_supabase, supabase_item_to_app} from "./item_convertion.js";

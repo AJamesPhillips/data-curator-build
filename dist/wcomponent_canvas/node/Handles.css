@@ -1,0 +1,46 @@
+.wcomponent_canvas_node .handles {
+  user-select: none;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: -24px;
+  font-size: 1em;
+  width: 25px;
+}
+
+.node_handle {
+  color: rgba(0, 0, 0, 0.3);
+  min-width: 1.5em;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.node_handle:hover {
+  color: black;
+}
+
+.node_handle.movement {
+  cursor: move;
+}
+
+.node_handle.explore.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.node_handle.explore.has_nested_knowledge_view {
+  color: black;
+  /* Can not colour unicode characters */
+}
+.node_handle.explore.current_but_no_parent {
+  color: pink;
+}
+.node_handle.explore.current_but_no_parent:hover {
+  color: red;
+}
+
+.node_handle.overlapping_nodes.hidden {
+  opacity: 0;
+  pointer-events: none;
+}

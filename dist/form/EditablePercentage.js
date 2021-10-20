@@ -2,9 +2,9 @@ import {h} from "../../snowpack/pkg/preact.js";
 import "./Editable.css.proxy.js";
 import {bounded} from "../shared/utils/bounded.js";
 import {EditableTextSingleLine} from "./editable_text/EditableTextSingleLine.js";
-import {percentage_to_string} from "../sharedf/percentages.js";
+import {ratio_to_percentage_string} from "../sharedf/percentages.js";
 export function EditablePercentage(props) {
-  const value = percentage_to_string(props.value);
+  const value = ratio_to_percentage_string(props.value);
   const {conditional_on_change, conditional_on_blur, disabled} = props;
   if (!conditional_on_change && !conditional_on_blur || disabled) {
     const class_name = "editable_percentage" + (disabled ? "disabled" : "");

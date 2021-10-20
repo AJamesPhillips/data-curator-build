@@ -2,7 +2,7 @@ import {Button, ButtonGroup} from "../../snowpack/pkg/@material-ui/core.js";
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
-import {time_resolution_types} from "../state/display_options/state.js";
+import {time_resolution_types as all_time_resolution_types} from "../state/display_options/state.js";
 import {invert_disabled_appearance} from "../ui_themes/invert_disabled.js";
 const map_state = (state) => ({
   time_resolution: state.display_options.time_resolution,
@@ -26,3 +26,4 @@ function _TimeResolutionOptions(props) {
   }, type)));
 }
 export const TimeResolutionOptions = connector(_TimeResolutionOptions);
+const time_resolution_types = all_time_resolution_types.filter((type) => type !== "second");

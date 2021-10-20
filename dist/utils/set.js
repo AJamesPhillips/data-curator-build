@@ -28,9 +28,13 @@ export function ensure_item_not_in_set(set, item) {
   set.delete(item);
   return set;
 }
-export function set_union(set1, set2) {
-  return new Set([
-    ...Array.from(set1),
-    ...Array.from(set2)
-  ]);
+export function set_union(...sets) {
+  let elements = [];
+  sets.forEach((set) => elements = elements.concat(Array.from(set)));
+  return new Set(elements);
+}
+export function set_difference(set_a, set_b) {
+  const new_set_a = new Set(set_a);
+  set_b.forEach((element) => new_set_a.delete(element));
+  return new_set_a.size === set_a.size ? set_a : new_set_a;
 }

@@ -3,7 +3,7 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.js";
 import {EditableCheckbox} from "../form/EditableCheckbox.js";
 import {LabelsEditor} from "../labels/LabelsEditor.js";
-import {wcomponent_types} from "../shared/wcomponent/interfaces/wcomponent_base.js";
+import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
 import {ACTIONS} from "../state/actions.js";
 const map_state = (state) => ({
   apply_filter: state.filter_context.apply_filter,

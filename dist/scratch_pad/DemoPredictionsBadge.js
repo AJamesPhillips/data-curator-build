@@ -1,6 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
-import {PredictionBadge} from "../knowledge/predictions/PredictionBadge.js";
+import {PredictionBadge} from "../sharedf/prediction_badge/PredictionBadge.js";
 import {ProbablitySelection} from "../probability/ProbabililtySelection.js";
 export function DemoPredictionsBadge() {
   const [probability, set_probability] = useState(1);

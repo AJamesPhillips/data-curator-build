@@ -23,16 +23,19 @@ function _EditableNumber(props) {
     class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "");
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
-      className: class_name
+      className: class_name,
+      style: props.style
     }, have_value && /* @__PURE__ */ h("span", {
       className: "description_label"
-    }, props.placeholder), have_value ? props.value : props.placeholder);
+    }, props.placeholder), " ", have_value ? props.value : props.placeholder);
   }
   return /* @__PURE__ */ h("div", {
-    className: class_name
+    className: class_name,
+    style: props.style
   }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: props.placeholder,
     size: props.size || "small",
+    style: props.style,
     value,
     select_all_on_focus: true,
     conditional_on_change: (new_value) => {

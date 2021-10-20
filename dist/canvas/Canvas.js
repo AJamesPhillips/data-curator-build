@@ -202,7 +202,7 @@ class _Canvas extends Component {
     }, blur_filter_defs, this.props.svg_upper_children)), this.state.pointer_state.area_select && /* @__PURE__ */ h(SelectionBox, {
       ...area_selection_args(this.state),
       color: this.props.control_key_down ? "red" : "blue"
-    })))));
+    }))), /* @__PURE__ */ h("div", null, this.props.overlay)));
   }
 }
 export const Canvas = connector(_Canvas);

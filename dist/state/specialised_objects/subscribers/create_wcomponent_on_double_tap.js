@@ -1,5 +1,5 @@
 import {round_canvas_point} from "../../../canvas/position_utils.js";
-import {create_wcomponent} from "../../../knowledge/create_wcomponent_type.js";
+import {create_wcomponent} from "../wcomponents/create_wcomponent_type.js";
 import {pub_sub} from "../../pub_sub/pub_sub.js";
 import {selector_chosen_base_id} from "../../user_info/selector.js";
 import {get_current_knowledge_view_from_state} from "../accessors.js";

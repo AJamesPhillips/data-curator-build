@@ -2,12 +2,12 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 import "./KnowledgeTimeView.css.proxy.js";
-import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
+import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNode.js";
 import {MainArea} from "../layout/MainArea.js";
 import {sort_list} from "../shared/utils/sort.js";
-import {wcomponent_has_VAP_sets} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_has_VAP_sets} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms, get_sim_datetime} from "../shared/utils_datetime/utils_datetime.js";
-import {ConnectedValueAndPredictionSetSummary} from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary.js";
+import {ConnectedValueAndPredictionSetSummary} from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;

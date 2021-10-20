@@ -1,14 +1,14 @@
 import {uncertain_datetime_is_eternal} from "../uncertainty/datetime.js";
 import {sort_list} from "../utils/sort.js";
 import {test} from "../utils/test.js";
-import {Tense} from "../wcomponent/interfaces/datetime.js";
+import {Tense} from "../../wcomponent/interfaces/datetime.js";
 import {get_tense_of_uncertain_datetime} from "./get_tense_of_uncertain_datetime.js";
 export function partition_and_sort_by_uncertain_event_datetimes(args) {
   const {items, sim_ms} = args;
   const sorted_items = sort_by_uncertain_event_datetimes(items);
   return partition_sorted_items_by_datetimes({sorted_items, sim_ms});
 }
-function sort_by_uncertain_event_datetimes(items) {
+export function sort_by_uncertain_event_datetimes(items) {
   const sorted_items = sort_list(items, ({datetime}) => {
     if (uncertain_datetime_is_eternal(datetime))
       return Number.NEGATIVE_INFINITY;
@@ -57,7 +57,8 @@ function partition_sorted_items_by_datetimes(args) {
     }
     past_items = past_items.concat(eternal_items);
   }
-  return {past_items, present_items, future_items};
+  const present_item = present_items[0];
+  return {past_items, present_item, future_items};
 }
 function test_partition_sorted_items_by_datetimes() {
   console.log("running tests of partition_sorted_items_by_datetimes");
@@ -65,7 +66,7 @@ function test_partition_sorted_items_by_datetimes() {
     const result2 = partition_sorted_items_by_datetimes(args);
     return {
       past_items: result2.past_items.map(({id}) => id),
-      present_items: result2.present_items.map(({id}) => id),
+      present_item: result2.present_item?.id,
       future_items: result2.future_items.map(({id}) => id)
     };
   }
@@ -87,39 +88,39 @@ function test_partition_sorted_items_by_datetimes() {
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date3_ms});
   test(result, {
     past_items: [],
-    present_items: [],
+    present_item: void 0,
     future_items: []
   });
   sorted_items = [s_eternal1, s_eternal2];
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date0_ms});
   test(result, {
     past_items: [s_eternal2.id],
-    present_items: [s_eternal1.id],
+    present_item: s_eternal1.id,
     future_items: []
   }, "Can handle multiple eternal elements");
   sorted_items = [s2, s1, s_eternal2];
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date0_ms});
   test(result, {
     past_items: [],
-    present_items: [s_eternal2.id],
+    present_item: s_eternal2.id,
     future_items: [s2.id, s1.id]
   });
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date1_ms});
   test(result, {
     past_items: [s_eternal2.id],
-    present_items: [s1.id],
+    present_item: s1.id,
     future_items: [s2.id]
   });
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date2_ms});
   test(result, {
     past_items: [s1.id, s_eternal2.id],
-    present_items: [s2.id],
+    present_item: s2.id,
     future_items: []
   });
   result = ids_partition_sorted_items_by_datetimes({sorted_items, sim_ms: date3_ms});
   test(result, {
     past_items: [s1.id, s_eternal2.id],
-    present_items: [s2.id],
+    present_item: s2.id,
     future_items: []
   });
 }

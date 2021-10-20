@@ -1,5 +1,5 @@
 import {ACTIONS} from "../../state/actions.js";
-import {save_and_signout} from "../../state/user_info/signout.js";
+import {save_and_optionally_signout} from "../../state/user_info/signout.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {register_window_on_focus_listener} from "../../utils/window_on_focus_listener.js";
 let registered = false;
@@ -57,7 +57,7 @@ function handle_connection_and_session_check_result(result, store) {
     window.location.reload();
     return;
   } else if (result === 3) {
-    save_and_signout();
+    save_and_optionally_signout(false);
     return;
   }
   let network_functional = true;

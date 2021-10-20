@@ -1,4 +1,4 @@
-import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
+import {wcomponent_types} from "../../wcomponent/interfaces/wcomponent_base.js";
 export function get_items_by_id(items, description) {
   const map = {};
   items.forEach((item) => {

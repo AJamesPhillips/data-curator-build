@@ -3,7 +3,7 @@ import {
   wcomponent_has_existence_predictions,
   wcomponent_has_validity_predictions,
   wcomponent_has_VAP_sets
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
+} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 export function get_wcomponent_time_slider_data(wcomponents) {
   const created_events = [];
   const created_events_ms = new Set();

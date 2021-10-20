@@ -9,12 +9,14 @@ const map_state = (state) => ({
   validity_filter: state.display_options.validity_filter,
   certainty_formatting: state.display_options.certainty_formatting,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
+  display_time_marks: state.display_options.display_time_marks,
   display_time_sliders: state.controls.display_time_sliders
 });
 const map_dispatch = {
   set_validity_filter: ACTIONS.display.set_validity_filter,
   set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
   set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+  set_display_time_marks: ACTIONS.display.set_display_time_marks,
   set_display_time_sliders: ACTIONS.controls.set_display_time_sliders
 };
 const connector = connect(map_state, map_dispatch);
@@ -59,11 +61,14 @@ function _DisplayOptionsSidePanel(props) {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Time resolution"), /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h("p", {
     className: "section"
+  }, /* @__PURE__ */ h("b", null, "Show time markers"), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.display_time_marks,
+    on_change: props.set_display_time_marks
+  })), /* @__PURE__ */ h("p", {
+    className: "section"
   }, /* @__PURE__ */ h("b", null, "Display by simulated time"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.display_by_simulated_time,
-    on_change: (display_by_simulated_time) => {
-      props.set_display_by_simulated_time({display_by_simulated_time});
-    }
+    on_change: props.set_display_by_simulated_time
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("h3", null, "Controls"), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, 'Whilst presenting, display time sliders for "created at" and "simulated" time'), /* @__PURE__ */ h(EditableCheckbox, {

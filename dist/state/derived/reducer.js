@@ -1,5 +1,5 @@
 import {project_priorities_derived_reducer} from "../../priorities/old_project_priorities/project_priorities_derived_reducer.js";
-import {wcomponent_is_goal, wcomponent_is_judgement_or_objective} from "../../shared/wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_is_goal, wcomponent_is_judgement_or_objective} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 import {is_defined} from "../../shared/utils/is_defined.js";
 import {sort_list} from "../../shared/utils/sort.js";
 import {update_substate} from "../../utils/update_state.js";

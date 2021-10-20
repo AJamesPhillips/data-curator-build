@@ -26,11 +26,13 @@ function _FoundationKnowledgeViewsList(props) {
       unfound_ids.push(id);
   });
   if (unfound_ids.length)
-    console.warn(`Unfounded foundational knowledge view ids: ${unfound_ids.join(", ")}`);
+    console.warn(`Did not find foundational knowledge view ids: ${unfound_ids.join(", ")}`);
   const exclude_ids = new Set(foundation_knowledge_view_ids_set);
   exclude_ids.add(owner_knowledge_view.id);
   const total = foundation_knowledge_views.length;
-  return /* @__PURE__ */ h("div", null, editing ? "Foundational Views" : foundation_knowledge_views.length > 0 && "Foundations", editing && /* @__PURE__ */ h("span", null, "(", total, ")"), editing && /* @__PURE__ */ h(SelectKnowledgeView, {
+  const {parent_knowledge_view_id} = owner_knowledge_view;
+  const parent_used_as_foundation = !!foundation_knowledge_views.find((kv) => kv.id === parent_knowledge_view_id);
+  return /* @__PURE__ */ h("div", null, editing ? "Foundational Views" : foundation_knowledge_views.length > 0 && "Foundational Views", editing && /* @__PURE__ */ h("span", null, "(", total, ")"), editing && /* @__PURE__ */ h(SelectKnowledgeView, {
     placeholder: "Search for knowledge view to add...",
     exclude_ids,
     on_change: (id) => {
@@ -38,6 +40,9 @@ function _FoundationKnowledgeViewsList(props) {
         return;
       on_change([id, ...foundation_knowledge_view_ids]);
     }
+  }), editing && parent_knowledge_view_id && !parent_used_as_foundation && /* @__PURE__ */ h(Button, {
+    value: "Use parent view as foundation",
+    onClick: () => on_change([parent_knowledge_view_id, ...foundation_knowledge_view_ids])
   }), foundation_knowledge_views.map((foundation_knowledge_view, index) => {
     return /* @__PURE__ */ h("div", {
       style: {display: "flex", flexDirection: "row"},

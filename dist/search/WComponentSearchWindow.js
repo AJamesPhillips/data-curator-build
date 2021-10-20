@@ -1,11 +1,11 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
+import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 import {get_wcomponent_search_options} from "./get_wcomponent_search_options.js";
 import {SearchWindow} from "./SearchWindow.js";
 const map_state = (state) => ({
   wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-  wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+  wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
   created_at_ms: state.routing.args.created_at_ms,
   sim_ms: state.routing.args.sim_ms
 });

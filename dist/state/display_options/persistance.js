@@ -6,6 +6,7 @@ export function display_options_persist(state) {
     "consumption_formatting",
     "time_resolution",
     "display_by_simulated_time",
+    "display_time_marks",
     "validity_filter",
     "certainty_formatting",
     "collapsed_side_panel"
@@ -23,6 +24,7 @@ export function display_options_starting_state() {
     focused_mode: false,
     time_resolution: "hour",
     display_by_simulated_time: false,
+    display_time_marks: false,
     collapsed_side_panel: false,
     show_help_menu: false,
     validity_filter,

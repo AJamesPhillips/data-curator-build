@@ -16,20 +16,24 @@ export const factory_location_hash = (store) => {
   store_subscriber_to_update_location_hash();
   return store_subscriber_to_update_location_hash;
 };
+let hash_pending_update = false;
 function factory_throttled_update_location_hash() {
   const update_location_hash_after_1000 = throttle((routing_state) => {
     const route = routing_state_to_string(routing_state);
     if (window.DEBUG_ROUTING)
       console.log("DELAYED changing route from ", window.location.hash.toString(), "   to:   ", route);
     window.location.hash = route;
+    hash_pending_update = false;
   }, 1e3);
   const debounced_update_location_hash = throttle((routing_state) => {
     const route = routing_state_to_string(routing_state);
     if (window.DEBUG_ROUTING)
       console.log("Debounced changing route from ", window.location.hash.toString(), "   to:   ", route);
     window.location.hash = route;
+    hash_pending_update = false;
   }, 0);
   return (changed_only_xy, routing_state) => {
+    hash_pending_update = true;
     if (changed_only_xy) {
       update_location_hash_after_1000.throttled(routing_state);
     } else {
@@ -45,7 +49,10 @@ function calc_changed_only_xy(current, next) {
   return current.args.x !== next.args.x || current.args.y !== next.args.y;
 }
 function record_location_hash_change(store) {
-  window.onhashchange = (e) => {
+  window.onhashchange = (ev) => {
+    if (hash_pending_update)
+      return;
+    const e = ev;
     const state = store.getState();
     if (!state.sync.ready_for_reading) {
     } else {
@@ -61,6 +68,10 @@ function record_location_hash_change(store) {
         console.log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state);
       store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}));
       const routing_params = merge_route_params_prioritising_url_over_state(e.newURL, state.routing);
+      if (routing_params?.args?.created_at_ms !== void 0)
+        delete routing_params?.args?.created_at_datetime;
+      if (routing_params?.args?.sim_ms !== void 0)
+        delete routing_params?.args?.sim_datetime;
       store.dispatch(ACTIONS.routing.change_route(routing_params));
     }
   };

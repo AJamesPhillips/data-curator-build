@@ -62,7 +62,7 @@ function _EditableCustomDateTime(props) {
     on_change
   }), editing && show_today_shortcut_button && /* @__PURE__ */ h(Button, {
     value: "Today",
-    onClick: () => {
+    onPointerDown: () => {
       const today_dt_str = get_today_str();
       on_change(new Date(today_dt_str));
     }

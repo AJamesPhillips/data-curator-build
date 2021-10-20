@@ -1,5 +1,5 @@
 import {test} from "../../../shared/utils/test.js";
-import {get_contextless_new_wcomponent_object} from "../../../shared/wcomponent/get_new_wcomponent_object.js";
+import {prepare_new_contextless_wcomponent_object} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 import {merge_base_object} from "./merge_data.js";
 export function merge_wcomponent(args) {
   return merge_base_object({...args, get_custom_field_merger});
@@ -26,7 +26,7 @@ function run_tests() {
   test_should_handle_non_and_conflicting_updates_with_multiple_client_updates();
   test_should_handle_different_custom_created_at();
   function test_should_handle_update_on_client() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
@@ -46,7 +46,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_nonconflicting_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
@@ -68,7 +68,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_conflicting_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
@@ -88,7 +88,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["title"]);
   }
   function test_should_handle_multiple_updates_on_client() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
@@ -108,7 +108,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_nonconflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
@@ -130,7 +130,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_conflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
@@ -150,7 +150,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["title"]);
   }
   function test_should_handle_non_and_conflicting_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
@@ -172,7 +172,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["description"]);
   }
   function test_should_handle_non_and_conflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
@@ -194,7 +194,7 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["description"]);
   }
   function test_should_handle_different_custom_created_at() {
-    const last_source_of_truth = get_contextless_new_wcomponent_object({
+    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       custom_created_at: new Date("2021"),
       modified_at: dt1

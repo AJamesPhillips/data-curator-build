@@ -4,7 +4,7 @@ import {AboutSidePanel} from "../about/AboutSidePanel.js";
 import {CreationContextSidePanel} from "../creation_context/CreationContextSidePanel.js";
 import {DisplayOptionsSidePanel} from "../display_options/DisplayOptionsSidePanel.js";
 import {FiltersSidePanel} from "../filter_context/FiltersSidePanel.js";
-import {WComponentsSidePanel} from "../knowledge/WComponentsSidePanel.js";
+import {WComponentsSidePanel} from "./wcomponents/WComponentsSidePanel.js";
 import {ViewsSidePanel} from "../knowledge_view/ViewsSidePanel.js";
 import {PerceptionsSidePanel} from "../perceptions/PerceptionsSidePanel.js";
 import {SearchSidePanel} from "../search/SearchSidePanel.js";

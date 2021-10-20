@@ -3,7 +3,8 @@ import {Button as MaterialButton} from "../../snowpack/pkg/@material-ui/core.js"
 import {Hidden} from "../../snowpack/pkg/@material-ui/core.js";
 export function Button(props) {
   return /* @__PURE__ */ h(Hidden, {
-    xsUp: props.is_hidden
+    xsUp: props.is_hidden,
+    title: props.title
   }, /* @__PURE__ */ h(MaterialButton, {
     title: props.title,
     color: props.color || "primary",

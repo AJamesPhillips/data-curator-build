@@ -48,6 +48,11 @@ function handle_upsert_knowledge_view_entry(state, knowledge_view_id, wcomponent
   return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry);
 }
 function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry) {
+  const existing_entry = knowledge_view.wc_id_map[wcomponent_id];
+  if (existing_entry && existing_entry.deleted && !entry.deleted) {
+    knowledge_view = {...knowledge_view, wc_id_map: {...knowledge_view.wc_id_map}};
+    delete knowledge_view.wc_id_map[wcomponent_id];
+  }
   const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry);
   return handle_upsert_knowledge_view(state, new_knowledge_view);
 }

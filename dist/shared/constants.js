@@ -17,3 +17,4 @@ export const LOG_TAGS = {
   SECURITY: ["INFO", "SECURITY"],
   DATABASE: ["INFO", "DATABASE"]
 };
+export const time_scale_days_to_ms_pixels_fudge_factor = 1e3 * 60 * 60;

@@ -1,11 +1,20 @@
+import {
+  wcomponent_is_event,
+  wcomponent_is_statev2,
+  wcomponent_is_sub_state,
+  wcomponent_should_have_state_VAP_sets
+} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 import {sort_list} from "../../shared/utils/sort.js";
+import {get_created_at_ms, partition_items_by_created_at_datetime} from "../../shared/utils_datetime/utils_datetime.js";
+import {get_uncertain_datetime, uncertain_datetime_is_eternal} from "../../shared/uncertainty/datetime.js";
+import {group_versions_by_id} from "../../wcomponent_derived/value_and_prediction/group_versions_by_id.js";
 export function get_wcomponent_from_state(state, id) {
   return id ? state.specialised_objects.wcomponents_by_id[id] : void 0;
 }
-export function get_wcomponents_id_map(wcomponents_by_id, ids) {
+export function get_wcomponents_from_ids(wcomponents_by_id, ids) {
   ids = ids || [];
   ids = ids instanceof Set ? Array.from(ids) : ids;
-  return ids.map((id) => id ? wcomponents_by_id[id] : void 0);
+  return ids.map((id) => wcomponents_by_id[id]);
 }
 export function get_wcomponents_from_state(state, ids) {
   ids = ids || [];
@@ -107,4 +116,61 @@ function sort_knowledge_map_ids_by_priority_then_title(ids, map) {
 }
 export function wcomponent_has_knowledge_view(wcomponent_id, knowledge_views_by_id) {
   return !!knowledge_views_by_id[wcomponent_id];
+}
+export function get_current_datetime_from_wcomponent(wcomponent_id, wcomponents_by_id, created_at_ms) {
+  const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(wcomponent_id, wcomponents_by_id, created_at_ms);
+  return get_uncertain_datetime(temporal_value_certainty?.temporal_uncertainty);
+}
+export function get_current_temporal_value_certainty_from_wcomponent(wcomponent_id, wcomponents_by_id, created_at_ms) {
+  const wcomponent = wcomponents_by_id[wcomponent_id];
+  if (wcomponent_is_event(wcomponent)) {
+    let {event_at = []} = wcomponent;
+    const prediction = event_at[0];
+    if (!prediction)
+      return void 0;
+    const temporal_uncertainty = prediction.datetime;
+    const certainty = prediction.probability * prediction.conviction;
+    return {temporal_uncertainty, certainty};
+  } else if (wcomponent_is_sub_state(wcomponent)) {
+    const {target_wcomponent_id, selector} = wcomponent;
+    const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""];
+    const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent;
+    if (!target_wcomponent || !selector)
+      return void 0;
+    const {target_VAP_set_id} = selector;
+    if (!target_VAP_set_id)
+      return void 0;
+    let {values_and_prediction_sets: target_VAP_sets} = target_wcomponent;
+    target_VAP_sets = target_VAP_sets.filter(({id}) => id === target_VAP_set_id);
+    target_VAP_sets = partition_items_by_created_at_datetime({items: target_VAP_sets, created_at_ms}).current_items;
+    target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, "descending");
+    const target_VAP_set = target_VAP_sets[0];
+    return convert_VAP_set_to_temporal_certainty(target_VAP_set);
+  } else if (wcomponent_is_statev2(wcomponent)) {
+    const VAP_set = wcomponent_has_single_statev2_datetime(wcomponent);
+    if (VAP_set) {
+      return convert_VAP_set_to_temporal_certainty(VAP_set);
+    }
+  }
+  return void 0;
+}
+export function wcomponent_has_single_statev2_datetime(wcomponent) {
+  let VAP_sets = wcomponent.values_and_prediction_sets || [];
+  VAP_sets = group_versions_by_id(VAP_sets).latest.filter((VAP_set2) => !uncertain_datetime_is_eternal(VAP_set2.datetime));
+  const VAP_set = VAP_sets[0];
+  if (VAP_set && VAP_sets.length === 1) {
+    return VAP_set;
+  }
+  return false;
+}
+function convert_VAP_set_to_temporal_certainty(VAP_set) {
+  if (!VAP_set)
+    return void 0;
+  let certainty = void 0;
+  const shared_conviction = VAP_set.shared_entry_values?.conviction;
+  VAP_set.entries.forEach((VAP) => {
+    const VAP_certainty = VAP.probability * (shared_conviction !== void 0 ? shared_conviction : VAP.conviction);
+    certainty = Math.max(certainty || 0, VAP_certainty);
+  });
+  return {temporal_uncertainty: VAP_set.datetime, certainty};
 }

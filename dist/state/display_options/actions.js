@@ -34,11 +34,18 @@ export const is_set_certainty_formatting = (action) => {
   return action.type === set_certainty_formatting_type;
 };
 const set_display_by_simulated_time_type = "set_display_by_simulated_time";
-const set_display_by_simulated_time = (args) => {
-  return {type: set_display_by_simulated_time_type, ...args};
+const set_display_by_simulated_time = (display_by_simulated_time) => {
+  return {type: set_display_by_simulated_time_type, display_by_simulated_time};
 };
 export const is_set_display_by_simulated_time = (action) => {
   return action.type === set_display_by_simulated_time_type;
+};
+const set_display_time_marks_type = "set_display_time_marks";
+const set_display_time_marks = (display_time_marks) => {
+  return {type: set_display_time_marks_type, display_time_marks};
+};
+export const is_set_display_time_marks = (action) => {
+  return action.type === set_display_time_marks_type;
 };
 const set_show_help_menu_type = "set_show_help_menu";
 const set_show_help_menu = (args) => {
@@ -54,5 +61,6 @@ export const display_actions = {
   set_validity_filter,
   set_certainty_formatting,
   set_display_by_simulated_time,
+  set_display_time_marks,
   set_show_help_menu
 };

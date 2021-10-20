@@ -1,21 +1,13 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect, Provider} from "../../snowpack/pkg/react-redux.js";
-import {WComponentCanvasNode} from "../knowledge/canvas_node/WComponentCanvasNode.js";
-import {VAPsType} from "../shared/wcomponent/interfaces/generic_value.js";
+import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNode.js";
+import {VAPsType} from "../wcomponent/interfaces/VAPsType.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_starting_state} from "../state/starting_state.js";
 import {get_store} from "../state/store.js";
-import {prepare_new_VAP_set} from "../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set.js";
+import {prepare_new_VAP_set} from "../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
 function sandbox_code() {
   const created_at = new Date("2021-01-01");
-  const wc10 = {
-    type: "state",
-    id: "wc10",
-    created_at,
-    base_id: -1,
-    title: "wc10 title",
-    description: "wc10 description"
-  };
   const creation_context = {use_creation_context: true, creation_context: {
     custom_created_at: created_at,
     label_ids: []
@@ -32,8 +24,6 @@ function sandbox_code() {
     base_id: -1,
     title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
     description: "wc11 description",
-    boolean_false_str: "this is false",
-    boolean_true_str: "this is true",
     values_and_prediction_sets: [
       VAP_set1
     ]
@@ -67,13 +57,12 @@ function sandbox_code() {
       VAP_set2
     ]
   };
-  const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement, wc14];
+  const wcomponents = [wc11, wc12_judgement, wc13_judgement, wc14];
   const kv10 = {
     id: "kv10",
     title: "kv10 title",
     description: "kv10 description",
     wc_id_map: {
-      [wc10.id]: {left: 100, top: 100},
       [wc11.id]: {left: 400, top: 100},
       [wc14.id]: {left: 700, top: 100}
     },
@@ -82,17 +71,17 @@ function sandbox_code() {
     goal_ids: [],
     sort_type: "normal"
   };
-  return {wcomponents, wc10, kv10};
+  return {wcomponents, wc11, kv10};
 }
 export function SandboxWComponentCanvasNode() {
-  const {wcomponents, wc10, kv10} = sandbox_code();
+  const {wcomponents, wc11, kv10} = sandbox_code();
   let override_preloaded_state = get_starting_state();
   override_preloaded_state = {
     ...override_preloaded_state,
     routing: {
       route: "wcomponents",
       sub_route: null,
-      item_id: wc10.id,
+      item_id: wc11.id,
       args: {
         ...override_preloaded_state.routing.args,
         view: "knowledge",

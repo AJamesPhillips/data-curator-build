@@ -25,7 +25,7 @@ function _KnowledgeContentControls(props) {
   const {wcomponents, current_composed_knowledge_view, selected_component_id} = props;
   if (!current_composed_knowledge_view)
     return /* @__PURE__ */ h("div", null);
-  const wcomponents_on_kv = useMemo(() => wcomponents.filter((wc) => !!current_composed_knowledge_view.composed_wc_id_map[wc.id]).filter((wc) => wc.type !== "counterfactual"), [wcomponents, current_composed_knowledge_view]);
+  const wcomponents_on_kv = useMemo(() => wcomponents.filter((wc) => !!current_composed_knowledge_view.composed_wc_id_map[wc.id]), [wcomponents, current_composed_knowledge_view]);
   const move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id;
   const {created_events, sim_events} = useMemo(() => get_wcomponent_time_slider_data(wcomponents_on_kv), [wcomponents_on_kv]);
   return /* @__PURE__ */ h(ContentControls, {

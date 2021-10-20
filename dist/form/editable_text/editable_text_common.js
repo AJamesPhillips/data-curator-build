@@ -64,7 +64,8 @@ function _EditableTextCommon(props) {
     handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_editing_text_flag});
   };
   return /* @__PURE__ */ h("div", {
-    className: class_name
+    className: class_name,
+    style: props.style
   }, props.component({
     value,
     on_render,

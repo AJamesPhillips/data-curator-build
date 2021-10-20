@@ -4,7 +4,7 @@ import {v4 as uuid_v4} from "../../snowpack/pkg/uuid.js";
 import SyncIcon from "../../snowpack/pkg/@material-ui/icons/Sync.js";
 import "./SandBox.css.proxy.js";
 import {get_new_knowledge_view_object} from "../knowledge_view/create_new_knowledge_view.js";
-import {get_contextless_new_wcomponent_object} from "../shared/wcomponent/get_new_wcomponent_object.js";
+import {prepare_new_contextless_wcomponent_object} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 import {sort_list} from "../shared/utils/sort.js";
 import {replace_element} from "../utils/list.js";
 import {get_supabase} from "../supabase/get_supabase.js";
@@ -401,7 +401,7 @@ async function modify_knowledge_view(args) {
   set_knowledge_views(updated_knowledge_views);
 }
 function generate_default_data(base_id) {
-  const wc1 = get_contextless_new_wcomponent_object({base_id, title: "wc1"});
+  const wc1 = prepare_new_contextless_wcomponent_object({base_id, title: "wc1"});
   const wcomponents = [wc1];
   const kv1 = get_new_knowledge_view_object({
     id: uuid_v4(),

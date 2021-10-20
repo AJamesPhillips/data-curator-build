@@ -2,12 +2,10 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./PrioritiesListView.css.proxy.js";
 import {MainArea} from "../layout/MainArea.js";
-import {
-  alert_wcomponent_is_goal
-} from "../shared/wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_is_goal} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {ListHeaderAddButton} from "../form/editable_list/ListHeaderAddButton.js";
-import {create_wcomponent} from "../knowledge/create_wcomponent_type.js";
+import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
 import {Prioritisation} from "./Prioritisation.js";
 import {ACTIONS} from "../state/actions.js";
 import {PrioritisableGoal} from "./PrioritisableGoal.js";
@@ -31,7 +29,7 @@ const map_state = (state) => {
     selected_prioritisation = prioritisations.find(({id}) => id === item_id);
     knowledge_view.wc_ids_by_type.goal.forEach((id) => {
       const goal = wcomponents_by_id[id];
-      if (!alert_wcomponent_is_goal(goal, id))
+      if (!wcomponent_is_goal(goal, id))
         return;
       goals.push(goal);
     });
@@ -40,7 +38,7 @@ const map_state = (state) => {
         if (knowledge_view.wc_ids_by_type.goal.has(id))
           return;
         const goal = wcomponents_by_id[id];
-        if (!alert_wcomponent_is_goal(goal, id))
+        if (!wcomponent_is_goal(goal, id))
           return;
         goals.push(goal);
       });

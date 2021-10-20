@@ -3,12 +3,12 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.js";
 import {get_wcomponent_search_options} from "../search/get_wcomponent_search_options.js";
 import {ACTIONS} from "../state/actions.js";
-import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
+import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 const map_state = (state, {}) => {
   return {
     ready: state.sync.ready_for_reading,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+    wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
   };
@@ -23,7 +23,7 @@ function _LabelsEditor(props) {
     return /* @__PURE__ */ h("div", null, "Loading labels...");
   const wcomponent_id_options = get_wcomponent_search_options({
     wcomponents_by_id: props.wcomponents_by_id,
-    wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
+    wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,
     sim_ms: props.sim_ms
   });

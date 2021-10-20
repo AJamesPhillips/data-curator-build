@@ -25,4 +25,3 @@ const knowledge_view_id_regex = new RegExp(/^kv(wc)?\d/);
 export const is_knowledge_view_id = (id) => !!id && knowledge_view_id_regex.test(id);
 const uuidv4_regex = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
 export const is_uuid_v4 = (id) => !!id && uuidv4_regex.test(id);
-export const wcomponent_id_to_wcomponent_kv_id = (id) => "kv" + id;

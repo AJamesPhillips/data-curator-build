@@ -72,8 +72,8 @@ function get_ready_for_fields_for_data_type(state) {
   return {ready_for_reading, ready_for_writing};
 }
 function prepare_specialised_object_ids_pending_save(args) {
-  const wcomponent_ids = new Set(args.wcomponents.filter((wc) => wc.needs_save).map(({id}) => id));
-  const knowledge_view_ids = new Set(args.knowledge_views.filter((wc) => wc.needs_save).map(({id}) => id));
+  const wcomponent_ids = new Set(args.wcomponents.filter((item) => item.needs_save).map(({id}) => id));
+  const knowledge_view_ids = new Set(args.knowledge_views.filter((item) => item.needs_save).map(({id}) => id));
   return {wcomponent_ids, knowledge_view_ids};
 }
 function update_specialised_object_ids_pending_save(state, ids_pending_save) {

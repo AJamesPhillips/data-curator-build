@@ -1,22 +1,25 @@
 import {
-  wcomponent_can_render_connection,
-  wcomponent_is_counterfactual,
-  wcomponent_is_counterfactual_v2,
-  wcomponent_is_prioritisation
-} from "../../../shared/wcomponent/interfaces/SpecialisedObjects.js";
+  calculate_canvas_x_for_wcomponent_temporal_uncertainty,
+  DEFAULT_DATETIME_LINE_CONFIG
+} from "../../../knowledge_view/datetime_line.js";
+import {is_uuid_v4} from "../../../shared/utils/ids.js";
+import {is_defined} from "../../../shared/utils/is_defined.js";
 import {sort_list} from "../../../shared/utils/sort.js";
+import {get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 import {update_substate} from "../../../utils/update_state.js";
+import {
+  wcomponent_can_render_connection,
+  wcomponent_is_counterfactual_v2,
+  wcomponent_is_prioritisation,
+  wcomponent_is_plain_connection
+} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
+import {get_wcomponent_ids_by_type} from "../../derived/get_wcomponent_ids_by_type.js";
 import {
   get_base_knowledge_view,
   get_nested_knowledge_view_ids,
-  get_wcomponents_from_state,
-  get_wcomponent_from_state,
-  sort_nested_knowledge_map_ids_by_priority_then_title
+  sort_nested_knowledge_map_ids_by_priority_then_title,
+  get_wcomponents_from_state
 } from "../accessors.js";
-import {get_wcomponent_ids_by_type} from "../../derived/get_wcomponent_ids_by_type.js";
-import {is_uuid_v4} from "../../../shared/utils/ids.js";
-import {get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
-import {is_defined} from "../../../shared/utils/is_defined.js";
 export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id;
   if (one_or_more_knowledge_views_changed) {
@@ -36,13 +39,20 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id;
   const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed;
   const filters_changed = initial_state.filter_context !== state.filter_context;
+  const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks;
+  const ephemeral_overrides_might_have_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms || display_time_marks_changed;
   if (current_kv) {
     if (composed_kv_needs_update) {
-      const current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv);
-      const current_composed_knowledge_view_updated_filters = update_filters(state, current_composed_knowledge_view);
-      state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view_updated_filters);
+      let current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv);
+      current_composed_knowledge_view = update_filters(state, current_composed_knowledge_view);
+      current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view);
+      state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view);
     } else if (filters_changed) {
       const current_composed_knowledge_view = update_filters(state, state.derived.current_composed_knowledge_view);
+      state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view);
+    } else if (ephemeral_overrides_might_have_changed) {
+      let {current_composed_knowledge_view} = state.derived;
+      current_composed_knowledge_view = update_ephemeral_overrides_of_current_composed_kv(current_composed_knowledge_view, display_time_marks_changed, state, current_kv);
       state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view);
     }
   }
@@ -69,46 +79,54 @@ function get_knowledge_view(state, id) {
   return state.specialised_objects.knowledge_views_by_id[id];
 }
 function update_current_composed_knowledge_view_state(state, current_kv) {
-  const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id);
-  remove_deleted_wcomponents(composed_wc_id_map, state.specialised_objects.wcomponents_by_id);
+  const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
+  const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id);
+  const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views);
+  remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
   const wcomponent_ids = Object.keys(composed_wc_id_map);
+  const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id);
   const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids);
   const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined);
   const wcomponent_nodes = wcomponents.filter(is_wcomponent_node);
   const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection);
-  const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv);
-  const wc_id_counterfactuals_v2_map = get_wc_id_counterfactuals_v2_map({
+  const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
     wc_ids_by_type,
-    wcomponents_by_id: state.specialised_objects.wcomponents_by_id
+    wcomponents_by_id
+  });
+  const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
+    wc_ids_by_type,
+    wcomponents_by_id,
+    active_counterfactual_ids: current_kv.active_counterfactual_v2_ids
   });
   const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation);
+  const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true);
   const current_composed_knowledge_view = {
     ...current_kv,
     composed_wc_id_map,
+    overlapping_wc_ids,
     wcomponent_nodes,
     wcomponent_connections,
-    wc_id_counterfactuals_map,
-    wc_id_counterfactuals_v2_map,
+    wc_id_to_counterfactuals_v2_map,
+    wc_id_to_active_counterfactuals_v2_map,
     wc_ids_by_type,
     prioritisations,
-    filters: {wc_ids_excluded_by_filters: new Set()}
+    filters: {wc_ids_excluded_by_filters: new Set()},
+    composed_datetime_line_config: datetime_lines_config
   };
   delete current_composed_knowledge_view.wc_id_map;
   return current_composed_knowledge_view;
 }
-export function get_composed_wc_id_map(knowledge_view, knowledge_views_by_id) {
-  const to_compose = [];
-  const foundation_knowledge_view_ids = knowledge_view.foundation_knowledge_view_ids || [];
-  foundation_knowledge_view_ids.forEach((id) => {
-    const new_kv = knowledge_views_by_id[id];
-    if (!new_kv)
-      return;
-    to_compose.push(new_kv.wc_id_map);
-  });
-  to_compose.push(knowledge_view.wc_id_map);
+export function get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, include_self = true) {
+  const {foundation_knowledge_view_ids = []} = knowledge_view;
+  const foundation_knowledge_views = foundation_knowledge_view_ids.map((id) => knowledge_views_by_id[id]).filter(is_defined);
+  if (include_self)
+    foundation_knowledge_views.push(knowledge_view);
+  return foundation_knowledge_views;
+}
+export function get_composed_wc_id_map(foundation_knowledge_views) {
   const composed_wc_id_map = {};
-  to_compose.forEach((map) => {
-    Object.entries(map).forEach(([id, entry]) => composed_wc_id_map[id] = entry);
+  foundation_knowledge_views.forEach((foundational_kv) => {
+    Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry);
   });
   return composed_wc_id_map;
 }
@@ -123,50 +141,49 @@ function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
 }
 const invalid_node_types = new Set([
   "causal_link",
-  "relation_link",
-  "counterfactual",
-  "prioritisation"
+  "relation_link"
 ]);
 const is_wcomponent_node = (wcomponent) => !invalid_node_types.has(wcomponent.type);
-function get_wc_id_counterfactuals_map(state, knowledge_view) {
+function get_wc_id_to_counterfactuals_v2_map(args) {
   const map = {};
-  Object.keys(knowledge_view.wc_id_map).forEach((wcomponent_id) => {
-    const counterfactual = get_wcomponent_from_state(state, wcomponent_id);
-    if (!wcomponent_is_counterfactual(counterfactual))
-      return;
-    const {target_wcomponent_id, target_VAP_set_id, target_VAP_id} = counterfactual;
-    const level_VAP_set_ids = map[target_wcomponent_id] || {VAP_set: {}};
-    map[target_wcomponent_id] = level_VAP_set_ids;
-    const level_VAP_ids = level_VAP_set_ids.VAP_set[target_VAP_set_id] || {};
-    level_VAP_set_ids.VAP_set[target_VAP_set_id] = level_VAP_ids;
-    if (level_VAP_ids[target_VAP_id]) {
-      console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id].id}", will not overwrite with: "${counterfactual.id}"`);
-      return;
-    }
-    level_VAP_ids[target_VAP_id] = counterfactual;
-  });
-  return map;
-}
-function get_wc_id_counterfactuals_v2_map(args) {
-  const map = {};
+  const active_counterfactual_ids = args.active_counterfactual_ids ? new Set(args.active_counterfactual_ids) : false;
   args.wc_ids_by_type.counterfactualv2.forEach((id) => {
+    if (active_counterfactual_ids && !active_counterfactual_ids.has(id))
+      return;
     const counterfactual_v2 = args.wcomponents_by_id[id];
     if (!wcomponent_is_counterfactual_v2(counterfactual_v2))
       return;
     const {target_wcomponent_id, target_VAP_set_id} = counterfactual_v2;
     if (!target_wcomponent_id || !target_VAP_set_id)
       return;
-    const level_VAP_set_ids = map[target_wcomponent_id] || {VAP_sets: {}};
-    map[target_wcomponent_id] = level_VAP_set_ids;
-    const counterfactual_v2s = level_VAP_set_ids.VAP_sets[target_VAP_set_id] || [];
+    const counterfactuals_by_attribute = map[target_wcomponent_id] || {VAP_sets: {}};
+    map[target_wcomponent_id] = counterfactuals_by_attribute;
+    const counterfactual_v2s = counterfactuals_by_attribute.VAP_sets[target_VAP_set_id] || [];
     counterfactual_v2s.push(counterfactual_v2);
-    level_VAP_set_ids.VAP_sets[target_VAP_set_id] = counterfactual_v2s;
+    counterfactuals_by_attribute.VAP_sets[target_VAP_set_id] = counterfactual_v2s;
   });
   return map;
 }
 function get_prioritisations(state, prioritisation_ids) {
   const prioritisations = get_wcomponents_from_state(state, prioritisation_ids).filter(wcomponent_is_prioritisation);
   return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY, "descending");
+}
+export function get_composed_datetime_lines_config(foundation_knowledge_views, use_defaults) {
+  let config = {};
+  if (use_defaults) {
+    config = {...DEFAULT_DATETIME_LINE_CONFIG};
+  }
+  foundation_knowledge_views.forEach((foundational_kv) => {
+    const {datetime_line_config} = foundational_kv;
+    if (!datetime_line_config)
+      return;
+    config.time_origin_ms = datetime_line_config.time_origin_ms ?? config.time_origin_ms;
+    config.time_origin_x = datetime_line_config.time_origin_x ?? config.time_origin_x;
+    config.time_scale = datetime_line_config.time_scale ?? config.time_scale;
+    config.time_line_number = datetime_line_config.time_line_number ?? config.time_line_number;
+    config.time_line_spacing_days = datetime_line_config.time_line_spacing_days ?? config.time_line_spacing_days;
+  });
+  return config;
 }
 function update_filters(state, current_composed_knowledge_view) {
   if (!current_composed_knowledge_view)
@@ -198,5 +215,81 @@ function update_filters(state, current_composed_knowledge_view) {
   return {
     ...current_composed_knowledge_view,
     filters: {wc_ids_excluded_by_filters}
+  };
+}
+function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
+  const map = {};
+  const entries = {};
+  const overlapping_coord_keys = new Set();
+  Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) => {
+    if (entry.deleted)
+      return;
+    if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id]))
+      return;
+    const coord_key = `${entry.left},${entry.top}`;
+    const ids = entries[coord_key] || [];
+    ids.push(wcomponent_id);
+    entries[coord_key] = ids;
+    if (ids.length > 1)
+      overlapping_coord_keys.add(coord_key);
+  });
+  overlapping_coord_keys.forEach((coord_key) => {
+    const overlapping_wcomponent_ids = entries[coord_key];
+    overlapping_wcomponent_ids.forEach((id, index) => {
+      const i = index + 1;
+      map[id] = [...overlapping_wcomponent_ids.slice(i), ...overlapping_wcomponent_ids.slice(0, i)];
+    });
+  });
+  return map;
+}
+function update_ephemeral_overrides_of_current_composed_kv(current_composed_knowledge_view, display_time_marks_changed, state, current_kv) {
+  if (!current_composed_knowledge_view)
+    return void 0;
+  if (display_time_marks_changed && !state.display_options.display_time_marks) {
+    const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
+    const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id);
+    const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views);
+    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
+    current_composed_knowledge_view = {
+      ...current_composed_knowledge_view,
+      composed_wc_id_map
+    };
+  } else {
+    current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view);
+  }
+  return current_composed_knowledge_view;
+}
+function add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view) {
+  if (!current_composed_knowledge_view)
+    return void 0;
+  const {display_time_marks} = state.display_options;
+  const {wc_ids_by_type, composed_wc_id_map, composed_datetime_line_config} = current_composed_knowledge_view;
+  const {time_origin_ms, time_origin_x, time_scale} = composed_datetime_line_config;
+  const {wcomponents_by_id} = state.specialised_objects;
+  const {created_at_ms} = state.routing.args;
+  if (!display_time_marks || time_origin_ms === void 0)
+    return current_composed_knowledge_view;
+  const new_map = {...composed_wc_id_map};
+  let changed = false;
+  Array.from(wc_ids_by_type.has_single_datetime).forEach((wcomponent_id) => {
+    const existing_entry = composed_wc_id_map[wcomponent_id];
+    if (!existing_entry)
+      return;
+    const left = calculate_canvas_x_for_wcomponent_temporal_uncertainty({
+      wcomponent_id,
+      wcomponents_by_id,
+      created_at_ms,
+      time_origin_ms,
+      time_origin_x,
+      time_scale
+    });
+    if (left === void 0 || existing_entry.left === left)
+      return;
+    changed = true;
+    new_map[wcomponent_id] = {...existing_entry, left};
+  });
+  return !changed ? current_composed_knowledge_view : {
+    ...current_composed_knowledge_view,
+    composed_wc_id_map: new_map
   };
 }

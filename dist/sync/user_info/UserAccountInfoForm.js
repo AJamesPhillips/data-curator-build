@@ -6,7 +6,7 @@ import LogoutIcon from "../../../snowpack/pkg/@material-ui/icons/ExitToApp.js";
 import "../common.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
 import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
-import {save_and_signout} from "../../state/user_info/signout.js";
+import {save_and_optionally_signout} from "../../state/user_info/signout.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
 import {UserAccountInfoChangePasswordForm} from "./UserAccountInfoChangePasswordForm.js";
@@ -55,7 +55,7 @@ function _UserAccountInfoForm(props) {
   async function log_out() {
     const supabase = get_supabase();
     try {
-      save_and_signout();
+      save_and_optionally_signout();
     } catch (err) {
     }
   }

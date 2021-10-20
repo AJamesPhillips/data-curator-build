@@ -22,6 +22,7 @@ function _ExpandableList(props) {
     items_count,
     item_descriptor,
     items_descriptor = get_items_descriptor(item_descriptor, items_count, props.editing),
+    items_descriptor_title,
     disable_partial_collapsed = false
   } = props;
   function toggle_expansion() {
@@ -34,6 +35,7 @@ function _ExpandableList(props) {
   }
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ListHeader, {
     items_descriptor,
+    items_descriptor_title,
     on_click_header: toggle_expansion,
     other_content: header_content
   }), content({disable_partial_collapsed, expanded_items: expanded_items > 0, expanded_item_rows}));

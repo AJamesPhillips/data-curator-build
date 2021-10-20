@@ -1,5 +1,5 @@
 import {bounded} from "../shared/utils/bounded.js";
-export function percentage_to_string(value) {
+export function ratio_to_percentage_string(value) {
   if (value === void 0)
     return "";
   const percent = bounded(value, 0, 1) * 100;

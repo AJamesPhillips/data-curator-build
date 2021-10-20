@@ -1,4 +1,4 @@
-import {create_wcomponent} from "../../../knowledge/create_wcomponent_type.js";
+import {create_wcomponent} from "../wcomponents/create_wcomponent_type.js";
 import {ACTIONS} from "../../actions.js";
 import {selector_chosen_base_id} from "../../user_info/selector.js";
 import {is_pointerup_on_connection_terminal} from "../meta_wcomponents/selecting/actions.js";

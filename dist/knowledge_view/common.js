@@ -8,6 +8,7 @@ import {knowledge_view_sort_types} from "../shared/interfaces/knowledge_view.js"
 import {FoundationKnowledgeViewsList} from "./FoundationKnowledgeViewsList.js";
 import {KnowledgeViewActiveCounterFactuals} from "./KnowledgeViewActiveCounterfactuals.js";
 import {KnowledgeViewListsSet} from "./KnowledgeViewListsSet.js";
+import {KnowledgeViewDatetimeLinesConfigForm} from "./KnowledgeViewDatetimeLinesConfigForm.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -31,7 +32,7 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
     value: knowledge_view.title,
     conditional_on_blur: (new_title) => {
       const default_title = knowledge_view.is_base ? "All" : make_default_kv_title();
-      crud.update_item({...knowledge_view, title: new_title || default_title});
+      crud.update_item({...knowledge_view, title: new_title ?? default_title});
     }
   })), (editing || knowledge_view.description) && /* @__PURE__ */ h("p", null, editing && /* @__PURE__ */ h("span", {
     className: "description_label"
@@ -69,7 +70,12 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
     options: knowledge_view_sort_types.map((type) => ({id: type, title: type})),
     allow_none: false,
     on_change: (sort_type) => sort_type && crud.update_item({...knowledge_view, sort_type})
-  })), (editing || children.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(KnowledgeViewListsSet, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h(KnowledgeViewDatetimeLinesConfigForm, {
+    editing,
+    knowledge_view,
+    knowledge_views_by_id: props.knowledge_views_by_id,
+    update_item: crud.update_item
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), (editing || children.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(KnowledgeViewListsSet, {
     ...props,
     parent_knowledge_view_id: knowledge_view.id,
     knowledge_views: children,

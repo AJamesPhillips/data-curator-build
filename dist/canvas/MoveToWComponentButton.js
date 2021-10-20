@@ -53,7 +53,7 @@ function _MoveToWComponentButton(props) {
   return /* @__PURE__ */ h(Box, {
     zIndex: 10,
     m: 2,
-    title: position ? "" : "No components present"
+    title: position ? "Move to component(s)" : "No components present"
   }, /* @__PURE__ */ h(IconButton, {
     size: "small",
     onClick: move,
