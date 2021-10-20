@@ -5,8 +5,10 @@ import {selector_chosen_base_id} from "../state/user_info/selector.js";
 import {UncertainDateTimeForm} from "./uncertain_datetime/UncertainDateTimeForm.js";
 import {EditablePercentage} from "../form/EditablePercentage.js";
 import {PredictionBadge} from "../sharedf/prediction_badge/PredictionBadge.js";
+import {Button} from "../sharedf/Button.js";
 const map_state = (state) => ({
   creation_context_state: state.creation_context,
+  editing: !state.display_options.consumption_formatting,
   base_id: selector_chosen_base_id(state)
 });
 const connector = connect(map_state);
@@ -46,6 +48,15 @@ function _WComponentEventAtFormField(props) {
     size: 20,
     probability: event_at.probability,
     conviction: event_at.conviction
-  })));
+  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), props.editing && /* @__PURE__ */ h(Button, {
+    fullWidth: true,
+    value: event_at ? "Clear Event" : "Create Default Event",
+    onClick: () => {
+      if (event_at)
+        upsert_wcomponent({event_at: []});
+      else
+        upsert_event_at({conviction: 1, probability: 1});
+    }
+  }));
 }
 export const WComponentEventAtFormField = connector(_WComponentEventAtFormField);

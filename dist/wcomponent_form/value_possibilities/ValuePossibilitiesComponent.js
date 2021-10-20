@@ -57,7 +57,7 @@ export function ValuePossibilitiesComponent(props) {
       const any_left = Object.keys(modified_value_possibilities).length > 0;
       props.update_value_possibilities(any_left ? modified_value_possibilities : void 0);
     }
-  }))), /* @__PURE__ */ h(Button, {
+  }))), props.editing && /* @__PURE__ */ h(Button, {
     value: "New possibility",
     fullWidth: true,
     onClick: () => {
@@ -68,7 +68,7 @@ export function ValuePossibilitiesComponent(props) {
       };
       props.update_value_possibilities(modified_value_possibilities);
     }
-  }), props.value_possibilities === void 0 && /* @__PURE__ */ h(Button, {
+  }), props.editing && props.value_possibilities === void 0 && /* @__PURE__ */ h(Button, {
     value: "Use defaults",
     fullWidth: true,
     onClick: () => {
