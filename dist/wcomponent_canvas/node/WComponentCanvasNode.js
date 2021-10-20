@@ -312,6 +312,11 @@ function get_wcomponent_color(args) {
       } else {
         background = "pink";
       }
+    } else if (!datetime) {
+      if (certainty === 1 || certainty === void 0) {
+        background = "rgb(62, 55, 90)";
+        font = " color_light ";
+      }
     }
   } else {
     background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)" : wcomponent_is_goal(args.wcomponent) ? "rgb(207, 255, 198)" : "";
