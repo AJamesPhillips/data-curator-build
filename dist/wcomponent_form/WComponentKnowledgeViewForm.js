@@ -37,7 +37,7 @@ const map_state = (state, own_props) => {
 };
 const map_dispatch = {
   upsert_knowledge_view_entry: ACTIONS.specialised_object.upsert_knowledge_view_entry,
-  delete_knowledge_view_entry: ACTIONS.specialised_object.delete_knowledge_view_entry
+  bulk_remove_from_knowledge_view: ACTIONS.specialised_object.bulk_remove_from_knowledge_view
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentKnowledgeViewForm(props) {
@@ -53,7 +53,7 @@ function _WComponentKnowledgeViewForm(props) {
   } = props;
   if (!wcomponent)
     return /* @__PURE__ */ h("div", null, "Component of ID: ", wcomponent_id, " does not exist");
-  const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => wc_id_map[wcomponent_id]);
+  const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => wc_id_map[wcomponent_id] && !wc_id_map[wcomponent_id]?.deleted);
   function upsert_entry(knowledge_view_id2, new_entry_partial = {}) {
     const new_entry = {
       ...composed_knowledge_view_entry || {left: props.middle_position_left, top: props.middle_position_top},
@@ -65,17 +65,7 @@ function _WComponentKnowledgeViewForm(props) {
       entry: new_entry
     });
   }
-  function delete_entry(knowledge_view_id2) {
-    props.delete_knowledge_view_entry({
-      wcomponent_id,
-      knowledge_view_id: knowledge_view_id2
-    });
-  }
-  return /* @__PURE__ */ h("div", null, knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
-    value: (knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view",
-    extra_class_names: "left",
-    onClick: () => upsert_entry(knowledge_view_id, {deleted: void 0})
-  })), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h(FormControl, {
+  return /* @__PURE__ */ h("div", null, editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
     margin: "normal"
@@ -96,7 +86,7 @@ function _WComponentKnowledgeViewForm(props) {
     valueLabelDisplay: "on"
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(AlignComponentForm, {
     wcomponent_id
-  }), /* @__PURE__ */ h("br", null)), composed_knowledge_view_entry && /* @__PURE__ */ h("div", {
+  }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
     wcomponent_id
@@ -108,10 +98,19 @@ function _WComponentKnowledgeViewForm(props) {
     wcomponent_id,
     wcomponent_current_kv_entry: composed_knowledge_view_entry,
     is_highlighted: true
-  }))), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Remove from knowledge view",
+  }))), knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && !composed_knowledge_view_entry.deleted && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
+    value: (knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view",
+    extra_class_names: "left",
+    onClick: () => upsert_entry(knowledge_view_id, {deleted: void 0})
+  })), editing && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Remove from knowledge view (block)",
     tooltip_text: "Remove from current knowledge view (" + knowledge_view_title + ")",
-    on_delete: () => delete_entry(knowledge_view_id)
+    on_delete: () => {
+      props.bulk_remove_from_knowledge_view({
+        wcomponent_ids: [wcomponent_id],
+        remove_type: "block"
+      });
+    }
   })), editing && /* @__PURE__ */ h("p", null, "Add to knowledge view", /* @__PURE__ */ h(SelectKnowledgeView, {
     on_change: (knowledge_view_id2) => {
       if (!knowledge_view_id2)

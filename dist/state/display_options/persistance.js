@@ -8,8 +8,7 @@ export function display_options_persist(state) {
     "display_by_simulated_time",
     "display_time_marks",
     "validity_filter",
-    "certainty_formatting",
-    "collapsed_side_panel"
+    "certainty_formatting"
   ], state.display_options);
   persist_state_object("display_options", to_persist);
 }
@@ -25,7 +24,6 @@ export function display_options_starting_state() {
     time_resolution: "hour",
     display_by_simulated_time: false,
     display_time_marks: false,
-    collapsed_side_panel: false,
     show_help_menu: false,
     validity_filter,
     certainty_formatting,

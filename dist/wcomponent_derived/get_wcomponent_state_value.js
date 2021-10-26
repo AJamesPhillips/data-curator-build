@@ -13,7 +13,8 @@ export function get_wcomponent_state_value_and_probabilities(args) {
   if (!wcomponent_should_have_state_VAP_sets(wcomponent))
     return {most_probable_VAP_set_values: []};
   const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent);
-  const counterfactual_VAP_sets = wcomponent.values_and_prediction_sets.map((VAP_set) => {
+  const {values_and_prediction_sets = []} = wcomponent;
+  const counterfactual_VAP_sets = values_and_prediction_sets.map((VAP_set) => {
     return apply_counterfactuals_v2_to_VAP_set({
       VAP_set,
       VAP_set_id_to_counterfactual_v2_map
@@ -48,7 +49,8 @@ function get_most_probable_VAP_set_values(VAP_set, VAPs_represent) {
         probability: VAP.probability,
         conviction: VAP.conviction,
         certainty,
-        parsed_value
+        parsed_value,
+        value_id: VAP.value_id
       });
     }
   });

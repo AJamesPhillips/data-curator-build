@@ -39,10 +39,18 @@ const clear_pointerupdown_on_connection_terminal = (args) => {
 export const is_clear_pointerupdown_on_connection_terminal = (action) => {
   return action.type === clear_pointerupdown_on_connection_terminal_type;
 };
+const set_wcomponent_ids_to_move_type = "set_wcomponent_ids_to_move";
+const set_wcomponent_ids_to_move = (args) => {
+  return {type: set_wcomponent_ids_to_move_type, ...args};
+};
+export const is_set_wcomponent_ids_to_move = (action) => {
+  return action.type === set_wcomponent_ids_to_move_type;
+};
 export const selecting_actions = {
   clicked_wcomponent,
   clear_selected_wcomponents,
   set_selected_wcomponents,
   pointerupdown_on_connection_terminal,
-  clear_pointerupdown_on_connection_terminal
+  clear_pointerupdown_on_connection_terminal,
+  set_wcomponent_ids_to_move
 };

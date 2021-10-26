@@ -15,6 +15,7 @@ export const ALLOWED_ROUTES = Object.keys(ALLOWED_SUB_ROUTES);
 const _view_types = {
   priorities: true,
   priorities_list: true,
+  actions_list: true,
   knowledge: true,
   objectives: true
 };

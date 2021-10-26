@@ -26,7 +26,7 @@ export function get_store(args = {}) {
   if (cached_store && use_cache)
     return cached_store;
   const preloaded_state = {
-    ...get_starting_state(),
+    ...get_starting_state(load_state_from_storage),
     ...override_preloaded_state
   };
   const store = createStore(root_reducer, preloaded_state);

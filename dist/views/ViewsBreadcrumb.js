@@ -69,7 +69,8 @@ function _ViewsBreadcrumb(props) {
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb);
 const view_options = [
   {id: "knowledge", title: "Knowledge"},
-  {id: "priorities_list", title: "Priorities list"}
+  {id: "priorities_list", title: "Priorities list"},
+  {id: "actions_list", title: "Actions list"}
 ];
 function calc_if_is_hidden(entry) {
   const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived";

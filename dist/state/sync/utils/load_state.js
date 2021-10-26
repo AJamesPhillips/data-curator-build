@@ -17,7 +17,7 @@ export function load_state(store) {
     return;
   }
   dispatch(ACTIONS.sync.update_sync_status({status: "LOADING", data_type: "specialised_objects"}));
-  get_state_data(storage_type, chosen_base_id).then((specialised_objects) => {
+  get_state_data(store.load_state_from_storage, storage_type, chosen_base_id).then((specialised_objects) => {
     dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({specialised_objects}));
     ensure_any_knowledge_view_displayed(store);
     dispatch(ACTIONS.sync.update_sync_status({status: "LOADED", data_type: "specialised_objects"}));
@@ -27,10 +27,10 @@ export function load_state(store) {
     dispatch(ACTIONS.sync.update_sync_status({status: "FAILED", data_type: "specialised_objects", error_message}));
   });
 }
-export function get_state_data(storage_type, chosen_base_id) {
+export function get_state_data(load_state_from_storage, storage_type, chosen_base_id) {
   let promise_data;
   if (storage_type === "supabase") {
-    promise_data = supabase_load_data(chosen_base_id);
+    promise_data = supabase_load_data(load_state_from_storage, chosen_base_id);
   } else {
     const message = `storage_type "${storage_type}" unsupported`;
     console.error(`Returning from get_state_data. ` + message);

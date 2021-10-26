@@ -18,6 +18,7 @@ import {
 import {new_value_and_prediction_set} from "./NewValueAndPredictionSet.js";
 import {ValueAndPredictionSetOlderVersions} from "./ValueAndPredictionSetOlderVersions.js";
 import {prepare_new_VAP_set} from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
+import {update_value_possibilities_with_VAPSets} from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
 export function ValueAndPredictionSetsComponent(props) {
   const [new_item, set_new_item] = useState(void 0);
   const {
@@ -25,7 +26,7 @@ export function ValueAndPredictionSetsComponent(props) {
     item_descriptor,
     VAPs_represent,
     update_values_and_predictions,
-    value_possibilities,
+    existing_value_possibilities,
     values_and_prediction_sets: all_VAP_sets,
     invalid_future_items,
     future_items,
@@ -36,7 +37,7 @@ export function ValueAndPredictionSetsComponent(props) {
   } = props;
   const present_items = present_item ? [present_item] : [];
   const render_future_list_content = factory_render_VAP_set_list_content({
-    value_possibilities,
+    existing_value_possibilities,
     subset_VAP_sets: future_items,
     previous_versions_by_id,
     all_VAP_sets,
@@ -47,7 +48,7 @@ export function ValueAndPredictionSetsComponent(props) {
     editing
   });
   const render_present_list_content = factory_render_VAP_set_list_content({
-    value_possibilities,
+    existing_value_possibilities,
     subset_VAP_sets: present_items,
     previous_versions_by_id,
     all_VAP_sets,
@@ -58,7 +59,7 @@ export function ValueAndPredictionSetsComponent(props) {
     editing
   });
   const render_past_list_content = factory_render_VAP_set_list_content({
-    value_possibilities,
+    existing_value_possibilities,
     subset_VAP_sets: past_items,
     previous_versions_by_id,
     all_VAP_sets,
@@ -68,10 +69,11 @@ export function ValueAndPredictionSetsComponent(props) {
     tense: Tense.past,
     editing
   });
+  const possible_value_possibilities = all_VAP_sets.length === 0 ? void 0 : update_value_possibilities_with_VAPSets(existing_value_possibilities, all_VAP_sets);
   const new_VAP_set_form_item_props = {
     get_created_at: get_actual_created_at_datetime,
     get_custom_created_at: get_actual_custom_created_at_datetime,
-    get_summary: new_value_and_prediction_set(VAPs_represent, value_possibilities),
+    get_summary: new_value_and_prediction_set(VAPs_represent, possible_value_possibilities),
     get_details: () => /* @__PURE__ */ h("div", null),
     get_details2: () => /* @__PURE__ */ h("div", null),
     extra_class_names: `value_and_prediction_set new`,
@@ -96,7 +98,7 @@ export function ValueAndPredictionSetsComponent(props) {
     other_content: () => !editing ? null : /* @__PURE__ */ h(ListHeaderAddButton, {
       new_item_descriptor: item_descriptor,
       on_pointer_down_new_list_entry: () => {
-        const new_VAP_set = prepare_new_VAP_set(VAPs_represent, value_possibilities, all_VAP_sets, props.base_id, props.creation_context);
+        const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, all_VAP_sets, props.base_id, props.creation_context);
         set_new_item(new_VAP_set);
       }
     })
@@ -145,7 +147,7 @@ function count_and_versions_title(title, all_latest, previous_versions_by_id) {
 }
 function factory_render_VAP_set_list_content(args) {
   const {
-    value_possibilities,
+    existing_value_possibilities,
     subset_VAP_sets,
     all_VAP_sets,
     previous_versions_by_id,
@@ -188,9 +190,9 @@ function factory_render_VAP_set_list_content(args) {
       get_created_at: get_actual_created_at_datetime,
       get_custom_created_at: get_actual_custom_created_at_datetime,
       get_summary: get_summary_for_single_VAP_set(VAPs_represent, false),
-      get_details: get_details_for_single_VAP_set(value_possibilities, VAPs_represent),
+      get_details: get_details_for_single_VAP_set(existing_value_possibilities, VAPs_represent),
       get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
-      get_details3: get_details3(value_possibilities, VAPs_represent, previous_versions_by_id),
+      get_details3: get_details3(existing_value_possibilities, VAPs_represent, previous_versions_by_id),
       extra_class_names: `value_and_prediction_set ${tense === Tense.future ? "future" : tense === Tense.present ? "present" : "past"}`,
       expanded: expanded_item_rows,
       crud,

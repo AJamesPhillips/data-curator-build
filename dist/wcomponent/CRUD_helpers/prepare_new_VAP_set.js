@@ -4,20 +4,21 @@ import {test} from "../../shared/utils/test.js";
 import {VAPsType} from "../interfaces/VAPsType.js";
 import {prepare_new_VAP, set_VAP_probabilities} from "./prepare_new_VAP.js";
 import {get_possibilities_from_VAP_sets} from "../value_possibilities/get_possibilities_from_VAP_sets.js";
-export function prepare_new_VAP_set(VAPs_represent, value_possibilities, existing_VAP_sets, base_id, creation_context) {
+export function prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, existing_VAP_sets, base_id, creation_context) {
   const dates = get_new_created_ats(creation_context);
-  const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets);
+  const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets);
+  const datetime = VAPs_represent === VAPsType.action ? {value: new Date()} : {};
   const new_VAP_set = {
     id: get_new_value_and_prediction_set_id(),
     ...dates,
     base_id,
-    datetime: {},
+    datetime,
     entries: entries_with_probabilities
   };
   return new_VAP_set;
 }
-function prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets) {
-  const possibilities = get_possibilities_from_VAP_sets(VAPs_represent, value_possibilities, existing_VAP_sets);
+function prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets) {
+  const possibilities = get_possibilities_from_VAP_sets(VAPs_represent, existing_value_possibilities, existing_VAP_sets);
   const vanilla_entries = possibilities.map((possibility) => ({
     ...prepare_new_VAP(),
     value: possibility.value,

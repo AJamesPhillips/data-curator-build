@@ -13,7 +13,8 @@ const map_state = (state) => {
     creation_context: state.creation_context,
     editing: !state.display_options.consumption_formatting,
     current_view: state.routing.args.view,
-    current_subview_id: state.routing.args.subview_id
+    current_subview_id: state.routing.args.subview_id,
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id
   };
 };
 const map_dispatch = {

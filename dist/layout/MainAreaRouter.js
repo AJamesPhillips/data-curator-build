@@ -5,6 +5,7 @@ import {ObjectivesView} from "../objectives/ObjectivesView.js";
 import {PrioritiesListView} from "../priorities_list_view/PrioritiesListView.js";
 import {KnowledgeTimeView} from "../knowledge_view/KnowledgeTimeView.js";
 import {OldPrioritiesView} from "../priorities/OldPrioritiesView.js";
+import {ActionsListView} from "../actions_list_view/ActionsListView.js";
 const map_state = (state) => {
   const {view} = state.routing.args;
   const {display_by_simulated_time} = state.display_options;
@@ -24,6 +25,8 @@ function _MainAreaRouter(props) {
     el = /* @__PURE__ */ h(OldPrioritiesView, null);
   else if (props.view === "priorities_list")
     el = /* @__PURE__ */ h(PrioritiesListView, null);
+  else if (props.view === "actions_list")
+    el = /* @__PURE__ */ h(ActionsListView, null);
   return el;
 }
 export const MainAreaRouter = connector(_MainAreaRouter);

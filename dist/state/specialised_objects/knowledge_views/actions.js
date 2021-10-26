@@ -4,11 +4,6 @@ const upsert_knowledge_view_entry = (args) => ({type: upsert_knowledge_view_entr
 export const is_upsert_knowledge_view_entry = (action) => {
   return action.type === upsert_knowledge_view_entry_type;
 };
-const delete_knowledge_view_entry_type = "delete_knowledge_view_entry";
-const delete_knowledge_view_entry = (args) => ({type: delete_knowledge_view_entry_type, ...args});
-export const is_delete_knowledge_view_entry = (action) => {
-  return action.type === delete_knowledge_view_entry_type;
-};
 const upsert_knowledge_view_type = "upsert_knowledge_view";
 const upsert_knowledge_view = (args) => ({type: upsert_knowledge_view_type, ...args});
 export const is_upsert_knowledge_view = (action) => {
@@ -16,7 +11,6 @@ export const is_upsert_knowledge_view = (action) => {
 };
 export const knowledge_view_actions = {
   upsert_knowledge_view_entry,
-  delete_knowledge_view_entry,
   upsert_knowledge_view,
   ...bulk_editing_knowledge_view_entries_actions
 };

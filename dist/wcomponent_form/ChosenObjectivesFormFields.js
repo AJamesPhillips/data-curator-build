@@ -6,7 +6,10 @@ import {
   wcomponent_is_judgement_or_objective
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {ACTIONS} from "../state/actions.js";
-import {get_current_composed_knowledge_view_from_state, get_wcomponents_from_state} from "../state/specialised_objects/accessors.js";
+import {
+  get_current_composed_knowledge_view_from_state,
+  get_wcomponents_from_state
+} from "../state/specialised_objects/accessors.js";
 import {set_union} from "../utils/set.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 const map_state = (state, {wcomponent}) => {
@@ -34,8 +37,9 @@ const map_dispatch = {
   set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent
 };
 const connector = connect(map_state, map_dispatch);
-function _GoalFormFields(props) {
-  if (props.consumption_formatting && props.wcomponent.objective_ids.length === 0)
+function _ChosenObjectivesFormFields(props) {
+  const {objective_ids = []} = props.wcomponent;
+  if (props.consumption_formatting && objective_ids.length === 0)
     return null;
   const wcomponent_id_options = get_wcomponent_search_options({
     wcomponents: props.filtered_wcomponents,
@@ -46,12 +50,12 @@ function _GoalFormFields(props) {
   });
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, "Objectives", /* @__PURE__ */ h(MultiAutocompleteText, {
     placeholder: "Objectives...",
-    selected_option_ids: props.wcomponent.objective_ids,
+    selected_option_ids: objective_ids,
     options: wcomponent_id_options,
     allow_none: true,
-    on_change: (objective_ids) => props.upsert_wcomponent({objective_ids}),
+    on_change: (objective_ids2) => props.upsert_wcomponent({objective_ids: objective_ids2}),
     on_mouse_over_option: (id) => props.set_highlighted_wcomponent({id, highlighted: true}),
     on_mouse_leave_option: (id) => props.set_highlighted_wcomponent({id, highlighted: false})
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null));
 }
-export const GoalFormFields = connector(_GoalFormFields);
+export const ChosenObjectivesFormFields = connector(_ChosenObjectivesFormFields);

@@ -1,26 +1,20 @@
 import {IconButton, makeStyles, Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
 import FilterIcon from "../../snowpack/pkg/@material-ui/icons/Filter.js";
 import {h} from "../../snowpack/pkg/preact.js";
-import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
-import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 const map_state = (state) => ({
-  created_at_ms: state.routing.args.created_at_ms,
-  current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
-  wcomponents: state.derived.wcomponents
+  component_number_excluded_by_created_at_datetime_filter: get_current_composed_knowledge_view_from_state(state)?.filters.wc_ids_excluded_by_created_at_datetime_filter.size
 });
 const connector = connect(map_state);
 function _ActiveCreatedAtFilterWarning(props) {
-  const {current_composed_knowledge_view, wcomponents} = props;
-  if (!current_composed_knowledge_view)
+  const {component_number_excluded_by_created_at_datetime_filter} = props;
+  if (!component_number_excluded_by_created_at_datetime_filter)
     return null;
-  const wcomponents_on_kv = useMemo(() => wcomponents.filter((wc) => !!current_composed_knowledge_view.composed_wc_id_map[wc.id]), [wcomponents, current_composed_knowledge_view]);
-  const components_excluded_by_created_at_datetime_filter = useMemo(() => wcomponents_on_kv.filter((kv) => get_created_at_ms(kv) > props.created_at_ms).length, [wcomponents_on_kv, props.created_at_ms]);
   const classes = use_styles();
-  return components_excluded_by_created_at_datetime_filter > 0 && /* @__PURE__ */ h(Tooltip, {
+  return /* @__PURE__ */ h(Tooltip, {
     placement: "top",
-    title: `WARNING: ${components_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter!`
+    title: `WARNING: ${component_number_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter!`
   }, /* @__PURE__ */ h(IconButton, {
     className: classes.warning_button,
     component: "span",

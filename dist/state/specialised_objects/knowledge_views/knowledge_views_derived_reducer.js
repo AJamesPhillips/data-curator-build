@@ -5,7 +5,8 @@ import {
 import {is_uuid_v4} from "../../../shared/utils/ids.js";
 import {is_defined} from "../../../shared/utils/is_defined.js";
 import {sort_list} from "../../../shared/utils/sort.js";
-import {get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
+import {get_created_at_ms, get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
+import {set_union} from "../../../utils/set.js";
 import {update_substate} from "../../../utils/update_state.js";
 import {
   wcomponent_can_render_connection,
@@ -38,9 +39,10 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
   const kv_object_changed = initial_kv !== current_kv;
   const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id;
   const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed;
-  const filters_changed = initial_state.filter_context !== state.filter_context;
+  const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms;
+  const filters_changed = initial_state.filter_context !== state.filter_context || created_at_changed || one_or_more_wcomponents_changed;
   const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks;
-  const ephemeral_overrides_might_have_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms || display_time_marks_changed;
+  const ephemeral_overrides_might_have_changed = created_at_changed || display_time_marks_changed;
   if (current_kv) {
     if (composed_kv_needs_update) {
       let current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv);
@@ -80,13 +82,23 @@ function get_knowledge_view(state, id) {
 }
 function update_current_composed_knowledge_view_state(state, current_kv) {
   const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
-  const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id);
-  const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views);
-  remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
-  const wcomponent_ids = Object.keys(composed_wc_id_map);
+  return calculate_composed_knowledge_view({
+    knowledge_view: current_kv,
+    knowledge_views_by_id,
+    wcomponents_by_id
+  });
+}
+export function calculate_composed_knowledge_view(args) {
+  const {knowledge_view, knowledge_views_by_id, wcomponents_by_id} = args;
+  const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id);
+  const {
+    composed_wc_id_map,
+    composed_blocked_wc_id_map
+  } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id);
   const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id);
-  const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids);
-  const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined);
+  const non_deleted_wcomponent_ids = Object.keys(composed_wc_id_map);
+  const wc_ids_by_type = get_wcomponent_ids_by_type(wcomponents_by_id, non_deleted_wcomponent_ids);
+  const wcomponents = non_deleted_wcomponent_ids.map((id) => wcomponents_by_id[id]).filter(is_defined);
   const wcomponent_nodes = wcomponents.filter(is_wcomponent_node);
   const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection);
   const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
@@ -96,13 +108,15 @@ function update_current_composed_knowledge_view_state(state, current_kv) {
   const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
     wc_ids_by_type,
     wcomponents_by_id,
-    active_counterfactual_ids: current_kv.active_counterfactual_v2_ids
+    active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids
   });
-  const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation);
+  const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id);
   const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true);
   const current_composed_knowledge_view = {
-    ...current_kv,
+    composed_visible_wc_id_map: {},
+    ...knowledge_view,
     composed_wc_id_map,
+    composed_blocked_wc_id_map,
     overlapping_wc_ids,
     wcomponent_nodes,
     wcomponent_connections,
@@ -110,7 +124,11 @@ function update_current_composed_knowledge_view_state(state, current_kv) {
     wc_id_to_active_counterfactuals_v2_map,
     wc_ids_by_type,
     prioritisations,
-    filters: {wc_ids_excluded_by_filters: new Set()},
+    filters: {
+      wc_ids_excluded_by_any_filter: new Set(),
+      wc_ids_excluded_by_filters: new Set(),
+      wc_ids_excluded_by_created_at_datetime_filter: new Set()
+    },
     composed_datetime_line_config: datetime_lines_config
   };
   delete current_composed_knowledge_view.wc_id_map;
@@ -123,12 +141,16 @@ export function get_foundational_knowledge_views(knowledge_view, knowledge_views
     foundation_knowledge_views.push(knowledge_view);
   return foundation_knowledge_views;
 }
-export function get_composed_wc_id_map(foundation_knowledge_views) {
-  const composed_wc_id_map = {};
+export function get_composed_wc_id_map(foundation_knowledge_views, wcomponents_by_id) {
+  let composed_wc_id_map = {};
   foundation_knowledge_views.forEach((foundational_kv) => {
     Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry);
   });
-  return composed_wc_id_map;
+  remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
+  const result = partition_wc_id_map_on_blocked_component(composed_wc_id_map);
+  composed_wc_id_map = result.composed_wc_id_map;
+  const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map;
+  return {composed_wc_id_map, composed_blocked_wc_id_map};
 }
 function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
   Object.keys(composed_wc_id_map).forEach((id) => {
@@ -138,6 +160,16 @@ function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
     else if (wcomponent.deleted_at)
       delete composed_wc_id_map[id];
   });
+}
+function partition_wc_id_map_on_blocked_component(composed_wc_id_map) {
+  const composed_blocked_wc_id_map = {};
+  Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) => {
+    if (entry.deleted) {
+      composed_blocked_wc_id_map[wcomponent_id] = entry;
+      delete composed_wc_id_map[wcomponent_id];
+    }
+  });
+  return {composed_wc_id_map, composed_blocked_wc_id_map};
 }
 const invalid_node_types = new Set([
   "causal_link",
@@ -164,8 +196,8 @@ function get_wc_id_to_counterfactuals_v2_map(args) {
   });
   return map;
 }
-function get_prioritisations(state, prioritisation_ids) {
-  const prioritisations = get_wcomponents_from_state(state, prioritisation_ids).filter(wcomponent_is_prioritisation);
+function get_prioritisations(prioritisation_ids, wcomponents_by_id) {
+  const prioritisations = Array.from(prioritisation_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_prioritisation);
   return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY, "descending");
 }
 export function get_composed_datetime_lines_config(foundation_knowledge_views, use_defaults) {
@@ -188,7 +220,13 @@ export function get_composed_datetime_lines_config(foundation_knowledge_views, u
 function update_filters(state, current_composed_knowledge_view) {
   if (!current_composed_knowledge_view)
     return void 0;
-  let wc_ids_excluded_by_filters = new Set();
+  let {
+    wc_ids_excluded_by_filters,
+    wc_ids_excluded_by_created_at_datetime_filter
+  } = current_composed_knowledge_view.filters;
+  const {composed_wc_id_map} = current_composed_knowledge_view;
+  const current_wc_ids = Object.keys(composed_wc_id_map);
+  const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined);
   if (state.filter_context.apply_filter) {
     const {
       exclude_by_label_ids: exclude_by_label_ids_list,
@@ -199,8 +237,7 @@ function update_filters(state, current_composed_knowledge_view) {
     const exclude_by_label_ids = new Set(exclude_by_label_ids_list);
     const exclude_by_component_types = new Set(exclude_by_component_types_list);
     const include_by_component_types = new Set(include_by_component_types_list);
-    const current_wc_ids = Object.keys(current_composed_knowledge_view.composed_wc_id_map);
-    const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined).filter((wcomponent) => {
+    const wc_ids_to_exclude = wcomponents_on_kv.filter((wcomponent) => {
       const {label_ids = [], type} = wcomponent;
       const applied_ids = new Set(label_ids);
       const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
@@ -212,9 +249,22 @@ function update_filters(state, current_composed_knowledge_view) {
     }).map(({id}) => id);
     wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude);
   }
+  const {created_at_ms} = state.routing.args;
+  const component_ids_excluded_by_created_at = wcomponents_on_kv.filter((kv) => get_created_at_ms(kv) > created_at_ms).map(({id}) => id);
+  wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at);
+  const wc_ids_excluded_by_any_filter = set_union(wc_ids_excluded_by_filters, wc_ids_excluded_by_created_at_datetime_filter);
+  const composed_visible_wc_id_map = {...composed_wc_id_map};
+  wc_ids_excluded_by_any_filter.forEach((id) => {
+    delete composed_visible_wc_id_map[id];
+  });
   return {
     ...current_composed_knowledge_view,
-    filters: {wc_ids_excluded_by_filters}
+    composed_visible_wc_id_map,
+    filters: {
+      wc_ids_excluded_by_any_filter,
+      wc_ids_excluded_by_filters,
+      wc_ids_excluded_by_created_at_datetime_filter
+    }
   };
 }
 function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
@@ -222,8 +272,6 @@ function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
   const entries = {};
   const overlapping_coord_keys = new Set();
   Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) => {
-    if (entry.deleted)
-      return;
     if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id]))
       return;
     const coord_key = `${entry.left},${entry.top}`;
@@ -248,11 +296,10 @@ function update_ephemeral_overrides_of_current_composed_kv(current_composed_know
   if (display_time_marks_changed && !state.display_options.display_time_marks) {
     const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
     const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id);
-    const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views);
-    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
+    const composed_wc_id_maps = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id);
     current_composed_knowledge_view = {
       ...current_composed_knowledge_view,
-      composed_wc_id_map
+      ...composed_wc_id_maps
     };
   } else {
     current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view);

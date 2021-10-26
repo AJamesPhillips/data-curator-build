@@ -9,6 +9,9 @@ import {FoundationKnowledgeViewsList} from "./FoundationKnowledgeViewsList.js";
 import {KnowledgeViewActiveCounterFactuals} from "./KnowledgeViewActiveCounterfactuals.js";
 import {KnowledgeViewListsSet} from "./KnowledgeViewListsSet.js";
 import {KnowledgeViewDatetimeLinesConfigForm} from "./KnowledgeViewDatetimeLinesConfigForm.js";
+import {Link} from "../sharedf/Link.js";
+import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
+import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -23,6 +26,7 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   const {editing, nested_knowledge_view_ids} = props;
   const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id];
   const children = (nested_kv?.child_ids || []).map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
+  const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""];
   return /* @__PURE__ */ h("div", {
     style: {backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5}
   }, /* @__PURE__ */ h("p", {
@@ -34,7 +38,22 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
       const default_title = knowledge_view.is_base ? "All" : make_default_kv_title();
       crud.update_item({...knowledge_view, title: new_title ?? default_title});
     }
-  })), (editing || knowledge_view.description) && /* @__PURE__ */ h("p", null, editing && /* @__PURE__ */ h("span", {
+  }), has_wcomponent && /* @__PURE__ */ h(Link, {
+    route: "wcomponents",
+    sub_route: void 0,
+    item_id: knowledge_view.id,
+    args: void 0
+  }, /* @__PURE__ */ h(ExternalLinkIcon, null), "Component"), !has_wcomponent && editing && /* @__PURE__ */ h("span", {
+    style: {cursor: "pointer"},
+    onClick: () => {
+      create_wcomponent({wcomponent: {
+        base_id: knowledge_view.base_id,
+        id: knowledge_view.id,
+        title: knowledge_view.title,
+        type: "statev2"
+      }});
+    }
+  }, /* @__PURE__ */ h(ExternalLinkIcon, null), "Create Component")), (editing || knowledge_view.description) && /* @__PURE__ */ h("p", null, editing && /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Description"), "  ", /* @__PURE__ */ h(EditableText, {
     placeholder: "...",

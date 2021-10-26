@@ -20,6 +20,9 @@
 .node_handle:hover {
   color: black;
 }
+.node_handle:hover.disabled {
+  color: rgba(0, 0, 0, 0.3);
+}
 
 .node_handle.movement {
   cursor: move;
@@ -29,7 +32,7 @@
   opacity: 0;
   pointer-events: none;
 }
-.node_handle.explore.has_nested_knowledge_view {
+.node_handle.explore.has_knowledge_view {
   color: black;
   /* Can not colour unicode characters */
 }

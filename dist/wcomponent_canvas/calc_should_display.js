@@ -1,8 +1,7 @@
 import {rescale} from "../shared/utils/bounded.js";
 import {get_wcomponent_validity_value} from "../wcomponent_derived/get_wcomponent_validity_value.js";
 import {
-  wcomponent_has_event_at,
-  wcomponent_is_judgement_or_objective
+  wcomponent_has_event_at
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 export function calc_wcomponent_should_display(args) {
@@ -15,8 +14,6 @@ export function calc_wcomponent_should_display(args) {
     return false;
   const is_not_created = wcomponent_is_not_yet_created(wcomponent, args.created_at_ms);
   if (is_not_created)
-    return false;
-  if (!is_editing && !is_selected && wcomponent_is_judgement_or_objective(wcomponent))
     return false;
   const validity_certain = get_wcomponent_validity_value(args).certainty;
   const is_invalid_for_display = get_wcomponent_is_invalid_for_display({

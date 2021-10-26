@@ -6,7 +6,7 @@ export function replace_element(existing, replacement, predicate) {
   }
   return [...existing.slice(0, index), replacement, ...existing.slice(index + 1)];
 }
-export function upsert_entry(existing, new_item, predicate, debug_item_descriptor) {
+export function upsert_entry(existing, new_item, predicate, debug_item_descriptor = "") {
   let matched_index = -1;
   const matches = existing.filter((item, index) => {
     const match = predicate(item);

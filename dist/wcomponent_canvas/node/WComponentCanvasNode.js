@@ -9,6 +9,7 @@ import {
   connection_terminal_directions,
   wcomponent_can_have_validity_predictions,
   wcomponent_has_legitimate_non_empty_state_VAP_sets,
+  wcomponent_has_objectives,
   wcomponent_has_validity_predictions,
   wcomponent_is_action,
   wcomponent_is_goal,
@@ -51,7 +52,7 @@ const map_state = (state, own_props) => {
   const wc_id_map = current_composed_knowledge_view?.composed_wc_id_map || {};
   const judgement_or_objective_ids = [
     ...state.derived.judgement_or_objective_ids_by_target_id[own_props.id] || [],
-    ...state.derived.judgement_or_objective_ids_by_goal_id[own_props.id] || []
+    ...state.derived.judgement_or_objective_ids_by_goal_or_action_id[own_props.id] || []
   ].filter((id) => !!wc_id_map[id]);
   return {
     force_displaying: state.filter_context.force_display,
@@ -61,7 +62,7 @@ const map_state = (state, own_props) => {
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     is_current_item: state.routing.item_id === own_props.id,
-    is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),
+    selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
     is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
     shift_or_control_keys_are_down,
     created_at_ms: state.routing.args.created_at_ms,
@@ -70,7 +71,8 @@ const map_state = (state, own_props) => {
     validity_filter: state.display_options.derived_validity_filter,
     certainty_formatting: state.display_options.derived_certainty_formatting,
     focused_mode: state.display_options.focused_mode,
-    have_judgements: judgement_or_objective_ids.length > 0
+    have_judgements: judgement_or_objective_ids.length > 0,
+    wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set
   };
 };
 const map_dispatch = {
@@ -78,16 +80,16 @@ const map_dispatch = {
   clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
   change_route: ACTIONS.routing.change_route,
   set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
-  upsert_knowledge_view_entry: ACTIONS.specialised_object.upsert_knowledge_view_entry,
-  pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal
+  pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
+  set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentCanvasNode(props) {
-  const [node_is_moving, set_node_is_moving] = useState(false);
   const [node_is_draggable, set_node_is_draggable] = useState(false);
   const {
     id,
-    on_graph = true,
+    is_movable = true,
+    always_show = false,
     force_displaying,
     is_editing,
     current_composed_knowledge_view: composed_kv,
@@ -95,7 +97,7 @@ function _WComponentCanvasNode(props) {
     wc_id_to_counterfactuals_map,
     wcomponents_by_id,
     is_current_item,
-    is_selected,
+    selected_wcomponent_ids_set,
     is_highlighted,
     shift_or_control_keys_are_down,
     created_at_ms,
@@ -111,7 +113,7 @@ function _WComponentCanvasNode(props) {
   if (!wcomponent)
     return /* @__PURE__ */ h("div", null, "Could not find component of id ", id);
   const kv_entry_maybe = composed_kv.composed_wc_id_map[id];
-  if (!kv_entry_maybe && on_graph)
+  if (!kv_entry_maybe && !always_show)
     return /* @__PURE__ */ h("div", null, "Could not find knowledge view entry for id ", id);
   const kv_entry = kv_entry_maybe || {left: 0, top: 0};
   let temporary_drag_kv_entry = void 0;
@@ -121,7 +123,8 @@ function _WComponentCanvasNode(props) {
     temporary_drag_kv_entry.top += props.drag_relative_position.top;
   }
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
-  const validity_value = calc_wcomponent_should_display({
+  const is_selected = selected_wcomponent_ids_set.has(id);
+  const validity_value = always_show ? {display_certainty: 1} : calc_wcomponent_should_display({
     is_editing,
     force_displaying,
     is_selected,
@@ -143,7 +146,8 @@ function _WComponentCanvasNode(props) {
     certainty_formatting,
     focused_mode: props.focused_mode
   });
-  const opacity = props.drag_relative_position ? 0.3 : validity_opacity;
+  const node_is_moving = props.wcomponent_ids_to_move_set.has(id);
+  const opacity = props.drag_relative_position ? 0.3 : node_is_moving ? 0 : validity_opacity;
   const on_pointer_down = factory_on_pointer_down({
     wcomponent_id: id,
     clicked_wcomponent,
@@ -152,21 +156,15 @@ function _WComponentCanvasNode(props) {
     change_route,
     is_current_item
   });
-  const update_position = (new_position) => {
-    const new_entry = {
-      ...kv_entry,
-      ...new_position
-    };
-    props.upsert_knowledge_view_entry({
-      wcomponent_id: props.id,
-      knowledge_view_id: composed_kv.id,
-      entry: new_entry
-    });
-  };
   const children = [
     /* @__PURE__ */ h(Handles, {
-      show_move_handle: on_graph && is_editing && is_highlighted,
-      user_requested_node_move: () => set_node_is_draggable(true),
+      show_move_handle: is_movable && is_editing && is_highlighted,
+      user_requested_node_move: () => {
+        if (!selected_wcomponent_ids_set.has(id)) {
+          props.clicked_wcomponent({id});
+        }
+        set_node_is_draggable(true);
+      },
       wcomponent_id: wcomponent.id,
       wcomponent_current_kv_entry: kv_entry,
       is_highlighted
@@ -185,18 +183,18 @@ function _WComponentCanvasNode(props) {
   const color = get_wcomponent_color({wcomponent, wcomponents_by_id, sim_ms, created_at_ms});
   const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + ` node_is_type_${wcomponent.type} ` + (show_all_details ? " compact_title " : "") + classes.sizer + (color.font ? color.font : "");
   const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
-  const show_state_value = is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0 || props.have_judgements);
+  const show_state_value = is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
   const sub_state_wcomponent = (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
-  const terminals = get_terminals({on_graph, is_editing, is_highlighted});
+  const terminals = get_terminals({is_movable, is_editing, is_highlighted});
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0);
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
-    position: on_graph ? temporary_drag_kv_entry || kv_entry : void 0,
+    position: is_movable ? temporary_drag_kv_entry || kv_entry : void 0,
     cover_image: wcomponent.summary_image,
     node_main_content: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("img", {
       className: "background_image " + wcomponent.type
     }), /* @__PURE__ */ h("div", {
       className: "node_title"
-    }, kv_entry_maybe === void 0 && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
+    }, kv_entry_maybe === void 0 && is_editing && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
       message: "Missing from this knowledge view"
     }), " "), (is_editing || !wcomponent.hide_title) && /* @__PURE__ */ h(Markdown, {
       options: {...MARKDOWN_OPTIONS, forceInline: true}
@@ -256,23 +254,16 @@ function _WComponentCanvasNode(props) {
     extra_args: {
       draggable: node_is_draggable,
       onDragStart: (e) => {
-        set_node_is_moving(true);
-        pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", [wcomponent.id]);
+        props.set_wcomponent_ids_to_move({wcomponent_ids_to_move: selected_wcomponent_ids_set});
         e.dataTransfer.dropEffect = "move";
-        e.currentTarget.style.opacity = "0";
       },
       onDrag: (e) => {
         const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s);
         pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position);
       },
       onDragEnd: (e) => {
-        e.currentTarget.style.removeProperty("opacity");
-        const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s);
         pub_sub.canvas.pub("canvas_node_drag_relative_position", void 0);
-        const new_position = calculate_new_position(kv_entry, new_relative_position);
-        update_position(new_position);
         set_node_is_draggable(false);
-        setTimeout(() => set_node_is_moving(false), 0);
       }
     },
     other_children: children
@@ -290,7 +281,7 @@ connection_terminal_attributes.forEach((attribute) => {
   });
 });
 function get_terminals(args) {
-  if (!args.on_graph)
+  if (!args.is_movable)
     return no_terminals;
   if (!args.is_editing)
     return no_terminals;

@@ -4,6 +4,8 @@ import {pub_sub} from "../pub_sub/pub_sub.js";
 import {refresh_bases_for_current_user} from "./utils.js";
 export function user_info_subscribers(store) {
   const starting_state = store.getState();
+  if (!store.load_state_from_storage)
+    return;
   const {user, users_by_id, bases_by_id: bases} = starting_state.user_info;
   if (user && !users_by_id)
     get_users(store);

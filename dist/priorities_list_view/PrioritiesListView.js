@@ -2,7 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./PrioritiesListView.css.proxy.js";
 import {MainArea} from "../layout/MainArea.js";
-import {wcomponent_is_goal} from "../wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_has_objectives} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {ListHeaderAddButton} from "../form/editable_list/ListHeaderAddButton.js";
 import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
@@ -20,36 +20,33 @@ export function PrioritiesListView(props) {
 const map_state = (state) => {
   const wcomponents_by_id = state.specialised_objects.wcomponents_by_id;
   const knowledge_view = get_current_composed_knowledge_view_from_state(state);
-  const goals = [];
+  const goals_and_actions = [];
   let prioritisations = [];
   let selected_prioritisation = void 0;
   if (knowledge_view) {
+    knowledge_view.wc_ids_by_type.has_objectives.forEach((id) => {
+      const goal_or_action = wcomponents_by_id[id];
+      if (!wcomponent_has_objectives(goal_or_action, id))
+        return;
+      goals_and_actions.push(goal_or_action);
+    });
     prioritisations = knowledge_view.prioritisations;
     const {item_id} = state.routing;
     selected_prioritisation = prioritisations.find(({id}) => id === item_id);
-    knowledge_view.wc_ids_by_type.goal.forEach((id) => {
-      const goal = wcomponents_by_id[id];
-      if (!wcomponent_is_goal(goal, id))
+    Object.keys(selected_prioritisation?.goals || {}).forEach((id) => {
+      if (knowledge_view.wc_ids_by_type.has_objectives.has(id))
         return;
-      goals.push(goal);
+      const goal_or_action = wcomponents_by_id[id];
+      if (!wcomponent_has_objectives(goal_or_action, id))
+        return;
+      goals_and_actions.push(goal_or_action);
     });
-    if (selected_prioritisation) {
-      Object.keys(selected_prioritisation.goals).forEach((id) => {
-        if (knowledge_view.wc_ids_by_type.goal.has(id))
-          return;
-        const goal = wcomponents_by_id[id];
-        if (!wcomponent_is_goal(goal, id))
-          return;
-        goals.push(goal);
-      });
-    }
   }
   return {
     knowledge_view_id: knowledge_view && knowledge_view.id,
-    goals,
+    goals_and_actions,
     prioritisations,
     editing: !state.display_options.consumption_formatting,
-    creation_context: state.creation_context,
     selected_prioritisation,
     base_id: selector_chosen_base_id(state)
   };
@@ -59,9 +56,9 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _PrioritiesListViewContent(props) {
-  const {goals, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id} = props;
+  const {goals_and_actions, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id} = props;
   const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals;
-  const {potential_goals, prioritised_goals, deprioritised_goals} = partition_and_sort_goals(goals, goal_prioritisation_attributes);
+  const {potential_goals, prioritised_goals, deprioritised_goals} = partition_and_sort_goals(goals_and_actions, goal_prioritisation_attributes);
   if (base_id === void 0)
     return /* @__PURE__ */ h("div", null, "No base id chosen");
   return /* @__PURE__ */ h("div", {
@@ -69,12 +66,15 @@ function _PrioritiesListViewContent(props) {
   }, /* @__PURE__ */ h("div", {
     className: "goals"
   }, /* @__PURE__ */ h("h1", null, "Potential"), potential_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
+    key: goal.id,
     goal,
     selected_prioritisation
   })), /* @__PURE__ */ h("h1", null, "Prioritised"), prioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
+    key: goal.id,
     goal,
     selected_prioritisation
   })), /* @__PURE__ */ h("h1", null, "Deprioritised"), deprioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
+    key: goal.id,
     goal,
     selected_prioritisation
   }))), /* @__PURE__ */ h("div", {
@@ -86,7 +86,6 @@ function _PrioritiesListViewContent(props) {
     on_pointer_down_new_list_entry: () => {
       create_wcomponent({
         wcomponent: {base_id, type: "prioritisation", goals: goal_prioritisation_attributes || {}},
-        creation_context: props.creation_context,
         add_to_knowledge_view: {
           id: knowledge_view_id,
           position: {left: 0, top: 0}

@@ -9,7 +9,7 @@ const map_state = (state, own_props) => {
   const wc_id_map = current_composed_kv?.composed_wc_id_map || {};
   const judgement_or_objective_ids = [
     ...state.derived.judgement_or_objective_ids_by_target_id[own_props.wcomponent.id] || [],
-    ...state.derived.judgement_or_objective_ids_by_goal_id[own_props.wcomponent.id] || []
+    ...state.derived.judgement_or_objective_ids_by_goal_or_action_id[own_props.wcomponent.id] || []
   ].filter((id) => !!wc_id_map[id]);
   return {
     judgement_or_objective_ids

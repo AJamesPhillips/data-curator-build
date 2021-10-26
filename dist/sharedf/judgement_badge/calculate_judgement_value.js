@@ -5,6 +5,8 @@ import {
 } from "../../wcomponent_derived/get_wcomponent_state_value.js";
 export function calculate_judgement_value(args) {
   const {judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms} = args;
+  if (judgement_wcomponent.judgement_manual !== void 0)
+    return judgement_wcomponent.judgement_manual;
   if (!target_wcomponent)
     return void 0;
   const {most_probable_VAP_set_values} = get_wcomponent_state_value_and_probabilities({

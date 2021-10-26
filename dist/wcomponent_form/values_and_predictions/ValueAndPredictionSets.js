@@ -8,6 +8,7 @@ import {ACTIONS} from "../../state/actions.js";
 import {selector_chosen_base_id} from "../../state/user_info/selector.js";
 import {ValueAndPredictionSetsComponent} from "./ValueAndPredictionSetsComponent.js";
 import {update_value_possibilities_with_VAPSets} from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
+import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
 const map_state = (state) => {
   return {
     created_at_ms: state.routing.args.created_at_ms,
@@ -41,18 +42,27 @@ function _ValueAndPredictionSets(props) {
     item_descriptor: "Value Prediction",
     VAPs_represent,
     update_values_and_predictions: (new_values_and_prediction_sets) => {
-      const value_possibilities = update_value_possibilities_with_VAPSets(props.value_possibilities, new_values_and_prediction_sets);
+      const value_possibilities = update_value_possibilities_with_VAPSets(props.existing_value_possibilities, new_values_and_prediction_sets);
       props.update_values_and_predictions({
         value_possibilities,
         values_and_prediction_sets: new_values_and_prediction_sets
       });
-      const orig_latest_created_at_ms = get_latest_created_at_VAP_set_ms(orig_values_and_prediction_sets, current_created_at_ms);
-      const new_latest_created_at_ms = get_latest_created_at_VAP_set_ms(new_values_and_prediction_sets, current_created_at_ms);
-      if (new_latest_created_at_ms > orig_latest_created_at_ms) {
-        change_route({args: {created_at_ms: new_latest_created_at_ms + 1e3 * 60}});
+      const orig_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(orig_values_and_prediction_sets, current_created_at_ms);
+      const new_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(new_values_and_prediction_sets, current_created_at_ms);
+      const _1_minute = 1 * 60 * 1e3;
+      const _10_minutes = 10 * _1_minute;
+      if (new_latest_datetimes_ms.latest_created_at_ms > orig_latest_datetimes_ms.latest_created_at_ms) {
+        const created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + _1_minute;
+        change_route({args: {created_at_ms}});
+      }
+      const current_ms = new Date().getTime();
+      const sim_ms = new_latest_datetimes_ms.latest_sim_ms;
+      const sim_ms_is_current = sim_ms < current_ms + _1_minute && sim_ms > current_ms - _10_minutes;
+      if (props.sim_ms < sim_ms && sim_ms_is_current) {
+        change_route({args: {sim_ms}});
       }
     },
-    value_possibilities: props.value_possibilities,
+    existing_value_possibilities: props.existing_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
     invalid_future_items,
     past_items,
@@ -65,9 +75,13 @@ function _ValueAndPredictionSets(props) {
   });
 }
 export const ValueAndPredictionSets = connector(_ValueAndPredictionSets);
-function get_latest_created_at_VAP_set_ms(values_and_prediction_sets, latest_ms = 0) {
+function get_latest_VAP_set_datetimes_ms(values_and_prediction_sets, latest_created_at_ms = 0) {
+  let latest_sim_ms = Number.NEGATIVE_INFINITY;
   values_and_prediction_sets.forEach((VAP_set) => {
-    latest_ms = Math.max(get_created_at_ms(VAP_set), latest_ms);
+    latest_created_at_ms = Math.max(get_created_at_ms(VAP_set), latest_created_at_ms);
+    const sim_datetime = get_uncertain_datetime(VAP_set.datetime);
+    if (sim_datetime)
+      latest_sim_ms = Math.max(sim_datetime.getTime(), latest_sim_ms);
   });
-  return latest_ms;
+  return {latest_created_at_ms, latest_sim_ms};
 }

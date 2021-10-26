@@ -7,13 +7,12 @@ import {
   wcomponent_has_VAP_sets,
   wcomponent_has_event_at,
   wcomponent_is_plain_connection,
-  wcomponent_has_started_stopped_at,
   wcomponent_is_process,
   wcomponent_has_existence_predictions,
   wcomponent_is_action,
   wcomponent_is_goal
 } from "../interfaces/SpecialisedObjects.js";
-import {parse_base_dates, optional_date} from "./parse_dates.js";
+import {parse_base_dates} from "./parse_dates.js";
 export function parse_wcomponent(wcomponent) {
   wcomponent = clean_base_object_of_sync_meta_fields(wcomponent);
   wcomponent = upgrade_2021_05_19_process_actions(wcomponent);
@@ -38,10 +37,6 @@ export function parse_wcomponent(wcomponent) {
     wcomponent.to_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.to_type);
     wcomponent.from_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.from_type);
     wcomponent.to_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.to_type);
-  }
-  if (wcomponent_has_started_stopped_at(wcomponent)) {
-    wcomponent.started_at = optional_date(wcomponent.started_at);
-    wcomponent.stopped_at = optional_date(wcomponent.stopped_at);
   }
   return wcomponent;
 }

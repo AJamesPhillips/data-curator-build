@@ -2,31 +2,34 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
-import {ACTION_OPTIONS} from "../../wcomponent_derived/value_and_prediction/actions_value.js";
 import {Button} from "../../sharedf/Button.js";
 import {
   get_details2_for_single_VAP_set,
   get_details_for_single_VAP_set,
   get_summary_for_single_VAP_set
 } from "./common.js";
-import {value_possibility_options} from "../../wcomponent_derived/value_possibilities/value_possibility_options.js";
 import {SimplifiedUncertainDatetimeForm} from "../uncertain_datetime/SimplifiedUncertainDatetimeForm.js";
-export const new_value_and_prediction_set = (VAPs_represent, value_possibilities) => {
-  const any_value_possibilities = Object.keys(value_possibilities || {}).length > 0;
+import {sentence_case} from "../../shared/utils/sentence_case.js";
+import {update_value_possibilities_with_VAPSets} from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
+export const new_value_and_prediction_set = (VAPs_represent, possible_value_possibilities) => {
+  const any_value_possibilities = Object.keys(possible_value_possibilities || {}).length > 0;
   const hide_advanced_for_type_other = VAPs_represent === VAPsType.other && any_value_possibilities;
   const initial_hide_advanced = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action || hide_advanced_for_type_other;
   const [show_advanced, set_show_advanced] = useState(!initial_hide_advanced);
   return (VAP_set, crud) => {
+    if (possible_value_possibilities === void 0) {
+      possible_value_possibilities = update_value_possibilities_with_VAPSets({}, [VAP_set]);
+    }
     const {update_item} = crud;
     return /* @__PURE__ */ h("div", null, VAPs_represent === VAPsType.boolean && /* @__PURE__ */ h(SimplifiedBooleanForm, {
       VAP_set,
       on_change: update_item
     }), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(SimplifiedActionForm, {
-      value_possibilities,
+      possible_value_possibilities,
       VAP_set,
       on_change: update_item
     }), hide_advanced_for_type_other && /* @__PURE__ */ h(SimplifiedOtherForm, {
-      value_possibilities,
+      possible_value_possibilities,
       VAP_set,
       on_change: update_item
     }), /* @__PURE__ */ h(SimplifiedUncertainDatetimeForm, {
@@ -35,7 +38,7 @@ export const new_value_and_prediction_set = (VAPs_represent, value_possibilities
     }), /* @__PURE__ */ h(Button, {
       value: (show_advanced ? "Hide" : "Show") + " advanced options",
       onClick: () => set_show_advanced(!show_advanced)
-    }), show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null), get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud), get_details_for_single_VAP_set(value_possibilities, VAPs_represent)(VAP_set, crud), get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)));
+    }), show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null), get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud), get_details_for_single_VAP_set(possible_value_possibilities, VAPs_represent)(VAP_set, crud), get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)));
   };
 };
 function SimplifiedBooleanForm(props) {
@@ -60,21 +63,19 @@ function SimplifiedBooleanForm(props) {
 function SimplifiedActionForm(props) {
   return /* @__PURE__ */ h(SimplifiedFormHeader, {
     ...props,
-    title: "Set action status to:",
-    default_options: ACTION_OPTIONS
+    title: "Set action status to:"
   });
 }
 function SimplifiedOtherForm(props) {
   return /* @__PURE__ */ h(SimplifiedFormHeader, {
     ...props,
-    title: "Set value to:",
-    default_options: []
+    title: "Set value to:"
   });
 }
 function SimplifiedFormHeader(props) {
-  const {title, value_possibilities, VAP_set, default_options, on_change} = props;
+  const {title, possible_value_possibilities, VAP_set, on_change} = props;
   const selected_option_id = get_VAP_set_certain_selected_value(VAP_set);
-  const options = value_possibility_options(value_possibilities, default_options);
+  const options = value_possibility_options(possible_value_possibilities);
   return /* @__PURE__ */ h("div", null, title, /* @__PURE__ */ h(AutocompleteText, {
     selected_option_id,
     options,
@@ -94,6 +95,9 @@ function SimplifiedFormHeader(props) {
       on_change({...VAP_set, entries});
     }
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null));
+}
+function value_possibility_options(value_possibilities) {
+  return value_possibilities === void 0 ? [] : Object.values(value_possibilities).map(({value}) => ({id: value, title: sentence_case(value)}));
 }
 function get_VAP_set_certain_selected_value(VAP_set) {
   let value = void 0;

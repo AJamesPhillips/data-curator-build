@@ -10,9 +10,6 @@ export function wcomponent_is_statev2(wcomponent) {
 export function wcomponent_is_process(wcomponent) {
   return wcomponent_is_a("process", wcomponent);
 }
-export function wcomponent_is_action(wcomponent) {
-  return wcomponent_is_a("action", wcomponent);
-}
 function wcomponent_is_a(type, wcomponent, log_error_id = "") {
   let yes = false;
   log_error_id = typeof log_error_id === "string" ? log_error_id : "";
@@ -28,8 +25,14 @@ function wcomponent_is_a(type, wcomponent, log_error_id = "") {
     yes = true;
   return yes;
 }
+export function wcomponent_is_action(wcomponent, log_error_id = "") {
+  return wcomponent_is_a("action", wcomponent, log_error_id);
+}
 export function wcomponent_is_goal(wcomponent, log_error_id = "") {
   return wcomponent_is_a("goal", wcomponent, log_error_id);
+}
+export function wcomponent_has_objectives(wcomponent, log_error_id = "") {
+  return wcomponent_is_action(wcomponent, void 0) || wcomponent_is_goal(wcomponent, log_error_id);
 }
 export function wcomponent_is_prioritisation(wcomponent, log_error_id = "") {
   return wcomponent_is_a("prioritisation", wcomponent, log_error_id);
@@ -44,7 +47,7 @@ export function wcomponent_is_plain_connection(wcomponent) {
   return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent);
 }
 export function wcomponent_is_judgement_or_objective(wcomponent, log_error_id = "") {
-  return wcomponent_is_a("judgement", wcomponent, log_error_id) || wcomponent_is_a("objective", wcomponent, log_error_id);
+  return wcomponent_is_a("judgement", wcomponent, void 0) || wcomponent_is_a("objective", wcomponent, log_error_id);
 }
 export function wcomponent_is_objective(wcomponent) {
   return wcomponent_is_a("objective", wcomponent);
@@ -78,9 +81,6 @@ export function wcomponent_has_existence_predictions(wcomponent) {
 }
 export function wcomponent_has_VAP_sets(wcomponent) {
   return wcomponent.values_and_prediction_sets !== void 0;
-}
-export function wcomponent_has_started_stopped_at(wcomponent) {
-  return wcomponent.started_at !== void 0 || wcomponent.stopped_at !== void 0;
 }
 export function wcomponent_should_have_state_VAP_sets(wcomponent) {
   return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent);

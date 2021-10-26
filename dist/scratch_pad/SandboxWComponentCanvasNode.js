@@ -75,7 +75,7 @@ function sandbox_code() {
 }
 export function SandboxWComponentCanvasNode() {
   const {wcomponents, wc11, kv10} = sandbox_code();
-  let override_preloaded_state = get_starting_state();
+  let override_preloaded_state = get_starting_state(false);
   override_preloaded_state = {
     ...override_preloaded_state,
     routing: {

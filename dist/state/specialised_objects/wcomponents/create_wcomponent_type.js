@@ -16,7 +16,8 @@ import {get_store} from "../../store.js";
 export function create_wcomponent(args) {
   const store = args.store || get_store();
   const state = store.getState();
-  let wcomponent = prepare_new_wcomponent_object(args.wcomponent, args.creation_context);
+  const creation_context = state.creation_context;
+  let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context);
   wcomponent = set_judgement_or_objective_target(wcomponent, state);
   const current_knowledge_view = get_current_composed_knowledge_view_from_state(state);
   let {add_to_knowledge_view} = args;

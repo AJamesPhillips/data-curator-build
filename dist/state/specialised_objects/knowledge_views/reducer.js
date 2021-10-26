@@ -4,8 +4,7 @@ import {get_knowledge_view_from_state} from "../accessors.js";
 import {is_upsert_wcomponent} from "../wcomponents/actions.js";
 import {
   is_upsert_knowledge_view,
-  is_upsert_knowledge_view_entry,
-  is_delete_knowledge_view_entry
+  is_upsert_knowledge_view_entry
 } from "./actions.js";
 import {bulk_editing_knowledge_view_entries_reducer} from "./bulk_edit/reducer.js";
 import {handle_upsert_knowledge_view} from "./utils.js";
@@ -23,9 +22,6 @@ export const knowledge_views_reducer = (state, action) => {
   }
   if (is_upsert_knowledge_view_entry(action)) {
     state = handle_upsert_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id, action.entry);
-  }
-  if (is_delete_knowledge_view_entry(action)) {
-    state = handle_delete_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id);
   }
   if (is_update_specialised_object_sync_info(action) && action.object_type === "knowledge_view") {
     let kv = get_knowledge_view_from_state(state, action.id);
@@ -54,17 +50,6 @@ function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponen
     delete knowledge_view.wc_id_map[wcomponent_id];
   }
   const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry);
-  return handle_upsert_knowledge_view(state, new_knowledge_view);
-}
-function handle_delete_knowledge_view_entry(state, knowledge_view_id, wcomponent_id) {
-  const knowledge_view = get_knowledge_view_from_state(state, knowledge_view_id);
-  if (!knowledge_view) {
-    console.error(`Could not find knowledge_view for id: "${knowledge_view_id}"`);
-    return state;
-  }
-  const new_wc_id_map = {...knowledge_view.wc_id_map};
-  new_wc_id_map[wcomponent_id] = {...new_wc_id_map[wcomponent_id], deleted: true};
-  const new_knowledge_view = {...knowledge_view, wc_id_map: new_wc_id_map};
   return handle_upsert_knowledge_view(state, new_knowledge_view);
 }
 function add_wcomponent_to_base_knowledge_view(state, wcomponent_id, entry) {

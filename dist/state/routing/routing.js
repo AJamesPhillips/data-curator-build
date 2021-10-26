@@ -9,7 +9,7 @@ import {test} from "../../shared/utils/test.js";
 export function routing_state_to_string(args) {
   const sub_route = args.sub_route ? `${args.sub_route}/` : "";
   const element_route = args.item_id ? `${args.item_id}/` : "";
-  const routing_args = args.args || {};
+  const routing_args = args.args;
   const routing_args_str = routing_args_to_string(routing_args);
   return "#" + args.route + "/" + sub_route + element_route + routing_args_str;
 }

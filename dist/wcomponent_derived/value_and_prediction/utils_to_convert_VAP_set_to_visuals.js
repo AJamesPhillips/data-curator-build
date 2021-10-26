@@ -1,9 +1,5 @@
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
-import {
-  value_possibility_visual_false_id,
-  value_possibility_visual_true_id,
-  value_possibility_visual_uncertainty_id
-} from "../../wcomponent/value/parse_value.js";
+import {VALUE_POSSIBILITY_IDS} from "../../wcomponent/value/parse_value.js";
 export const VAP_visual_uncertainty_id = "VAP_uncertainty_id__undefined__";
 export const VAP_visual_false_id = "VAP_false_id__undefined__";
 export function ensure_VAP_set_entries_consistent_with_representing_type(VAP_set, VAPs_represent) {
@@ -20,10 +16,10 @@ function expand_booleans(entries, VAPs_represent) {
       ...VAP_true,
       probability: 1 - VAP_true.probability,
       id: VAP_visual_false_id,
-      value_id: value_possibility_visual_false_id,
+      value_id: VALUE_POSSIBILITY_IDS.boolean_false,
       description: ""
     };
-    entries = [{...VAP_true, value_id: value_possibility_visual_true_id}, VAP_false];
+    entries = [{...VAP_true, value_id: VALUE_POSSIBILITY_IDS.boolean_true}, VAP_false];
   }
   return entries;
 }
@@ -31,7 +27,7 @@ export function add_uncertain_VAP_visual(total_certainties, VAP_visuals) {
   const uncertainty = 1 - total_certainties;
   const uncertainty_VAP_visual = {
     VAP_id: VAP_visual_uncertainty_id,
-    value_id: value_possibility_visual_uncertainty_id,
+    value_id: VALUE_POSSIBILITY_IDS.uncertainty,
     value_text: "?",
     certainty: uncertainty,
     parsed_value: null

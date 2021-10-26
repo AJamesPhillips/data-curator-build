@@ -274,7 +274,7 @@ class DateRange {
         top: 0
       }, /* @__PURE__ */ h(WComponentCanvasNode, {
         id: wc.id,
-        on_graph: false
+        is_movable: false
       })), /* @__PURE__ */ h(Box, {
         className: "vaps",
         width: 1,

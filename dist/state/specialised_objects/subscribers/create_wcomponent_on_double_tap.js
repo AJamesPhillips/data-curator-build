@@ -22,7 +22,6 @@ export function create_wcomponent_on_double_tap(store) {
     const add_to_knowledge_view = {id: current_knowledge_view.id, position};
     create_wcomponent({
       wcomponent: {base_id, type: "statev2"},
-      creation_context: state.creation_context,
       add_to_knowledge_view,
       store
     });

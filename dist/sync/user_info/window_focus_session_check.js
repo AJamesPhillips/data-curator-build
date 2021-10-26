@@ -12,6 +12,8 @@ export function register_window_focus_session_check(store) {
   register_window_on_focus_listener(() => check_and_handle_connection_and_session(store));
 }
 export async function check_and_handle_connection_and_session(store) {
+  if (!store.load_state_from_storage)
+    return;
   const supabase = get_supabase();
   const result = await check_connection_and_session(store, supabase);
   handle_connection_and_session_check_result(result, store);

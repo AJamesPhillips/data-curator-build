@@ -19,6 +19,7 @@ import {SandBoxSupabase} from "./scratch_pad/SandBoxSupabase.js";
 import {setup_window_on_focus_listener} from "./utils/window_on_focus_listener.js";
 import {LandingPage} from "./home/LandingPage.js";
 import {DevLandingPage} from "./home/DevLandingPage.js";
+import {SimHome} from "./x_sim_app/SimHome.js";
 const root = document.getElementById("root");
 const title = document.getElementsByTagName("title")[0];
 if (root) {
@@ -64,6 +65,8 @@ if (root) {
     render(/* @__PURE__ */ h(Provider, {
       store
     }, /* @__PURE__ */ h(App, null)), root);
+  } else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim") {
+    render(/* @__PURE__ */ h(SimHome, null), root);
   } else {
     root.innerText = "Unknown path: " + window.location.pathname;
   }

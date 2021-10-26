@@ -23,8 +23,8 @@ import {
   wcomponent_is_event,
   wcomponent_is_prioritisation,
   wcomponent_has_existence_predictions,
-  wcomponent_is_goal,
-  wcomponent_is_sub_state
+  wcomponent_is_sub_state,
+  wcomponent_has_objectives
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {wcomponent_statev2_subtypes} from "../wcomponent/interfaces/state.js";
 import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
@@ -40,7 +40,7 @@ import {ValueAndPredictionSets} from "./values_and_predictions/ValueAndPredictio
 import {PredictionList} from "./values_and_predictions/to_deprecate/PredictionList.js";
 import {WComponentFromTo} from "./WComponentFromTo.js";
 import {WComponentLatestPrediction} from "./WComponentLatestPrediction.js";
-import {GoalFormFields} from "./GoalFormFields.js";
+import {ChosenObjectivesFormFields} from "./ChosenObjectivesFormFields.js";
 import {JudgementFormFields} from "./JudgementFormFields.js";
 import {WComponentCausalLinkForm} from "./WComponentCausalLinkForm.js";
 import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
@@ -248,7 +248,7 @@ function _WComponentForm(props) {
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Values: Set subtype to view"), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
     wcomponent_id: wcomponent.id,
     VAPs_represent,
-    value_possibilities: orig_value_possibilities,
+    existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
     update_values_and_predictions: ({value_possibilities, values_and_prediction_sets}) => {
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
@@ -262,7 +262,7 @@ function _WComponentForm(props) {
       const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities);
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
-  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_is_goal(wcomponent) && /* @__PURE__ */ h(GoalFormFields, {
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
     ...{wcomponent, upsert_wcomponent}
   }), /* @__PURE__ */ h(FormControl, {
     fullWidth: true
