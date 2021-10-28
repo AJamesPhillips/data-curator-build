@@ -14,6 +14,7 @@ import {
   get_wcomponent_from_state
 } from "../state/specialised_objects/accessors.js";
 import {ExploreButtonHandle} from "../wcomponent_canvas/node/ExploreButtonHandle.js";
+import {WComponentBackReferences} from "../wcomponent_ui/WComponentBackReferences.js";
 import {AlignComponentForm} from "./AlignComponentForm.js";
 const map_state = (state, own_props) => {
   const {wcomponent_id} = own_props;
@@ -127,6 +128,8 @@ function _WComponentKnowledgeViewForm(props) {
       item_id: void 0,
       args: {subview_id: kv.id, ...pos}
     }, kv.title));
+  })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentBackReferences, {
+    wcomponent_id
   })));
 }
 export const WComponentKnowledgeViewForm = connector(_WComponentKnowledgeViewForm);
