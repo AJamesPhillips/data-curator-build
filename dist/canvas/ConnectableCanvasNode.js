@@ -25,7 +25,6 @@ export function ConnectableCanvasNode(props) {
   const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "");
   const classes = use_styles();
   return /* @__PURE__ */ h(CanvasNode, {
-    get_ref: (ref) => props.get_ref && props.get_ref(ref),
     position: props.position,
     on_pointer_down: props.on_pointer_down,
     on_click: props.on_click,
@@ -35,7 +34,7 @@ export function ConnectableCanvasNode(props) {
     extra_styles: extra_node_styles,
     extra_args: props.extra_args
   }, /* @__PURE__ */ h(Card, {
-    className: `node_main_content ${classes.card}`,
+    className: "node_main_content",
     variant: "outlined",
     style: main_content_styles
   }, props.cover_image && /* @__PURE__ */ h(CardMedia, {
@@ -63,9 +62,6 @@ export function ConnectableCanvasNode(props) {
   }), props.other_children);
 }
 const use_styles = makeStyles((theme) => ({
-  card: {
-    borderColor: "black"
-  },
   image: {
     maxHeight: "200px",
     maxWidth: "100%",

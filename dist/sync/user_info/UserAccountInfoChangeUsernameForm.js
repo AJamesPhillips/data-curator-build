@@ -44,9 +44,12 @@ function _UserAccountInfoChangeUsernameForm(props) {
     className: classes.root
   }, /* @__PURE__ */ h(FormControl, null, /* @__PURE__ */ h(TextField, {
     disabled: is_saving,
-    onKeyUp: (e) => set_username(e.currentTarget.value),
-    onChange: (e) => set_username(e.currentTarget.value),
-    onBlur: async (e) => set_username(e.currentTarget.value),
+    onChange: (e) => {
+      set_username(e.currentTarget.value);
+    },
+    onBlur: (e) => {
+      set_username(e.currentTarget.value);
+    },
     placeholder: "Username",
     size: "small",
     value: username,

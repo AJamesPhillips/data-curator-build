@@ -144,7 +144,10 @@ export function get_foundational_knowledge_views(knowledge_view, knowledge_views
 export function get_composed_wc_id_map(foundation_knowledge_views, wcomponents_by_id) {
   let composed_wc_id_map = {};
   foundation_knowledge_views.forEach((foundational_kv) => {
-    Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry);
+    Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => {
+      delete composed_wc_id_map[id];
+      composed_wc_id_map[id] = entry;
+    });
   });
   remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
   const result = partition_wc_id_map_on_blocked_component(composed_wc_id_map);

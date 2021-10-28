@@ -13,7 +13,6 @@ export class CanvasNode extends Component {
     const css_class_names = `node ${mouseable} ${extra_css_class || ""}`;
     return /* @__PURE__ */ h("div", {
       ...this.props.extra_args || {},
-      ref: (ref) => ref && this.props.get_ref && this.props.get_ref(ref),
       className: css_class_names,
       style: style_outer,
       title,

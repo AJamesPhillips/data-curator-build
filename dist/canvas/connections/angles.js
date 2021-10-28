@@ -3,6 +3,7 @@ import {get_angle, rads, normalise_angle_between_neg_Pi_and_Pi} from "../../util
 import {bounded} from "../../shared/utils/bounded.js";
 export function get_angle_from_start_connector(connection_angle, direction) {
   const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction];
+  connection_angle += 1e-4;
   return get_angle_from_connector({
     connection_angle,
     angle_of_normal_to_connector_surface,
@@ -11,8 +12,9 @@ export function get_angle_from_start_connector(connection_angle, direction) {
 }
 export function get_angle_from_end_connector(connection_angle, direction) {
   const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction];
+  connection_angle += Math.PI;
   return get_angle_from_connector({
-    connection_angle: connection_angle + Math.PI,
+    connection_angle,
     angle_of_normal_to_connector_surface,
     offset_direction: 1
   });
@@ -32,7 +34,7 @@ const max_connection_angle_from_normal = rads._50;
 function get_angle_from_connector(args) {
   const angle = normalise_angle_between_neg_Pi_and_Pi(args.connection_angle - args.angle_of_normal_to_connector_surface);
   const peeled_angle = bounded(angle, -max_connection_angle_from_normal, max_connection_angle_from_normal);
-  const offsetted_angle = peeled_angle + args.offset_direction * angle_offset;
+  const offsetted_angle = peeled_angle;
   const bounded_angle = bounded(offsetted_angle, -max_connection_angle_from_normal, max_connection_angle_from_normal);
   const corrected_angle = bounded_angle + args.angle_of_normal_to_connector_surface;
   return corrected_angle;

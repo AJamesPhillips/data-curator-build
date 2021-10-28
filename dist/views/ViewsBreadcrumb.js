@@ -69,6 +69,7 @@ function _ViewsBreadcrumb(props) {
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb);
 const view_options = [
   {id: "knowledge", title: "Knowledge"},
+  {id: "priorities", title: "Priorities"},
   {id: "priorities_list", title: "Priorities list"},
   {id: "actions_list", title: "Actions list"}
 ];

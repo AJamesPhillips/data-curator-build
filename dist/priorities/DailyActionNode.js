@@ -1,9 +1,9 @@
-import {h} from "../../../snowpack/pkg/preact.js";
-import {CanvasNode} from "../../canvas/CanvasNode.js";
-import {DailyActionsList} from "./DailyActionsList.js";
+import {h} from "../../snowpack/pkg/preact.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {CanvasNode} from "../canvas/CanvasNode.js";
+import {WComponentListModal} from "../wcomponent_ui/WComponentListModal.js";
 export function DailyActionNode(props) {
-  const [action_ids_to_show, set_action_ids_to_show] = [[], (action_ids2) => {
-  }];
+  const [action_ids_to_show, set_action_ids_to_show] = useState([]);
   const {x, y, width, height, display, action_ids} = props;
   const extra_styles = {
     backgroundColor: "orange",
@@ -20,8 +20,9 @@ export function DailyActionNode(props) {
   if (action_ids_to_show.length === 0)
     return canvas_node;
   else
-    return /* @__PURE__ */ h("div", null, canvas_node, /* @__PURE__ */ h(DailyActionsList, {
-      action_ids_to_show,
-      on_close: () => set_action_ids_to_show([])
+    return /* @__PURE__ */ h("div", null, canvas_node, /* @__PURE__ */ h(WComponentListModal, {
+      object_ids: action_ids_to_show,
+      on_close: () => set_action_ids_to_show([]),
+      title: "Actions"
     }));
 }

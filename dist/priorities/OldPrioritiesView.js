@@ -4,18 +4,15 @@ import {Canvas} from "../canvas/Canvas.js";
 import {project_priority_y} from "../canvas/display.js";
 import {MainArea} from "../layout/MainArea.js";
 import {CurrentDatetimeLine} from "./CurrentDatetimeLine.js";
-import {DailyActionNode} from "./old_daily_actions/DailyActionNode.js";
+import {DailyActionNode} from "./DailyActionNode.js";
 import {convert_daily_actions_to_nodes} from "./old_daily_actions/daily_actions_to_nodes.js";
-import {get_daily_actions_meta_c} from "./old_daily_actions/get_daily_actions.js";
-import {ProjectPriorityNode} from "./old_project_priorities/ProjectPriorityNode.js";
 import {convert_project_priorities_to_nodes} from "./old_project_priorities/project_priorities_to_nodes.js";
 const map_state = (state) => {
   const display_at_datetime_ms = state.routing.args.created_at_ms;
-  const daily_actions_meta = get_daily_actions_meta_c(state);
   return {
     display_at_datetime_ms,
     project_priorities_meta: state.derived.project_priorities_meta,
-    daily_actions_meta
+    daily_actions_meta: {}
   };
 };
 const connector = connect(map_state);
@@ -34,9 +31,6 @@ const get_children = (props) => {
     daily_action_nodes
   } = get_nodes_from_props(props);
   const elements = [
-    ...project_priority_nodes.map((node_props) => /* @__PURE__ */ h(ProjectPriorityNode, {
-      ...node_props
-    })),
     ...daily_action_nodes.map((node_props) => /* @__PURE__ */ h(DailyActionNode, {
       ...node_props
     }))

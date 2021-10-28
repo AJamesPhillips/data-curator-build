@@ -1,6 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {ObjectsList} from "../objects/ObjectsList.js";
 import {ObjectForm} from "../objects/ObjectForm.js";
 import {ObjectBulkImport} from "../objects/ObjectBulkImport/ObjectBulkImport.js";
 import {ObjectBulkImportSetup} from "../objects/ObjectBulkImport/ObjectBulkImportSetup.js";
@@ -18,6 +17,6 @@ function _Objects(props) {
     return /* @__PURE__ */ h(ObjectBulkImportSetup, null);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ObjectForm, {
     object: props.object
-  }), /* @__PURE__ */ h("hr", null), "Objects: ", props.object_count, /* @__PURE__ */ h(ObjectsList, null));
+  }), /* @__PURE__ */ h("hr", null), "Objects: ", props.object_count);
 }
 export const Objects = connector(_Objects);

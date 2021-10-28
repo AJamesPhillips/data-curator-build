@@ -1,4 +1,4 @@
-import {update_substate, update_subsubstate} from "../../../utils/update_state.js";
+import {update_subsubstate} from "../../../utils/update_state.js";
 import {is_update_specialised_object_sync_info} from "../../sync/actions.js";
 import {get_knowledge_view_from_state} from "../accessors.js";
 import {is_upsert_wcomponent} from "../wcomponents/actions.js";
@@ -44,12 +44,13 @@ function handle_upsert_knowledge_view_entry(state, knowledge_view_id, wcomponent
   return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry);
 }
 function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry) {
-  const existing_entry = knowledge_view.wc_id_map[wcomponent_id];
+  const wc_id_map = {...knowledge_view.wc_id_map};
+  const existing_entry = wc_id_map[wcomponent_id];
   if (existing_entry && existing_entry.deleted && !entry.deleted) {
-    knowledge_view = {...knowledge_view, wc_id_map: {...knowledge_view.wc_id_map}};
-    delete knowledge_view.wc_id_map[wcomponent_id];
+    delete wc_id_map[wcomponent_id];
   }
-  const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry);
+  wc_id_map[wcomponent_id] = entry;
+  const new_knowledge_view = {...knowledge_view, wc_id_map};
   return handle_upsert_knowledge_view(state, new_knowledge_view);
 }
 function add_wcomponent_to_base_knowledge_view(state, wcomponent_id, entry) {

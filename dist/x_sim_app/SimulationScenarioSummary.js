@@ -29,19 +29,67 @@ export function SimulationScenarioSummary(props) {
     created_at_ms,
     sim_ms
   };
+  const consumers_initial_demand = get_attribute_initial_number("consumers_initial_demand", get_attribute_args);
+  const consumers_demand_increase_delay_days = get_attribute_initial_number("consumers_demand_increase_delay_days", get_attribute_args);
+  const consumers_increased_demand = get_attribute_initial_number("consumers_increased_demand", get_attribute_args);
+  if (!consumers_initial_demand)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing consumers_initial_demand attribute");
+  if (!consumers_demand_increase_delay_days)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing consumers_demand_increase_delay_days attribute");
+  if (!consumers_increased_demand)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing consumers_increased_demand attribute");
+  const retailer_initial_price = get_attribute_initial_number("retailer_initial_price", get_attribute_args);
+  const retailer_initial_balance = get_attribute_initial_number("retailer_initial_balance", get_attribute_args);
   const retailer_initial_stock = get_attribute_initial_number("retailer_initial_stock", get_attribute_args);
   const retailer_storage = get_attribute_initial_number("retailer_storage", get_attribute_args);
+  if (!retailer_initial_price)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing retailer_initial_price attribute");
+  if (!retailer_initial_balance)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing retailer_initial_balance attribute");
   if (!retailer_initial_stock)
     return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing retailer_initial_stock attribute");
   if (!retailer_storage)
     return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing retailer_storage attribute");
+  const wholesaler_initial_price = get_attribute_initial_number("wholesaler_initial_price", get_attribute_args);
+  if (!wholesaler_initial_price)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing wholesaler_initial_price attribute");
+  const distributor_initial_price = get_attribute_initial_number("distributor_initial_price", get_attribute_args);
+  if (!distributor_initial_price)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing distributor_initial_price attribute");
+  const manufacturer_initial_price = get_attribute_initial_number("manufacturer_initial_price", get_attribute_args);
+  const manufacturing_delay_in_days = get_attribute_initial_number("manufacturing_delay_in_days", get_attribute_args);
+  if (!manufacturer_initial_price)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing manufacturer_initial_price attribute");
+  if (!manufacturing_delay_in_days)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing manufacturing_delay_in_days attribute");
+  const demand_signal_multiplier = get_attribute_initial_number("demand_signal_multiplier", get_attribute_args);
+  if (!demand_signal_multiplier)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing demand_signal_multiplier attribute");
+  const days_between_stock_take = get_attribute_initial_number("days_between_stock_take", get_attribute_args);
+  if (!days_between_stock_take)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing days_between_stock_take attribute");
+  const transport_time_in_days = get_attribute_initial_number("transport_time_in_days", get_attribute_args);
+  if (!transport_time_in_days)
+    return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing transport_time_in_days attribute");
   const scenario_group_args = {
     total_to_run: 1,
-    max_sim_time_seconds: 365 * 24 * 3600
+    max_sim_time_seconds: 3600 * 24 * 20
   };
   const beer_game_args = {
+    consumers_initial_demand: consumers_initial_demand.parsed_value,
+    consumers_demand_increase_delay_days: consumers_demand_increase_delay_days.parsed_value,
+    consumers_increased_demand: consumers_increased_demand.parsed_value,
+    retailer_initial_price: retailer_initial_price.parsed_value,
+    retailer_initial_balance: retailer_initial_balance.parsed_value,
     retailer_initial_stock: retailer_initial_stock.parsed_value,
-    retailer_storage: retailer_storage.parsed_value
+    retailer_storage: retailer_storage.parsed_value,
+    wholesaler_initial_price: wholesaler_initial_price.parsed_value,
+    distributor_initial_price: distributor_initial_price.parsed_value,
+    manufacturer_initial_price: manufacturer_initial_price.parsed_value,
+    manufacturing_delay_in_days: manufacturing_delay_in_days.parsed_value,
+    demand_signal_multiplier: demand_signal_multiplier.parsed_value,
+    days_between_stock_take: days_between_stock_take.parsed_value,
+    transport_time_in_days: transport_time_in_days.parsed_value
   };
   return /* @__PURE__ */ h("div", {
     className: "scenario_summary"
@@ -57,7 +105,7 @@ export function SimulationScenarioSummary(props) {
     onClick: () => {
       beer_game_simulator.schedule_sim({...scenario_group_args, total_to_run: 100}, beer_game_args, upsert_scenario_group_run_results);
     }
-  })), /* @__PURE__ */ h("br", null), "retailer_initial_stock: ", retailer_initial_stock?.parsed_value, " ", (retailer_initial_stock?.certainty || 1) * 100, "% retailer_storage: ", retailer_storage?.parsed_value, " ", (retailer_storage?.certainty || 1) * 100, "%", /* @__PURE__ */ h("br", null), scenario_group_run_results.map((i) => /* @__PURE__ */ h(ScenarioGroupRunResultComponent, {
+  })), /* @__PURE__ */ h("br", null), "retailer_initial_stock: ", retailer_initial_stock?.parsed_value, "  retailer_storage: ", retailer_storage?.parsed_value, "  demand_signal_multiplier: ", demand_signal_multiplier?.parsed_value, /* @__PURE__ */ h("br", null), scenario_group_run_results.map((i) => /* @__PURE__ */ h(ScenarioGroupRunResultComponent, {
     key: i.started.getTime(),
     scenario_group_run_result: i
   })));

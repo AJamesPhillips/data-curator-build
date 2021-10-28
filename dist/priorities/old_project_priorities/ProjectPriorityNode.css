@@ -1,0 +1,5 @@
+.unlimited_width_on_hover:hover {
+  width: initial !important;
+  min-width: 150px;
+  z-index: 100;
+}

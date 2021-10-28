@@ -36,37 +36,27 @@ const connector = connect(map_state, map_dispatch);
 function _MoveToWComponentButton(props) {
   const {
     components_on_screen,
-    have_finished_drawing_attention = () => {
-    }
+    have_finished_drawing_attention
   } = props;
-  const {position, go_to_datetime_ms} = useMemo(() => calculate_spatial_temporal_position_to_move_to(props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms), [props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms]);
+  const {position, go_to_datetime_ms} = useMemo(() => calculate_spatial_temporal_position_to_move_to(props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms, props.disable_if_not_present), [props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms, props.disable_if_not_present]);
   const move = () => position && props.move(go_to_datetime_ms, position);
   const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && position && !components_on_screen;
-  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Box, {
-    zIndex: 10,
-    m: 2,
-    title: position ? "Move to component(s)" : "No components present"
-  }, /* @__PURE__ */ h(IconButton, {
-    size: "small",
-    onClick: move,
-    disabled: !position
-  }, /* @__PURE__ */ h(FilterCenterFocusIcon, null))), /* @__PURE__ */ h("div", {
-    className: draw_attention_to_move_to_wcomponent_button ? "pulsating_circle" : "",
-    ref: (e) => setTimeout(() => {
-      e?.classList.remove("pulsating_circle");
-      have_finished_drawing_attention();
-    }, 1e4)
-  }));
+  return /* @__PURE__ */ h(MoveToItemButton, {
+    position,
+    move,
+    draw_attention: draw_attention_to_move_to_wcomponent_button,
+    have_finished_drawing_attention
+  });
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton);
-function calculate_spatial_temporal_position_to_move_to(composed_visible_wc_id_map, wcomponents_by_id, initial_wcomponent_id, go_to_datetime_ms) {
+function calculate_spatial_temporal_position_to_move_to(composed_visible_wc_id_map, wcomponents_by_id, initial_wcomponent_id, go_to_datetime_ms, disable_if_not_present) {
   let wcomponent_created_at_ms = void 0;
   let position = void 0;
   if (composed_visible_wc_id_map) {
     let wcomponent = wcomponents_by_id[initial_wcomponent_id];
     wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent);
     let view_entry = composed_visible_wc_id_map[initial_wcomponent_id];
-    if (!view_entry) {
+    if (!view_entry && !disable_if_not_present) {
       Object.entries(composed_visible_wc_id_map).find(([wcomponent_id, an_entry]) => {
         wcomponent = wcomponents_by_id[wcomponent_id];
         wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent);
@@ -82,4 +72,28 @@ function calculate_spatial_temporal_position_to_move_to(composed_visible_wc_id_m
     }
   }
   return {position, go_to_datetime_ms};
+}
+export function MoveToItemButton(props) {
+  const {
+    position,
+    move,
+    draw_attention,
+    have_finished_drawing_attention = () => {
+    }
+  } = props;
+  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Box, {
+    zIndex: 10,
+    m: 2,
+    title: position ? "Move to component(s)" : "No component(s) present"
+  }, /* @__PURE__ */ h(IconButton, {
+    size: "small",
+    onClick: move,
+    disabled: !position
+  }, /* @__PURE__ */ h(FilterCenterFocusIcon, null))), /* @__PURE__ */ h("div", {
+    className: draw_attention ? "pulsating_circle" : "",
+    ref: (e) => setTimeout(() => {
+      e?.classList.remove("pulsating_circle");
+      have_finished_drawing_attention();
+    }, 1e4)
+  }));
 }

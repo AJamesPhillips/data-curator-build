@@ -69,11 +69,13 @@ function _PrioritiesListViewContent(props) {
     key: goal.id,
     goal,
     selected_prioritisation
-  })), /* @__PURE__ */ h("h1", null, "Prioritised"), prioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
+  })), /* @__PURE__ */ h("h1", null, "Deprioritised"), deprioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
     key: goal.id,
     goal,
     selected_prioritisation
-  })), /* @__PURE__ */ h("h1", null, "Deprioritised"), deprioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
+  }))), /* @__PURE__ */ h("div", {
+    className: "goals"
+  }, /* @__PURE__ */ h("h1", null, "Prioritised"), prioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
     key: goal.id,
     goal,
     selected_prioritisation
@@ -85,16 +87,22 @@ function _PrioritiesListViewContent(props) {
     new_item_descriptor: "Prioritisation",
     on_pointer_down_new_list_entry: () => {
       create_wcomponent({
-        wcomponent: {base_id, type: "prioritisation", goals: goal_prioritisation_attributes || {}},
+        wcomponent: {
+          base_id,
+          type: "prioritisation",
+          goals: goal_prioritisation_attributes || {}
+        },
         add_to_knowledge_view: {
           id: knowledge_view_id,
           position: {left: 0, top: 0}
         }
       });
     }
-  })), prioritisations.map((p) => /* @__PURE__ */ h(Prioritisation, {
+  })), /* @__PURE__ */ h("div", {
+    className: "prioritisations_list"
+  }, prioritisations.map((p) => /* @__PURE__ */ h(Prioritisation, {
     prioritisation: p
-  }))));
+  })))));
 }
 const PrioritiesListViewContent = connector(_PrioritiesListViewContent);
 function partition_and_sort_goals(goals, goal_prioritisation_attributes) {

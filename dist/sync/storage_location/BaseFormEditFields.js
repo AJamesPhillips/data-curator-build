@@ -1,5 +1,5 @@
 import {h} from "../../../snowpack/pkg/preact.js";
-import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import "../common.css.proxy.js";
 import {modify_base} from "../../supabase/bases.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
@@ -7,6 +7,7 @@ import {DisplaySupabasePostgrestError} from "../user_info/DisplaySupabaseErrors.
 export function BaseFormEditFields(props) {
   const {base, on_save_or_exit, user} = props;
   const [modified_base, set_modified_base] = useState(base);
+  useEffect(() => set_modified_base(base), [base]);
   const [error_modifying_base, set_error_modifying_base] = useState(void 0);
   const is_owner = base.owner_user_id === user.id;
   const have_pending_edits = JSON.stringify(base) !== JSON.stringify(modified_base);

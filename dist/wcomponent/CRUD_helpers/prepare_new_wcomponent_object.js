@@ -57,7 +57,7 @@ export function prepare_new_contextless_wcomponent_object(partial_wcomponent) {
       ...base,
       title: date2str_auto({date: when, time_resolution: "day"}),
       goals: {},
-      datetime: {min: when},
+      datetime: {value: when},
       ...partial_wcomponent,
       type: partial_wcomponent.type
     };

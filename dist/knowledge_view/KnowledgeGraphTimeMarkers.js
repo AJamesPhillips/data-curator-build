@@ -9,6 +9,7 @@ import {bounded} from "../shared/utils/bounded.js";
 import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {date2str} from "../shared/utils/date_helpers.js";
 import {time_scale_days_to_ms_pixels_fudge_factor} from "../shared/constants.js";
+import {default_time_origin_parameters} from "./datetime_line.js";
 const map_state = (state) => {
   const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
   const composed_datetime_line_config = current_composed_knowledge_view?.composed_datetime_line_config;
@@ -26,16 +27,19 @@ const map_state = (state) => {
 };
 const connector = connect(map_state);
 function _KnowledgeGraphTimeMarkers(props) {
+  if (!(props.force_display ?? props.display_time_marks))
+    return null;
+  let {time_origin_ms, time_origin_x, time_scale} = props;
+  if (props.force_display) {
+    ({time_origin_ms, time_origin_x, time_scale} = default_time_origin_parameters({time_origin_ms, time_origin_x, time_scale}));
+  }
+  if (time_origin_ms === void 0 || time_origin_x === void 0 || time_scale === void 0)
+    return null;
   const {
     sim_ms,
-    time_origin_ms,
-    time_origin_x,
-    time_scale,
     time_line_number,
     time_line_spacing_days
   } = props;
-  if (!props.display_time_marks || time_origin_ms === void 0 || time_origin_x === void 0 || time_scale === void 0)
-    return null;
   const other_datetime_lines = useMemo(() => get_other_datetime_lines({
     time_line_number,
     time_line_spacing_days
@@ -44,12 +48,13 @@ function _KnowledgeGraphTimeMarkers(props) {
   const xd = zoom / SCALE_BY;
   const xm = (x - time_origin_x) * xd;
   const time_scale_ms_to_pixels_fudge = time_scale / time_scale_days_to_ms_pixels_fudge_factor * xd;
+  const now_ms = new Date().getTime();
   return /* @__PURE__ */ h("div", {
     className: "datetime_lines_container"
   }, other_datetime_lines.map((config) => {
     return /* @__PURE__ */ h(DatetimeLine, {
       key: config.key,
-      date_ms: sim_ms + config.offset,
+      date_ms: (props.show_by_now ? now_ms : sim_ms) + config.offset,
       time_origin_ms,
       time_scale_ms_to_pixels_fudge,
       xm,
@@ -58,14 +63,14 @@ function _KnowledgeGraphTimeMarkers(props) {
       opacity: config.opacity
     });
   }), /* @__PURE__ */ h(DatetimeLine, {
-    date_ms: new Date().getTime(),
+    date_ms: now_ms,
     time_origin_ms,
     time_scale_ms_to_pixels_fudge,
     xm,
     xd,
     color: "red",
     left_label_when_off_screen: true
-  }), /* @__PURE__ */ h(DatetimeLine, {
+  }), !props.show_by_now && /* @__PURE__ */ h(DatetimeLine, {
     date_ms: sim_ms,
     time_origin_ms,
     time_scale_ms_to_pixels_fudge,

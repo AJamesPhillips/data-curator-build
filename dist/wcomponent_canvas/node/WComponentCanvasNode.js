@@ -190,7 +190,7 @@ function _WComponentCanvasNode(props) {
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: is_movable ? temporary_drag_kv_entry || kv_entry : void 0,
     cover_image: wcomponent.summary_image,
-    node_main_content: /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("img", {
+    node_main_content: /* @__PURE__ */ h("div", null, !wcomponent.summary_image && /* @__PURE__ */ h("div", {
       className: "background_image " + wcomponent.type
     }), /* @__PURE__ */ h("div", {
       className: "node_title"

@@ -89,7 +89,8 @@ function _WComponentKnowledgeViewForm(props) {
   }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
-    wcomponent_id
+    wcomponent_id,
+    disable_if_not_present: true
   }), /* @__PURE__ */ h(Box, {
     zIndex: 10,
     m: 4,

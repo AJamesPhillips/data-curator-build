@@ -55,6 +55,7 @@ import {update_VAPSets_with_possibilities} from "../wcomponent/CRUD_helpers/upda
 import {WComponentSubStateForm} from "./WComponentSubStateForm.js";
 import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
 import {get_default_wcomponent_title} from "../wcomponent_derived/rich_text/get_default_wcomponent_title.js";
+import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -172,7 +173,7 @@ function _WComponentForm(props) {
       new_wcomponent.type = type;
       upsert_wcomponent(new_wcomponent);
     }
-  })), wcomponent_is_statev2(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), wcomponent_is_statev2(wcomponent) && (editing || (orig_values_and_prediction_sets?.length || 0) > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Sub type"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}
@@ -264,7 +265,7 @@ function _WComponentForm(props) {
     }
   }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
     ...{wcomponent, upsert_wcomponent}
-  }), /* @__PURE__ */ h(FormControl, {
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(FormControl, {
     fullWidth: true
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
     title: "Created at",
@@ -281,7 +282,10 @@ function _WComponentForm(props) {
   })), editing && /* @__PURE__ */ h(WComponentImageForm, {
     wcomponent,
     upsert_wcomponent
-  }), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  }), !editing && wcomponent.summary_image && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("a", {
+    href: wcomponent.summary_image,
+    target: "_blank"
+  }, /* @__PURE__ */ h(ExternalLinkIcon, null), "Open image")), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Hide node title"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_title,

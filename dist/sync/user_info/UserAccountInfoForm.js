@@ -7,7 +7,6 @@ import "../common.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
 import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
 import {save_and_optionally_signout} from "../../state/user_info/signout.js";
-import {get_supabase} from "../../supabase/get_supabase.js";
 import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
 import {UserAccountInfoChangePasswordForm} from "./UserAccountInfoChangePasswordForm.js";
 import {UserAccountInfoChangeUsernameForm} from "./UserAccountInfoChangeUsernameForm.js";
@@ -52,13 +51,6 @@ function _UserAccountInfoForm(props) {
   }, [need_to_set_user_name, form_state]);
   if (!user)
     return null;
-  async function log_out() {
-    const supabase = get_supabase();
-    try {
-      save_and_optionally_signout();
-    } catch (err) {
-    }
-  }
   if (form_state === "updating_password" || need_to_handle_password_recovery) {
     return /* @__PURE__ */ h(UserAccountInfoChangePasswordForm, {
       on_close: () => set_form_state("initial")
@@ -75,7 +67,7 @@ function _UserAccountInfoForm(props) {
   }, /* @__PURE__ */ h(Box, {
     className: `${classes.section} ${classes.logout_section} section`
   }, /* @__PURE__ */ h("p", null, "Logged in with", /* @__PURE__ */ h("strong", null, " ", user.email, " ")), /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Button, {
-    onClick: log_out,
+    onClick: () => save_and_optionally_signout(true),
     variant: "contained",
     endIcon: /* @__PURE__ */ h(LogoutIcon, null)
   }, "Log out"))), /* @__PURE__ */ h(Box, {
@@ -88,7 +80,7 @@ function _UserAccountInfoForm(props) {
     className: classes.button,
     variant: "contained",
     onClick: () => set_form_state("updating_username")
-  }, `${need_to_set_user_name ? "Set" : "Change"} username`), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(Button, {
+  }, need_to_set_user_name ? "Set" : "Change", " username"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(Button, {
     variant: "contained",
     onClick: () => set_form_state("updating_password")
   }, "Change password"))), /* @__PURE__ */ h(DisplaySupabaseSessionError, {

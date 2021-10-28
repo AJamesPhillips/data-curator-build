@@ -1,30 +1,29 @@
-
-.priorities_list_view_content
-{
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    overflow-y: scroll;
-    /* margin-bottom: 100px; -- does not work as it overlaps the content */
+.priorities_list_view_content {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-y: scroll;
+  /* margin-bottom: 100px; -- does not work as it overlaps the content */
 }
 
-.priorities_list_view_content .goals
-{
-    flex: 1;
-    margin: 20px;
-    border-right: thin solid #aaa;
+.priorities_list_view_content .goals {
+  flex: 1;
+  padding: 40px;
+  border-right: thin solid #aaa;
 }
 
-.priorities_list_view_content .prioritisations
-{
-    flex: 1;
-    padding: 20px;
+.priorities_list_view_content .prioritisations {
+  flex: 1;
+  padding: 20px;
 }
 
-.prioritisations_header
-{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.prioritisations_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priorities_list_view_content .goals > div, .prioritisations_list > div {
+  margin-bottom: 20px;
 }

@@ -9,7 +9,7 @@
 
 .action_list_view_content .icebox, .action_list_view_content .todo, .action_list_view_content .in_progress, .action_list_view_content .done_or_rejected {
   flex: 1;
-  padding: 20px;
+  padding: 40px;
 }
 .action_list_view_content .icebox, .action_list_view_content .todo, .action_list_view_content .in_progress {
   border-right: thin solid #aaa;
