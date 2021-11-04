@@ -73,7 +73,7 @@ export function SimulationScenarioSummary(props) {
     return /* @__PURE__ */ h("div", null, scenario_kv.title, " missing transport_time_in_days attribute");
   const scenario_group_args = {
     total_to_run: 1,
-    max_sim_time_seconds: 3600 * 24 * 20
+    max_sim_time_seconds: 3600 * 24 * 365
   };
   const beer_game_args = {
     consumers_initial_demand: consumers_initial_demand.parsed_value,

@@ -12,6 +12,7 @@ import {KnowledgeViewDatetimeLinesConfigForm} from "./KnowledgeViewDatetimeLines
 import {Link} from "../sharedf/Link.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
+import {KnowledgeViewChangeBase} from "./change_base/KnowledgeViewChangeBase.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -27,6 +28,7 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id];
   const children = (nested_kv?.child_ids || []).map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
   const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""];
+  const is_current_kv = props.current_subview_id === knowledge_view.id;
   return /* @__PURE__ */ h("div", {
     style: {backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5}
   }, /* @__PURE__ */ h("p", {
@@ -89,12 +91,19 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
     options: knowledge_view_sort_types.map((type) => ({id: type, title: type})),
     allow_none: false,
     on_change: (sort_type) => sort_type && crud.update_item({...knowledge_view, sort_type})
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h(KnowledgeViewDatetimeLinesConfigForm, {
+  })), /* @__PURE__ */ h("hr", null), editing && !is_current_kv && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Link, {
+    route: void 0,
+    sub_route: void 0,
+    item_id: void 0,
+    args: {subview_id: knowledge_view.id}
+  }, "Change to this knowledge view"), " to edit datetime lines config and change the base."), editing && is_current_kv && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(KnowledgeViewDatetimeLinesConfigForm, {
     editing,
     knowledge_view,
     knowledge_views_by_id: props.knowledge_views_by_id,
     update_item: crud.update_item
-  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), (editing || children.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(KnowledgeViewListsSet, {
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h(KnowledgeViewChangeBase, {
+    knowledge_view
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), (editing || children.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(KnowledgeViewListsSet, {
     ...props,
     parent_knowledge_view_id: knowledge_view.id,
     knowledge_views: children,

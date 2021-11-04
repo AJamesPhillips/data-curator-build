@@ -3,13 +3,17 @@ import MenuIcon from "../../snowpack/pkg/@material-ui/icons/Menu.js";
 import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
+import {ACTIONS} from "../state/actions.js";
 import {ALLOWED_ROUTES} from "../state/routing/interfaces.js";
-import {AppMenuItem} from "./AppMenuItem.js";
+import {AppMenuItem, CustomisableAppMenuItem} from "./AppMenuItem.js";
 const map_state = (state) => ({
   route: state.routing.route,
   editing: !state.display_options.consumption_formatting
 });
-const connector = connect(map_state);
+const map_dispatch = {
+  set_show_help_menu: ACTIONS.display.set_show_help_menu
+};
+const connector = connect(map_state, map_dispatch);
 const hide_routes = new Set([
   "objects",
   "patterns",
@@ -64,7 +68,12 @@ function _AppMenuItemsContainer(props) {
   }, routes.map((route) => /* @__PURE__ */ h(AppMenuItem, {
     id: route,
     on_pointer_down: handleClose
-  })), /* @__PURE__ */ h(MaterialMenuItem, {
+  })), /* @__PURE__ */ h(CustomisableAppMenuItem, {
+    on_pointer_down: () => {
+      handleClose();
+      props.set_show_help_menu({show: true});
+    }
+  }, "Help"), /* @__PURE__ */ h(MaterialMenuItem, {
     onClick: () => set_show_all_routes(!show_all_routes),
     style: {display: "flex", justifyContent: "flex-start", padding: "0.5em"}
   }, show_all_routes ? "Hide" : "Show", " all options")));

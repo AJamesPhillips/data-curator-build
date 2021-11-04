@@ -36,10 +36,8 @@ const map_dispatch = {change_route: ACTIONS.routing.change_route};
 const connector = connect(map_state, map_dispatch);
 function _AppMenuItem(props) {
   const title = get_title(props.id);
-  return /* @__PURE__ */ h(MaterialMenuItem, {
-    style: {display: "flex", justifyContent: "flex-start", padding: "0.5em"},
-    onPointerDown: (e) => {
-      e.stopImmediatePropagation();
+  return /* @__PURE__ */ h(CustomisableAppMenuItem, {
+    on_pointer_down: () => {
       props.change_route({route: props.id, sub_route: null, item_id: null});
       props.on_pointer_down();
     }
@@ -52,3 +50,12 @@ function _AppMenuItem(props) {
   }, title));
 }
 export const AppMenuItem = connector(_AppMenuItem);
+export function CustomisableAppMenuItem(props) {
+  return /* @__PURE__ */ h(MaterialMenuItem, {
+    style: {display: "flex", justifyContent: "flex-start", padding: "0.5em"},
+    onPointerDown: (e) => {
+      e.stopImmediatePropagation();
+      props.on_pointer_down();
+    }
+  }, props.children);
+}

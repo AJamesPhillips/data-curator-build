@@ -5,6 +5,7 @@ import {EditableCheckbox} from "../form/EditableCheckbox.js";
 import {LabelsEditor} from "../labels/LabelsEditor.js";
 import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
 import {ACTIONS} from "../state/actions.js";
+import {wcomponent_type_to_text} from "../wcomponent_derived/wcomponent_type_to_text.js";
 const map_state = (state) => ({
   apply_filter: state.filter_context.apply_filter,
   filters: state.filter_context.filters
@@ -51,4 +52,4 @@ function _FiltersSidePanel(props) {
   })));
 }
 export const FiltersSidePanel = connector(_FiltersSidePanel);
-const wcomponent_type_options = () => wcomponent_types.map((type) => ({id: type, title: type}));
+const wcomponent_type_options = () => wcomponent_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));

@@ -18,7 +18,6 @@ import {
 import {new_value_and_prediction_set} from "./NewValueAndPredictionSet.js";
 import {ValueAndPredictionSetOlderVersions} from "./ValueAndPredictionSetOlderVersions.js";
 import {prepare_new_VAP_set} from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
-import {update_value_possibilities_with_VAPSets} from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
 export function ValueAndPredictionSetsComponent(props) {
   const [new_item, set_new_item] = useState(void 0);
   const {
@@ -69,7 +68,7 @@ export function ValueAndPredictionSetsComponent(props) {
     tense: Tense.past,
     editing
   });
-  const possible_value_possibilities = all_VAP_sets.length === 0 ? void 0 : update_value_possibilities_with_VAPSets(existing_value_possibilities, all_VAP_sets);
+  const possible_value_possibilities = existing_value_possibilities;
   const new_VAP_set_form_item_props = {
     get_created_at: get_actual_created_at_datetime,
     get_custom_created_at: get_actual_custom_created_at_datetime,

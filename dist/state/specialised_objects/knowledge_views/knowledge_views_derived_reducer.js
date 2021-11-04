@@ -40,7 +40,7 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id;
   const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed;
   const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms;
-  const filters_changed = initial_state.filter_context !== state.filter_context || created_at_changed || one_or_more_wcomponents_changed;
+  const filters_changed = created_at_changed || initial_state.filter_context !== state.filter_context || one_or_more_wcomponents_changed;
   const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks;
   const ephemeral_overrides_might_have_changed = created_at_changed || display_time_marks_changed;
   if (current_kv) {
@@ -223,13 +223,10 @@ export function get_composed_datetime_lines_config(foundation_knowledge_views, u
 function update_filters(state, current_composed_knowledge_view) {
   if (!current_composed_knowledge_view)
     return void 0;
-  let {
-    wc_ids_excluded_by_filters,
-    wc_ids_excluded_by_created_at_datetime_filter
-  } = current_composed_knowledge_view.filters;
   const {composed_wc_id_map} = current_composed_knowledge_view;
   const current_wc_ids = Object.keys(composed_wc_id_map);
   const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined);
+  let wc_ids_to_exclude = [];
   if (state.filter_context.apply_filter) {
     const {
       exclude_by_label_ids: exclude_by_label_ids_list,
@@ -240,7 +237,7 @@ function update_filters(state, current_composed_knowledge_view) {
     const exclude_by_label_ids = new Set(exclude_by_label_ids_list);
     const exclude_by_component_types = new Set(exclude_by_component_types_list);
     const include_by_component_types = new Set(include_by_component_types_list);
-    const wc_ids_to_exclude = wcomponents_on_kv.filter((wcomponent) => {
+    wc_ids_to_exclude = wcomponents_on_kv.filter((wcomponent) => {
       const {label_ids = [], type} = wcomponent;
       const applied_ids = new Set(label_ids);
       const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
@@ -250,11 +247,11 @@ function update_filters(state, current_composed_knowledge_view) {
       const should_exclude = labels__should_exclude || labels__lacks_include || types__should_exclude || types__lacks_include;
       return should_exclude;
     }).map(({id}) => id);
-    wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude);
   }
+  const wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude);
   const {created_at_ms} = state.routing.args;
   const component_ids_excluded_by_created_at = wcomponents_on_kv.filter((kv) => get_created_at_ms(kv) > created_at_ms).map(({id}) => id);
-  wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at);
+  const wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at);
   const wc_ids_excluded_by_any_filter = set_union(wc_ids_excluded_by_filters, wc_ids_excluded_by_created_at_datetime_filter);
   const composed_visible_wc_id_map = {...composed_wc_id_map};
   wc_ids_excluded_by_any_filter.forEach((id) => {

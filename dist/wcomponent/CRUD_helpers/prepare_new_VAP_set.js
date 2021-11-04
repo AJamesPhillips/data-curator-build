@@ -7,7 +7,7 @@ import {get_possibilities_from_VAP_sets} from "../value_possibilities/get_possib
 export function prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, existing_VAP_sets, base_id, creation_context) {
   const dates = get_new_created_ats(creation_context);
   const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets);
-  const datetime = VAPs_represent === VAPsType.action ? {value: new Date()} : {};
+  const datetime = VAPs_represent === VAPsType.action ? {value: new Date()} : existing_VAP_sets.length > 0 ? {value: new Date()} : {};
   const new_VAP_set = {
     id: get_new_value_and_prediction_set_id(),
     ...dates,

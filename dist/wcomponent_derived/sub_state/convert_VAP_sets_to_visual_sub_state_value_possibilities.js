@@ -12,7 +12,7 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities(args) {
   target_VAP_sets.forEach((VAP_set) => {
     convert_VAP_set_to_VAP_visuals({VAP_set, VAPs_represent, wcomponent: target_wcomponent}).forEach(({value_id, value_text}) => values.push({value_id, value: value_text}));
   });
-  const simple_possibilities = get_simple_possibilities_from_values(target_wcomponent.value_possibilities, values);
+  const simple_possibilities = get_simple_possibilities_from_values(values, target_wcomponent.value_possibilities);
   return simple_possibilities.map((possilibity) => {
     const selected = predicate_target_value_possibility({
       target_value_id_type,

@@ -21,7 +21,7 @@ export function selector_editable_bases(state) {
     return void 0;
   if (!bases_by_id)
     return void 0;
-  return Object.values(bases_by_id).filter((b) => b.access_level === "editor" || b.owner_user_id === user.id);
+  return Object.values(bases_by_id).filter((b) => b.access_level === "editor" || b.access_level === "owner");
 }
 export function selector_have_an_editable_base(state) {
   const a_bases = selector_editable_bases(state);

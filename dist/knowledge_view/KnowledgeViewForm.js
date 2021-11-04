@@ -6,6 +6,7 @@ import {factory_get_kv_details, get_all_parent_knowledge_view_ids} from "./commo
 const map_state = (state) => {
   const knowledge_view = get_current_knowledge_view_from_state(state);
   return {
+    ready_for_reading: state.sync.ready_for_reading,
     knowledge_view,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     knowledge_views: state.derived.knowledge_views,
@@ -23,6 +24,8 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _KnowledgeViewForm(props) {
   const {knowledge_view, upsert_knowledge_view} = props;
+  if (!props.ready_for_reading)
+    return /* @__PURE__ */ h("div", null, "Loading...");
   if (!knowledge_view)
     return /* @__PURE__ */ h("div", null, "No knowledge view selected");
   const possible_parent_knowledge_view_options = props.knowledge_views.map((kv) => ({id: kv.id, title: kv.title}));

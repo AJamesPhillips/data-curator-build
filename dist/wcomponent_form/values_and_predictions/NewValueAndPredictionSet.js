@@ -10,16 +10,13 @@ import {
 } from "./common.js";
 import {SimplifiedUncertainDatetimeForm} from "../uncertain_datetime/SimplifiedUncertainDatetimeForm.js";
 import {sentence_case} from "../../shared/utils/sentence_case.js";
-import {update_value_possibilities_with_VAPSets} from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
+import {update_VAP_set_VAP_probabilities} from "./update_VAP_set_VAP_probabilities.js";
 export const new_value_and_prediction_set = (VAPs_represent, possible_value_possibilities) => {
   const any_value_possibilities = Object.keys(possible_value_possibilities || {}).length > 0;
   const hide_advanced_for_type_other = VAPs_represent === VAPsType.other && any_value_possibilities;
   const initial_hide_advanced = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action || hide_advanced_for_type_other;
   const [show_advanced, set_show_advanced] = useState(!initial_hide_advanced);
   return (VAP_set, crud) => {
-    if (possible_value_possibilities === void 0) {
-      possible_value_possibilities = update_value_possibilities_with_VAPSets({}, [VAP_set]);
-    }
     const {update_item} = crud;
     return /* @__PURE__ */ h("div", null, VAPs_represent === VAPsType.boolean && /* @__PURE__ */ h(SimplifiedBooleanForm, {
       VAP_set,
@@ -74,33 +71,25 @@ function SimplifiedOtherForm(props) {
 }
 function SimplifiedFormHeader(props) {
   const {title, possible_value_possibilities, VAP_set, on_change} = props;
-  const selected_option_id = get_VAP_set_certain_selected_value(VAP_set);
+  const selected_option_id = get_VAP_set_certain_selected_value_id(VAP_set);
   const options = value_possibility_options(possible_value_possibilities);
   return /* @__PURE__ */ h("div", null, title, /* @__PURE__ */ h(AutocompleteText, {
     selected_option_id,
     options,
     allow_none: true,
-    on_change: (new_status) => {
-      if (!new_status)
+    on_change: (new_status_id) => {
+      if (!new_status_id)
         return;
-      const entries = VAP_set.entries.map((VAP) => {
-        const probability = VAP.value === new_status ? 1 : 0;
-        return {
-          ...VAP,
-          relative_probability: probability,
-          probability,
-          conviction: 1
-        };
-      });
+      const entries = update_VAP_set_VAP_probabilities(VAP_set, new_status_id);
       on_change({...VAP_set, entries});
     }
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null));
 }
 function value_possibility_options(value_possibilities) {
-  return value_possibilities === void 0 ? [] : Object.values(value_possibilities).map(({value}) => ({id: value, title: sentence_case(value)}));
+  return value_possibilities === void 0 ? [] : Object.values(value_possibilities).map(({id, value}) => ({id, title: sentence_case(value)}));
 }
-function get_VAP_set_certain_selected_value(VAP_set) {
-  let value = void 0;
+function get_VAP_set_certain_selected_value_id(VAP_set) {
+  let value_id = void 0;
   const conviction = VAP_set.shared_entry_values?.conviction || 0;
   const probability = VAP_set.shared_entry_values?.probability || 0;
   VAP_set.entries.forEach((VAP) => {
@@ -108,7 +97,7 @@ function get_VAP_set_certain_selected_value(VAP_set) {
       return;
     if (Math.max(probability, VAP.probability) !== 1)
       return;
-    value = VAP.value;
+    value_id = VAP.value_id;
   });
-  return value;
+  return value_id;
 }

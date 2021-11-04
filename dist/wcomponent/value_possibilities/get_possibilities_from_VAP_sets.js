@@ -10,17 +10,17 @@ export function get_possibilities_from_VAP_sets(VAPs_represent, value_possibilit
   const possibilities = ensure_possible_values_have_ids(simple_possibilities);
   return possibilities;
 }
-export function get_simple_possibilities_from_VAP_sets(VAPs_represent, value_possibilities_by_id, VAP_sets) {
-  const value_cores = [];
+function get_simple_possibilities_from_VAP_sets(VAPs_represent, value_possibilities_by_id, VAP_sets) {
+  const value_cores = Object.values(value_possibilities_by_id || {}).map((possibility) => ({...possibility, id: void 0, value_id: possibility.id}));
   VAP_sets.forEach((VAP_set) => {
     VAP_set.entries.forEach(({value_id, value}) => {
       value_cores.push({value_id, value});
     });
   });
-  const simple_possibilities = get_simple_possibilities_from_values(value_possibilities_by_id, value_cores);
+  const simple_possibilities = get_simple_possibilities_from_values(value_cores, value_possibilities_by_id);
   return default_possible_values(VAPs_represent, simple_possibilities);
 }
-export function get_simple_possibilities_from_values(value_possibilities_by_id, values) {
+export function get_simple_possibilities_from_values(values, value_possibilities_by_id) {
   let simple_possibilities = [];
   const possible_value_strings = new Set();
   let max_order = 0;
@@ -32,10 +32,10 @@ export function get_simple_possibilities_from_values(value_possibilities_by_id, 
     max_order = Math.max(max_order, value_possibility.order);
     possible_value_strings.add(value_possibility.value);
   });
-  values.forEach(({value}) => {
+  values.forEach(({value, value_id}) => {
     if (possible_value_strings.has(value))
       return;
-    simple_possibilities.push({value, order: ++max_order});
+    simple_possibilities.push({value, id: value_id, order: ++max_order});
     possible_value_strings.add(value);
   });
   return simple_possibilities.sort((a, b) => (a.order ?? 0) < (b.order ?? 0) ? -1 : 1);

@@ -37,7 +37,7 @@ function _WComponentBackReferences(props) {
       sub_route: void 0,
       item_id: wcomponent.id,
       args: void 0
-    }, /* @__PURE__ */ h(Markdown, null, get_title({rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: {}, created_at_ms, sim_ms}))));
+    }, /* @__PURE__ */ h(Markdown, null, get_title({rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}))));
   }));
 }
 export const WComponentBackReferences = connector(_WComponentBackReferences);

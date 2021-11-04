@@ -50,7 +50,7 @@ function _WComponentCounterfactualForm(props) {
   const wcomponent_id_options = get_wcomponent_search_options({
     wcomponents: wcomponent_statev2s_in_current_kv,
     wcomponents_by_id,
-    wc_id_to_counterfactuals_map: {},
+    wc_id_to_counterfactuals_map: void 0,
     created_at_ms: props.created_at_ms,
     sim_ms: props.sim_ms
   });

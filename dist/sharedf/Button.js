@@ -1,6 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {Button as MaterialButton} from "../../snowpack/pkg/@material-ui/core.js";
 import {Hidden} from "../../snowpack/pkg/@material-ui/core.js";
+import "./Button.css.proxy.js";
 export function Button(props) {
   return /* @__PURE__ */ h(Hidden, {
     xsUp: props.is_hidden,

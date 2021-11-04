@@ -10,7 +10,7 @@ export async function refresh_bases_for_current_user(store) {
     return {error: void 0};
   }
   store.dispatch(ACTIONS.sync.update_sync_status({status: "LOADING", data_type: "bases"}));
-  const {data, error} = await get_all_bases();
+  const {data, error} = await get_all_bases(user.id);
   store.dispatch(ACTIONS.user_info.update_bases({bases: data}));
   const status = error ? "FAILED" : "LOADED";
   store.dispatch(ACTIONS.sync.update_sync_status({status, data_type: "bases"}));

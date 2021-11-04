@@ -176,6 +176,7 @@ export function SandBoxSupabase() {
     }));
   if (waiting_user_registration_email)
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", null, "Registered"), /* @__PURE__ */ h("br", null), "Please check your email");
+  const user_id = user.id;
   return /* @__PURE__ */ h("div", null, "Logged in with ", user.email, " ", user.id, /* @__PURE__ */ h("br", null), async_request_in_progress && /* @__PURE__ */ h(SyncIcon, {
     className: "animate spinning"
   }), /* @__PURE__ */ h("input", {
@@ -195,11 +196,11 @@ export function SandBoxSupabase() {
     error: supabase_session_error
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
-    onClick: () => get_all_bases2({set_postgrest_error, set_bases}),
+    onClick: () => get_all_bases2({set_postgrest_error, set_bases, user_id}),
     value: "Get all bases"
   }), /* @__PURE__ */ h("input", {
     type: "button",
-    onClick: () => get_or_create_an_owned_base({user_id: user.id, set_postgrest_error, set_current_base_id}),
+    onClick: () => get_or_create_an_owned_base({user_id, set_postgrest_error, set_current_base_id}),
     value: "Get a base (optionally create)"
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
     error: postgrest_error
@@ -212,33 +213,33 @@ export function SandBoxSupabase() {
       type: "radio",
       checked: base.id === current_base?.id,
       onClick: () => set_current_base_id(base.id)
-    }), "  ", base.public_read ? "Public" : "Private", "   title: ", base.title, "   owned by: ", get_user_name_for_display({users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id}), "   id: ", base.id, "  ", base.owner_user_id !== user.id && /* @__PURE__ */ h("span", null, "access: ", access_description, "  "));
+    }), "  ", base.public_read ? "Public" : "Private", "   title: ", base.title, "   owned by: ", get_user_name_for_display({users_by_id, current_user_id: user_id, other_user_id: base.owner_user_id}), "   id: ", base.id, "  ", base.owner_user_id !== user.id && /* @__PURE__ */ h("span", null, "access: ", access_description, "  "));
   })), current_base && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("h3", null, "Base modification"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
     onClick: () => {
       const modified_base = {...current_base, title: "Title changed"};
-      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases});
+      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases, user_id});
     },
     value: "Modify base (change title)"
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
     onClick: () => {
       const modified_base = {...current_base, title: "Primary"};
-      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases});
+      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases, user_id});
     },
     value: "Modify base (reset title)"
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
     onClick: () => {
       const modified_base = {...current_base, owner_user_id: user_1_id};
-      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases});
+      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases, user_id});
     },
     value: "Modify base (change owner to user_1 -- should FAIL if different user)"
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
     type: "button",
     onClick: () => {
       const modified_base = {...current_base, public_read: !current_base.public_read};
-      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases});
+      modify_base_wrapper({base: modified_base, set_postgrest_error, set_bases, user_id});
     },
     value: "Modify base (toggle public read)"
   }), /* @__PURE__ */ h("br", null)), current_base && current_base_id && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("h3", null, "Base sharing"), /* @__PURE__ */ h("br", null), current_base.public_read ? "Is PUBLIC" : "Is private (not public)", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
@@ -353,7 +354,7 @@ async function get_an_owned_base(user_id) {
   return {base, error};
 }
 async function get_all_bases2(args) {
-  const res = await get_all_bases();
+  const res = await get_all_bases(args.user_id);
   args.set_postgrest_error(res.error);
   args.set_bases(res.data);
 }
@@ -362,7 +363,7 @@ async function modify_base_wrapper(args) {
   const res = await modify_base(base);
   set_postgrest_error(res.error);
   if (!res.error)
-    await get_all_bases2({set_postgrest_error, set_bases});
+    await get_all_bases2({set_postgrest_error, set_bases, user_id: args.user_id});
 }
 async function get_access_controls(args) {
   const res = await get_access_controls_for_base(args.base_id);

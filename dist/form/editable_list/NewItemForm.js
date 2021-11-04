@@ -1,9 +1,9 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
+import {Box, Dialog, DialogActions, DialogContent, DialogTitle} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./NewItemForm.css.proxy.js";
 import {Button} from "../../sharedf/Button.js";
 import {EditableListEntry} from "./EditableListEntry.js";
-import {Box, Dialog, DialogActions, DialogContent, DialogTitle} from "../../../snowpack/pkg/@material-ui/core.js";
 export function NewItemForm(props) {
   const {new_item, set_new_item, item_descriptor, item_props} = props;
   const {crud} = item_props;

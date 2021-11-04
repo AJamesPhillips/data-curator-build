@@ -14,7 +14,7 @@ export function run_tests() {
     owner_user_id: user_id,
     public_read: false,
     title: "owned by this user",
-    access_level: void 0
+    access_level: "owner"
   };
   const a_base_with_editor_access = {
     id: 2,
@@ -40,7 +40,8 @@ export function run_tests() {
     updated_at,
     owner_user_id: other_user_id,
     public_read: true,
-    title: "public viewable by this user"
+    title: "public viewable by this user",
+    access_level: "viewer"
   };
   const bases = [
     an_owned_base,

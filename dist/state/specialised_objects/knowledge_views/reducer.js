@@ -19,6 +19,11 @@ export const knowledge_views_reducer = (state, action) => {
       state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry);
       state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry);
     }
+    const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id];
+    if (associated_kv && associated_kv.title !== wcomponent.title) {
+      const updated_knowledge_view = {...associated_kv, title: wcomponent.title};
+      state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.source_of_truth);
+    }
   }
   if (is_upsert_knowledge_view_entry(action)) {
     state = handle_upsert_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id, action.entry);

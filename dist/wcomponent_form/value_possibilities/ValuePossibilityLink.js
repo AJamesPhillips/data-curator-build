@@ -1,10 +1,12 @@
 import {h} from "../../../snowpack/pkg/preact.js";
+import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import LinkOffIcon from "../../../snowpack/pkg/@material-ui/icons/LinkOff.js";
 import "./ValuePossibilityLink.css.proxy.js";
 import {AddLinkIcon} from "../../sharedf/icons/AddLinkIcon.js";
-import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import {LinkWorkingIcon} from "../../sharedf/icons/LinkWorkingIcon.js";
-import {get_value_possibilities_by_value} from "../../wcomponent/value_possibilities/get_value_possibilities_by_value.js";
+import {
+  get_value_possibilities_by_value
+} from "../../wcomponent/value_possibilities/get_value_possibilities_by_value.js";
 export function ValuePossibilityLink(props) {
   const {editing, VAP, value_possibilities, update_VAP} = props;
   const value_possibilities_by_value = useMemo(() => get_value_possibilities_by_value(props.value_possibilities, true), [props.value_possibilities]);

@@ -56,6 +56,7 @@ import {WComponentSubStateForm} from "./WComponentSubStateForm.js";
 import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
 import {get_default_wcomponent_title} from "../wcomponent_derived/rich_text/get_default_wcomponent_title.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
+import {EasyActionValueAndPredictionSets} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
 const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -246,12 +247,19 @@ function _WComponentForm(props) {
     update_predictions: (new_predictions) => upsert_wcomponent({
       existence: new_predictions.length ? new_predictions : void 0
     })
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Values: Set subtype to view"), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Values: Set subtype to view"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
+    VAPs_represent,
+    existing_value_possibilities: orig_value_possibilities,
+    values_and_prediction_sets: orig_values_and_prediction_sets,
+    update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
+      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
+    }
+  }), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
     wcomponent_id: wcomponent.id,
     VAPs_represent,
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
-    update_values_and_predictions: ({value_possibilities, values_and_prediction_sets}) => {
+    update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {

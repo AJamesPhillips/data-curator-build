@@ -23,7 +23,7 @@ function _ProjectPriorityNode(props) {
     rich_text: true,
     wcomponent,
     wcomponents_by_id,
-    wc_id_to_counterfactuals_map: {},
+    wc_id_to_counterfactuals_map: void 0,
     created_at_ms,
     sim_ms: new Date().getTime()
   });

@@ -4,13 +4,14 @@ import {SimulationSummary} from "./SimulationSummary.js";
 import {get_simulations} from "./simulations.js";
 import {supabase_load_data} from "../state/sync/supabase/supabase_load_data.js";
 import {get_items_by_id} from "../shared/utils/get_items.js";
+const base_id = 16;
 const initial_data = {};
 export function SimHome() {
   const [knowledge_views_by_id, set_knowledge_views_by_id] = useState(initial_data);
   const [wcomponents_by_id, set_wcomponents_by_id] = useState({});
   const [simulations, set_simulations] = useState([]);
   useEffect(() => {
-    supabase_load_data(true, 14).then((data) => {
+    supabase_load_data(true, base_id).then((data) => {
       set_knowledge_views_by_id(get_items_by_id(data.knowledge_views, ""));
       set_wcomponents_by_id(get_items_by_id(data.wcomponents, ""));
     });
