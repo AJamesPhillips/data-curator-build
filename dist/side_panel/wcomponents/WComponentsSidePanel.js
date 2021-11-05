@@ -1,4 +1,5 @@
 import {h} from "../../../snowpack/pkg/preact.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {get_wcomponent_from_state} from "../../state/specialised_objects/accessors.js";
 import {CreateNewWComponent} from "./CreateNewWComponent.js";
@@ -7,8 +8,6 @@ import {WComponentMultipleForm} from "./WComponentMultipleForm.js";
 import {LinkButton} from "../../sharedf/Link.js";
 import {Button} from "../../sharedf/Button.js";
 import {ACTIONS} from "../../state/actions.js";
-import {useState} from "../../../snowpack/pkg/preact/hooks.js";
-import {useEffect} from "../../../snowpack/pkg/preact/compat.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {supabase_get_wcomponent_from_any_base} from "../../state/sync/supabase/wcomponent.js";
 const map_state = (state) => {
