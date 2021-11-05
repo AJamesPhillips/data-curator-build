@@ -25,12 +25,12 @@ function _EditableTextCommon(props) {
     always_on_blur,
     disabled,
     presenting,
-    always_allow_editing,
+    force_editable,
     select_all_on_focus,
     force_focus,
     set_editing_text_flag
   } = props;
-  if (!user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting && !always_allow_editing) {
+  if (force_editable === false || !user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting && force_editable !== true) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {

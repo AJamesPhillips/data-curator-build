@@ -10,6 +10,20 @@ export function supabase_get_wcomponents(args) {
     converter: wcomponent_supabase_to_app
   });
 }
+export async function supabase_get_wcomponent_from_any_base(args) {
+  const result = await supabase_get_items({
+    supabase: args.supabase,
+    all_bases: true,
+    base_id: void 0,
+    specific_id: args.id,
+    table: TABLE_NAME,
+    converter: wcomponent_supabase_to_app
+  });
+  return {
+    error: result.error,
+    wcomponent: result.items[0]
+  };
+}
 export async function supabase_upsert_wcomponent(args) {
   return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args);
 }

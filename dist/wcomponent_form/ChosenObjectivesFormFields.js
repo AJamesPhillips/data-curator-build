@@ -49,6 +49,7 @@ function _ChosenObjectivesFormFields(props) {
     sim_ms: props.sim_ms
   });
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, "Objectives", /* @__PURE__ */ h(MultiAutocompleteText, {
+    force_editable: props.force_editable,
     placeholder: "Objectives...",
     selected_option_ids: objective_ids,
     options: wcomponent_id_options,

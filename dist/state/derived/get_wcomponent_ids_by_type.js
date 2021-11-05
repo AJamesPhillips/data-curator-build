@@ -30,7 +30,7 @@ export function get_wcomponent_ids_by_type(wcomponents_by_id, ids) {
   ids.forEach((id) => {
     const wc = wcomponents_by_id[id];
     if (!wc) {
-      console.error(`Could not find wcomponent by id: ${id}`);
+      console.warn(`Could not find wcomponent by id: ${id}.  Wrong ID or in another base?`);
       return;
     }
     wc_ids_by_type[wc.type].add(id);

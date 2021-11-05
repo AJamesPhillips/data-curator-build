@@ -57,7 +57,9 @@ function get_certainty_for_wcomponent_event_at(args) {
 }
 export function calc_connection_wcomponent_should_display(args) {
   const {from_wc, from_wc__kv_entry, to_wc, to_wc__kv_entry} = args;
-  if (!from_wc || !to_wc || !from_wc__kv_entry || !to_wc__kv_entry)
+  if (!from_wc || !to_wc)
+    return {display_certainty: 1};
+  if (!from_wc__kv_entry || !to_wc__kv_entry)
     return false;
   const connection_validity_value = calc_wcomponent_should_display(args);
   if (!connection_validity_value)

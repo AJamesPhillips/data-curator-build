@@ -7,6 +7,10 @@ import {WComponentMultipleForm} from "./WComponentMultipleForm.js";
 import {LinkButton} from "../../sharedf/Link.js";
 import {Button} from "../../sharedf/Button.js";
 import {ACTIONS} from "../../state/actions.js";
+import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {useEffect} from "../../../snowpack/pkg/preact/compat.js";
+import {get_supabase} from "../../supabase/get_supabase.js";
+import {supabase_get_wcomponent_from_any_base} from "../../state/sync/supabase/wcomponent.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {sub_route} = state.routing;
@@ -20,11 +24,40 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentsSidePanel(props) {
-  if (!props.ready)
+  const [searching_for_unfound, set_searching_for_unfound] = useState(void 0);
+  const [searched_for_wcomponent, set_searched_for_wcomponent] = useState(void 0);
+  const {id} = props;
+  const wcomponent = props.wcomponent || searched_for_wcomponent;
+  const display_type = !props.ready ? DisplayType.loading : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple : id === null ? DisplayType.no_id : wcomponent ? DisplayType.wcomponent_present : DisplayType.no_wcomponent_present;
+  function clear_old_wcomponent_from_other_base() {
+    if (id && wcomponent && wcomponent.id !== id) {
+      set_searching_for_unfound(void 0);
+      set_searched_for_wcomponent(void 0);
+    }
+  }
+  function look_for_wcomponent_in_any_base() {
+    if (display_type === DisplayType.no_wcomponent_present && searching_for_unfound === void 0 && id !== null) {
+      (async () => {
+        let component_form_closed = false;
+        set_searching_for_unfound(true);
+        const result = await search_for_wcomponent_in_all_bases(id);
+        if (component_form_closed)
+          return;
+        set_searching_for_unfound(false);
+        set_searched_for_wcomponent(result.wcomponent);
+        return () => {
+          component_form_closed = true;
+        };
+      })();
+    }
+  }
+  useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id]);
+  useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id]);
+  if (display_type === DisplayType.loading)
     return /* @__PURE__ */ h("div", null, "Loading...");
-  if (props.sub_route === "wcomponents_edit_multiple")
+  if (display_type === DisplayType.edit_multiple)
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WComponentMultipleForm, null));
-  if (!props.id)
+  if (display_type === DisplayType.no_id)
     return /* @__PURE__ */ h("div", null, props.selected_ids.length > 0 && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
       style: {display: "inline-flex"}
     }, /* @__PURE__ */ h(LinkButton, {
@@ -38,10 +71,25 @@ function _WComponentsSidePanel(props) {
       onClick: () => props.clear_selected_wcomponents({}),
       is_left: true
     })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h(CreateNewWComponent, null));
-  if (!props.wcomponent)
-    return /* @__PURE__ */ h("div", null, "Component not found for id: ", props.id);
-  return /* @__PURE__ */ h(WComponentForm, {
-    wcomponent: props.wcomponent
-  });
+  if (display_type === DisplayType.wcomponent_present) {
+    const wcomponent_from_different_base = !props.wcomponent && !!searched_for_wcomponent;
+    return /* @__PURE__ */ h(WComponentForm, {
+      wcomponent,
+      wcomponent_from_different_base
+    });
+  }
+  return /* @__PURE__ */ h("div", null, "Component not found for id: ", id, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), searching_for_unfound && /* @__PURE__ */ h("div", null, "Searching in other bases..."), !searching_for_unfound && /* @__PURE__ */ h("div", null, "Not found in other bases (that you have access to)."));
 }
 export const WComponentsSidePanel = connector(_WComponentsSidePanel);
+var DisplayType;
+(function(DisplayType2) {
+  DisplayType2[DisplayType2["loading"] = 0] = "loading";
+  DisplayType2[DisplayType2["edit_multiple"] = 1] = "edit_multiple";
+  DisplayType2[DisplayType2["no_id"] = 2] = "no_id";
+  DisplayType2[DisplayType2["no_wcomponent_present"] = 3] = "no_wcomponent_present";
+  DisplayType2[DisplayType2["wcomponent_present"] = 4] = "wcomponent_present";
+})(DisplayType || (DisplayType = {}));
+function search_for_wcomponent_in_all_bases(wcomponent_id) {
+  const supabase = get_supabase();
+  return supabase_get_wcomponent_from_any_base({supabase, id: wcomponent_id});
+}

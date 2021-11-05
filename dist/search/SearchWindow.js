@@ -125,7 +125,7 @@ export function SearchWindow(props) {
       search_fields,
       search_type,
       set_search_type_used,
-      allow_editing_when_presenting: true,
+      force_editable: true,
       threshold_minimum_score: -1e3
     }))
   });

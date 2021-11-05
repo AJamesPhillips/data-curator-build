@@ -13,12 +13,13 @@ const map_state = (state) => {
   const {current_composed_knowledge_view} = state.derived;
   if (ready && !current_composed_knowledge_view)
     console.log(`No current_composed_knowledge_view`);
-  const {wcomponent_nodes, wcomponent_connections} = current_composed_knowledge_view || {};
+  const {wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids} = current_composed_knowledge_view || {};
   const {selected_wcomponent_ids_map} = state.meta_wcomponents;
   return {
     ready,
     wcomponent_nodes,
     wcomponent_connections,
+    wcomponent_unfound_ids,
     presenting: state.display_options.consumption_formatting,
     selected_wcomponent_ids_map
   };
@@ -38,14 +39,21 @@ function _KnowledgeGraphView(props) {
 export const KnowledgeGraphView = connector(_KnowledgeGraphView);
 const no_children = [];
 const get_children = (props) => {
-  const {ready} = props;
-  let {wcomponent_nodes} = props;
-  if (!ready || !wcomponent_nodes || wcomponent_nodes.length === 0)
+  const {ready, wcomponent_nodes = [], wcomponent_unfound_ids = []} = props;
+  if (!ready)
     return no_children;
-  const elements = wcomponent_nodes.map(({id}) => /* @__PURE__ */ h(WComponentCanvasNode, {
-    key: id,
-    id
-  }));
+  if (wcomponent_nodes.length === 0 && wcomponent_unfound_ids.length === 0)
+    return no_children;
+  const elements = [
+    ...wcomponent_nodes.map(({id}) => /* @__PURE__ */ h(WComponentCanvasNode, {
+      key: id,
+      id
+    })),
+    ...wcomponent_unfound_ids.map((id) => /* @__PURE__ */ h(WComponentCanvasNode, {
+      key: id,
+      id
+    }))
+  ];
   elements.push(/* @__PURE__ */ h(TemporaryDraggedCanvasNodes, null));
   return elements;
 };

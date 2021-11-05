@@ -57,7 +57,8 @@ import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
 import {get_default_wcomponent_title} from "../wcomponent_derived/rich_text/get_default_wcomponent_title.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {EasyActionValueAndPredictionSets} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
-const map_state = (state, {wcomponent}) => {
+import {WarningTriangle} from "../sharedf/WarningTriangle.js";
+const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
   if (wcomponent_is_plain_connection(wcomponent)) {
@@ -72,14 +73,16 @@ const map_state = (state, {wcomponent}) => {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
-    editing: !state.display_options.consumption_formatting,
+    editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
+    force_editable: wcomponent_from_different_base ? false : void 0,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
   };
 };
 const map_dispatch = {
   upsert_wcomponent: ACTIONS.specialised_object.upsert_wcomponent,
-  delete_wcomponent: ACTIONS.specialised_object.delete_wcomponent
+  delete_wcomponent: ACTIONS.specialised_object.delete_wcomponent,
+  update_chosen_base_id: ACTIONS.user_info.update_chosen_base_id
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentForm(props) {
@@ -97,6 +100,7 @@ function _WComponentForm(props) {
     from_wcomponent,
     to_wcomponent,
     editing,
+    force_editable,
     created_at_ms,
     sim_ms
   } = props;
@@ -122,6 +126,8 @@ function _WComponentForm(props) {
   if (focus_title)
     set_focus_title(false);
   const upsert_wcomponent = (partial_wcomponent) => {
+    if (props.wcomponent_from_different_base)
+      return;
     const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent;
     props.upsert_wcomponent({wcomponent: updated});
   };
@@ -137,11 +143,17 @@ function _WComponentForm(props) {
   }
   return /* @__PURE__ */ h(Box, {
     className: `editable-${wcomponent_id}`
-  }, /* @__PURE__ */ h(FormControl, {
+  }, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
+    style: {cursor: "pointer"},
+    onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
+  }, /* @__PURE__ */ h(WarningTriangle, {
+    message: ""
+  }), "Editing disabled.  Change to base ", props.wcomponent.base_id, " to edit"), /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal",
     style: {fontWeight: 600, fontSize: 22}
   }, /* @__PURE__ */ h(EditableText, {
+    force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}) || default_title,
     conditional_on_blur: (title) => upsert_wcomponent({title}),
@@ -163,6 +175,7 @@ function _WComponentForm(props) {
     fullWidth: true,
     margin: "normal"
   }, /* @__PURE__ */ h(AutocompleteText, {
+    force_editable,
     placeholder: "Type: ",
     selected_option_id: wcomponent.type,
     options: wcomponent_type_options,
@@ -179,6 +192,7 @@ function _WComponentForm(props) {
   }, "Sub type"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}
   }, /* @__PURE__ */ h(AutocompleteText, {
+    force_editable,
     placeholder: "Sub type...",
     selected_option_id: wcomponent.subtype,
     options: wcomponent_statev2_subtype_options,
@@ -187,6 +201,7 @@ function _WComponentForm(props) {
     fullWidth: true,
     margin: "normal"
   }, /* @__PURE__ */ h(EditableText, {
+    force_editable,
     placeholder: "Description...",
     value: wcomponent.description,
     conditional_on_blur: (description) => upsert_wcomponent({description}),
@@ -272,10 +287,13 @@ function _WComponentForm(props) {
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
-    ...{wcomponent, upsert_wcomponent}
+    force_editable,
+    wcomponent,
+    upsert_wcomponent
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(FormControl, {
     fullWidth: true
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
+    force_editable,
     title: "Created at",
     invariant_value: wcomponent.created_at,
     value: wcomponent.custom_created_at,

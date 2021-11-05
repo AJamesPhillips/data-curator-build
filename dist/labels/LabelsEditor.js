@@ -37,7 +37,7 @@ function _LabelsEditor(props) {
     },
     on_mouse_over_option: (id) => props.set_highlighted_wcomponent({id, highlighted: true}),
     on_mouse_leave_option: (id) => props.set_highlighted_wcomponent({id, highlighted: false}),
-    always_allow_editing: props.always_allow_editing
+    force_editable: props.force_editable
   });
 }
 export const LabelsEditor = connector(_LabelsEditor);

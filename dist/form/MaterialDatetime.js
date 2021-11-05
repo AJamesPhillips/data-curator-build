@@ -20,7 +20,7 @@ function _MaterialDateTime(props) {
   const handle_close_paste_popover = () => {
     set_popover_anchor(null);
   };
-  const not_editable = props.always_allow_editing ? false : props.presenting;
+  const not_editable = props.force_editable ? false : props.presenting;
   const is_popover_open = Boolean(popover_anchor);
   const on_popover_value_changed = (event) => {
     let input_element = event.target;

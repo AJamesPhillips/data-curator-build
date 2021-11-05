@@ -1,7 +1,7 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse} from "../../../snowpack/pkg/@material-ui/core.js";
+import {Box, Button, Toolbar, makeStyles, Collapse} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./ContentControls.css.proxy.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
 import {TimeResolutionOptions} from "../../display_options/TimeResolutionOptions.js";
@@ -76,23 +76,7 @@ function _ContentControls(props) {
     onClick: () => props.set_display_time_sliders(!props.display_time_sliders)
   }, props.display_time_sliders ? "Hide" : "Show", " time sliders")), /* @__PURE__ */ h(Box, {
     component: "label"
-  }, /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null), /* @__PURE__ */ h(Box, {
-    component: "label"
-  }, /* @__PURE__ */ h(ButtonGroup, {
-    disableElevation: true,
-    variant: "contained",
-    value: props.display_by_simulated_time
-  }, /* @__PURE__ */ h(Button, {
-    onClick: () => props.set_display_by_simulated_time(true),
-    "aria-label": "Display by simulated time",
-    className: invert_classes.inverse_disabled,
-    disabled: props.display_by_simulated_time
-  }, "Time"), /* @__PURE__ */ h(Button, {
-    onClick: () => props.set_display_by_simulated_time(false),
-    "aria-label": "Display by relationships",
-    className: invert_classes.inverse_disabled,
-    disabled: !props.display_by_simulated_time
-  }, "Relationships")))));
+  }, /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null)));
 }
 export const ContentControls = connector(_ContentControls);
 const use_styles = makeStyles((theme) => ({

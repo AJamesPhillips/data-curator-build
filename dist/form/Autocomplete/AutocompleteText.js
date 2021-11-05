@@ -115,7 +115,7 @@ function _AutocompleteText(props) {
     class: "editable_field autocomplete " + (valid ? "" : "invalid "),
     style: props.extra_styles
   }, /* @__PURE__ */ h(TextField, {
-    disabled: props.allow_editing_when_presenting ? false : props.presenting,
+    disabled: props.force_editable !== void 0 ? !props.force_editable : props.presenting,
     ref: (el) => {
       if (!el)
         return;

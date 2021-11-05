@@ -2,7 +2,6 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {Card, CardContent, CardMedia, makeStyles} from "../../snowpack/pkg/@material-ui/core.js";
 import "./ConnectableCanvasNode.css.proxy.js";
 import {CanvasNode} from "./CanvasNode.js";
-import {COLOURS} from "./display.js";
 import "./display_colors.css.proxy.js";
 import {connection_radius} from "./connections/terminal.js";
 export function ConnectableCanvasNode(props) {
@@ -16,7 +15,7 @@ export function ConnectableCanvasNode(props) {
     extra_node_styles.maxWidth = "initial";
   const main_content_styles = {
     boxShadow: props.glow ? `${props.glow} 0px 0px 10px` : "",
-    backgroundColor: props.color || COLOURS.white
+    backgroundColor: props.color
   };
   const {
     pointerupdown_on_connection_terminal = () => {

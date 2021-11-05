@@ -4,6 +4,8 @@ export async function supabase_get_items(args) {
   let query = args.supabase.from(args.table).select("*").order("id", {ascending: true}).range(offset, offset + SUPABASE_MAX_ROWS - 1);
   if (args.base_id !== void 0)
     query = query.eq("base_id", args.base_id);
+  if (args.specific_id !== void 0)
+    query = query.eq("id", args.specific_id);
   const res1 = await query;
   let error = res1.error || void 0;
   let items = (res1.data || []).map(args.converter);

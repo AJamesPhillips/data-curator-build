@@ -37,7 +37,7 @@ function _DisplayOptionsSidePanel(props) {
         return;
       props.set_validity_filter({validity_filter});
     },
-    allow_editing_when_presenting: true
+    force_editable: true
   })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     className: "description"
   }, "Show only nodes and connections with validity ", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("i", null, "certainty ", validity_filter_descriptions[props.validity_filter]), " ", description_of_certainty, ".")), /* @__PURE__ */ h("p", {
@@ -54,7 +54,7 @@ function _DisplayOptionsSidePanel(props) {
         return;
       props.set_certainty_formatting({certainty_formatting});
     },
-    allow_editing_when_presenting: true
+    force_editable: true
   })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     className: "description"
   }, "Show nodes and connection opacity as ", /* @__PURE__ */ h("i", null, certainty_formatting_descriptions[props.certainty_formatting]), " ", description_of_certainty, ".")), /* @__PURE__ */ h("p", {
@@ -69,7 +69,9 @@ function _DisplayOptionsSidePanel(props) {
   }, /* @__PURE__ */ h("b", null, "Display by simulated time"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.display_by_simulated_time,
     on_change: props.set_display_by_simulated_time
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("h3", null, "Controls"), /* @__PURE__ */ h("p", {
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
+    style: {backgroundColor: "pink"}
+  }, "Experimental view not optimised for data sets over a large period of time")), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("h3", null, "Controls"), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, 'Whilst presenting, display time sliders for "created at" and "simulated" time'), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.display_time_sliders,

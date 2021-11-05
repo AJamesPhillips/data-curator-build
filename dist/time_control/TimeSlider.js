@@ -90,7 +90,7 @@ function _TimeSlider(props) {
     on_change: (new_datetime) => new_datetime && props.change_handle_ms(new_datetime.getTime()),
     show_now_shortcut_button: false,
     show_today_shortcut_button: false,
-    always_allow_editing: true
+    force_editable: true
   }), /* @__PURE__ */ h(NowButton, {
     title: "Set " + props.title + " to now",
     change_datetime_ms: (datetime_ms) => props.change_handle_ms(datetime_ms)

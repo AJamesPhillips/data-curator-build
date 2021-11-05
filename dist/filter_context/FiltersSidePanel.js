@@ -24,13 +24,13 @@ function _FiltersSidePanel(props) {
     on_change: (exclude_by_label_ids) => {
       props.set_filters({filters: {...props.filters, exclude_by_label_ids}});
     },
-    always_allow_editing: true
+    force_editable: true
   })), /* @__PURE__ */ h("p", null, "Filter (include) by label:", /* @__PURE__ */ h(LabelsEditor, {
     label_ids: props.filters.include_by_label_ids,
     on_change: (include_by_label_ids) => {
       props.set_filters({filters: {...props.filters, include_by_label_ids}});
     },
-    always_allow_editing: true
+    force_editable: true
   })), /* @__PURE__ */ h("p", null, "Exclude by component type:", /* @__PURE__ */ h(MultiAutocompleteText, {
     placeholder: "",
     selected_option_ids: props.filters.exclude_by_component_types,
@@ -39,7 +39,7 @@ function _FiltersSidePanel(props) {
     on_change: (exclude_by_component_types) => {
       props.set_filters({filters: {...props.filters, exclude_by_component_types}});
     },
-    always_allow_editing: true
+    force_editable: true
   })), /* @__PURE__ */ h("p", null, "Filter (include) by component type:", /* @__PURE__ */ h(MultiAutocompleteText, {
     placeholder: "",
     selected_option_ids: props.filters.include_by_component_types,
@@ -48,7 +48,7 @@ function _FiltersSidePanel(props) {
     on_change: (include_by_component_types) => {
       props.set_filters({filters: {...props.filters, include_by_component_types}});
     },
-    always_allow_editing: true
+    force_editable: true
   })));
 }
 export const FiltersSidePanel = connector(_FiltersSidePanel);

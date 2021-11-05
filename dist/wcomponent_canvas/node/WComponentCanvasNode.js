@@ -11,8 +11,6 @@ import {
   wcomponent_has_legitimate_non_empty_state_VAP_sets,
   wcomponent_has_objectives,
   wcomponent_has_validity_predictions,
-  wcomponent_is_action,
-  wcomponent_is_goal,
   wcomponent_is_judgement_or_objective,
   wcomponent_is_statev2,
   wcomponent_is_sub_state,
@@ -72,7 +70,8 @@ const map_state = (state, own_props) => {
     certainty_formatting: state.display_options.derived_certainty_formatting,
     focused_mode: state.display_options.focused_mode,
     have_judgements: judgement_or_objective_ids.length > 0,
-    wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set
+    wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
+    display_time_marks: state.display_options.display_time_marks
   };
 };
 const map_dispatch = {
@@ -110,8 +109,6 @@ function _WComponentCanvasNode(props) {
   const {change_route, set_highlighted_wcomponent} = props;
   if (!composed_kv)
     return /* @__PURE__ */ h("div", null, "No current knowledge view");
-  if (!wcomponent)
-    return /* @__PURE__ */ h("div", null, "Could not find component of id ", id);
   const kv_entry_maybe = composed_kv.composed_wc_id_map[id];
   if (!kv_entry_maybe && !always_show)
     return /* @__PURE__ */ h("div", null, "Could not find knowledge view entry for id ", id);
@@ -124,7 +121,7 @@ function _WComponentCanvasNode(props) {
   }
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const is_selected = selected_wcomponent_ids_set.has(id);
-  const validity_value = always_show ? {display_certainty: 1} : calc_wcomponent_should_display({
+  const validity_value = always_show || !wcomponent ? {display_certainty: 1} : calc_wcomponent_should_display({
     is_editing,
     force_displaying,
     is_selected,
@@ -156,7 +153,7 @@ function _WComponentCanvasNode(props) {
     change_route,
     is_current_item
   });
-  const children = [
+  const children = !wcomponent ? [] : [
     /* @__PURE__ */ h(Handles, {
       show_move_handle: is_movable && is_editing && is_highlighted,
       user_requested_node_move: () => {
@@ -170,7 +167,7 @@ function _WComponentCanvasNode(props) {
       is_highlighted
     })
   ];
-  const title = get_title({wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
+  const title = !wcomponent ? "&lt;Not found&gt;" : get_title({wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
   const show_all_details = is_editing || is_current_item;
   const use_styles = makeStyles((theme) => ({
     sizer: {
@@ -180,31 +177,37 @@ function _WComponentCanvasNode(props) {
   }));
   const classes = use_styles();
   const glow = is_highlighted ? "orange" : (is_selected || is_current_item) && "blue";
-  const color = get_wcomponent_color({wcomponent, wcomponents_by_id, sim_ms, created_at_ms});
-  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + ` node_is_type_${wcomponent.type} ` + (show_all_details ? " compact_title " : "") + classes.sizer + (color.font ? color.font : "");
-  const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
-  const show_state_value = is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
-  const sub_state_wcomponent = (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
+  const color = get_wcomponent_color({
+    wcomponent,
+    wcomponents_by_id,
+    sim_ms,
+    created_at_ms,
+    display_time_marks: props.display_time_marks
+  });
+  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + classes.sizer + color.font + color.background;
+  const show_validity_value = !wcomponent ? false : wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
+  const show_state_value = !wcomponent ? false : is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
+  const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
   const terminals = get_terminals({is_movable, is_editing, is_highlighted});
   const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0);
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: is_movable ? temporary_drag_kv_entry || kv_entry : void 0,
-    cover_image: wcomponent.summary_image,
-    node_main_content: /* @__PURE__ */ h("div", null, !wcomponent.summary_image && /* @__PURE__ */ h("div", {
-      className: "background_image " + wcomponent.type
+    cover_image: wcomponent?.summary_image,
+    node_main_content: /* @__PURE__ */ h("div", null, !wcomponent?.summary_image && /* @__PURE__ */ h("div", {
+      className: "background_image"
     }), /* @__PURE__ */ h("div", {
       className: "node_title"
     }, kv_entry_maybe === void 0 && is_editing && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
       message: "Missing from this knowledge view"
-    }), " "), (is_editing || !wcomponent.hide_title) && /* @__PURE__ */ h(Markdown, {
+    }), " "), (is_editing || !wcomponent?.hide_title) && /* @__PURE__ */ h(Markdown, {
       options: {...MARKDOWN_OPTIONS, forceInline: true}
-    }, title)), show_validity_value && /* @__PURE__ */ h("div", {
+    }, title)), wcomponent && show_validity_value && /* @__PURE__ */ h("div", {
       className: "node_validity_container"
     }, is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
     }, "validity"), /* @__PURE__ */ h(WComponentValidityValue, {
       wcomponent
-    })), show_state_value && /* @__PURE__ */ h(Box, {
+    })), wcomponent && show_state_value && /* @__PURE__ */ h(Box, {
       display: "flex",
       maxWidth: "100%",
       overflow: "hidden",
@@ -236,16 +239,15 @@ function _WComponentCanvasNode(props) {
       sim_ms
     }))), sub_state_wcomponent && /* @__PURE__ */ h(NodeSubStateTypeIndicators, {
       wcomponent: sub_state_wcomponent
-    }), is_editing && /* @__PURE__ */ h("div", {
+    }), wcomponent && is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
-    }, wcomponent_type_to_text(wcomponent.type)), /* @__PURE__ */ h(LabelsListV2, {
+    }, wcomponent_type_to_text(wcomponent.type)), wcomponent && /* @__PURE__ */ h(LabelsListV2, {
       label_ids: wcomponent.label_ids
     })),
     extra_css_class,
     opacity,
     unlimited_width: false,
     glow,
-    color: color.background,
     on_pointer_down,
     on_pointer_enter: () => set_highlighted_wcomponent({id, highlighted: true}),
     on_pointer_leave: () => set_highlighted_wcomponent({id, highlighted: false}),
@@ -292,25 +294,30 @@ function get_terminals(args) {
 function get_wcomponent_color(args) {
   let background = "";
   let font = "";
-  const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms);
-  if (temporal_value_certainty) {
-    const {temporal_uncertainty, certainty} = temporal_value_certainty;
-    const datetime = get_uncertain_datetime(temporal_uncertainty);
-    if (datetime && datetime.getTime() < args.sim_ms) {
-      if (certainty === 1 || certainty === void 0) {
-        background = "rgb(62, 55, 90)";
-        font = " color_light ";
-      } else {
-        background = "pink";
+  if (args.wcomponent) {
+    if (args.display_time_marks) {
+      const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms);
+      if (temporal_value_certainty) {
+        const {temporal_uncertainty, certainty} = temporal_value_certainty;
+        const datetime = get_uncertain_datetime(temporal_uncertainty);
+        if (datetime && datetime.getTime() < args.sim_ms) {
+          if (certainty === 1 || certainty === void 0) {
+            background = " past_certain ";
+            font = " color_light ";
+          } else {
+            background = " past_uncertain ";
+          }
+        } else if (!datetime) {
+          if (certainty === 1 || certainty === void 0) {
+            background = " past_certain ";
+            font = " color_light ";
+          }
+        }
       }
-    } else if (!datetime) {
-      if (certainty === 1 || certainty === void 0) {
-        background = "rgb(62, 55, 90)";
-        font = " color_light ";
-      }
+    } else {
     }
   } else {
-    background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)" : wcomponent_is_goal(args.wcomponent) ? "rgb(207, 255, 198)" : "";
+    background = " node_missing ";
   }
   return {background, font};
 }

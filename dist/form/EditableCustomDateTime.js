@@ -22,7 +22,7 @@ function _EditableCustomDateTime(props) {
     }, display_value);
   const {invariant_value, show_now_shortcut_button = false, show_today_shortcut_button = true} = props;
   const valid = is_value_valid(display_value);
-  const not_editable = props.always_allow_editing ? false : props.presenting;
+  const not_editable = props.force_editable !== void 0 ? !props.force_editable : props.presenting;
   const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : ""}`;
   const title = (props.title || "DateTime") + (props.invariant_value && props.value ? " (custom)" : "");
   return /* @__PURE__ */ h("div", {

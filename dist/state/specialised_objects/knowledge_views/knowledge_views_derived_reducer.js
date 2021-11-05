@@ -98,7 +98,15 @@ export function calculate_composed_knowledge_view(args) {
   const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id);
   const non_deleted_wcomponent_ids = Object.keys(composed_wc_id_map);
   const wc_ids_by_type = get_wcomponent_ids_by_type(wcomponents_by_id, non_deleted_wcomponent_ids);
-  const wcomponents = non_deleted_wcomponent_ids.map((id) => wcomponents_by_id[id]).filter(is_defined);
+  const wcomponents = [];
+  const wcomponent_unfound_ids = [];
+  non_deleted_wcomponent_ids.forEach((id) => {
+    const wcomponent = wcomponents_by_id[id];
+    if (wcomponent)
+      wcomponents.push(wcomponent);
+    else
+      wcomponent_unfound_ids.push(id);
+  });
   const wcomponent_nodes = wcomponents.filter(is_wcomponent_node);
   const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection);
   const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
@@ -120,6 +128,7 @@ export function calculate_composed_knowledge_view(args) {
     overlapping_wc_ids,
     wcomponent_nodes,
     wcomponent_connections,
+    wcomponent_unfound_ids,
     wc_id_to_counterfactuals_v2_map,
     wc_id_to_active_counterfactuals_v2_map,
     wc_ids_by_type,
@@ -158,9 +167,7 @@ export function get_composed_wc_id_map(foundation_knowledge_views, wcomponents_b
 function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
   Object.keys(composed_wc_id_map).forEach((id) => {
     const wcomponent = wcomponents_by_id[id];
-    if (!wcomponent)
-      delete composed_wc_id_map[id];
-    else if (wcomponent.deleted_at)
+    if (wcomponent?.deleted_at)
       delete composed_wc_id_map[id];
   });
 }

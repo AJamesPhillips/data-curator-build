@@ -30,10 +30,8 @@ function optionally_remove_invalid_wc_ids(kv, remove_missing, wcomponent_ids) {
     }
   });
   if (missing_ids.length > 0) {
-    if (remove_missing)
-      console.warn(`Dropped ${missing_ids.length} invalid ids from KnowledgeView: ${kv.id}`);
-    else
-      console.warn(`${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`);
+    console.warn(`${remove_missing ? "Dropped " : ""}${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`);
+    console.warn(missing_ids);
   }
   return new_wc_id_map;
 }

@@ -6,7 +6,7 @@ import {SelectedOption} from "./SelectedOption.js";
 import {Box} from "../../../snowpack/pkg/@material-ui/core.js";
 import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 const map_state = (state, own_props) => ({
-  editable: own_props.always_allow_editing || !state.display_options.consumption_formatting
+  editable: own_props.force_editable !== void 0 ? own_props.force_editable : !state.display_options.consumption_formatting
 });
 const map_dispatch = {
   change_route: ACTIONS.routing.change_route
@@ -32,7 +32,7 @@ function _MultiAutocompleteText(props) {
         return;
       props.on_change([...selected_option_ids, id]);
     },
-    allow_editing_when_presenting: editable
+    force_editable: editable
   }), /* @__PURE__ */ h(Box, {
     display: "flex",
     flexDirection: "row",

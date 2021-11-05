@@ -13,7 +13,7 @@ function _MaterialAutoComplete(props) {
     blurOnSelect: true,
     clearOnBlur: true,
     clearOnEscape: true,
-    disabled: props.allow_editing_when_presenting ? false : props.presenting,
+    disabled: props.force_editable ? false : props.presenting,
     disableClearable: props.disableClearable || false,
     disableListWrap: true,
     disablePortal: true,

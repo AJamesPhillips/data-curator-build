@@ -53,14 +53,28 @@
   z-index: 99;
 }
 
+.node_missing > .node_main_content {
+  background-color: #e9e9e9;
+}
+
+.past_certain > .node_main_content {
+  background-color: #3e375a;
+}
+
+.past_uncertain > .node_main_content {
+  background-color: pink;
+}
+
 .node_is_type_action > .node_main_content {
   box-shadow: inset orange 0px 0px 4px 2px;
+  background-color: #ffeec6;
 }
 
 .node_is_type_goal > .node_main_content,
 .node_is_type_judgement > .node_main_content,
 .node_is_type_objective > .node_main_content {
   box-shadow: inset #67c767 0px 0px 4px 2px;
+  background-color: #cfffc6;
 }
 
 .wcomponent_canvas_node.compact_title .node_main_content .node_title {
@@ -92,6 +106,6 @@
   /* Alternatively set mackground image z-index to 0 and all other elements in node to 1 with positive relative */
 }
 
-.wcomponent_canvas_node .background_image.actor {
+.wcomponent_canvas_node.node_is_type_actor .background_image {
   background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
 }
