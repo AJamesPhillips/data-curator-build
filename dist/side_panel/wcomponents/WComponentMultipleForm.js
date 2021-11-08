@@ -12,6 +12,8 @@ import {is_defined} from "../../shared/utils/is_defined.js";
 import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
 import {EditableCustomDateTime} from "../../form/EditableCustomDateTime.js";
 import {AlignComponentForm} from "../../wcomponent_form/AlignComponentForm.js";
+import {wcomponent_is_causal_link} from "../../wcomponent/interfaces/SpecialisedObjects.js";
+import {BasicCausalLinkForm} from "../../wcomponent_form/WComponentCausalLinkForm.js";
 const map_state = (state) => {
   const kv = get_current_composed_knowledge_view_from_state(state);
   const wcomponent_ids_set = state.meta_wcomponents.selected_wcomponent_ids_set;
@@ -52,7 +54,17 @@ function _WComponentMultipleForm(props) {
   const wcomponent_ids = Array.from(wcomponent_ids_set);
   const all_wcomponent_ids_present_in_current_kv = calc_all_wcomponent_ids_present_in_current_kv(wcomponent_ids, composed_wc_id_map);
   const label_ids_set = new Set();
-  wcomponents.forEach((wc) => (wc.label_ids || []).forEach((id) => label_ids_set.add(id)));
+  const causal_link_wcomponent_ids = [];
+  let effect_when_true = void 0;
+  let effect_when_false = void 0;
+  wcomponents.forEach((wc) => {
+    (wc.label_ids || []).forEach((id) => label_ids_set.add(id));
+    if (wcomponent_is_causal_link(wc)) {
+      causal_link_wcomponent_ids.push(wc.id);
+      effect_when_true = wc.effect_when_true;
+      effect_when_false = wc.effect_when_false;
+    }
+  });
   const label_ids = Array.from(label_ids_set).sort();
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h2", null, editing ? "Bulk editing" : "Viewing", " ", wcomponent_ids.length, " components"), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Position"), /* @__PURE__ */ h(EditablePosition, {
     point: {left: 0, top: 0},
@@ -73,6 +85,14 @@ function _WComponentMultipleForm(props) {
       const add_label_ids = new Set(new_label_ids.filter((id) => !label_ids_set.has(id)));
       bulk_edit_wcomponents({wcomponent_ids, change: {}, remove_label_ids, add_label_ids});
     }
+  })), editing && causal_link_wcomponent_ids.length > 0 && /* @__PURE__ */ h("p", null, "Causal Connection Values", /* @__PURE__ */ h(BasicCausalLinkForm, {
+    show_primary_effect: true,
+    show_effect_when_false: true,
+    VAPs_represent_number: true,
+    effect_when_true,
+    effect_when_false,
+    editing,
+    change_effect: (arg) => bulk_edit_wcomponents({wcomponent_ids: causal_link_wcomponent_ids, change: arg})
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Created at"), /* @__PURE__ */ h(EditableCustomDateTime, {
     value: void 0,
     on_change: (custom_created_at) => bulk_edit_wcomponents({wcomponent_ids, change: {custom_created_at}})

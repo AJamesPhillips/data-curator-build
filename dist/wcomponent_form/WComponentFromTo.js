@@ -1,9 +1,9 @@
-import {Link} from "../../snowpack/pkg/@material-ui/core.js";
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {get_wcomponent_search_options} from "../search/get_wcomponent_search_options.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
+import {Link} from "../sharedf/Link.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 import {

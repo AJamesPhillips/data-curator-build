@@ -15,7 +15,7 @@ const connector = connect(map_state, map_dispatch);
 function _TemporaryDraggedCanvasNodes(props) {
   const [relative_position, set_relative_position] = useState(void 0);
   useEffect(() => {
-    const unsubscribe_position = pub_sub.canvas.sub("canvas_node_drag_relative_position", (new_relative_position) => {
+    function handle_canvas_node_drag_relative_position(new_relative_position) {
       if (relative_position && new_relative_position === void 0) {
         props.bulk_edit_knowledge_view_entries({
           wcomponent_ids: props.wcomponent_ids_to_move_list,
@@ -27,7 +27,8 @@ function _TemporaryDraggedCanvasNodes(props) {
         }, 0);
       }
       set_relative_position(new_relative_position);
-    });
+    }
+    const unsubscribe_position = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", handle_canvas_node_drag_relative_position);
     return () => unsubscribe_position();
   });
   if (!relative_position)
