@@ -26,6 +26,7 @@ export function ConnectableCanvasNode(props) {
   return /* @__PURE__ */ h(CanvasNode, {
     position: props.position,
     on_pointer_down: props.on_pointer_down,
+    on_pointer_up: props.on_pointer_up,
     on_click: props.on_click,
     on_pointer_enter: props.on_pointer_enter,
     on_pointer_leave: props.on_pointer_leave,

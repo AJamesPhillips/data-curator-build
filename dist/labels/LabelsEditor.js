@@ -22,6 +22,7 @@ function _LabelsEditor(props) {
   if (!ready)
     return /* @__PURE__ */ h("div", null, "Loading labels...");
   const wcomponent_id_options = get_wcomponent_search_options({
+    allowed_wcomponent_ids: props.allowed_label_ids,
     wcomponents_by_id: props.wcomponents_by_id,
     wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,

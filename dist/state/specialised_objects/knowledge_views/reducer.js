@@ -13,11 +13,10 @@ export const knowledge_views_reducer = (state, action) => {
     state = handle_upsert_knowledge_view(state, action.knowledge_view, action.source_of_truth);
   }
   if (is_upsert_wcomponent(action)) {
-    const {wcomponent, add_to_knowledge_view} = action;
+    const {wcomponent, add_to_knowledge_view, add_to_top} = action;
     if (add_to_knowledge_view) {
       const entry = {...add_to_knowledge_view.position};
-      state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry);
-      state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry);
+      state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry, add_to_top);
     }
     const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id];
     if (associated_kv && associated_kv.title !== wcomponent.title) {
@@ -40,22 +39,26 @@ export const knowledge_views_reducer = (state, action) => {
   state = bulk_editing_knowledge_view_entries_reducer(state, action);
   return state;
 };
-function handle_upsert_knowledge_view_entry(state, knowledge_view_id, wcomponent_id, entry) {
+function handle_upsert_knowledge_view_entry(state, knowledge_view_id, wcomponent_id, entry, add_to_top) {
   const knowledge_view = get_knowledge_view_from_state(state, knowledge_view_id);
   if (!knowledge_view) {
     console.error(`Could not find knowledge_view for id: "${knowledge_view_id}"`);
     return state;
   }
-  return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry);
+  return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry, add_to_top);
 }
-function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry) {
-  const wc_id_map = {...knowledge_view.wc_id_map};
-  const existing_entry = wc_id_map[wcomponent_id];
+function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry, add_to_top = true) {
+  let new_wc_id_map = {...knowledge_view.wc_id_map};
+  const existing_entry = new_wc_id_map[wcomponent_id];
   if (existing_entry && existing_entry.deleted && !entry.deleted) {
-    delete wc_id_map[wcomponent_id];
+    delete new_wc_id_map[wcomponent_id];
   }
-  wc_id_map[wcomponent_id] = entry;
-  const new_knowledge_view = {...knowledge_view, wc_id_map};
+  if (add_to_top) {
+    new_wc_id_map[wcomponent_id] = entry;
+  } else {
+    new_wc_id_map = {[wcomponent_id]: entry, ...new_wc_id_map};
+  }
+  const new_knowledge_view = {...knowledge_view, wc_id_map: new_wc_id_map};
   return handle_upsert_knowledge_view(state, new_knowledge_view);
 }
 function add_wcomponent_to_base_knowledge_view(state, wcomponent_id, entry) {

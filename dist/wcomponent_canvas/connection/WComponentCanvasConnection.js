@@ -25,7 +25,7 @@ import {
   calc_judgement_connection_wcomponent_should_display,
   calc_display_opacity
 } from "../calc_should_display.js";
-import {factory_on_pointer_down} from "../canvas_common.js";
+import {factory_on_click} from "../canvas_common.js";
 import {get_VAP_set_id_to_counterfactual_v2_map} from "../../state/derived/accessor.js";
 const map_state = (state, own_props) => {
   const wcomponent = get_wcomponent_from_state(state, own_props.id);
@@ -134,7 +134,7 @@ function _WComponentCanvasConnection(props) {
     console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but no current_composed_knowledge_view`);
     return null;
   }
-  const on_pointer_down = factory_on_pointer_down({wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item});
+  const on_click = factory_on_click({wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item});
   const {
     from_node_position,
     to_node_position,
@@ -169,7 +169,7 @@ function _WComponentCanvasConnection(props) {
     to_node_position,
     from_connection_type,
     to_connection_type,
-    on_pointer_down,
+    on_click,
     line_behaviour,
     thickness,
     connection_end_type,

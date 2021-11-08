@@ -7,7 +7,7 @@ export function replace_normal_ids(text, wcomponents_by_id, depth_limit, current
     const replacer = new RegExp(`@@${id}`, "g");
     const referenced_wcomponent = wcomponents_by_id[id];
     if (!referenced_wcomponent) {
-      text = text.replace(replacer, format_wcomponent_id_error("not found", id));
+      text = text.replace(replacer, format_wcomponent_id_error(root_url, id, "not found"));
       return;
     }
     const replacement_content = current_depth < depth_limit ? get_title(referenced_wcomponent) : `@@${id}`;

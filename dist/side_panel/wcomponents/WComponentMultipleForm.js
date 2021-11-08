@@ -65,9 +65,14 @@ function _WComponentMultipleForm(props) {
     }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(AlignComponentForm, {
     wcomponent_ids
-  })), (editing || label_ids.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Label"), /* @__PURE__ */ h(LabelsEditor, {
+  })), (editing || label_ids.length > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Labels"), /* @__PURE__ */ h(LabelsEditor, {
     label_ids,
-    on_change: (label_ids2) => bulk_edit_wcomponents({wcomponent_ids, change: {label_ids: label_ids2}})
+    on_change: (new_label_ids) => {
+      const new_label_ids_set = new Set(new_label_ids);
+      const remove_label_ids = new Set(label_ids.filter((id) => !new_label_ids_set.has(id)));
+      const add_label_ids = new Set(new_label_ids.filter((id) => !label_ids_set.has(id)));
+      bulk_edit_wcomponents({wcomponent_ids, change: {}, remove_label_ids, add_label_ids});
+    }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Created at"), /* @__PURE__ */ h(EditableCustomDateTime, {
     value: void 0,
     on_change: (custom_created_at) => bulk_edit_wcomponents({wcomponent_ids, change: {custom_created_at}})

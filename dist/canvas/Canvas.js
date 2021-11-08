@@ -43,6 +43,7 @@ class _Canvas extends Component {
       return this.props.y - this.client_to_canvas(client_y);
     };
     this.on_pointer_down = (e) => {
+      pub_sub.canvas.pub("canvas_pointer_down", true);
       const right_button = e.button === 2;
       if (right_button)
         return;
@@ -70,7 +71,8 @@ class _Canvas extends Component {
         canvas_current_y: new_pointer_state.canvas_start_y
       });
     };
-    this.on_pointer_up = () => {
+    this.on_pointer_up = (e) => {
+      pub_sub.canvas.pub("canvas_pointer_up", true);
       if (this.state.pointer_state.area_select) {
         const args = area_selection_args(this.state);
         const canvas_area_select = {

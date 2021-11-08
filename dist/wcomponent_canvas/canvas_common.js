@@ -1,4 +1,4 @@
-export function factory_on_pointer_down(args) {
+export function factory_on_click(args) {
   const {
     wcomponent_id: id,
     shift_or_control_keys_are_down,

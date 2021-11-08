@@ -12,7 +12,6 @@ import {
   wcomponent_has_objectives,
   wcomponent_has_validity_predictions,
   wcomponent_is_judgement_or_objective,
-  wcomponent_is_statev2,
   wcomponent_is_sub_state,
   wcomponent_should_have_state_VAP_sets
 } from "../../wcomponent/interfaces/SpecialisedObjects.js";
@@ -33,7 +32,7 @@ import {
 } from "../../state/specialised_objects/accessors.js";
 import {get_store} from "../../state/store.js";
 import {calc_wcomponent_should_display, calc_display_opacity} from "../calc_should_display.js";
-import {factory_on_pointer_down} from "../canvas_common.js";
+import {factory_on_click} from "../canvas_common.js";
 import {WComponentJudgements} from "./WComponentJudgements.js";
 import {NodeValueAndPredictionSetSummary} from "./NodeValueAndPredictionSetSummary.js";
 import {WComponentValidityValue} from "./WComponentValidityValue.js";
@@ -79,6 +78,7 @@ const map_dispatch = {
   clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
   change_route: ACTIONS.routing.change_route,
   set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
+  pointerupdown_on_component: ACTIONS.specialised_object.pointerupdown_on_component,
   pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
   set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move
 };
@@ -145,7 +145,7 @@ function _WComponentCanvasNode(props) {
   });
   const node_is_moving = props.wcomponent_ids_to_move_set.has(id);
   const opacity = props.drag_relative_position ? 0.3 : node_is_moving ? 0 : validity_opacity;
-  const on_pointer_down = factory_on_pointer_down({
+  const on_click = factory_on_click({
     wcomponent_id: id,
     clicked_wcomponent,
     clear_selected_wcomponents,
@@ -189,7 +189,21 @@ function _WComponentCanvasNode(props) {
   const show_state_value = !wcomponent ? false : is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
   const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
   const terminals = get_terminals({is_movable, is_editing, is_highlighted});
-  const show_judgements_when_no_state_values = wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0);
+  const on_pointer_down = (e) => {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    props.pointerupdown_on_component({up_down: "down", wcomponent_id: id});
+  };
+  const on_pointer_up = (e) => {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    props.pointerupdown_on_component({up_down: "up", wcomponent_id: id});
+  };
+  const pointerupdown_on_connection_terminal = (connection_location, up_down) => props.pointerupdown_on_connection_terminal({
+    terminal_type: connection_location,
+    up_down,
+    wcomponent_id: id
+  });
   return /* @__PURE__ */ h(ConnectableCanvasNode, {
     position: is_movable ? temporary_drag_kv_entry || kv_entry : void 0,
     cover_image: wcomponent?.summary_image,
@@ -214,7 +228,7 @@ function _WComponentCanvasNode(props) {
       className: "node_state_container"
     }, is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
-    }, "state  "), show_judgements_when_no_state_values && /* @__PURE__ */ h(WComponentJudgements, {
+    }, "state  "), /* @__PURE__ */ h(WComponentJudgements, {
       wcomponent
     }), /* @__PURE__ */ h(Box, {
       flexGrow: 1,
@@ -248,11 +262,13 @@ function _WComponentCanvasNode(props) {
     opacity,
     unlimited_width: false,
     glow,
-    on_pointer_down,
+    on_click,
     on_pointer_enter: () => set_highlighted_wcomponent({id, highlighted: true}),
     on_pointer_leave: () => set_highlighted_wcomponent({id, highlighted: false}),
     terminals,
-    pointerupdown_on_connection_terminal: (connection_location, up_down) => props.pointerupdown_on_connection_terminal({terminal_type: connection_location, up_down, wcomponent_id: id}),
+    on_pointer_down,
+    on_pointer_up,
+    pointerupdown_on_connection_terminal,
     extra_args: {
       draggable: node_is_draggable,
       onDragStart: (e) => {

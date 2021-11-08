@@ -119,6 +119,7 @@ export function calculate_composed_knowledge_view(args) {
     active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids
   });
   const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id);
+  const available_filter_options = get_available_filter_options(wcomponents);
   const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true);
   const current_composed_knowledge_view = {
     composed_visible_wc_id_map: {},
@@ -133,6 +134,7 @@ export function calculate_composed_knowledge_view(args) {
     wc_id_to_active_counterfactuals_v2_map,
     wc_ids_by_type,
     prioritisations,
+    available_filter_options,
     filters: {
       wc_ids_excluded_by_any_filter: new Set(),
       wc_ids_excluded_by_filters: new Set(),
@@ -209,6 +211,17 @@ function get_wc_id_to_counterfactuals_v2_map(args) {
 function get_prioritisations(prioritisation_ids, wcomponents_by_id) {
   const prioritisations = Array.from(prioritisation_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_prioritisation);
   return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY, "descending");
+}
+function get_available_filter_options(wcomponents) {
+  const wc_label_ids = new Set();
+  const wc_types_set = new Set();
+  wcomponents.forEach((wc) => {
+    if (wc.label_ids)
+      wc.label_ids.forEach((id) => wc_label_ids.add(id));
+    wc_types_set.add(wc.type);
+  });
+  const wc_types = Array.from(wc_types_set).sort();
+  return {wc_label_ids, wc_types};
 }
 export function get_composed_datetime_lines_config(foundation_knowledge_views, use_defaults) {
   let config = {};

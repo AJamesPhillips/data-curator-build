@@ -73,6 +73,7 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
+    unmodified_editing: !state.display_options.consumption_formatting,
     editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
     force_editable: wcomponent_from_different_base ? false : void 0,
     created_at_ms: state.routing.args.created_at_ms,
@@ -148,7 +149,7 @@ function _WComponentForm(props) {
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
   }, /* @__PURE__ */ h(WarningTriangle, {
     message: ""
-  }), "Editing disabled.  Change to base ", props.wcomponent.base_id, " to edit"), /* @__PURE__ */ h(FormControl, {
+  }), " ", props.unmodified_editing ? /* @__PURE__ */ h("span", null, "Editing disabled. Change to base ", props.wcomponent.base_id, " to edit") : /* @__PURE__ */ h("span", null, "Change to base ", props.wcomponent.base_id, " to view")), /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal",
     style: {fontWeight: 600, fontSize: 22}

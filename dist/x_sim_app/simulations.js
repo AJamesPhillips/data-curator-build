@@ -1,7 +1,7 @@
 export async function get_simulations() {
   return [
     {
-      base_knowledge_view_id: "01ee3824-9445-4059-8714-912a011962bf",
+      foundational_knowledge_view_id: "01ee3824-9445-4059-8714-912a011962bf",
       scenario_knowledge_view_ids: [
         "fa166715-c167-4efc-bc25-12fad9f531f1",
         "2b56dbff-d82a-4fab-9082-68237b5cf6b3",

@@ -27,10 +27,10 @@ export function CanvasConnnection(props) {
     filter: blur ? `url(#blur_filter_${Math.round(blur)})` : ""
   };
   const extra_line_classes = `${hovered ? "hovered" : props.is_highlighted ? "highlighted" : ""}`;
-  const extra_background_classes = (props.on_pointer_down ? " mouseable " : "") + extra_line_classes;
+  const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes;
   return /* @__PURE__ */ h("g", {
     className: "connection_container " + (props.extra_css_classes || ""),
-    onPointerDown: props.on_pointer_down,
+    onPointerDown: props.on_click,
     style: {display: props.hidden ? "none" : ""}
   }, /* @__PURE__ */ h("path", {
     className: "connection_line_background " + extra_background_classes,
