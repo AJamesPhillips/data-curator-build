@@ -22,15 +22,19 @@ function _TemporaryDraggedCanvasNodes(props) {
           change_left: relative_position.left,
           change_top: relative_position.top
         });
-        setTimeout(() => {
-          props.set_wcomponent_ids_to_move({wcomponent_ids_to_move: new Set()});
-        }, 0);
       }
       set_relative_position(new_relative_position);
     }
     const unsubscribe_position = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", handle_canvas_node_drag_relative_position);
     return () => unsubscribe_position();
   });
+  useEffect(() => {
+    if (relative_position !== void 0)
+      return;
+    if (props.wcomponent_ids_to_move_list.length === 0)
+      return;
+    props.set_wcomponent_ids_to_move({wcomponent_ids_to_move: new Set()});
+  }, [relative_position]);
   if (!relative_position)
     return null;
   return /* @__PURE__ */ h("div", null, props.wcomponent_ids_to_move_list.map((wcomponent_id) => /* @__PURE__ */ h(WComponentCanvasNode, {

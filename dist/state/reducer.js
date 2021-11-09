@@ -2,7 +2,6 @@ import {controls_reducer} from "./controls/reducer.js";
 import {creation_context_reducer} from "./creation_context/reducer.js";
 import {derived_state_reducer} from "./derived/reducer.js";
 import {display_reducer} from "./display_options/reducer.js";
-import {derived_filter_context_state_reducer} from "./filter_context/derived.js";
 import {filter_context_reducer} from "./filter_context/reducer.js";
 import {global_keys_reducer} from "./global_keys/reducer.js";
 import {objectives_reducer} from "./objectives.js";
@@ -40,7 +39,6 @@ export const root_reducer = (state, action) => {
   state = {...state, last_action: action};
   state = derived_state_reducer(initial_state, state);
   state = derived_meta_wcomponents_state_reducer(initial_state, state);
-  state = derived_filter_context_state_reducer(initial_state, state);
   window.debug_state = state;
   return state;
 };

@@ -30,7 +30,6 @@ import {get_VAP_set_id_to_counterfactual_v2_map} from "../../state/derived/acces
 const map_state = (state, own_props) => {
   const {id: wcomponent_id} = own_props;
   const wcomponent = get_wcomponent_from_state(state, wcomponent_id);
-  const {force_display: force_displaying} = state.filter_context;
   const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id);
   const {current_composed_knowledge_view: composed_kv} = state.derived;
   const {created_at_ms, sim_ms} = state.routing.args;
@@ -52,7 +51,6 @@ const map_state = (state, own_props) => {
       const to_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.to_id];
       validity_value = calc_connection_wcomponent_should_display({
         is_editing,
-        force_displaying,
         is_selected,
         wcomponent,
         kv_entry,
@@ -72,7 +70,6 @@ const map_state = (state, own_props) => {
       const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id];
       validity_value = calc_judgement_connection_wcomponent_should_display({
         is_editing,
-        force_displaying,
         is_selected,
         wcomponent,
         kv_entry,

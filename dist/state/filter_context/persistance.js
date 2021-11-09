@@ -22,8 +22,7 @@ export function filter_context_starting_state() {
   } = obj;
   const state = {
     apply_filter,
-    filters,
-    force_display: false
+    filters
   };
   return state;
 }

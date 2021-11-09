@@ -53,7 +53,6 @@ const map_state = (state, own_props) => {
     ...state.derived.judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id] || []
   ].filter((id) => !!wc_id_map[id]);
   return {
-    force_displaying: state.filter_context.force_display,
     on_current_knowledge_view,
     current_composed_knowledge_view,
     wcomponent: get_wcomponent_from_state(state, wcomponent_id),
@@ -91,7 +90,6 @@ function _WComponentCanvasNode(props) {
     id,
     is_movable = true,
     always_show = false,
-    force_displaying,
     is_editing,
     current_composed_knowledge_view: composed_kv,
     wcomponent,
@@ -125,7 +123,6 @@ function _WComponentCanvasNode(props) {
   const is_selected = selected_wcomponent_ids_set.has(id);
   const validity_value = always_show || !wcomponent ? {display_certainty: 1} : calc_wcomponent_should_display({
     is_editing,
-    force_displaying,
     is_selected,
     wcomponent,
     kv_entry,

@@ -15,7 +15,7 @@ export function handle_ctrl_a(store, e) {
   const viewing_knowledge = state.routing.args.view === "knowledge";
   if (!viewing_knowledge)
     return;
-  const ids = Object.keys(kv.composed_wc_id_map);
+  const ids = Object.keys(kv.composed_visible_wc_id_map);
   store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ids}));
   store.dispatch(ACTIONS.routing.change_route({sub_route: "wcomponents_edit_multiple", item_id: null}));
 }
@@ -31,7 +31,7 @@ function handle_canvas_area_select(store) {
     const {start_x, start_y, end_x, end_y} = area_select;
     const start_top = -start_y;
     const end_top = -end_y;
-    const ids = Object.entries(kv.composed_wc_id_map).filter(([id, entry]) => {
+    const ids = Object.entries(kv.composed_visible_wc_id_map).filter(([id, entry]) => {
       return entry.left >= start_x && entry.left <= end_x && entry.top <= start_top && entry.top >= end_top;
     }).map(([id]) => id).filter((id) => !kv.wc_ids_by_type.any_link.has(id));
     const remove_ids = state.global_keys.keys_down.has("Control");

@@ -5,10 +5,10 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 export function calc_wcomponent_should_display(args) {
-  const {is_editing, force_displaying, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters} = args;
+  const {is_editing, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters} = args;
   if (!kv_entry || kv_entry.deleted)
     return false;
-  if (force_displaying || is_selected)
+  if (is_selected)
     return {display_certainty: 1};
   if (wc_ids_excluded_by_filters.has(wcomponent.id))
     return false;
