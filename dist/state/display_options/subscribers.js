@@ -1,6 +1,7 @@
 import {ACTIONS} from "../actions.js";
 import {pub_sub} from "../pub_sub/pub_sub.js";
 import {conditional_ctrl_f_search} from "../search/conditional_ctrl_f_search.js";
+import {handle_ctrl_a} from "../specialised_objects/meta_wcomponents/selecting/subscribers.js";
 import {conditional_ctrl_s_save} from "../sync/utils/conditionally_save_state.js";
 export function display_options_subscribers(store) {
   toggle_consumption_formatting_on_key_press(store);
@@ -14,6 +15,8 @@ function toggle_consumption_formatting_on_key_press(store) {
     }
     const start_key_combo = e.ctrl_key && root_key_combo.has(e.key);
     key_combination = start_key_combo ? key_combination = e.key : "";
+    if (start_key_combo)
+      return;
     if (e.ctrl_key && e.key === "e") {
       store.dispatch(ACTIONS.display.toggle_consumption_formatting({}));
     } else if (e.shift_key && e.key === "?") {
@@ -22,6 +25,7 @@ function toggle_consumption_formatting_on_key_press(store) {
         store.dispatch(ACTIONS.display.set_show_help_menu({show: true}));
       }
     } else {
+      handle_ctrl_a(store, e);
       conditional_ctrl_f_search(store, e);
       conditional_ctrl_s_save(store);
     }
@@ -39,6 +43,8 @@ function toggle_consumption_formatting_on_key_press(store) {
         store.dispatch(ACTIONS.controls.toggle_display_time_sliders());
       } else if (e.key === "s") {
         store.dispatch(ACTIONS.controls.toggle_display_side_panel());
+      } else if (e.key === "a") {
+        store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links());
       } else {
         clear_key_combination = false;
       }

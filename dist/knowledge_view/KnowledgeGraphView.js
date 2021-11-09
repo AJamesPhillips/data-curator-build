@@ -14,14 +14,12 @@ const map_state = (state) => {
   if (ready && !current_composed_knowledge_view)
     console.log(`No current_composed_knowledge_view`);
   const {wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids} = current_composed_knowledge_view || {};
-  const {selected_wcomponent_ids_map} = state.meta_wcomponents;
   return {
     ready,
     wcomponent_nodes,
     wcomponent_connections,
     wcomponent_unfound_ids,
-    presenting: state.display_options.consumption_formatting,
-    selected_wcomponent_ids_map
+    presenting: state.display_options.consumption_formatting
   };
 };
 const connector = connect(map_state);

@@ -43,24 +43,25 @@ import {NodeSubStateTypeIndicators} from "./NodeSubStateTypeIndicators.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
 const map_state = (state, own_props) => {
+  const {id: wcomponent_id} = own_props;
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
-  const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id);
+  const on_current_knowledge_view = is_on_current_knowledge_view(state, wcomponent_id);
   const {current_composed_knowledge_view} = state.derived;
   const wc_id_map = current_composed_knowledge_view?.composed_wc_id_map || {};
   const judgement_or_objective_ids = [
-    ...state.derived.judgement_or_objective_ids_by_target_id[own_props.id] || [],
-    ...state.derived.judgement_or_objective_ids_by_goal_or_action_id[own_props.id] || []
+    ...state.derived.judgement_or_objective_ids_by_target_id[wcomponent_id] || [],
+    ...state.derived.judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id] || []
   ].filter((id) => !!wc_id_map[id]);
   return {
     force_displaying: state.filter_context.force_display,
     on_current_knowledge_view,
     current_composed_knowledge_view,
-    wcomponent: get_wcomponent_from_state(state, own_props.id),
+    wcomponent: get_wcomponent_from_state(state, wcomponent_id),
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    is_current_item: state.routing.item_id === own_props.id,
+    is_current_item: state.routing.item_id === wcomponent_id,
     selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
-    is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
+    is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
     shift_or_control_keys_are_down,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
@@ -70,7 +71,8 @@ const map_state = (state, own_props) => {
     focused_mode: state.display_options.focused_mode,
     have_judgements: judgement_or_objective_ids.length > 0,
     wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
-    display_time_marks: state.display_options.display_time_marks
+    display_time_marks: state.display_options.display_time_marks,
+    connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id)
   };
 };
 const map_dispatch = {
@@ -138,6 +140,7 @@ function _WComponentCanvasNode(props) {
     is_editing,
     certainty: validity_value.display_certainty,
     is_highlighted,
+    connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
     is_selected,
     is_current_item,
     certainty_formatting,
@@ -185,8 +188,12 @@ function _WComponentCanvasNode(props) {
     display_time_marks: props.display_time_marks
   });
   const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + classes.sizer + color.font + color.background;
-  const show_validity_value = !wcomponent ? false : wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
-  const show_state_value = !wcomponent ? false : is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
+  let show_validity_value = false;
+  let show_state_value = false;
+  if (wcomponent) {
+    show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && is_editing || wcomponent_has_validity_predictions(wcomponent) && is_current_item;
+    show_state_value = is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
+  }
   const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
   const terminals = get_terminals({is_movable, is_editing, is_highlighted});
   const on_pointer_down = (e) => {

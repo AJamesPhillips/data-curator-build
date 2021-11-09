@@ -107,6 +107,8 @@ export function calc_display_opacity(args) {
     return 1;
   if (args.certainty_formatting.render_100_opacity && !args.focused_mode)
     return 1;
+  if (args.connected_neighbour_is_highlighted)
+    return 1;
   if (args.focused_mode)
     return 0.2;
   const min50 = args.certainty_formatting.render_certainty_as_easier_opacity;

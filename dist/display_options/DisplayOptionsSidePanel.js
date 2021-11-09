@@ -10,6 +10,7 @@ const map_state = (state) => ({
   certainty_formatting: state.display_options.certainty_formatting,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
   display_time_marks: state.display_options.display_time_marks,
+  animate_causal_links: state.display_options.animate_causal_links,
   display_time_sliders: state.controls.display_time_sliders
 });
 const map_dispatch = {
@@ -17,6 +18,7 @@ const map_dispatch = {
   set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
   set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
   set_display_time_marks: ACTIONS.display.set_display_time_marks,
+  set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
   set_display_time_sliders: ACTIONS.controls.set_display_time_sliders
 };
 const connector = connect(map_state, map_dispatch);
@@ -64,6 +66,11 @@ function _DisplayOptionsSidePanel(props) {
   }, /* @__PURE__ */ h("b", null, "Show time markers"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.display_time_marks,
     on_change: props.set_display_time_marks
+  })), /* @__PURE__ */ h("p", {
+    className: "section"
+  }, /* @__PURE__ */ h("b", null, "Animate causal connections"), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.animate_causal_links,
+    on_change: props.set_or_toggle_animate_causal_links
   })), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Display by simulated time"), /* @__PURE__ */ h(EditableCheckbox, {

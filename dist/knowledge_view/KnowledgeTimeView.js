@@ -13,7 +13,7 @@ const map_state = (state) => {
   const {current_composed_knowledge_view} = state.derived;
   if (ready && !current_composed_knowledge_view)
     console.log("No current_composed_knowledge_view");
-  const {selected_wcomponent_ids_map} = state.meta_wcomponents;
+  const {selected_wcomponent_ids_to_ordinal_position_map} = state.meta_wcomponents;
   const {created_at_ms, sim_ms} = state.routing.args;
   let wcomponent_nodes = [];
   if (current_composed_knowledge_view) {
@@ -24,7 +24,7 @@ const map_state = (state) => {
     wcomponent_nodes,
     wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
     presenting: state.display_options.consumption_formatting,
-    selected_wcomponent_ids_map,
+    selected_wcomponent_ids_to_ordinal_position_map,
     created_at_ms,
     sim_ms
   };
@@ -316,10 +316,10 @@ class DateRange {
 }
 function _KnowledgeTimeView(props) {
   let {wcomponent_nodes} = props;
-  const {selected_wcomponent_ids_map} = props;
+  const {selected_wcomponent_ids_to_ordinal_position_map} = props;
   const dates = [];
   const get_key = (wc) => {
-    const entry = selected_wcomponent_ids_map[wc.id];
+    const entry = selected_wcomponent_ids_to_ordinal_position_map[wc.id];
     if (entry !== void 0)
       return entry;
     else

@@ -7,7 +7,8 @@ import {
   is_set_display_by_simulated_time,
   is_toggle_focused_mode,
   is_set_show_help_menu,
-  is_set_display_time_marks
+  is_set_display_time_marks,
+  is_set_or_toggle_animate_causal_links
 } from "./actions.js";
 import {derive_validity_filter, derive_certainty_formatting} from "./util.js";
 export const display_reducer = (state, action) => {
@@ -35,6 +36,13 @@ export const display_reducer = (state, action) => {
   }
   if (is_set_display_time_marks(action)) {
     state = update_substate(state, "display_options", "display_time_marks", action.display_time_marks);
+  }
+  if (is_set_or_toggle_animate_causal_links(action)) {
+    let {animate_causal_links} = action;
+    if (animate_causal_links === void 0) {
+      animate_causal_links = !state.display_options.animate_causal_links;
+    }
+    state = update_substate(state, "display_options", "animate_causal_links", animate_causal_links);
   }
   if (is_set_show_help_menu(action)) {
     state = update_substate(state, "display_options", "show_help_menu", action.show);

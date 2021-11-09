@@ -38,7 +38,7 @@ function _FiltersSidePanel(props) {
       props.set_filters({filters: {...props.filters, exclude_by_label_ids}});
     },
     force_editable: true
-  })), /* @__PURE__ */ h("p", null, "Filter (include) by label:", /* @__PURE__ */ h(LabelsEditor, {
+  })), /* @__PURE__ */ h("p", null, "Filter (include) by any label (OR):", /* @__PURE__ */ h(LabelsEditor, {
     allowed_label_ids: wc_label_ids,
     label_ids: props.filters.include_by_label_ids,
     on_change: (include_by_label_ids) => {

@@ -5,7 +5,15 @@ import {ConnectionEndType, ConnectionEnd} from "./ConnectionEnd.js";
 import {derive_coords} from "./derive_coords.js";
 export function CanvasConnnection(props) {
   const [hovered, set_hovered] = useState(false);
-  const {from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour} = props;
+  const {
+    from_node_position,
+    to_node_position,
+    from_connection_type,
+    to_connection_type,
+    line_behaviour,
+    on_pointer_over_out = () => {
+    }
+  } = props;
   if (!from_node_position || !to_node_position)
     return null;
   const {x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle} = derive_coords({
@@ -35,8 +43,14 @@ export function CanvasConnnection(props) {
   }, /* @__PURE__ */ h("path", {
     className: "connection_line_background " + extra_background_classes,
     d: `M ${x1} ${-y1} C ${x1 + relative_control_point1.x},${-y1 - relative_control_point1.y}, ${x2 + relative_control_point2.x},${-y2 - relative_control_point2.y}, ${x2},${-y2}`,
-    onPointerOver: () => set_hovered(true),
-    onPointerOut: () => set_hovered(false),
+    onPointerOver: () => {
+      set_hovered(true);
+      on_pointer_over_out(true);
+    },
+    onPointerOut: () => {
+      set_hovered(false);
+      on_pointer_over_out(false);
+    },
     style: style_line_background
   }), /* @__PURE__ */ h("path", {
     className: "connection_line " + extra_line_classes,

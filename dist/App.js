@@ -25,6 +25,7 @@ import {date_to_string} from "./form/datetime_utils.js";
 import {ActiveUserWidget} from "./sharedf/ActiveUserWidget.js";
 const map_state = (state) => ({
   display_side_panel: state.controls.display_side_panel,
+  animate_causal_links: state.display_options.animate_causal_links,
   network_functional: state.sync.network_functional,
   network_function_last_checked: state.sync.network_function_last_checked
 });
@@ -88,7 +89,10 @@ function App(props) {
   }, /* @__PURE__ */ h(SidePanelOrMenuButton, null))))), /* @__PURE__ */ h(Box, {
     id: "app_content",
     component: "main",
-    className: clsx(classes.content, {[classes.content_with_open_side_panel]: props.display_side_panel})
+    className: clsx(classes.content, {
+      [classes.content_with_open_side_panel]: props.display_side_panel,
+      animate_causal_links: props.animate_causal_links
+    })
   }, /* @__PURE__ */ h(MainAreaRouter, null)), /* @__PURE__ */ h(Drawer, {
     anchor: "right",
     className: classes.drawer,

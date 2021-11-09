@@ -14,7 +14,9 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _TimeResolutionOptions(props) {
   const classes = invert_disabled_appearance();
-  return !props.display_by_simulated_time && /* @__PURE__ */ h(ButtonGroup, {
+  if (props.display_by_simulated_time)
+    return null;
+  return /* @__PURE__ */ h(ButtonGroup, {
     disableElevation: true,
     variant: "contained",
     value: props.time_resolution

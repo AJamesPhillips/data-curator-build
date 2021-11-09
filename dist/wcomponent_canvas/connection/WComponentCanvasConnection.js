@@ -28,9 +28,10 @@ import {
 import {factory_on_click} from "../canvas_common.js";
 import {get_VAP_set_id_to_counterfactual_v2_map} from "../../state/derived/accessor.js";
 const map_state = (state, own_props) => {
-  const wcomponent = get_wcomponent_from_state(state, own_props.id);
+  const {id: wcomponent_id} = own_props;
+  const wcomponent = get_wcomponent_from_state(state, wcomponent_id);
   const {force_display: force_displaying} = state.filter_context;
-  const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id);
+  const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id);
   const {current_composed_knowledge_view: composed_kv} = state.derived;
   const {created_at_ms, sim_ms} = state.routing.args;
   const {derived_validity_filter: validity_filter} = state.display_options;
@@ -90,18 +91,20 @@ const map_state = (state, own_props) => {
     wcomponent,
     connection_effect,
     validity_value,
-    is_current_item: state.routing.item_id === own_props.id,
+    is_current_item: state.routing.item_id === wcomponent_id,
     is_selected,
-    is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
+    is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
     is_editing,
     certainty_formatting: state.display_options.derived_certainty_formatting,
     shift_or_control_keys_are_down,
-    focused_mode: state.display_options.focused_mode
+    focused_mode: state.display_options.focused_mode,
+    connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id)
   };
 };
 const map_dispatch = {
   clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
   clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+  set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
   change_route: ACTIONS.routing.change_route
 };
 const connector = connect(map_state, map_dispatch);
@@ -145,6 +148,7 @@ function _WComponentCanvasConnection(props) {
     is_editing: props.is_editing,
     certainty: validity_value.display_certainty,
     is_current_item,
+    connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
     certainty_formatting: props.certainty_formatting,
     focused_mode: props.focused_mode
   });
@@ -170,6 +174,7 @@ function _WComponentCanvasConnection(props) {
     from_connection_type,
     to_connection_type,
     on_click,
+    on_pointer_over_out: (over) => props.set_highlighted_wcomponent({id, highlighted: over}),
     line_behaviour,
     thickness,
     connection_end_type,

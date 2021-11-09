@@ -13,7 +13,7 @@ const map_state = (state) => {
 };
 const connector = connect(map_state);
 function _MainAreaRouter(props) {
-  let el = /* @__PURE__ */ h("div", null, "Unsupported view: ", props.view, " for display_by_simulated_time: ", "" + props.display_by_simulated_time);
+  let el = /* @__PURE__ */ h("div", null, "Unsupported view: ", props.view);
   if (props.view === "knowledge") {
     if (props.display_by_simulated_time)
       el = /* @__PURE__ */ h(KnowledgeTimeView, null);

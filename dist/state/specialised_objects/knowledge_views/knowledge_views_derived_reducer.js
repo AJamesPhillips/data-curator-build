@@ -119,6 +119,7 @@ export function calculate_composed_knowledge_view(args) {
     active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids
   });
   const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id);
+  const wc_id_connections_map = get_wc_id_connections_map(wc_ids_by_type.any_link, wcomponents_by_id);
   const available_filter_options = get_available_filter_options(wcomponents);
   const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true);
   const current_composed_knowledge_view = {
@@ -134,6 +135,7 @@ export function calculate_composed_knowledge_view(args) {
     wc_id_to_active_counterfactuals_v2_map,
     wc_ids_by_type,
     prioritisations,
+    wc_id_connections_map,
     available_filter_options,
     filters: {
       wc_ids_excluded_by_any_filter: new Set(),
@@ -212,6 +214,28 @@ function get_prioritisations(prioritisation_ids, wcomponents_by_id) {
   const prioritisations = Array.from(prioritisation_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_prioritisation);
   return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY, "descending");
 }
+function get_wc_id_connections_map(link_ids, wcomponents_by_id) {
+  const map = {};
+  function add_entry(id, to_id) {
+    const entries = map[id] || new Set();
+    entries.add(to_id);
+    map[id] = entries;
+  }
+  function add_both_entries(connection_id, to_node_id) {
+    add_entry(connection_id, to_node_id);
+    add_entry(to_node_id, connection_id);
+  }
+  link_ids.forEach((id) => {
+    const wcomponent = wcomponents_by_id[id];
+    if (!wcomponent_is_plain_connection(wcomponent))
+      return;
+    if (wcomponent.from_id)
+      add_both_entries(wcomponent.from_id, wcomponent.id);
+    if (wcomponent.to_id)
+      add_both_entries(wcomponent.to_id, wcomponent.id);
+  });
+  return map;
+}
 function get_available_filter_options(wcomponents) {
   const wc_label_ids = new Set();
   const wc_types_set = new Set();
@@ -243,10 +267,11 @@ export function get_composed_datetime_lines_config(foundation_knowledge_views, u
 function update_filters(state, current_composed_knowledge_view) {
   if (!current_composed_knowledge_view)
     return void 0;
-  const {composed_wc_id_map} = current_composed_knowledge_view;
-  const current_wc_ids = Object.keys(composed_wc_id_map);
-  const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined);
-  let wc_ids_to_exclude = [];
+  const {wc_ids_by_type, composed_wc_id_map} = current_composed_knowledge_view;
+  const wcomponents_nodes_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_node).filter(is_defined);
+  const wcomponents_links_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_link).filter(wcomponent_is_plain_connection);
+  const wcomponents_on_kv = wcomponents_nodes_on_kv.concat(wcomponents_links_on_kv);
+  const wc_ids_to_exclude = new Set();
   if (state.filter_context.apply_filter) {
     const {
       exclude_by_label_ids: exclude_by_label_ids_list,
@@ -255,18 +280,29 @@ function update_filters(state, current_composed_knowledge_view) {
       include_by_component_types: include_by_component_types_list
     } = state.filter_context.filters;
     const exclude_by_label_ids = new Set(exclude_by_label_ids_list);
+    const include_by_label_ids = new Set(include_by_label_ids_list);
     const exclude_by_component_types = new Set(exclude_by_component_types_list);
     const include_by_component_types = new Set(include_by_component_types_list);
-    wc_ids_to_exclude = wcomponents_on_kv.filter((wcomponent) => {
-      const {label_ids = [], type} = wcomponent;
-      const applied_ids = new Set(label_ids);
-      const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
-      const labels__lacks_include = !!include_by_label_ids_list.find((label_id) => !applied_ids.has(label_id));
-      const types__should_exclude = exclude_by_component_types.has(type);
-      const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type);
-      const should_exclude = labels__should_exclude || labels__lacks_include || types__should_exclude || types__lacks_include;
-      return should_exclude;
-    }).map(({id}) => id);
+    const args = {
+      exclude_by_label_ids,
+      include_by_label_ids,
+      include_by_label_ids_list,
+      exclude_by_component_types,
+      include_by_component_types
+    };
+    wcomponents_nodes_on_kv.forEach((wcomponent) => {
+      const {should_exclude, lacks_include} = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args);
+      if (should_exclude || lacks_include)
+        wc_ids_to_exclude.add(wcomponent.id);
+    });
+    wcomponents_links_on_kv.forEach((wcomponent) => {
+      const {from_id, to_id} = wcomponent;
+      let should_exclude = !from_id || !to_id;
+      should_exclude = should_exclude || wc_ids_to_exclude.has(from_id) || wc_ids_to_exclude.has(to_id);
+      should_exclude = should_exclude || calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args).should_exclude;
+      if (should_exclude)
+        wc_ids_to_exclude.add(wcomponent.id);
+    });
   }
   const wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude);
   const {created_at_ms} = state.routing.args;
@@ -286,6 +322,23 @@ function update_filters(state, current_composed_knowledge_view) {
       wc_ids_excluded_by_created_at_datetime_filter
     }
   };
+}
+function calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, exclusion_args) {
+  const {label_ids = [], type} = wcomponent;
+  const {
+    exclude_by_label_ids,
+    include_by_label_ids,
+    include_by_label_ids_list,
+    exclude_by_component_types,
+    include_by_component_types
+  } = exclusion_args;
+  const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
+  const labels__lacks_include = !label_ids.find((label_id) => include_by_label_ids.has(label_id));
+  const types__should_exclude = exclude_by_component_types.has(type);
+  const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type);
+  const should_exclude = labels__should_exclude || types__should_exclude;
+  const lacks_include = labels__lacks_include || types__lacks_include;
+  return {should_exclude, lacks_include};
 }
 function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
   const map = {};
