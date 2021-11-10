@@ -1,5 +1,6 @@
 import {createStore} from "../../snowpack/pkg/redux.js";
 import {register_window_focus_session_check} from "../sync/user_info/window_focus_session_check.js";
+import {controls_subscribers} from "./controls/subscribers.js";
 import {display_options_subscribers} from "./display_options/subscribers.js";
 import {record_keyupdown_activity} from "./global_keys/record_keyupdown_activity.js";
 import {persist_relevant_state} from "./persistence/persistence.js";
@@ -41,6 +42,7 @@ export function get_store(args = {}) {
   setup_warning_of_unsaved_data_beforeunload(load_state_from_storage, store);
   store.subscribe(factory_location_hash(store));
   store.subscribe(specialised_objects_subscribers(store));
+  controls_subscribers(store);
   display_options_subscribers(store);
   meta_wcomponents_selecting_subscribers(store);
   periodically_change_display_at_created_datetime(store);
