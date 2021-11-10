@@ -1,6 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {useEffect, useMemo, useState} from "../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Box, FormControl, FormLabel} from "../../snowpack/pkg/@material-ui/core.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {ConfirmatoryDeleteButton} from "../form/ConfirmatoryDeleteButton.js";
@@ -54,7 +54,6 @@ import {ValuePossibilitiesComponent} from "./value_possibilities/ValuePossibilit
 import {update_VAPSets_with_possibilities} from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities.js";
 import {WComponentSubStateForm} from "./WComponentSubStateForm.js";
 import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
-import {get_default_wcomponent_title} from "../wcomponent_derived/rich_text/get_default_wcomponent_title.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {EasyActionValueAndPredictionSets} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
 import {WarningTriangle} from "../sharedf/WarningTriangle.js";
@@ -105,16 +104,6 @@ function _WComponentForm(props) {
     created_at_ms,
     sim_ms
   } = props;
-  const default_title = useMemo(() => {
-    return get_default_wcomponent_title({
-      wcomponent,
-      rich_text: false,
-      wcomponents_by_id,
-      wc_id_to_counterfactuals_map,
-      created_at_ms,
-      sim_ms
-    });
-  }, [wcomponent_id]);
   const {ready, base_id} = props;
   if (!ready)
     return /* @__PURE__ */ h("div", null, "Loading...");
@@ -156,7 +145,7 @@ function _WComponentForm(props) {
   }, /* @__PURE__ */ h(EditableText, {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
-    value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}) || default_title,
+    value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
     conditional_on_blur: (title) => upsert_wcomponent({title}),
     force_focus: focus_title,
     hide_label: true

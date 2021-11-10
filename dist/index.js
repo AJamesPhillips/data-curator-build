@@ -20,6 +20,7 @@ import {setup_window_on_focus_listener} from "./utils/window_on_focus_listener.j
 import {LandingPage} from "./home/LandingPage.js";
 import {DevLandingPage} from "./home/DevLandingPage.js";
 import {SimHome} from "./x_sim_app/SimHome.js";
+import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
 const root = document.getElementById("root");
 const title = document.getElementsByTagName("title")[0];
 if (root) {
@@ -75,3 +76,4 @@ if (title) {
   title.innerHTML = APP_DETAILS.NAME;
 }
 setup_window_on_focus_listener();
+setup_console_api();
