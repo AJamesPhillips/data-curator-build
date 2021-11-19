@@ -4,13 +4,17 @@ import {
 import {parse_base_dates} from "./parse_dates.js";
 export function parse_knowledge_view(knowledge_view, wcomponent_ids) {
   knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view);
+  let wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids);
+  wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map);
   knowledge_view = {
     ...knowledge_view,
     ...parse_base_dates(knowledge_view),
-    wc_id_map: optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids),
+    wc_id_map,
     sort_type: knowledge_view.sort_type || "normal"
   };
-  return upgrade_2021_05_24_knowledge_view(knowledge_view);
+  knowledge_view = upgrade_2021_05_24_knowledge_view(knowledge_view);
+  knowledge_view = upgrade_2021_11_19_knowledge_view(knowledge_view);
+  return knowledge_view;
 }
 function optionally_remove_invalid_wc_ids(kv, remove_missing, wcomponent_ids) {
   if (!wcomponent_ids)
@@ -35,7 +39,26 @@ function optionally_remove_invalid_wc_ids(kv, remove_missing, wcomponent_ids) {
   }
   return new_wc_id_map;
 }
+function remove_wc_id_map_passthrough_entries(wc_id_map) {
+  const new_wc_id_map = {...wc_id_map};
+  Object.entries(new_wc_id_map).forEach(([id, entry]) => {
+    if (entry.passthrough)
+      delete new_wc_id_map[id];
+  });
+  return new_wc_id_map;
+}
 function upgrade_2021_05_24_knowledge_view(knowledge_view) {
   const goal_ids = knowledge_view.goal_ids || [];
   return {...knowledge_view, goal_ids};
+}
+function upgrade_2021_11_19_knowledge_view(knowledge_view) {
+  const {wc_id_map} = knowledge_view;
+  const new_wc_id_map = {...wc_id_map};
+  Object.values(new_wc_id_map).forEach((entry) => {
+    if (entry.deleted) {
+      delete entry.deleted;
+      entry.blocked = true;
+    }
+  });
+  return {...knowledge_view, wc_id_map: new_wc_id_map};
 }

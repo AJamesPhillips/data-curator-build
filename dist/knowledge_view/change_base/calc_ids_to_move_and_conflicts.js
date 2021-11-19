@@ -39,7 +39,7 @@ function get_ids_to_move(args) {
     if (kv.is_base)
       return;
     Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) => {
-      if (kv_entry.deleted)
+      if (kv_entry.blocked || kv_entry.passthrough)
         return;
       const kv_ids = conflicted_wc_ids_in_kvs_to_keep[wc_id] || [];
       kv_ids.push({kv_id: kv.id, left: kv_entry.left, top: kv_entry.top});
@@ -49,7 +49,7 @@ function get_ids_to_move(args) {
   let ids_to_move = args.knowledge_views_to_move.map((kv) => kv.id);
   const wcomponents_move_conflicts = {};
   args.knowledge_views_to_move.forEach((kv) => Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) => {
-    if (kv_entry.deleted)
+    if (kv_entry.blocked || kv_entry.passthrough)
       return;
     if (!args.wcomponents_by_id[wc_id])
       return;

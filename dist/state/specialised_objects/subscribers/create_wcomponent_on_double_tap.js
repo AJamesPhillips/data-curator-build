@@ -1,4 +1,4 @@
-import {round_canvas_point} from "../../../canvas/position_utils.js";
+import {offset_by_half_node, position_to_point, round_canvas_point} from "../../../canvas/position_utils.js";
 import {create_wcomponent} from "../wcomponents/create_wcomponent_type.js";
 import {pub_sub} from "../../pub_sub/pub_sub.js";
 import {selector_chosen_base_id} from "../../user_info/selector.js";
@@ -18,7 +18,8 @@ export function create_wcomponent_on_double_tap(store) {
     }
     if (state.display_options.consumption_formatting)
       return;
-    const position = round_canvas_point({left: double_tap.x - 20, top: -double_tap.y - 20}, "large");
+    const point = offset_by_half_node(position_to_point(double_tap));
+    const position = round_canvas_point(point, "large");
     const add_to_knowledge_view = {id: current_knowledge_view.id, position};
     create_wcomponent({
       wcomponent: {base_id, type: "statev2"},

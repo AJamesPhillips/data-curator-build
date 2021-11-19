@@ -42,7 +42,7 @@ function toggle_consumption_formatting_on_key_press(store) {
       } else if (e.key === "t") {
         store.dispatch(ACTIONS.controls.toggle_display_time_sliders());
       } else if (e.key === "s") {
-        store.dispatch(ACTIONS.controls.toggle_display_side_panel());
+        store.dispatch(ACTIONS.controls.set_or_toggle_display_side_panel());
       } else if (e.key === "a") {
         store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links());
       } else {

@@ -1,4 +1,5 @@
 #graph_container {
+  height: 100%;
   flex-grow: 1;
   flex-shrink: 1;
   cursor: move;
@@ -6,6 +7,13 @@
 }
 #graph_container.squared_background {
   background-image: linear-gradient(to right, #EEE 1px, transparent 1px), linear-gradient(to bottom, #EEE 1px, transparent 1px);
+}
+#graph_container.squared_background .big_squared_background {
+  background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  pointer-events: none;
 }
 #graph_container.graph_background_pointer_down #graph_lowest_elements_container {
   pointer-events: none;

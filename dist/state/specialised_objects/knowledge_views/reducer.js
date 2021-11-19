@@ -50,8 +50,10 @@ function handle_upsert_knowledge_view_entry(state, knowledge_view_id, wcomponent
 function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry, add_to_top = true) {
   let new_wc_id_map = {...knowledge_view.wc_id_map};
   const existing_entry = new_wc_id_map[wcomponent_id];
-  if (existing_entry && existing_entry.deleted && !entry.deleted) {
-    delete new_wc_id_map[wcomponent_id];
+  if (existing_entry) {
+    if (existing_entry.blocked && !entry.blocked || existing_entry.passthrough && !entry.passthrough) {
+      delete new_wc_id_map[wcomponent_id];
+    }
   }
   if (add_to_top) {
     new_wc_id_map[wcomponent_id] = entry;

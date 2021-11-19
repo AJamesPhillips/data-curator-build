@@ -61,6 +61,13 @@ const set_show_help_menu = (args) => {
 export const is_set_show_help_menu = (action) => {
   return action.type === set_show_help_menu_type;
 };
+const set_or_toggle_show_large_grid_type = "set_or_toggle_show_large_grid";
+const set_or_toggle_show_large_grid = (show_large_grid) => {
+  return {type: set_or_toggle_show_large_grid_type, show_large_grid};
+};
+export const is_set_or_toggle_show_large_grid = (action) => {
+  return action.type === set_or_toggle_show_large_grid_type;
+};
 export const display_actions = {
   toggle_consumption_formatting,
   toggle_focused_mode,
@@ -70,5 +77,6 @@ export const display_actions = {
   set_display_by_simulated_time,
   set_display_time_marks,
   set_or_toggle_animate_causal_links,
-  set_show_help_menu
+  set_show_help_menu,
+  set_or_toggle_show_large_grid
 };

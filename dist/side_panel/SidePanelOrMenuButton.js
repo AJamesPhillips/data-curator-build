@@ -8,7 +8,7 @@ const map_state = (state) => ({
   display_side_panel: state.controls.display_side_panel
 });
 const map_dispatch = {
-  toggle_display_side_panel: ACTIONS.controls.toggle_display_side_panel
+  set_or_toggle_display_side_panel: ACTIONS.controls.set_or_toggle_display_side_panel
 };
 const connector = connect(map_state, map_dispatch);
 function _SidePanelOrMenuButton(props) {
@@ -16,7 +16,7 @@ function _SidePanelOrMenuButton(props) {
     "aria-label": "open side panel",
     color: "inherit",
     edge: "end",
-    onClick: props.toggle_display_side_panel,
+    onClick: props.set_or_toggle_display_side_panel,
     size: "small"
   }, props.display_side_panel ? /* @__PURE__ */ h(CloseIcon, null) : /* @__PURE__ */ h(MenuIcon, null));
 }

@@ -45,6 +45,10 @@ function handle_bulk_add_to_knowledge_view(state, action) {
         console.error(`we should always have an entry but wcomponent "${id}" lacking entry in composed_kv composed_wc_id_map for "${knowledge_view_id}"`);
         return;
       }
+      if (entry.blocked || entry.passthrough) {
+        console.warn(`we should not be adding an entry for wcomponent "${id}" in composed_kv composed_wc_id_map for "${knowledge_view_id}" as it is blocked or passed through`);
+        return;
+      }
       new_wc_id_map[id] = entry;
     });
     new_wc_id_map = {...new_wc_id_map, ...kv.wc_id_map};
@@ -54,7 +58,8 @@ function handle_bulk_add_to_knowledge_view(state, action) {
   return state;
 }
 function handle_bulk_remove_from_knowledge_view(state, action) {
-  const {wcomponent_ids} = action;
+  const {wcomponent_ids, remove_type} = action;
+  const blocked = remove_type === "block";
   const kv = get_current_knowledge_view_from_state(state);
   const composed_kv = get_current_composed_knowledge_view_from_state(state);
   if (!kv || !composed_kv) {
@@ -62,10 +67,11 @@ function handle_bulk_remove_from_knowledge_view(state, action) {
   } else {
     const new_wc_id_map = {...kv.wc_id_map};
     wcomponent_ids.forEach((id) => {
-      const entry = composed_kv.composed_wc_id_map[id];
+      const entry = blocked ? composed_kv.composed_wc_id_map[id] : kv.wc_id_map[id];
       if (!entry)
         return;
-      new_wc_id_map[id] = {...entry, deleted: true};
+      const new_entry = blocked ? {...entry, blocked: true, passthrough: void 0} : {...entry, blocked: void 0, passthrough: true};
+      new_wc_id_map[id] = new_entry;
     });
     const new_kv = {...kv, wc_id_map: new_wc_id_map};
     state = handle_upsert_knowledge_view(state, new_kv);

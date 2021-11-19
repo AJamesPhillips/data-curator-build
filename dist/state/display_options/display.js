@@ -1,4 +1,4 @@
-import {h_step, round_number, v_step} from "../../canvas/position_utils.js";
+import {h_step, position_to_point, round_number, v_step} from "../../canvas/position_utils.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
 import {get_actually_display_time_sliders} from "../controls/accessors.js";
 import {STARTING_ZOOM} from "../routing/starting_state.js";
@@ -21,7 +21,7 @@ function calculate_xy_for_put_middle(args, display_side_panel) {
 }
 export function get_middle_of_screen(state) {
   const result = calculate_xy_for_middle(state.routing.args, state.controls.display_side_panel);
-  return {left: result.x, top: -result.y};
+  return position_to_point(result);
 }
 export function lefttop_to_xy(position, middle) {
   if (!position)

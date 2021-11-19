@@ -1,27 +1,23 @@
-
-.connectable_canvas_node
-{
-    box-sizing: content-box;
-    width: 250px;
+.connectable_canvas_node {
+  box-sizing: content-box;
+  width: 250px;
 }
 
-.connectable_canvas_node.node .node_main_content
-{
-    min-height: 36px;
-    white-space: normal;
+.connectable_canvas_node.node .node_main_content {
+  min-height: 36px;
+  white-space: normal;
 }
 
 .connection_terminal {
-    position: absolute;
-    background-color: white;
-    border: thin solid #555;
-    font-size: 9px;
-    text-align: center;
-    user-select: none;
+  position: absolute;
+  background-color: white;
+  border: thin solid #555;
+  font-size: 9px;
+  text-align: center;
+  user-select: none;
 }
 
-.connection_terminal:hover
-{
-    box-shadow: 0 0 6px blue;
-    background-color: rgb(53, 130, 247);
+.connection_terminal:hover {
+  box-shadow: 0 0 6px blue;
+  background-color: #3582f7;
 }

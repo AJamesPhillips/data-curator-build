@@ -3,7 +3,7 @@ import {Component, h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {pub_sub} from "../state/pub_sub/pub_sub.js";
-import {grid_small_step} from "./position_utils.js";
+import {grid_small_step, h_step, v_step} from "./position_utils.js";
 import {bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy} from "./zoom_utils.js";
 import {SelectionBox} from "./SelectionBox.js";
 const GRAPH_CONTAINER_ID = "graph_container";
@@ -163,8 +163,11 @@ class _Canvas extends Component {
     const backgroundSize = grid_small_step * scale;
     const background_style = {
       backgroundPosition: `${x}px ${y}px`,
-      backgroundSize: `${backgroundSize}px ${backgroundSize}px`,
-      height: "100%"
+      backgroundSize: `${backgroundSize}px ${backgroundSize}px`
+    };
+    const big_squared_background_style = {
+      backgroundPosition: `${x}px ${y}px`,
+      backgroundSize: `${h_step * scale}px ${v_step * scale}px`
     };
     const html_translation_container_style = {
       transform: `translate(${x}px,${y}px)`
@@ -190,7 +193,10 @@ class _Canvas extends Component {
         e.dataTransfer.dropEffect = "move";
       },
       onContextMenu: this.on_context_menu
-    }, /* @__PURE__ */ h("div", {
+    }, !this.props.plain_background && this.props.show_large_grid && /* @__PURE__ */ h("div", {
+      className: "big_squared_background",
+      style: big_squared_background_style
+    }), /* @__PURE__ */ h("div", {
       id: GRAPH_VISUALS_CONTAINER_ID,
       style: html_translation_container_style
     }, /* @__PURE__ */ h("div", {

@@ -54,7 +54,10 @@ function _WComponentKnowledgeViewForm(props) {
   } = props;
   if (!wcomponent)
     return /* @__PURE__ */ h("div", null, "Component of ID: ", wcomponent_id, " does not exist");
-  const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => wc_id_map[wcomponent_id] && !wc_id_map[wcomponent_id]?.deleted);
+  const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => {
+    const entry = wc_id_map[wcomponent_id];
+    return entry && !entry.blocked && !entry.passthrough;
+  });
   function upsert_entry(knowledge_view_id2, new_entry_partial = {}) {
     const new_entry = {
       ...composed_knowledge_view_entry || {left: props.middle_position_left, top: props.middle_position_top},
@@ -66,7 +69,7 @@ function _WComponentKnowledgeViewForm(props) {
       entry: new_entry
     });
   }
-  return /* @__PURE__ */ h("div", null, editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h(FormControl, {
+  return /* @__PURE__ */ h("div", null, editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
     margin: "normal"
@@ -100,13 +103,22 @@ function _WComponentKnowledgeViewForm(props) {
     wcomponent_id,
     wcomponent_current_kv_entry: composed_knowledge_view_entry,
     is_highlighted: true
-  }))), knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && !composed_knowledge_view_entry.deleted && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
-    value: (knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view",
+  }))), knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
+    value: (knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view",
     extra_class_names: "left",
-    onClick: () => upsert_entry(knowledge_view_id, {deleted: void 0})
-  })), editing && knowledge_view_entry && !knowledge_view_entry.deleted && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Remove from knowledge view (block)",
-    tooltip_text: "Remove from current knowledge view (" + knowledge_view_title + ")",
+    onClick: () => upsert_entry(knowledge_view_id, {blocked: void 0, passthrough: void 0})
+  })), editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Delete from knowledge view (allow passthrough from foundations)",
+    tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations",
+    on_delete: () => {
+      props.bulk_remove_from_knowledge_view({
+        wcomponent_ids: [wcomponent_id],
+        remove_type: "passthrough"
+      });
+    }
+  })), editing && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Block from knowledge view",
+    tooltip_text: "Block from showing in current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => {
       props.bulk_remove_from_knowledge_view({
         wcomponent_ids: [wcomponent_id],

@@ -19,7 +19,8 @@ const map_state = (state) => {
     wcomponent_nodes,
     wcomponent_connections,
     wcomponent_unfound_ids,
-    presenting: state.display_options.consumption_formatting
+    presenting: state.display_options.consumption_formatting,
+    show_large_grid: state.display_options.show_large_grid
   };
 };
 const connector = connect(map_state);
@@ -30,7 +31,8 @@ function _KnowledgeGraphView(props) {
       svg_children: [],
       svg_upper_children: get_svg_upper_children(props),
       overlay: get_overlay_children(),
-      plain_background: props.presenting
+      plain_background: props.presenting,
+      show_large_grid: props.show_large_grid
     }, elements)
   });
 }

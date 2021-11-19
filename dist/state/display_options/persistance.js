@@ -8,6 +8,7 @@ export function display_options_persist(state) {
     "display_by_simulated_time",
     "display_time_marks",
     "animate_causal_links",
+    "show_large_grid",
     "validity_filter",
     "certainty_formatting"
   ], state.display_options);
@@ -27,6 +28,7 @@ export function display_options_starting_state() {
     display_time_marks: false,
     animate_causal_links: false,
     show_help_menu: false,
+    show_large_grid: false,
     validity_filter,
     certainty_formatting,
     derived_validity_filter,
