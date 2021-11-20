@@ -4,33 +4,45 @@ import {get_magnitude} from "../../utils/vector.js";
 import {get_angle_from_start_connector, get_angle_from_end_connector} from "./angles.js";
 import {get_connection_point} from "./terminal.js";
 import {to_vec} from "./utils.js";
+import {NODE_WIDTH} from "../position_utils.js";
 export function derive_coords(args) {
-  const {
+  let {
     from_node_position,
     to_node_position,
     from_connection_type,
+    to_connection_type,
     line_behaviour,
     circular_links
   } = args;
-  let {to_connection_type} = args;
-  if (circular_links && from_node_position.left >= to_node_position.left) {
-    to_connection_type = {...to_connection_type, direction: "from"};
+  let y_offset = 0;
+  let complete_invert_of_right_to_left = false;
+  if (circular_links) {
+    if (from_node_position.left >= to_node_position.left) {
+      to_connection_type = {...to_connection_type, direction: "from"};
+      if (from_node_position.left > to_node_position.left + NODE_WIDTH) {
+        complete_invert_of_right_to_left = true;
+        from_connection_type = {...from_connection_type, direction: "to"};
+      }
+    } else {
+      y_offset = 30;
+    }
   }
   const from_connector_position = get_connection_point(from_node_position, from_connection_type);
   const to_connector_position = get_connection_point(to_node_position, to_connection_type);
   const x1 = from_connector_position.left;
-  const y1 = -from_connector_position.top;
+  const y1 = -from_connector_position.top + y_offset;
   const x2 = to_connector_position.left;
-  const y2 = -to_connector_position.top;
+  const y2 = -to_connector_position.top + y_offset;
   let relative_control_point1 = {x: 0, y: 0};
   let relative_control_point2 = relative_control_point1;
   const angle = get_angle(x1, y1, x2, y2);
   let end_angle = angle + rads._180;
   if (line_behaviour === void 0 || line_behaviour === "curve") {
-    if (x2 < x1 + 20) {
+    const going_right_to_left = x2 <= x1;
+    if (going_right_to_left && !complete_invert_of_right_to_left) {
       ({end_angle, relative_control_point1, relative_control_point2} = loop_curve(x1, y1, x2, y2, angle, from_connection_type, end_angle, to_connection_type, relative_control_point1, relative_control_point2));
     } else {
-      end_angle = rads._180;
+      end_angle = complete_invert_of_right_to_left ? 0 : rads._180;
       const xc = (x2 - x1) / 2;
       relative_control_point1 = {x: xc, y: 0};
       relative_control_point2 = {x: -xc, y: 0};
