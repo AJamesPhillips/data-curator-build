@@ -12,6 +12,7 @@ export function CanvasConnnection(props) {
     from_connection_type,
     to_connection_type,
     line_behaviour,
+    circular_links,
     on_pointer_over_out = () => {
     }
   } = props;
@@ -22,10 +23,11 @@ export function CanvasConnnection(props) {
     to_node_position,
     from_connection_type,
     to_connection_type,
-    line_behaviour
+    line_behaviour,
+    circular_links
   });
-  let opacity = props.intensity === void 0 ? 1 : props.intensity;
-  const thickness = hovered ? 2 : props.thickness === void 0 ? 2 : props.thickness;
+  let opacity = props.intensity ?? 1;
+  const thickness = hovered ? 2 : props.thickness ?? 2;
   const blur = props.blur || 0;
   const style_line_background = {
     strokeWidth: thickness + 10
@@ -35,7 +37,7 @@ export function CanvasConnnection(props) {
     strokeWidth: thickness,
     filter: blur ? `url(#blur_filter_${Math.round(blur)})` : ""
   };
-  const extra_line_classes = `${hovered ? "hovered" : props.is_highlighted ? "highlighted" : ""}`;
+  const extra_line_classes = hovered ? "hovered" : props.focused_mode ? "" : props.is_highlighted ? "highlighted" : "";
   const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes;
   const new_target = useMemo(() => ({
     x1,
@@ -54,7 +56,7 @@ export function CanvasConnnection(props) {
     style: {display: props.hidden ? "none" : ""}
   }, /* @__PURE__ */ h("path", {
     className: "connection_line_background " + extra_background_classes,
-    d: calc_d(d_args),
+    d: calc_d(new_target),
     onPointerOver: () => {
       set_hovered(true);
       on_pointer_over_out(true);
@@ -67,6 +69,11 @@ export function CanvasConnnection(props) {
   }), /* @__PURE__ */ h("path", {
     className: "connection_line " + extra_line_classes,
     d: calc_d(d_args),
+    ref: (e) => {
+      if (!e)
+        return;
+      move_to_target(e, target_position, new_target);
+    },
     style: style_line
   }), /* @__PURE__ */ h(ConnectionEnd, {
     type: props.connection_end_type || ConnectionEndType.positive,
@@ -96,8 +103,10 @@ function move_to_target(e, target_position, new_target) {
     return;
   const current = _current;
   let progress = 0;
+  let timeout = void 0;
   function advance() {
     progress += 0.1;
+    progress = Math.min(progress, 1);
     const intermediate = {
       x1: tween(current.x1, new_target.x1, progress),
       y1: tween(current.y1, new_target.y1, progress),
@@ -110,10 +119,13 @@ function move_to_target(e, target_position, new_target) {
     };
     const d = calc_d(intermediate);
     e.setAttribute("d", d);
-    if (progress < 1)
-      setTimeout(advance, 30);
+    if (progress >= 1) {
+      if (timeout)
+        clearTimeout(timeout);
+      target_position.current = new_target;
+    }
   }
-  setTimeout(advance, 30);
+  timeout = setInterval(advance, 20);
 }
 function tween(a, b, progress) {
   return a + (b - a) * progress;

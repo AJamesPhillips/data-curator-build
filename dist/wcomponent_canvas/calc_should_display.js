@@ -5,10 +5,10 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 export function calc_wcomponent_should_display(args) {
-  const {is_editing, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters} = args;
+  const {is_editing, wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters} = args;
   if (!kv_entry || kv_entry.blocked)
     return false;
-  if (is_selected)
+  if (selected_wcomponent_ids_set.has(wcomponent.id))
     return {display_certainty: 1};
   if (wc_ids_excluded_by_filters.has(wcomponent.id))
     return false;
@@ -110,7 +110,7 @@ export function calc_display_opacity(args) {
   if (args.connected_neighbour_is_highlighted)
     return 1;
   if (args.focused_mode)
-    return 0.2;
+    return 0.1;
   const min50 = args.certainty_formatting.render_certainty_as_easier_opacity;
   return args.certainty === 1 ? 1 : min50 ? rescale(args.certainty, 0.4, 0.7) : rescale(args.certainty, 0.1, 0.5);
 }

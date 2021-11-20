@@ -54,6 +54,13 @@ const set_or_toggle_animate_causal_links = (animate_causal_links) => {
 export const is_set_or_toggle_animate_causal_links = (action) => {
   return action.type === set_or_toggle_animate_causal_links_type;
 };
+const set_or_toggle_circular_links_type = "set_or_toggle_circular_links";
+const set_or_toggle_circular_links = (circular_links) => {
+  return {type: set_or_toggle_circular_links_type, circular_links};
+};
+export const is_set_or_toggle_circular_links = (action) => {
+  return action.type === set_or_toggle_circular_links_type;
+};
 const set_show_help_menu_type = "set_show_help_menu";
 const set_show_help_menu = (args) => {
   return {type: set_show_help_menu_type, ...args};
@@ -77,6 +84,7 @@ export const display_actions = {
   set_display_by_simulated_time,
   set_display_time_marks,
   set_or_toggle_animate_causal_links,
+  set_or_toggle_circular_links,
   set_show_help_menu,
   set_or_toggle_show_large_grid
 };

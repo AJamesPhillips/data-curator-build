@@ -24,10 +24,15 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _FiltersSidePanel(props) {
-  const {wc_label_ids, wc_types} = props;
-  const wcomponent_type_options = useMemo(() => {
-    return (wc_types || []).map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
-  }, [wc_types]);
+  const {wc_label_ids, wc_types, filters} = props;
+  const wcomponent_exclude_type_options = useMemo(() => {
+    const all_exclude_types = [...wc_types || []].concat(filters.exclude_by_component_types);
+    return all_exclude_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
+  }, [wc_types, filters]);
+  const wcomponent_include_type_options = useMemo(() => {
+    const all_include_types = [...wc_types || []].concat(filters.include_by_component_types);
+    return all_include_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
+  }, [wc_types, filters]);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", null, "Filters"), /* @__PURE__ */ h("p", null, "Enabled: ", /* @__PURE__ */ h(EditableCheckbox, {
     value: props.apply_filter,
     on_change: () => props.set_apply_filter(!props.apply_filter)
@@ -48,7 +53,7 @@ function _FiltersSidePanel(props) {
   })), /* @__PURE__ */ h("p", null, "Exclude by component type:", /* @__PURE__ */ h(MultiAutocompleteText, {
     placeholder: "",
     selected_option_ids: props.filters.exclude_by_component_types,
-    options: wcomponent_type_options,
+    options: wcomponent_exclude_type_options,
     allow_none: true,
     on_change: (exclude_by_component_types) => {
       props.set_filters({filters: {...props.filters, exclude_by_component_types}});
@@ -57,7 +62,7 @@ function _FiltersSidePanel(props) {
   })), /* @__PURE__ */ h("p", null, "Filter (include) by component type:", /* @__PURE__ */ h(MultiAutocompleteText, {
     placeholder: "",
     selected_option_ids: props.filters.include_by_component_types,
-    options: wcomponent_type_options,
+    options: wcomponent_include_type_options,
     allow_none: true,
     on_change: (include_by_component_types) => {
       props.set_filters({filters: {...props.filters, include_by_component_types}});

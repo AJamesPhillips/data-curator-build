@@ -21,8 +21,13 @@ function _LabelsEditor(props) {
   const {ready, label_ids = []} = props;
   if (!ready)
     return /* @__PURE__ */ h("div", null, "Loading labels...");
+  let allowed_wcomponent_ids = void 0;
+  if (props.allowed_label_ids) {
+    allowed_wcomponent_ids = new Set(props.allowed_label_ids);
+    label_ids.forEach((id) => allowed_wcomponent_ids?.add(id));
+  }
   const wcomponent_id_options = get_wcomponent_search_options({
-    allowed_wcomponent_ids: props.allowed_label_ids,
+    allowed_wcomponent_ids,
     wcomponents_by_id: props.wcomponents_by_id,
     wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,

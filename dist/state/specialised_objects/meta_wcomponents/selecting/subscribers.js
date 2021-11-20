@@ -1,6 +1,7 @@
 import {ACTIONS} from "../../../actions.js";
 import {pub_sub} from "../../../pub_sub/pub_sub.js";
 import {get_current_composed_knowledge_view_from_state} from "../../accessors.js";
+import {conditionally_select_all_components} from "./helpers.js";
 export function meta_wcomponents_selecting_subscribers(store) {
   handle_canvas_area_select(store);
 }
@@ -8,16 +9,7 @@ export function handle_ctrl_a(store, e) {
   const select_all = e.key === "a" && e.ctrl_key;
   if (!select_all)
     return;
-  const state = store.getState();
-  const kv = get_current_composed_knowledge_view_from_state(state);
-  if (!kv)
-    return;
-  const viewing_knowledge = state.routing.args.view === "knowledge";
-  if (!viewing_knowledge)
-    return;
-  const ids = Object.keys(kv.composed_visible_wc_id_map);
-  store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ids}));
-  store.dispatch(ACTIONS.routing.change_route({sub_route: "wcomponents_edit_multiple", item_id: null}));
+  conditionally_select_all_components(store);
 }
 function handle_canvas_area_select(store) {
   pub_sub.canvas.sub("canvas_area_select", (area_select) => {

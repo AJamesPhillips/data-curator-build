@@ -228,13 +228,13 @@ function get_wc_id_connections_map(link_ids, wcomponents_by_id) {
     add_entry(to_node_id, connection_id);
   }
   link_ids.forEach((id) => {
-    const wcomponent = wcomponents_by_id[id];
-    if (!wcomponent_is_plain_connection(wcomponent))
+    const connection_wc = wcomponents_by_id[id];
+    if (!wcomponent_is_plain_connection(connection_wc))
       return;
-    if (wcomponent.from_id)
-      add_both_entries(wcomponent.from_id, wcomponent.id);
-    if (wcomponent.to_id)
-      add_both_entries(wcomponent.to_id, wcomponent.id);
+    if (connection_wc.from_id)
+      add_both_entries(connection_wc.from_id, connection_wc.id);
+    if (connection_wc.to_id)
+      add_both_entries(connection_wc.to_id, connection_wc.id);
   });
   return map;
 }
@@ -297,10 +297,11 @@ function update_filters(state, current_composed_knowledge_view) {
       if (should_exclude || lacks_include)
         wc_ids_to_exclude.add(wcomponent.id);
     });
+    const {selected_wcomponent_ids_set: selected_wc_ids} = state.meta_wcomponents;
     wcomponents_links_on_kv.forEach((wcomponent) => {
       const {from_id, to_id} = wcomponent;
       let should_exclude = !from_id || !to_id;
-      should_exclude = should_exclude || wc_ids_to_exclude.has(from_id) || wc_ids_to_exclude.has(to_id);
+      should_exclude = should_exclude || !selected_wc_ids.has(from_id) && wc_ids_to_exclude.has(from_id) || !selected_wc_ids.has(to_id) && wc_ids_to_exclude.has(to_id);
       should_exclude = should_exclude || calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args).should_exclude;
       if (should_exclude)
         wc_ids_to_exclude.add(wcomponent.id);
@@ -335,7 +336,7 @@ function calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, exc
     include_by_component_types
   } = exclusion_args;
   const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
-  const labels__lacks_include = !label_ids.find((label_id) => include_by_label_ids.has(label_id));
+  const labels__lacks_include = include_by_label_ids.size > 0 && !label_ids.find((label_id) => include_by_label_ids.has(label_id));
   const types__should_exclude = exclude_by_component_types.has(type);
   const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type);
   const should_exclude = labels__should_exclude || types__should_exclude;

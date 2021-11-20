@@ -5,7 +5,17 @@ import {get_angle_from_start_connector, get_angle_from_end_connector} from "./an
 import {get_connection_point} from "./terminal.js";
 import {to_vec} from "./utils.js";
 export function derive_coords(args) {
-  const {from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour} = args;
+  const {
+    from_node_position,
+    to_node_position,
+    from_connection_type,
+    line_behaviour,
+    circular_links
+  } = args;
+  let {to_connection_type} = args;
+  if (circular_links && from_node_position.left >= to_node_position.left) {
+    to_connection_type = {...to_connection_type, direction: "from"};
+  }
   const from_connector_position = get_connection_point(from_node_position, from_connection_type);
   const to_connector_position = get_connection_point(to_node_position, to_connection_type);
   const x1 = from_connector_position.left;

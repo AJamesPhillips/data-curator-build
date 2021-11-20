@@ -9,7 +9,8 @@ import {
   is_set_show_help_menu,
   is_set_display_time_marks,
   is_set_or_toggle_animate_causal_links,
-  is_set_or_toggle_show_large_grid
+  is_set_or_toggle_show_large_grid,
+  is_set_or_toggle_circular_links
 } from "./actions.js";
 import {derive_validity_filter, derive_certainty_formatting} from "./util.js";
 export const display_reducer = (state, action) => {
@@ -41,6 +42,10 @@ export const display_reducer = (state, action) => {
   if (is_set_or_toggle_animate_causal_links(action)) {
     const animate_causal_links = boolean_or_toggle(action.animate_causal_links, state.display_options.animate_causal_links);
     state = update_substate(state, "display_options", "animate_causal_links", animate_causal_links);
+  }
+  if (is_set_or_toggle_circular_links(action)) {
+    const circular_links = boolean_or_toggle(action.circular_links, state.display_options.circular_links);
+    state = update_substate(state, "display_options", "circular_links", circular_links);
   }
   if (is_set_show_help_menu(action)) {
     state = update_substate(state, "display_options", "show_help_menu", action.show);

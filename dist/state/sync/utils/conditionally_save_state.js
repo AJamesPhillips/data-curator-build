@@ -7,21 +7,6 @@ export async function conditionally_save_state(store) {
     return Promise.resolve();
   await save_state(store);
 }
-let allow_ctrl_s_to_flush_save = true;
-export async function conditional_ctrl_s_save(store) {
-  const should_save = calc_should_save(store, false);
-  if (!should_save)
-    return;
-  const ctrl_s_flush_save = is_ctrl_s_flush_save(store.getState());
-  if (ctrl_s_flush_save && allow_ctrl_s_to_flush_save) {
-    allow_ctrl_s_to_flush_save = false;
-    await save_state(store, true);
-  }
-  allow_ctrl_s_to_flush_save = !ctrl_s_flush_save;
-}
-function is_ctrl_s_flush_save(state) {
-  return state.global_keys.keys_down.has("s") && state.global_keys.keys_down.has("Control");
-}
 function calc_should_save(store, cautious_save) {
   if (!store.load_state_from_storage)
     return false;
