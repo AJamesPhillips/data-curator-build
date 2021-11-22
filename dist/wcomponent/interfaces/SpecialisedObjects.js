@@ -82,6 +82,9 @@ export function wcomponent_has_existence_predictions(wcomponent) {
 export function wcomponent_has_VAP_sets(wcomponent) {
   return wcomponent.values_and_prediction_sets !== void 0;
 }
+export function wcomponent_has_value_possibilities(wcomponent) {
+  return wcomponent?.value_possibilities !== void 0;
+}
 export function wcomponent_should_have_state_VAP_sets(wcomponent) {
   return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent);
 }

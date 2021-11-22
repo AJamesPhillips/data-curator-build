@@ -17,7 +17,7 @@ function _ActiveFilterWarning(props) {
     return null;
   return /* @__PURE__ */ h(Tooltip, {
     placement: "top",
-    title: "WARNING: a filter is in place which could result in components being hidden."
+    title: "A filter is in place which could result in components being hidden"
   }, /* @__PURE__ */ h(IconButton, {
     className: classes.warning_button,
     component: "span",

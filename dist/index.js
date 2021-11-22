@@ -4,7 +4,6 @@ import App from "./App.js";
 import {h, render} from "../snowpack/pkg/preact.js";
 import "../snowpack/pkg/preact/devtools.js";
 import {Provider} from "../snowpack/pkg/react-redux.js";
-import {APP_DETAILS} from "./shared/constants.js";
 import {get_store} from "./state/store.js";
 import {DemoPredictionsGraph} from "./scratch_pad/PredictionsGraph.js";
 import {DemoStatementProbability} from "./statements/StatementWithProbability.js";
@@ -21,8 +20,8 @@ import {LandingPage} from "./home/LandingPage.js";
 import {DevLandingPage} from "./home/DevLandingPage.js";
 import {SimHome} from "./x_sim_app/SimHome.js";
 import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
+import {set_window_title} from "./window_title.js";
 const root = document.getElementById("root");
-const title = document.getElementsByTagName("title")[0];
 if (root) {
   const in_production = window.location.hostname === "datacurator.org";
   if (window.location.pathname === "" || window.location.pathname === "/") {
@@ -72,8 +71,6 @@ if (root) {
     root.innerText = "Unknown path: " + window.location.pathname;
   }
 }
-if (title) {
-  title.innerHTML = APP_DETAILS.NAME;
-}
+set_window_title();
 setup_window_on_focus_listener();
 setup_console_api();

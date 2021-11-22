@@ -10,7 +10,6 @@ import {convert_VAP_set_to_VAP_visuals} from "../../wcomponent_derived/value_and
 import {get_wcomponent_VAPs_represent} from "../../wcomponent/get_wcomponent_VAPs_represent.js";
 import {predicate_target_value_possibility} from "../../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities.js";
 import {ValueAndPredictionEntryRow} from "./ValueAndPredictionEntryRow.js";
-import {value_possibility_for_UI} from "../../wcomponent/value/parse_value.js";
 import {ratio_to_percentage_string} from "../../sharedf/percentages.js";
 import {prune_items_by_created_at_and_versions} from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions.js";
 const map_state = (state, own_props) => {
@@ -44,30 +43,7 @@ function _NodeSubStateSummary(props) {
     } else if (target_value_id_type === void 0 || target_value === void 0)
       return null;
     else {
-      let value_text2 = target_value;
-      let value_id = "";
-      if (target_value_id_type === "id") {
-        value_id = target_value;
-        value_text2 = (target_wcomponent.value_possibilities || {})[target_value]?.value || target_value;
-      }
-      const parsed_value = value_possibility_for_UI({value: value_text2, id: value_id}, VAPs_represent);
-      const VAP_visual2 = {
-        VAP_id: "",
-        parsed_value,
-        value_text: value_text2,
-        certainty: 1
-      };
-      const counterfactual_VAP_set_info = {
-        has_any_counterfactual_applied: false,
-        active_counterfactual_v2_id: void 0
-      };
-      return /* @__PURE__ */ h(ValueAndPredictionEntryRow, {
-        wcomponent: props.wcomponent,
-        VAP_visual: VAP_visual2,
-        show_judgements: true,
-        counterfactual_VAP_set: counterfactual_VAP_set_info,
-        VAP_id_to_counterfactuals_info_map: {}
-      });
+      return null;
     }
   }
   target_VAP_sets = target_VAP_sets.filter(({id}) => id === target_VAP_set_id);
@@ -100,7 +76,7 @@ function _NodeSubStateSummary(props) {
   if (!VAP_visual)
     return /* @__PURE__ */ h("div", null, "Invalid configuration");
   let {value_text} = VAP_visual;
-  value_text += VAP_visual.certainty === 1 ? "" : ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`;
+  value_text = ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`;
   VAP_visual = {...VAP_visual, value_text, certainty: 1};
   return /* @__PURE__ */ h(ValueAndPredictionEntryRow, {
     wcomponent: target_wcomponent,

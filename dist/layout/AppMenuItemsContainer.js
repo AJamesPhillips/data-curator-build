@@ -11,7 +11,8 @@ const map_state = (state) => ({
   editing: !state.display_options.consumption_formatting
 });
 const map_dispatch = {
-  set_show_help_menu: ACTIONS.display.set_show_help_menu
+  set_show_help_menu: ACTIONS.display.set_show_help_menu,
+  change_route: ACTIONS.routing.change_route
 };
 const connector = connect(map_state, map_dispatch);
 const hide_routes = new Set([
@@ -44,7 +45,6 @@ function _AppMenuItemsContainer(props) {
     flexDirection: "column",
     alignItems: "end"
   }, /* @__PURE__ */ h(Button, {
-    onClick: handleClick,
     "aria-controls": "select_tab",
     fullWidth: true,
     "aria-haspopup": "true"
@@ -58,8 +58,13 @@ function _AppMenuItemsContainer(props) {
     alignItems: "start",
     alignContent: "stretch"
   }, /* @__PURE__ */ h(Box, {
-    component: "strong"
-  }, route_to_text(props.route)), /* @__PURE__ */ h(MenuIcon, null))), /* @__PURE__ */ h(Menu, {
+    component: "strong",
+    onClick: () => {
+      props.change_route({route: props.route, item_id: null, sub_route: null});
+    }
+  }, route_to_text(props.route)), /* @__PURE__ */ h(MenuIcon, {
+    onClick: handleClick
+  }))), /* @__PURE__ */ h(Menu, {
     anchorEl,
     id: "select_tab",
     onClose: handleClose,
