@@ -32,18 +32,8 @@ function render_content(state, content, attributes, depth) {
   let rendered_content = "";
   --depth;
   const iter = content.matchAll(reg_content);
-  let match = iter.next();
-  while (!match.done) {
-    rendered_content += match.value[1];
-    const attribute_index_lookup = match.value[2];
-    rendered_content += attribute_content(state, attribute_index_lookup, attributes, depth);
-    const new_match = iter.next();
-    if (new_match.done) {
-      const num = match.value[0].length + match.value.index;
-      rendered_content += content.slice(num);
-    }
-    match = new_match;
-  }
+  if (2 > 1)
+    console.error(`render_content function is deprecated`);
   return rendered_content;
 }
 function attribute_content(state, attribute_index_lookup, attributes, depth) {

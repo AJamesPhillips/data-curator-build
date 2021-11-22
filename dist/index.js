@@ -23,6 +23,7 @@ import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
 import {set_window_title} from "./window_title.js";
 const root = document.getElementById("root");
 if (root) {
+  root.innerText = "";
   const in_production = window.location.hostname === "datacurator.org";
   if (window.location.pathname === "" || window.location.pathname === "/") {
     if (in_production) {

@@ -14,25 +14,28 @@ export function derive_coords(args) {
     line_behaviour,
     circular_links
   } = args;
-  let y_offset = 0;
+  let y1_offset = 0;
+  let y2_offset = 0;
   let complete_invert_of_right_to_left = false;
   if (circular_links) {
+    y1_offset = 30;
+    y2_offset = 30;
     if (from_node_position.left >= to_node_position.left) {
+      y2_offset = 0;
       to_connection_type = {...to_connection_type, direction: "from"};
       if (from_node_position.left > to_node_position.left + NODE_WIDTH) {
         complete_invert_of_right_to_left = true;
         from_connection_type = {...from_connection_type, direction: "to"};
+        y1_offset = 0;
       }
-    } else {
-      y_offset = 30;
     }
   }
   const from_connector_position = get_connection_point(from_node_position, from_connection_type);
   const to_connector_position = get_connection_point(to_node_position, to_connection_type);
   const x1 = from_connector_position.left;
-  const y1 = -from_connector_position.top + y_offset;
+  const y1 = -from_connector_position.top + y1_offset;
   const x2 = to_connector_position.left;
-  const y2 = -to_connector_position.top + y_offset;
+  const y2 = -to_connector_position.top + y2_offset;
   let relative_control_point1 = {x: 0, y: 0};
   let relative_control_point2 = relative_control_point1;
   const angle = get_angle(x1, y1, x2, y2);
