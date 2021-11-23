@@ -28,7 +28,7 @@ export function display_options_starting_state() {
     display_by_simulated_time: false,
     display_time_marks: false,
     animate_causal_links: false,
-    circular_links: false,
+    circular_links: true,
     show_help_menu: false,
     show_large_grid: false,
     validity_filter,

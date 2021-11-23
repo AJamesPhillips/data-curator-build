@@ -12,35 +12,39 @@ const map_state = (state) => {
   return {
     user: state.user_info.user,
     user_name: state.user_info.user_name,
+    bases_by_id: state.user_info.bases_by_id,
+    chosen_base_id: state.user_info.chosen_base_id,
     need_to_set_user_name: selector_need_to_set_user_name(state)
   };
 };
 const map_dispatch = {};
 const connector = connect(map_state, map_dispatch);
 function _UserInfo(props) {
-  const {user, user_name, need_to_set_user_name} = props;
+  const {user, bases_by_id, chosen_base_id, user_name, need_to_set_user_name} = props;
   const [form_state, set_form_state] = useState("hidden");
   const previous_user = useRef(user);
   const user_name_or_none = user_name || no_user_name;
   useEffect(() => {
     const previous_signed_out = !previous_user.current && user;
     previous_user.current = user;
-    const new_form_state = !user ? "signin" : need_to_set_user_name ? "account_info" : previous_signed_out ? "hidden" : form_state;
+    const have_bases_but_base_id_not_present = bases_by_id && chosen_base_id ? !bases_by_id[chosen_base_id] : false;
+    const should_sign_in = !user && have_bases_but_base_id_not_present;
+    const new_form_state = should_sign_in ? "signin" : need_to_set_user_name ? "account_info" : previous_signed_out ? "hidden" : form_state;
     set_form_state(new_form_state);
-  }, [user, need_to_set_user_name]);
+  }, [user, bases_by_id, chosen_base_id, need_to_set_user_name]);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
     color: "primary",
     endIcon: /* @__PURE__ */ h(ExitToAppIcon, null),
     fullWidth: true,
     disableElevation: true,
-    onClick: () => set_form_state("account_info"),
+    onClick: () => set_form_state(user ? "account_info" : "signin"),
     size: "small",
     style: {textTransform: "none"},
     variant: "contained"
   }, /* @__PURE__ */ h(Typography, {
     noWrap: true
   }, user ? user_name_or_none : "Sign in")), form_state === "signin" && /* @__PURE__ */ h(UserSigninRegister, {
-    on_close: !user ? void 0 : () => set_form_state("hidden")
+    on_close: () => set_form_state("hidden")
   }), form_state === "account_info" && /* @__PURE__ */ h(UserAccountInfo, {
     on_close: need_to_set_user_name ? void 0 : () => set_form_state("hidden")
   }));

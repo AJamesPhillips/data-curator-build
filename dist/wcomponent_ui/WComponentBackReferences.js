@@ -29,6 +29,8 @@ function _WComponentBackReferences(props) {
       value: "Show back references",
       onClick: () => set_show_back_references(true)
     }));
+  if (other_wcomponents.length === 0)
+    return /* @__PURE__ */ h("div", null, "No back references");
   const created_at_ms = new Date().getTime();
   const sim_ms = created_at_ms;
   return /* @__PURE__ */ h("div", null, "Back references:", other_wcomponents.map((wcomponent) => {

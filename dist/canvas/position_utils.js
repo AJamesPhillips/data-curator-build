@@ -18,8 +18,9 @@ export function round_canvas_point(point, step = "small") {
   }
 }
 export const NODE_WIDTH = 250;
+export const NODE_HEIGHT_APPROX = 120;
 const half_node_width = NODE_WIDTH / 2;
-const half_node_height = 60;
+const half_node_height = NODE_HEIGHT_APPROX;
 export function offset_by_half_node(point) {
   return {left: point.left - half_node_width, top: point.top - half_node_height};
 }

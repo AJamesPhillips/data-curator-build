@@ -29,9 +29,12 @@ export const user_info_reducer = (state, action) => {
     const {bases} = action;
     const bases_by_id = build_bases_by_id_map(bases);
     state = update_substate(state, "user_info", "bases_by_id", bases_by_id);
-    const initial_chosen_base_id = state.user_info.chosen_base_id;
-    state = ensure_valid_chosen_base_id(state);
-    const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id;
+    let changed_chosen_base_id = false;
+    if (state.user_info.user) {
+      const initial_chosen_base_id = state.user_info.chosen_base_id;
+      state = ensure_valid_chosen_base_id(state);
+      changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id;
+    }
     pub_sub.user.pub("changed_bases", true);
     if (changed_chosen_base_id)
       pub_sub.user.pub("changed_chosen_base_id", true);

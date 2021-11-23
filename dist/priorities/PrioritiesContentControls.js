@@ -18,7 +18,6 @@ function _PrioritiesContentControls(props) {
   const components_on_screen = true;
   const draw_attention = allow_drawing_attention && position && !components_on_screen;
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(MoveToItemButton, {
-    position,
     move: () => props.change_route({args: position}),
     draw_attention,
     have_finished_drawing_attention: () => set_allow_drawing_attention(false)

@@ -2,10 +2,12 @@ import {
   clean_base_object_of_sync_meta_fields
 } from "../../state/sync/supabase/clean_base_object_for_supabase.js";
 import {parse_base_dates} from "./parse_dates.js";
-export function parse_knowledge_view(knowledge_view, wcomponent_ids) {
+export function parse_knowledge_view(knowledge_view, wcomponent_ids, remove_passthrough_entries = false) {
   knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view);
   let wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids);
-  wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map);
+  if (remove_passthrough_entries) {
+    wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map);
+  }
   knowledge_view = {
     ...knowledge_view,
     ...parse_base_dates(knowledge_view),

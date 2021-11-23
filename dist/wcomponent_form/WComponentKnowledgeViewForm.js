@@ -53,7 +53,7 @@ function _WComponentKnowledgeViewForm(props) {
     editing
   } = props;
   if (!wcomponent)
-    return /* @__PURE__ */ h("div", null, "Component of ID: ", wcomponent_id, " does not exist");
+    return null;
   const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => {
     const entry = wc_id_map[wcomponent_id];
     return entry && !entry.blocked && !entry.passthrough;

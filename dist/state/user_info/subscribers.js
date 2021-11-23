@@ -9,7 +9,7 @@ export function user_info_subscribers(store) {
   const {user, users_by_id, bases_by_id: bases} = starting_state.user_info;
   if (user && !users_by_id)
     get_users(store);
-  if (user && !bases)
+  if (!bases)
     refresh_bases_for_current_user(store);
   pub_sub.user.sub("changed_user", () => {
     get_users(store);

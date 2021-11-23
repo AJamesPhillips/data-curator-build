@@ -59,11 +59,23 @@ export function derive_coords(args) {
   const angle = get_angle(x1, y1, x2, y2);
   let end_angle = angle + rads._180;
   if (line_behaviour === void 0 || line_behaviour === "curve") {
-    end_angle = invert_end_angle ? 0 : rads._180;
     const xc = (x2 - x1) / 2;
     const min_xc = Math.max(Math.abs(xc), minimum_line_bow) * (Math.sign(xc) || -1);
-    relative_control_point1 = {x: min_xc * x_control1_factor, y: 0};
-    relative_control_point2 = {x: -min_xc * x_control2_factor, y: 0};
+    let x_control1 = min_xc * x_control1_factor;
+    let x_control2 = -min_xc * x_control2_factor;
+    let y_control1 = 0;
+    let y_control2 = 0;
+    const going_right_to_left = x2 <= x1;
+    const y_diff = y2 - y1;
+    if (!circular_links && going_right_to_left) {
+      x_control1 = Math.min(-x_control1, 300);
+      x_control2 = Math.max(-x_control2, -300);
+      y_control1 = y_diff;
+      y_control2 = -y_diff;
+    }
+    end_angle = invert_end_angle ? 0 : rads._180;
+    relative_control_point1 = {x: x_control1, y: y_control1};
+    relative_control_point2 = {x: x_control2, y: y_control2};
   }
   return {
     x1,

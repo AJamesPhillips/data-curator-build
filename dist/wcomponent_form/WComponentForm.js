@@ -131,6 +131,7 @@ function _WComponentForm(props) {
     orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || [];
     orig_value_possibilities = wcomponent.value_possibilities;
   }
+  const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
   return /* @__PURE__ */ h(Box, {
     className: `editable-${wcomponent_id}`
   }, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
@@ -160,7 +161,7 @@ function _WComponentForm(props) {
     className: "description_label"
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
     UI_value
-  })), /* @__PURE__ */ h(FormControl, {
+  })), (editing || wcomponent.type !== "statev2" || has_VAP_sets) && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
     margin: "normal"
@@ -177,7 +178,7 @@ function _WComponentForm(props) {
       new_wcomponent.type = type;
       upsert_wcomponent(new_wcomponent);
     }
-  })), wcomponent_is_statev2(wcomponent) && (editing || (orig_values_and_prediction_sets?.length || 0) > 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Sub type"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}

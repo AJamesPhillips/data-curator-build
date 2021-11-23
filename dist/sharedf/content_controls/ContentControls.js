@@ -65,7 +65,8 @@ function _ContentControls(props) {
     variant: "dense"
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
     allow_drawing_attention,
-    have_finished_drawing_attention: () => set_allow_drawing_attention(false)
+    have_finished_drawing_attention: () => set_allow_drawing_attention(false),
+    disable_if_not_present: false
   }), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(Box, {
     component: "label",
     title: props.editing ? "Time sliders always shown whilst editing" : ""
