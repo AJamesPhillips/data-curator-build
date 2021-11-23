@@ -21,6 +21,7 @@ import {DevLandingPage} from "./home/DevLandingPage.js";
 import {SimHome} from "./x_sim_app/SimHome.js";
 import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
 import {set_window_title} from "./window_title.js";
+import {SandboxCircularConnections} from "./scratch_pad/SandboxCircularConnections.js";
 const root = document.getElementById("root");
 if (root) {
   root.innerText = "";
@@ -31,6 +32,8 @@ if (root) {
     } else {
       render(/* @__PURE__ */ h(DevLandingPage, null), root);
     }
+  } else if (window.location.pathname === "/landing_page/") {
+    render(/* @__PURE__ */ h(LandingPage, null), root);
   } else if (window.location.pathname === "/project_dashboard") {
     render(/* @__PURE__ */ h(Provider, {
       store: get_store({load_state_from_storage: true})
@@ -53,6 +56,8 @@ if (root) {
     }, /* @__PURE__ */ h(SandboxEditableCustomDateTime, null)), root);
   } else if (window.location.pathname === "/sandbox/canvas_nodes") {
     render(/* @__PURE__ */ h(SandboxWComponentCanvasNode, null), root);
+  } else if (window.location.pathname === "/sandbox/circular_connections") {
+    render(/* @__PURE__ */ h(SandboxCircularConnections, null), root);
   } else if (window.location.pathname === "/sandbox/connected") {
     render(/* @__PURE__ */ h(Provider, {
       store: get_store({load_state_from_storage: false})

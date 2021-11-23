@@ -1,10 +1,8 @@
-import {bounded} from "../../shared/utils/bounded.js";
 import {get_angle, rads} from "../../utils/angles.js";
-import {get_magnitude} from "../../utils/vector.js";
-import {get_angle_from_start_connector, get_angle_from_end_connector} from "./angles.js";
 import {get_connection_point} from "./terminal.js";
-import {to_vec} from "./utils.js";
 import {NODE_WIDTH} from "../position_utils.js";
+const NODE_WIDTH_plus_fudge = NODE_WIDTH + 45;
+const minimum_line_bow = 30;
 export function derive_coords(args) {
   let {
     from_node_position,
@@ -16,17 +14,37 @@ export function derive_coords(args) {
   } = args;
   let y1_offset = 0;
   let y2_offset = 0;
-  let complete_invert_of_right_to_left = false;
+  let x_control1_factor = 1;
+  let x_control2_factor = 1;
+  let invert_end_angle = false;
   if (circular_links) {
-    y1_offset = 30;
-    y2_offset = 30;
-    if (from_node_position.left >= to_node_position.left) {
-      y2_offset = 0;
+    if (from_node_position.left < to_node_position.left - NODE_WIDTH_plus_fudge) {
+      y1_offset = 30;
+      y2_offset = 30;
+    } else if (to_node_position.left < from_node_position.left - NODE_WIDTH_plus_fudge) {
       to_connection_type = {...to_connection_type, direction: "from"};
-      if (from_node_position.left > to_node_position.left + NODE_WIDTH) {
-        complete_invert_of_right_to_left = true;
+      from_connection_type = {...from_connection_type, direction: "to"};
+      invert_end_angle = true;
+    } else {
+      const from_below_to = to_node_position.top < from_node_position.top;
+      if (from_below_to) {
         from_connection_type = {...from_connection_type, direction: "to"};
-        y1_offset = 0;
+        y2_offset = 30;
+      } else {
+        to_connection_type = {...to_connection_type, direction: "from"};
+        y1_offset = 30;
+        invert_end_angle = true;
+      }
+      if (from_node_position.left < to_node_position.left) {
+        if (from_below_to)
+          x_control1_factor = -1;
+        else
+          x_control2_factor = -1;
+      } else {
+        if (from_below_to)
+          x_control2_factor = -1;
+        else
+          x_control1_factor = -1;
       }
     }
   }
@@ -41,15 +59,11 @@ export function derive_coords(args) {
   const angle = get_angle(x1, y1, x2, y2);
   let end_angle = angle + rads._180;
   if (line_behaviour === void 0 || line_behaviour === "curve") {
-    const going_right_to_left = x2 <= x1;
-    if (going_right_to_left && !complete_invert_of_right_to_left) {
-      ({end_angle, relative_control_point1, relative_control_point2} = loop_curve(x1, y1, x2, y2, angle, from_connection_type, end_angle, to_connection_type, relative_control_point1, relative_control_point2));
-    } else {
-      end_angle = complete_invert_of_right_to_left ? 0 : rads._180;
-      const xc = (x2 - x1) / 2;
-      relative_control_point1 = {x: xc, y: 0};
-      relative_control_point2 = {x: -xc, y: 0};
-    }
+    end_angle = invert_end_angle ? 0 : rads._180;
+    const xc = (x2 - x1) / 2;
+    const min_xc = Math.max(Math.abs(xc), minimum_line_bow) * (Math.sign(xc) || -1);
+    relative_control_point1 = {x: min_xc * x_control1_factor, y: 0};
+    relative_control_point2 = {x: -min_xc * x_control2_factor, y: 0};
   }
   return {
     x1,
@@ -60,15 +74,6 @@ export function derive_coords(args) {
     relative_control_point2,
     end_angle
   };
-}
-function loop_curve(x1, y1, x2, y2, angle, from_connection_type, end_angle, to_connection_type, relative_control_point1, relative_control_point2) {
-  const magnitude = (get_magnitude(x1, y1, x2, y2) * 100) ** 0.5;
-  const start_angle = get_angle_from_start_connector(angle, from_connection_type.direction);
-  end_angle = get_angle_from_end_connector(angle, to_connection_type.direction);
-  const control_point_magnitude = bounded(magnitude, 10, 200);
-  relative_control_point1 = to_vec(start_angle, control_point_magnitude);
-  relative_control_point2 = to_vec(end_angle, control_point_magnitude);
-  return {end_angle, relative_control_point1, relative_control_point2};
 }
 export function bezier_middle(args) {
   const C1 = add_point(args.point1, args.relative_control_point1);

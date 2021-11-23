@@ -15,7 +15,8 @@ export function CanvasConnnection(props) {
     line_behaviour,
     circular_links,
     on_pointer_over_out = () => {
-    }
+    },
+    should_animate = true
   } = props;
   if (!from_node_position || !to_node_position)
     return null;
@@ -29,7 +30,7 @@ export function CanvasConnnection(props) {
   });
   let opacity = props.intensity ?? 1;
   const thickness = hovered ? 2 : props.thickness ?? 2;
-  const blur = props.blur || 0;
+  const blur = props.blur ?? 0;
   const style_line_background = {
     strokeWidth: thickness + 10
   };
@@ -51,7 +52,7 @@ export function CanvasConnnection(props) {
     y2,
     progress: 0
   }), [x1, y1, relative_control_point1.x, relative_control_point1.y, relative_control_point2.x, relative_control_point2.y, x2, y2]);
-  const d_args = current_position.current || target_position;
+  const d_args = should_animate ? current_position.current || target_position : target_position;
   return /* @__PURE__ */ h("g", {
     className: "connection_container " + (props.extra_css_classes || ""),
     onPointerDown: props.on_click,
@@ -72,7 +73,7 @@ export function CanvasConnnection(props) {
     className: "connection_line " + extra_line_classes,
     d: calc_d(d_args),
     ref: (e) => {
-      if (!e)
+      if (!e || !should_animate)
         return;
       if (animate_to_target_timeout.current)
         clearTimeout(animate_to_target_timeout.current);
