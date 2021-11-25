@@ -3,6 +3,7 @@ import {pub_sub} from "../pub_sub/pub_sub.js";
 export function record_keyupdown_activity(store) {
   document.onkeydown = (e) => {
     const action_args = {
+      event: e,
       time_stamp: e.timeStamp,
       alt_key: e.altKey,
       code: e.code,
@@ -17,6 +18,7 @@ export function record_keyupdown_activity(store) {
   };
   document.onkeyup = (e) => {
     const action_args = {
+      event: e,
       time_stamp: e.timeStamp,
       alt_key: e.altKey,
       code: e.code,

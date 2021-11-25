@@ -16,7 +16,7 @@ function toggle_consumption_formatting_on_key_press(store) {
   let key_combination = "";
   pub_sub.global_keys.sub("key_down", (e) => {
     if (key_combination) {
-      handle_key_combo(key_combination, e);
+      handle_key_combo(key_combination, e, store);
       return;
     }
     const start_key_combo = e.ctrl_key && root_key_combo.has(e.key);
@@ -39,22 +39,21 @@ function toggle_consumption_formatting_on_key_press(store) {
     if (e.key === "Control")
       key_combination = "";
   });
-  function handle_key_combo(key_combination2, e) {
-    let clear_key_combination = true;
-    if (key_combination2 === "d") {
-      clear_key_combination = handle_display_key_combo(e.key, store);
-    } else if (key_combination2 === "s") {
-      clear_key_combination = handle_selection_key_combo(e.key, store);
-    } else {
-      clear_key_combination = false;
-    }
-    if (clear_key_combination)
-      key_combination2 = "";
+}
+function handle_key_combo(key_combination, e, store) {
+  let handled_key = false;
+  if (key_combination === "d") {
+    handled_key = handle_display_key_combo(e.key, store);
+  } else if (key_combination === "s") {
+    handled_key = handle_selection_key_combo(e.key, store);
+  }
+  if (handled_key) {
+    e.event.preventDefault();
   }
 }
-const root_key_combo = new Set(["d", "s"]);
+export const root_key_combo = new Set(["d", "s"]);
 function handle_display_key_combo(key, store) {
-  let clear_key_combination = true;
+  let handled_key = true;
   if (key === "f") {
     store.dispatch(ACTIONS.display.toggle_focused_mode({}));
   } else if (key === "t") {
@@ -66,12 +65,12 @@ function handle_display_key_combo(key, store) {
   } else if (key === "c") {
     store.dispatch(ACTIONS.display.set_or_toggle_circular_links());
   } else {
-    clear_key_combination = false;
+    handled_key = false;
   }
-  return clear_key_combination;
+  return handled_key;
 }
 function handle_selection_key_combo(key, store) {
-  let clear_key_combination = true;
+  let handled_key = true;
   if (key === "a") {
     conditionally_select_all_components(store);
   } else if (key === "e") {
@@ -83,7 +82,7 @@ function handle_selection_key_combo(key, store) {
   } else if (key === "c") {
     conditionally_select_source_causal_components(store);
   } else {
-    clear_key_combination = false;
+    handled_key = false;
   }
-  return clear_key_combination;
+  return handled_key;
 }
