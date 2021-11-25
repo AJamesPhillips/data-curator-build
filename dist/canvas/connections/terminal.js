@@ -5,7 +5,7 @@ const connection_left = -6;
 const connection_top = 27;
 let connection_top_increment = 22;
 try {
-  if (navigator.platform.indexOf("Win"))
+  if (navigator.platform.indexOf("Win") > -1)
     connection_top_increment = 17;
 } catch (e) {
 }
