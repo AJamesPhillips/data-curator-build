@@ -3,6 +3,7 @@ export const ALLOWED_SUB_ROUTES = {
   wcomponents: ["wcomponents_edit_multiple"],
   search: [],
   filter: [],
+  select: [],
   display: [],
   statements: [],
   objects: ["objects_bulk_import", "objects_bulk_import/setup"],

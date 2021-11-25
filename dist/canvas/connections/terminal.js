@@ -3,7 +3,12 @@ const connection_diameter = 12;
 export const connection_radius = connection_diameter / 2;
 const connection_left = -6;
 const connection_top = 27;
-const connection_top_increment = 19;
+let connection_top_increment = 22;
+try {
+  if (navigator.platform.indexOf("Win"))
+    connection_top_increment = 17;
+} catch (e) {
+}
 const attribute_type_to_ordinal = {
   meta: 0,
   validity: 1,

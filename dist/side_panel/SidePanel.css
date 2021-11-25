@@ -1,0 +1,17 @@
+.side_panel .section {
+  padding: 5px;
+  background-color: white;
+  border-radius: 3px;
+  border: thin solid #aaa;
+}
+
+.side_panel .description {
+  margin-top: 5px;
+  color: grey;
+  font-size: 14px;
+}
+
+.side_panel .description i {
+  /* white-space: nowrap; */
+  font-weight: 900;
+}

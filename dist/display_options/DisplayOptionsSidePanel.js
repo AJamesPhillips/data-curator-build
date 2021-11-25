@@ -1,6 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import "./DisplayOptionsSidePanel.css.proxy.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {ACTIONS} from "../state/actions.js";
 import {TimeResolutionOptions} from "./TimeResolutionOptions.js";
@@ -9,6 +8,8 @@ const map_state = (state) => ({
   validity_filter: state.display_options.validity_filter,
   certainty_formatting: state.display_options.certainty_formatting,
   display_by_simulated_time: state.display_options.display_by_simulated_time,
+  focused_mode: state.display_options.focused_mode,
+  circular_links: state.display_options.circular_links,
   display_time_marks: state.display_options.display_time_marks,
   animate_causal_links: state.display_options.animate_causal_links,
   show_large_grid: state.display_options.show_large_grid,
@@ -18,6 +19,8 @@ const map_dispatch = {
   set_validity_filter: ACTIONS.display.set_validity_filter,
   set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
   set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+  set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
+  set_or_toggle_circular_links: ACTIONS.display.set_or_toggle_circular_links,
   set_display_time_marks: ACTIONS.display.set_display_time_marks,
   set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
   set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
@@ -26,7 +29,7 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _DisplayOptionsSidePanel(props) {
   return /* @__PURE__ */ h("div", {
-    className: "display_options_side_panel"
+    className: "side_panel"
   }, /* @__PURE__ */ h("h3", null, "Display Options"), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Validity filter"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
@@ -65,14 +68,30 @@ function _DisplayOptionsSidePanel(props) {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Time resolution"), /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h("p", {
     className: "section"
+  }, /* @__PURE__ */ h("b", null, 'Use "Focused" Mode'), /* @__PURE__ */ h("span", {
+    className: "description"
+  }, "ctrl + d + f"), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.focused_mode,
+    on_change: props.set_or_toggle_focused_mode
+  })), /* @__PURE__ */ h("p", {
+    className: "section"
+  }, /* @__PURE__ */ h("b", null, "Show causal links as more circular"), /* @__PURE__ */ h("span", {
+    className: "description"
+  }, "ctrl + d + c"), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.circular_links,
+    on_change: props.set_or_toggle_circular_links
+  })), /* @__PURE__ */ h("p", {
+    className: "section"
+  }, /* @__PURE__ */ h("b", null, "Animate causal connections"), /* @__PURE__ */ h("span", {
+    className: "description"
+  }, "ctrl + d + a"), /* @__PURE__ */ h(EditableCheckbox, {
+    value: props.animate_causal_links,
+    on_change: props.set_or_toggle_animate_causal_links
+  })), /* @__PURE__ */ h("p", {
+    className: "section"
   }, /* @__PURE__ */ h("b", null, "Show time markers"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.display_time_marks,
     on_change: props.set_display_time_marks
-  })), /* @__PURE__ */ h("p", {
-    className: "section"
-  }, /* @__PURE__ */ h("b", null, "Animate causal connections"), /* @__PURE__ */ h(EditableCheckbox, {
-    value: props.animate_causal_links,
-    on_change: props.set_or_toggle_animate_causal_links
   })), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Display by simulated time"), /* @__PURE__ */ h(EditableCheckbox, {
@@ -80,7 +99,7 @@ function _DisplayOptionsSidePanel(props) {
     on_change: props.set_display_by_simulated_time
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
     style: {backgroundColor: "pink"}
-  }, "Experimental view not optimised for data sets over a large period of time")), /* @__PURE__ */ h("p", {
+  }, 'Experimental view not optimised for data sets over a large period of time.  Probably want to use "Show time markers" above.')), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Show large grid (whilst editing)"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.show_large_grid,

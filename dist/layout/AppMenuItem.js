@@ -8,6 +8,8 @@ import {ACTIONS} from "../state/actions.js";
 function get_title(id) {
   if (id === "filter")
     return /* @__PURE__ */ h(FilterContextTabTitle, null);
+  else if (id === "select")
+    return "Selection";
   else if (id === "display")
     return "Display options";
   else if (id === "statements")

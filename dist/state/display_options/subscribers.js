@@ -59,7 +59,7 @@ export const root_key_combo = new Set(["d", "s"]);
 function handle_display_key_combo(key, store) {
   let handled_key = true;
   if (key === "f") {
-    store.dispatch(ACTIONS.display.toggle_focused_mode({}));
+    store.dispatch(ACTIONS.display.set_or_toggle_focused_mode());
   } else if (key === "t") {
     store.dispatch(ACTIONS.controls.toggle_display_time_sliders());
   } else if (key === "s") {

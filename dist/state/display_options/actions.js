@@ -5,12 +5,12 @@ const toggle_consumption_formatting = (args) => {
 export const is_toggle_consumption_formatting = (action) => {
   return action.type === toggle_consumption_formatting_type;
 };
-const toggle_focused_mode_type = "toggle_focused_mode";
-const toggle_focused_mode = (args) => {
-  return {type: toggle_focused_mode_type, ...args};
+const set_or_toggle_focused_mode_type = "set_or_toggle_focused_mode";
+const set_or_toggle_focused_mode = (focused_mode) => {
+  return {type: set_or_toggle_focused_mode_type, focused_mode};
 };
-export const is_toggle_focused_mode = (action) => {
-  return action.type === toggle_focused_mode_type;
+export const is_set_or_toggle_focused_mode = (action) => {
+  return action.type === set_or_toggle_focused_mode_type;
 };
 const set_time_resolution_type = "set_time_resolution";
 const set_time_resolution = (args) => {
@@ -77,7 +77,7 @@ export const is_set_or_toggle_show_large_grid = (action) => {
 };
 export const display_actions = {
   toggle_consumption_formatting,
-  toggle_focused_mode,
+  set_or_toggle_focused_mode,
   set_time_resolution,
   set_validity_filter,
   set_certainty_formatting,
