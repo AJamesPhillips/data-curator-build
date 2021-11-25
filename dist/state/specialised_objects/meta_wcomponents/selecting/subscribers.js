@@ -9,6 +9,7 @@ export function handle_ctrl_a(store, e) {
   const select_all = e.key === "a" && e.ctrl_key;
   if (!select_all)
     return;
+  e.event.preventDefault();
   conditionally_select_all_components(store);
 }
 function handle_canvas_area_select(store) {

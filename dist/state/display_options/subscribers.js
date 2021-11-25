@@ -21,11 +21,15 @@ function toggle_consumption_formatting_on_key_press(store) {
     }
     const start_key_combo = e.ctrl_key && root_key_combo.has(e.key);
     key_combination = start_key_combo ? key_combination = e.key : "";
-    if (start_key_combo)
+    if (start_key_combo) {
+      e.event.preventDefault();
       return;
+    }
     if (e.ctrl_key && e.key === "e") {
+      e.event.preventDefault();
       store.dispatch(ACTIONS.display.toggle_consumption_formatting({}));
     } else if (e.shift_key && e.key === "?") {
+      e.event.preventDefault();
       const state = store.getState();
       if (!state.display_options.show_help_menu && !state.user_activity.is_editing_text) {
         store.dispatch(ACTIONS.display.set_show_help_menu({show: true}));
