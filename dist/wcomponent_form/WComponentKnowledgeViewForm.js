@@ -10,22 +10,20 @@ import {ACTIONS} from "../state/actions.js";
 import {get_middle_of_screen, lefttop_to_xy} from "../state/display_options/display.js";
 import {
   get_current_knowledge_view_from_state,
-  get_current_composed_knowledge_view_from_state,
-  get_wcomponent_from_state
+  get_current_composed_knowledge_view_from_state
 } from "../state/specialised_objects/accessors.js";
 import {ExploreButtonHandle} from "../wcomponent_canvas/node/ExploreButtonHandle.js";
 import {WComponentBackReferences} from "../wcomponent_ui/WComponentBackReferences.js";
 import {AlignComponentForm} from "./AlignComponentForm.js";
 const map_state = (state, own_props) => {
-  const {wcomponent_id} = own_props;
+  const {wcomponent} = own_props;
   const current_knowledge_view = get_current_knowledge_view_from_state(state);
-  const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id];
+  const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent.id];
   const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
-  const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id];
+  const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent.id];
   const all_knowledge_views = state.derived.knowledge_views;
   const middle_position = get_middle_of_screen(state);
   return {
-    wcomponent: get_wcomponent_from_state(state, wcomponent_id),
     knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
     knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
     composed_knowledge_view_entry,
@@ -43,7 +41,6 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _WComponentKnowledgeViewForm(props) {
   const {
-    wcomponent_id,
     wcomponent,
     knowledge_view_id,
     knowledge_view_title,
@@ -52,8 +49,7 @@ function _WComponentKnowledgeViewForm(props) {
     all_knowledge_views,
     editing
   } = props;
-  if (!wcomponent)
-    return null;
+  const wcomponent_id = wcomponent.id;
   const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => {
     const entry = wc_id_map[wcomponent_id];
     return entry && !entry.blocked && !entry.passthrough;

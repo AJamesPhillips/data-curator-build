@@ -6,10 +6,10 @@ export function user_info_subscribers(store) {
   const starting_state = store.getState();
   if (!store.load_state_from_storage)
     return;
-  const {user, users_by_id, bases_by_id: bases} = starting_state.user_info;
-  if (user && !users_by_id)
+  const {users_by_id, bases_by_id} = starting_state.user_info;
+  if (!users_by_id)
     get_users(store);
-  if (!bases)
+  if (!bases_by_id)
     refresh_bases_for_current_user(store);
   pub_sub.user.sub("changed_user", () => {
     get_users(store);
@@ -19,11 +19,6 @@ export function user_info_subscribers(store) {
   pub_sub.user.sub("stale_bases", () => refresh_bases_for_current_user(store));
 }
 async function get_users(store) {
-  const {user} = store.getState().user_info;
-  if (!user) {
-    store.dispatch(ACTIONS.user_info.set_users({users: void 0}));
-    return;
-  }
   const supabase = get_supabase();
   const {data, error} = await supabase.from("users").select("*");
   if (data)

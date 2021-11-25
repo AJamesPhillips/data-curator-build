@@ -20,7 +20,6 @@ export const user_info_reducer = (state, action) => {
       action.users.forEach((u) => map[u.id] = u);
     }
     state = update_substate(state, "user_info", "users_by_id", map);
-    state = update_users_name(state);
   }
   if (is_set_need_to_handle_password_recovery(action)) {
     state = update_substate(state, "user_info", "need_to_handle_password_recovery", action.need_to_handle_password_recovery);
@@ -48,17 +47,6 @@ export const user_info_reducer = (state, action) => {
   }
   return state;
 };
-function selector_users_name(state) {
-  const {user, users_by_id} = state.user_info;
-  return user && users_by_id ? users_by_id[user.id]?.name : void 0;
-}
-function update_users_name(state) {
-  const new_user_name = selector_users_name(state);
-  if (new_user_name !== state.user_info.user_name) {
-    state = update_substate(state, "user_info", "user_name", new_user_name);
-  }
-  return state;
-}
 function build_bases_by_id_map(bases) {
   let bases_by_id = void 0;
   if (bases) {

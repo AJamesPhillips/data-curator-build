@@ -1,9 +1,10 @@
 export function selector_user_name(state) {
-  return state.user_info.user_name;
+  const {user, users_by_id} = state.user_info;
+  return user && users_by_id ? users_by_id[user.id]?.name : void 0;
 }
 export function selector_need_to_set_user_name(state) {
-  const {user, users_by_id, user_name} = state.user_info;
-  return user && users_by_id && !user_name;
+  const {user, users_by_id} = state.user_info;
+  return user && users_by_id && !selector_user_name(state);
 }
 export function selector_chosen_base(state) {
   const {bases_by_id, chosen_base_id} = state.user_info;

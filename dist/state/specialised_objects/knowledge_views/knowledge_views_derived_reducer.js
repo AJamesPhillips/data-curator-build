@@ -46,11 +46,11 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
   if (current_kv) {
     if (composed_kv_needs_update) {
       let current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv);
-      current_composed_knowledge_view = update_filters(state, current_composed_knowledge_view);
+      current_composed_knowledge_view = update_composed_knowledge_view_filters(state, current_composed_knowledge_view);
       current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view);
       state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view);
     } else if (filters_changed) {
-      const current_composed_knowledge_view = update_filters(state, state.derived.current_composed_knowledge_view);
+      const current_composed_knowledge_view = update_composed_knowledge_view_filters(state, state.derived.current_composed_knowledge_view);
       state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view);
     } else if (ephemeral_overrides_might_have_changed) {
       let {current_composed_knowledge_view} = state.derived;
@@ -80,7 +80,7 @@ function update_derived_knowledge_view_state(state) {
 function get_knowledge_view(state, id) {
   return state.specialised_objects.knowledge_views_by_id[id];
 }
-function update_current_composed_knowledge_view_state(state, current_kv) {
+export function update_current_composed_knowledge_view_state(state, current_kv) {
   const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
   const current_composed_knowledge_view = calculate_composed_knowledge_view({
     knowledge_view: current_kv,
@@ -269,7 +269,7 @@ export function get_composed_datetime_lines_config(foundation_knowledge_views, u
   });
   return config;
 }
-function update_filters(state, current_composed_knowledge_view) {
+export function update_composed_knowledge_view_filters(state, current_composed_knowledge_view) {
   if (!current_composed_knowledge_view)
     return void 0;
   const {wc_ids_by_type, composed_wc_id_map} = current_composed_knowledge_view;

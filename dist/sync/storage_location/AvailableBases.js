@@ -31,12 +31,10 @@ function _AvailableBases(props) {
   } = props;
   const [async_state, set_async_state] = useState("initial");
   const [error, set_error] = useState(void 0);
-  if (!user)
-    return "Please sign in";
   if (!users_by_id)
-    return "Fetching users...";
+    return "Loading users...";
   if (!bases_by_id)
-    return "Fetching bases...";
+    return "Loading bases...";
   const bases = sort_list(Object.values(bases_by_id), (b) => b.inserted_at.getTime(), "descending");
   if (bases.length === 0)
     return null;
@@ -54,7 +52,7 @@ function _AvailableBases(props) {
     style: {float: "right"}
   }), /* @__PURE__ */ h("h4", null, "Select an existing base"), /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
     error
-  }), /* @__PURE__ */ h("table", null, /* @__PURE__ */ h("thead", null, /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("th", null), /* @__PURE__ */ h("th", null, "Title"), /* @__PURE__ */ h("th", null, "Public"), /* @__PURE__ */ h("th", null, "Owner"), /* @__PURE__ */ h("th", null, "Access"), /* @__PURE__ */ h("th", null, "Id"), /* @__PURE__ */ h("th", null, "Edit"))), /* @__PURE__ */ h("tbody", null, bases.map((base) => /* @__PURE__ */ h(StorageOption, {
+  }), /* @__PURE__ */ h("table", null, /* @__PURE__ */ h("thead", null, /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("th", null), /* @__PURE__ */ h("th", null, "Knowledge Base Title"), /* @__PURE__ */ h("th", null), /* @__PURE__ */ h("th", null, "Owner"), /* @__PURE__ */ h("th", null, "Access"), /* @__PURE__ */ h("th", null))), /* @__PURE__ */ h("tbody", null, bases.map((base) => /* @__PURE__ */ h(StorageOption, {
     user,
     users_by_id,
     base,

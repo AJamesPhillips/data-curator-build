@@ -28,7 +28,7 @@ function _UserSigninRegisterForm(props) {
   async function sign_in() {
     const {user, error} = await supabase.auth.signIn({email, password});
     set_supabase_session_error(error);
-    set_user({user});
+    set_user({user: user || void 0});
   }
   async function forgot_password() {
     const {data, error} = await supabase.auth.api.resetPasswordForEmail(email);

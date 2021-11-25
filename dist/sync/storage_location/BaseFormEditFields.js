@@ -4,6 +4,7 @@ import "../common.css.proxy.js";
 import {modify_base} from "../../supabase/bases.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 import {DisplaySupabasePostgrestError} from "../user_info/DisplaySupabaseErrors.js";
+import {SelectKnowledgeView} from "../../knowledge_view/SelectKnowledgeView.js";
 export function BaseFormEditFields(props) {
   const {base, on_save_or_exit, user} = props;
   const [modified_base, set_modified_base] = useState(base);
@@ -32,6 +33,12 @@ export function BaseFormEditFields(props) {
       set_modified_base({...modified_base, public_read: !modified_base.public_read});
     },
     value: modified_base.public_read ? "Make private" : "Publish (make public)"
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), "Default view   ", /* @__PURE__ */ h(SelectKnowledgeView, {
+    selected_option_id: modified_base.default_knowledge_view_id,
+    on_change: (default_knowledge_view_id) => {
+      set_modified_base({...modified_base, default_knowledge_view_id});
+    },
+    force_editable: true
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", null, have_pending_edits && valid_edits && /* @__PURE__ */ h("input", {
     type: "button",
     disabled: !have_pending_edits || !valid_edits,

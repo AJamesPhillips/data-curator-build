@@ -4,16 +4,16 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {useRef} from "../../../snowpack/pkg/preact/hooks.js";
 import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
+import {selector_need_to_set_user_name, selector_user_name} from "../../state/user_info/selector.js";
 import {no_user_name} from "./constants.js";
 import {UserAccountInfo} from "./UserAccountInfo.js";
 import {UserSigninRegister} from "./UserSigninRegister.js";
 const map_state = (state) => {
   return {
     user: state.user_info.user,
-    user_name: state.user_info.user_name,
     bases_by_id: state.user_info.bases_by_id,
     chosen_base_id: state.user_info.chosen_base_id,
+    user_name: selector_user_name(state),
     need_to_set_user_name: selector_need_to_set_user_name(state)
   };
 };

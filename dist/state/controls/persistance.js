@@ -7,12 +7,13 @@ export function controls_persist(state) {
   ], state.controls);
   persist_state_object("controls", to_persist);
 }
-export function controls_starting_state() {
+export function controls_starting_state(args) {
   const obj = get_persisted_state_object("controls");
   const state = {
     linked_datetime_sliders: false,
     display_time_sliders: false,
     display_side_panel: true,
+    display_select_storage: args.storage_location === void 0,
     ...obj
   };
   return state;

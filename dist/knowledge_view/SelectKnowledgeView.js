@@ -1,15 +1,11 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
-import {ACTIONS} from "../state/actions.js";
 const map_state = (state) => ({
   knowledge_views: state.derived.knowledge_views,
   nested_knowledge_view_ids_map: state.derived.nested_knowledge_view_ids.map
 });
-const map_dispatch = {
-  upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view
-};
-const connector = connect(map_state, map_dispatch);
+const connector = connect(map_state);
 function _SelectKnowledgeView(props) {
   const {
     placeholder,
@@ -33,7 +29,8 @@ function _SelectKnowledgeView(props) {
     allow_none: true,
     selected_option_id,
     options,
-    on_change
+    on_change,
+    force_editable: props.force_editable
   });
 }
 export const SelectKnowledgeView = connector(_SelectKnowledgeView);

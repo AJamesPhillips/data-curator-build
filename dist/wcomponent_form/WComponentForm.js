@@ -313,7 +313,7 @@ function _WComponentForm(props) {
     value: wcomponent.hide_state,
     on_change: (hide_state) => upsert_wcomponent({hide_state})
   }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
-    wcomponent_id
+    wcomponent
   })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Delete",
     tooltip_text: "Remove from all knowledge views",

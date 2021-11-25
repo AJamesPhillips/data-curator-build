@@ -6,24 +6,21 @@ import "../common.css.proxy.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {DisplaySupabasePostgrestError} from "./DisplaySupabaseErrors.js";
 import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
-import {useEffect} from "../../../snowpack/pkg/preact/hooks.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 const map_state = (state) => {
   return {
     user: state.user_info.user,
-    user_name: state.user_info.user_name,
     need_to_set_user_name: selector_need_to_set_user_name(state)
   };
 };
 const map_dispatch = {};
 const connector = connect(map_state, map_dispatch);
 function _UserAccountInfoChangeUsernameForm(props) {
-  const {on_close, user, user_name: stored_user_name, need_to_set_user_name} = props;
+  const {on_close, user, need_to_set_user_name} = props;
   const [username, set_username] = useState("");
   const [save_state, set_save_state] = useState("initial");
   const is_saving = save_state === "in_progress";
   const [postgrest_error, set_postgrest_error] = useState(null);
-  useEffect(() => set_username(stored_user_name || ""), [stored_user_name]);
   if (!user)
     return null;
   const {id: user_id} = user;

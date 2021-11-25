@@ -5,7 +5,7 @@ import {Box, Button, makeStyles, Typography} from "../../../snowpack/pkg/@materi
 import LogoutIcon from "../../../snowpack/pkg/@material-ui/icons/ExitToApp.js";
 import "../common.css.proxy.js";
 import {ACTIONS} from "../../state/actions.js";
-import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
+import {selector_need_to_set_user_name, selector_user_name} from "../../state/user_info/selector.js";
 import {save_and_optionally_signout} from "../../state/user_info/signout.js";
 import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
 import {UserAccountInfoChangePasswordForm} from "./UserAccountInfoChangePasswordForm.js";
@@ -13,7 +13,7 @@ import {UserAccountInfoChangeUsernameForm} from "./UserAccountInfoChangeUsername
 const map_state = (state) => {
   return {
     user: state.user_info.user,
-    user_name: state.user_info.user_name,
+    user_name: selector_user_name(state),
     need_to_set_user_name: selector_need_to_set_user_name(state),
     need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery
   };

@@ -29,7 +29,7 @@ function _UserAccountInfoChangePasswordForm(props) {
     const result = await supabase.auth.update({email, password});
     set_supabase_session_error(result.error);
     if (!result.error) {
-      set_user({user: result.user});
+      set_user({user: result.user || void 0});
       set_need_to_handle_password_recovery(false);
       on_close();
     }

@@ -13,9 +13,10 @@ import {user_activity_starting_state} from "./user_activity/starting_state.js";
 import {user_info_starting_state} from "./user_info/persistance.js";
 export function get_starting_state(load_state_from_storage) {
   const routing = get_routing_starting_state();
-  const user_info = user_info_starting_state(load_state_from_storage, routing.args.storage_location);
+  const {storage_location} = routing.args;
+  const user_info = user_info_starting_state({load_state_from_storage, storage_location});
   const starting_state = {
-    controls: controls_starting_state(),
+    controls: controls_starting_state({storage_location}),
     creation_context: creation_context_starting_state(),
     filter_context: filter_context_starting_state(),
     statements: [],

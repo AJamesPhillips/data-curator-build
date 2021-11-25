@@ -43,10 +43,15 @@ function optionally_remove_invalid_wc_ids(kv, remove_missing, wcomponent_ids) {
 }
 function remove_wc_id_map_passthrough_entries(wc_id_map) {
   const new_wc_id_map = {...wc_id_map};
+  const deleted_ids = [];
   Object.entries(new_wc_id_map).forEach(([id, entry]) => {
-    if (entry.passthrough)
-      delete new_wc_id_map[id];
+    if (!entry.passthrough)
+      return;
+    delete new_wc_id_map[id];
+    deleted_ids.push(id);
   });
+  if (deleted_ids.length)
+    console.log(`Deleted ${deleted_ids.length} passthrough ids`);
   return new_wc_id_map;
 }
 function upgrade_2021_05_24_knowledge_view(knowledge_view) {
