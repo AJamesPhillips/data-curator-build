@@ -16,6 +16,7 @@ export function record_keyupdown_activity(store) {
     store.dispatch(ACTIONS.global_keys.key_down(action_args));
     pub_sub.global_keys.pub("key_down", action_args);
   };
+  document.onkeypress = (e) => e.preventDefault();
   document.onkeyup = (e) => {
     const action_args = {
       event: e,
