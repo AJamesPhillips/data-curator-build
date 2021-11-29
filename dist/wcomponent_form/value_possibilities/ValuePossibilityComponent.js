@@ -40,7 +40,7 @@ export function ValuePossibilityComponent(props) {
         value
       });
     }
-  }))), /* @__PURE__ */ h(Box, {
+  }))), VALUE_POSSIBILITY_IDS_to_text[value_possibility.id] && /* @__PURE__ */ h(Box, {
     style: {width: 100, color: "#cb4", cursor: "pointer"},
     title: "Using interoperable ID"
   }, VALUE_POSSIBILITY_IDS_to_text[value_possibility.id]), editing && /* @__PURE__ */ h(IconButton, {

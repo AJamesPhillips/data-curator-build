@@ -183,7 +183,7 @@ function _WComponentCanvasNode(props) {
     created_at_ms,
     display_time_marks: props.display_time_marks
   });
-  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + classes.sizer + color.font + color.background;
+  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + color.font + color.background;
   let show_validity_value = false;
   let show_state_value = false;
   if (wcomponent) {
@@ -262,6 +262,7 @@ function _WComponentCanvasNode(props) {
       label_ids: wcomponent.label_ids
     })),
     extra_css_class,
+    extra_css_class_node_main_content: classes.sizer,
     opacity,
     unlimited_width: false,
     glow,

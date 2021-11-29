@@ -268,7 +268,7 @@ function _WComponentForm(props) {
     update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), VAPs_represent !== VAPsType.undefined && orig_values_and_prediction_sets !== void 0 && (editing || Object.keys(orig_value_possibilities || {}).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
     editing,
     VAPs_represent,
     value_possibilities: orig_value_possibilities,
@@ -277,7 +277,7 @@ function _WComponentForm(props) {
       const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities);
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
-  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null))), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
+  }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
     force_editable,
     wcomponent,
     upsert_wcomponent

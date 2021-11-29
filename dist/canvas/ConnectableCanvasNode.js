@@ -6,11 +6,7 @@ import "./display_colors.css.proxy.js";
 import {connection_radius} from "./connections/terminal.js";
 export function ConnectableCanvasNode(props) {
   let {opacity} = props;
-  const extra_node_styles = {
-    display: props.hidden ? "none" : "",
-    opacity,
-    ...props.extra_node_styles
-  };
+  const extra_node_styles = {display: props.hidden ? "none" : "", opacity};
   if (props.unlimited_width)
     extra_node_styles.maxWidth = "initial";
   const main_content_styles = {
@@ -34,7 +30,7 @@ export function ConnectableCanvasNode(props) {
     extra_styles: extra_node_styles,
     extra_args: props.extra_args
   }, /* @__PURE__ */ h(Card, {
-    className: "node_main_content",
+    className: "node_main_content " + (props.extra_css_class_node_main_content || ""),
     variant: "outlined",
     style: main_content_styles
   }, props.cover_image && /* @__PURE__ */ h(CardMedia, {
