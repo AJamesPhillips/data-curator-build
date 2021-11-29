@@ -1,4 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {is_defined} from "../shared/utils/is_defined.js";
 import {ACTIONS} from "../state/actions.js";
@@ -26,14 +27,14 @@ function _TopLevelKnowledgeViewListsSet(props) {
       style: {cursor: "progress"}
     }, props.ready ? "Automatically creating base knowledge view..." : "Loading...");
   }
-  const possible_parent_knowledge_view_options = props.knowledge_views.map((kv) => ({id: kv.id, title: kv.title}));
+  const possible_parent_knowledge_view_ids = useMemo(() => props.knowledge_views.map((kv) => kv.id), [props.knowledge_views]);
   const knowledge_views = props.nested_knowledge_view_ids.top_ids.map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
   const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id);
   return /* @__PURE__ */ h(KnowledgeViewListsSet, {
     ...props,
     parent_knowledge_view_id: void 0,
     knowledge_views,
-    possible_parent_knowledge_view_options,
+    possible_parent_knowledge_view_ids,
     upsert_knowledge_view: props.upsert_knowledge_view,
     current_kv_parent_ids
   });

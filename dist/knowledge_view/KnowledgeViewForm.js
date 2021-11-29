@@ -1,4 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_current_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
@@ -28,7 +29,7 @@ function _KnowledgeViewForm(props) {
     return /* @__PURE__ */ h("div", null, "Loading...");
   if (!knowledge_view)
     return /* @__PURE__ */ h("div", null, "No knowledge view selected");
-  const possible_parent_knowledge_view_options = props.knowledge_views.map((kv) => ({id: kv.id, title: kv.title}));
+  const possible_parent_knowledge_view_ids = useMemo(() => props.knowledge_views.map((kv) => kv.id), [props.knowledge_views]);
   const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id);
   const update_item = (knowledge_view2) => upsert_knowledge_view({knowledge_view: knowledge_view2});
   const crud = {
@@ -42,7 +43,7 @@ function _KnowledgeViewForm(props) {
   };
   return factory_get_kv_details({
     ...props,
-    possible_parent_knowledge_view_options,
+    possible_parent_knowledge_view_ids,
     current_kv_parent_ids
   })(knowledge_view, crud);
 }

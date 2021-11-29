@@ -13,6 +13,8 @@ import {Link} from "../sharedf/Link.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
 import {KnowledgeViewChangeBase} from "./change_base/KnowledgeViewChangeBase.js";
+import {SelectKnowledgeView} from "./SelectKnowledgeView.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -29,6 +31,7 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   const children = (nested_kv?.child_ids || []).map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
   const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""];
   const is_current_kv = props.current_subview_id === knowledge_view.id;
+  const allow_nest_under_knowledge_view_ids = useMemo(() => new Set(props.possible_parent_knowledge_view_ids), [props.possible_parent_knowledge_view_ids]);
   return /* @__PURE__ */ h("div", {
     style: {backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5}
   }, /* @__PURE__ */ h("p", {
@@ -77,10 +80,9 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
     className: "description_label"
   }, "Nest under"), nested_kv?.ERROR_is_circular && /* @__PURE__ */ h("div", {
     style: {backgroundColor: "pink"}
-  }, "Is circularly nested"), /* @__PURE__ */ h(AutocompleteText, {
+  }, "Is circularly nested"), /* @__PURE__ */ h(SelectKnowledgeView, {
     selected_option_id: knowledge_view.parent_knowledge_view_id,
-    allow_none: true,
-    options: props.possible_parent_knowledge_view_options.filter(({id}) => id !== knowledge_view.id),
+    allowed_ids: allow_nest_under_knowledge_view_ids,
     on_change: (parent_knowledge_view_id) => {
       crud.update_item({...knowledge_view, parent_knowledge_view_id});
     }
