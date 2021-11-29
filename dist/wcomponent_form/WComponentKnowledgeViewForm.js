@@ -65,6 +65,7 @@ function _WComponentKnowledgeViewForm(props) {
       entry: new_entry
     });
   }
+  const not_present = !knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough;
   return /* @__PURE__ */ h("div", null, editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
@@ -99,7 +100,7 @@ function _WComponentKnowledgeViewForm(props) {
     wcomponent_id,
     wcomponent_current_kv_entry: composed_knowledge_view_entry,
     is_highlighted: true
-  }))), knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough) && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
+  }))), knowledge_view_id && not_present && /* @__PURE__ */ h("div", null, (knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view", composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view", /* @__PURE__ */ h("br", null), editing && /* @__PURE__ */ h(Button, {
     value: (knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view",
     extra_class_names: "left",
     onClick: () => upsert_entry(knowledge_view_id, {blocked: void 0, passthrough: void 0})
@@ -127,7 +128,7 @@ function _WComponentKnowledgeViewForm(props) {
         return;
       upsert_entry(knowledge_view_id2);
     }
-  })), other_knowledge_views.length > 0 && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), "Also in:", other_knowledge_views.map((kv) => {
+  })), other_knowledge_views.length > 0 && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), not_present ? "Present" : "Also", " in:", other_knowledge_views.map((kv) => {
     const entry = kv.wc_id_map[wcomponent_id];
     const pos = lefttop_to_xy(entry, true);
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Link, {

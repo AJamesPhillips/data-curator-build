@@ -11,11 +11,18 @@ export function Options(props) {
   } = props;
   if (options_to_display.length === 0 || !editing_options)
     return null;
+  const fudge = 45;
   return /* @__PURE__ */ h("div", {
     className: "options_outer",
     style: {marginTop: 15}
   }, /* @__PURE__ */ h("div", {
-    className: "options_inner"
+    className: "options_inner",
+    ref: (e) => {
+      if (!e)
+        return;
+      const max_height = `${document.body.clientHeight - e.clientTop - fudge}px`;
+      e.style.setProperty("max-height", max_height);
+    }
   }, options_to_display.map((option, index) => /* @__PURE__ */ h("div", {
     className: "option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : ""),
     onMouseDown: () => conditional_on_change(option.id),

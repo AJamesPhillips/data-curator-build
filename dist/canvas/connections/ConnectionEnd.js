@@ -15,7 +15,7 @@ export function ConnectionEnd(props) {
   const style = {
     fillOpacity: style_opacity
   };
-  let size = props.size === void 0 ? 10 : bounded(props.size * 10, 5, 25);
+  let size = props.size === void 0 ? 10 : bounded(props.size * 5, 10, 35);
   let points;
   if (type === 0) {
     points = get_connection_arrow_end(end_angle, size);
