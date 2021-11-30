@@ -161,12 +161,14 @@ export function get_composed_wc_id_map(foundation_knowledge_views, wcomponents_b
   let composed_wc_id_map = {};
   foundation_knowledge_views.forEach((foundational_kv) => {
     Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => {
+      if (entry.passthrough)
+        return;
       delete composed_wc_id_map[id];
       composed_wc_id_map[id] = entry;
     });
   });
   remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id);
-  const result = partition_wc_id_map_on_blocked_and_remove_passthrough(composed_wc_id_map);
+  const result = partition_wc_id_map_on_blocked(composed_wc_id_map);
   composed_wc_id_map = result.composed_wc_id_map;
   const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map;
   return {composed_wc_id_map, composed_blocked_wc_id_map};
@@ -178,13 +180,11 @@ function remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id) {
       delete composed_wc_id_map[id];
   });
 }
-function partition_wc_id_map_on_blocked_and_remove_passthrough(composed_wc_id_map) {
+function partition_wc_id_map_on_blocked(composed_wc_id_map) {
   const composed_blocked_wc_id_map = {};
   Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) => {
     if (entry.blocked) {
       composed_blocked_wc_id_map[wcomponent_id] = entry;
-      delete composed_wc_id_map[wcomponent_id];
-    } else if (entry.passthrough) {
       delete composed_wc_id_map[wcomponent_id];
     }
   });

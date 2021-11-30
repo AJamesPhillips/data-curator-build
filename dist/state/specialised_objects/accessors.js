@@ -34,7 +34,8 @@ export function is_on_current_knowledge_view(state, wcomponent_id) {
   const kv = get_current_knowledge_view_from_state(state);
   if (!kv)
     return false;
-  return !!kv.wc_id_map[wcomponent_id];
+  const entry = kv.wc_id_map[wcomponent_id];
+  return !!entry && !entry.passthrough;
 }
 export function get_knowledge_view_from_state(state, knowledge_view_id) {
   return state.specialised_objects.knowledge_views_by_id[knowledge_view_id];
