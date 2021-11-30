@@ -4,13 +4,15 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Box, Button, Toolbar, makeStyles, Collapse} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./ContentControls.css.proxy.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
-import {TimeResolutionOptions} from "../../display_options/TimeResolutionOptions.js";
 import {ACTIONS} from "../../state/actions.js";
 import {TimeSlider} from "../../time_control/TimeSlider.js";
 import {invert_disabled_appearance} from "../../ui_themes/invert_disabled.js";
 import {ActiveCreatedAtFilterWarning} from "../ActiveCreatedAtFilterWarning.js";
 import {ToggleDatetimeMarkers} from "./ToggleDatetimeMarkers.js";
 import {get_actually_display_time_sliders} from "../../state/controls/accessors.js";
+import {ActiveFilterWarning} from "../ActiveFilterWarning.js";
+import {ActiveCreationContextWarning} from "../ActiveCreationContextWarning.js";
+import {ActiveFocusedMode} from "../ActiveFocusedMode.js";
 const map_state = (state) => {
   return {
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
@@ -63,11 +65,13 @@ function _ContentControls(props) {
   })))), /* @__PURE__ */ h(Toolbar, {
     className: classes.toolbar,
     variant: "dense"
+  }, /* @__PURE__ */ h(Box, {
+    className: classes.move_to_button_and_warnings
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
     allow_drawing_attention,
     have_finished_drawing_attention: () => set_allow_drawing_attention(false),
     disable_if_not_present: false
-  }), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(Box, {
+  }), /* @__PURE__ */ h(ActiveFocusedMode, null), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(ActiveFilterWarning, null), /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null), /* @__PURE__ */ h(Box, {
     component: "label",
     title: props.editing ? "Time sliders always shown whilst editing" : ""
   }, /* @__PURE__ */ h(Button, {
@@ -75,14 +79,16 @@ function _ContentControls(props) {
     disableElevation: true,
     disabled: props.editing,
     onClick: () => props.set_display_time_sliders(!props.display_time_sliders)
-  }, props.display_time_sliders ? "Hide" : "Show", " time sliders")), /* @__PURE__ */ h(Box, {
-    component: "label"
-  }, /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null)));
+  }, props.display_time_sliders ? "Hide" : "Show", " time sliders"))));
 }
 export const ContentControls = connector(_ContentControls);
 const use_styles = makeStyles((theme) => ({
   toolbar: {
     justifyContent: "space-between"
+  },
+  move_to_button_and_warnings: {
+    display: "flex",
+    flexDirection: "row"
   },
   drawer_content: {
     display: "flex",

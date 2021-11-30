@@ -16,7 +16,8 @@ const map_state = (state) => {
     display_time_marks: state.display_options.display_time_marks,
     sim_ms: state.routing.args.sim_ms,
     time_origin_ms_present,
-    current_kv
+    current_kv,
+    presenting: state.display_options.consumption_formatting
   };
 };
 const map_dispatch = {
@@ -25,7 +26,9 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _ToggleDatetimeMarkers(props) {
-  const {display_time_marks, time_origin_ms_present, current_kv} = props;
+  const {display_time_marks, time_origin_ms_present, current_kv, presenting} = props;
+  if (presenting && !time_origin_ms_present)
+    return null;
   return /* @__PURE__ */ h(Box, {
     component: "label"
   }, /* @__PURE__ */ h(ButtonGroup, {

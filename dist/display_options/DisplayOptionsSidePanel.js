@@ -68,21 +68,21 @@ function _DisplayOptionsSidePanel(props) {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Time resolution"), /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h("p", {
     className: "section"
-  }, /* @__PURE__ */ h("b", null, 'Use "Focused" Mode'), /* @__PURE__ */ h("span", {
+  }, /* @__PURE__ */ h("b", null, 'Use "Focused" Mode'), "  ", /* @__PURE__ */ h("span", {
     className: "description"
   }, "ctrl + d + f"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.focused_mode,
     on_change: props.set_or_toggle_focused_mode
   })), /* @__PURE__ */ h("p", {
     className: "section"
-  }, /* @__PURE__ */ h("b", null, "Show causal links as more circular"), /* @__PURE__ */ h("span", {
+  }, /* @__PURE__ */ h("b", null, "Show causal links as more circular"), "  ", /* @__PURE__ */ h("span", {
     className: "description"
   }, "ctrl + d + c"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.circular_links,
     on_change: props.set_or_toggle_circular_links
   })), /* @__PURE__ */ h("p", {
     className: "section"
-  }, /* @__PURE__ */ h("b", null, "Animate causal connections"), /* @__PURE__ */ h("span", {
+  }, /* @__PURE__ */ h("b", null, "Animate causal connections"), "  ", /* @__PURE__ */ h("span", {
     className: "description"
   }, "ctrl + d + a"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.animate_causal_links,
@@ -93,13 +93,6 @@ function _DisplayOptionsSidePanel(props) {
     value: props.display_time_marks,
     on_change: props.set_display_time_marks
   })), /* @__PURE__ */ h("p", {
-    className: "section"
-  }, /* @__PURE__ */ h("b", null, "Display by simulated time"), /* @__PURE__ */ h(EditableCheckbox, {
-    value: props.display_by_simulated_time,
-    on_change: props.set_display_by_simulated_time
-  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
-    style: {backgroundColor: "pink"}
-  }, 'Experimental view not optimised for data sets over a large period of time.  Probably want to use "Show time markers" above.')), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Show large grid (whilst editing)"), /* @__PURE__ */ h(EditableCheckbox, {
     value: props.show_large_grid,

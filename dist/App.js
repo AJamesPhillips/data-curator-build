@@ -72,11 +72,7 @@ function App(props) {
     justifyContent: "flex-end"
   }, /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`
-  }, /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null)), /* @__PURE__ */ h(Box, {
-    className: `${classes.toolbar_item}`
-  }, /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(Box, {
-    className: `${classes.toolbar_item}`
-  }, /* @__PURE__ */ h(ActiveFilterWarning, null)), /* @__PURE__ */ h(Box, {
+  }, /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(ActiveFilterWarning, null), /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`
   }, /* @__PURE__ */ h(ActiveUserWidget, null)), /* @__PURE__ */ h(Box, {
     className: `${classes.toolbar_item}`

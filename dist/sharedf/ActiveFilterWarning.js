@@ -1,8 +1,9 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import {IconButton, makeStyles, Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
+import {IconButton, Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import FilterNoneIcon from "../../snowpack/pkg/@material-ui/icons/FilterNone.js";
 import {ACTIONS} from "../state/actions.js";
+import {active_warning_styles} from "./active_warning_common.js";
 const map_state = (state) => ({
   apply_filter: state.filter_context.apply_filter
 });
@@ -12,7 +13,7 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _ActiveFilterWarning(props) {
   const {apply_filter} = props;
-  const classes = use_styles();
+  const classes = active_warning_styles();
   if (!apply_filter)
     return null;
   return /* @__PURE__ */ h(Tooltip, {
@@ -28,7 +29,3 @@ function _ActiveFilterWarning(props) {
   })));
 }
 export const ActiveFilterWarning = connector(_ActiveFilterWarning);
-const use_styles = makeStyles((theme) => ({
-  warning_button: {cursor: "help"},
-  warning_icon: {color: theme.palette.warning.main}
-}));
