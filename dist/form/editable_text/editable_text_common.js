@@ -7,7 +7,9 @@ import {RichMarkDown} from "../../sharedf/RichMarkDown.js";
 import {ACTIONS} from "../../state/actions.js";
 import {ConditionalWComponentSearchWindow} from "../ConditionalWComponentSearchWindow.js";
 const map_state = (state) => ({
-  presenting: state.display_options.consumption_formatting
+  presenting: state.display_options.consumption_formatting,
+  use_creation_context: state.creation_context.use_creation_context,
+  creation_context: state.creation_context.creation_context
 });
 const map_dispatch = {
   set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag
@@ -42,6 +44,9 @@ function _EditableTextCommon(props) {
     }));
   }
   const conditional_on_change = (new_value) => {
+    if (props.use_creation_context) {
+      new_value = custom_creation_context_replace_text(props.creation_context, new_value);
+    }
     if (new_value !== value)
       user_conditional_on_change && user_conditional_on_change(new_value);
     set_value(new_value);
@@ -131,4 +136,10 @@ function get_id_insertion_point({selectionStart, value}) {
     }
   }
   return void 0;
+}
+function custom_creation_context_replace_text(creation_context, new_value) {
+  if (creation_context?.replace_text_target && creation_context?.replace_text_replacement) {
+    new_value = new_value.replaceAll(creation_context.replace_text_target, creation_context.replace_text_replacement);
+  }
+  return new_value;
 }

@@ -13,11 +13,12 @@ export function creation_context_starting_state() {
     use_creation_context = false,
     creation_context = {custom_created_at: void 0, label_ids: []}
   } = obj;
-  let {custom_created_at, label_ids = []} = creation_context;
+  let {custom_created_at} = creation_context;
   custom_created_at = custom_created_at && new Date(custom_created_at);
+  creation_context.custom_created_at = custom_created_at;
   const state = {
     use_creation_context,
-    creation_context: {custom_created_at, label_ids}
+    creation_context
   };
   return state;
 }

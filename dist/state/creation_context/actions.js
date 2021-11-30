@@ -19,8 +19,16 @@ const set_label_ids = (args) => {
 export const is_set_label_ids = (action) => {
   return action.type === set_label_ids_type;
 };
+const set_replace_text_type = "set_replace_text";
+const set_replace_text = (args) => {
+  return {type: set_replace_text_type, ...args};
+};
+export const is_set_replace_text = (action) => {
+  return action.type === set_replace_text_type;
+};
 export const creation_context_actions = {
   toggle_use_creation_context,
   set_custom_created_at,
-  set_label_ids
+  set_label_ids,
+  set_replace_text
 };
