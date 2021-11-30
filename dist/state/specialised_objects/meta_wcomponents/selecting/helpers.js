@@ -66,7 +66,43 @@ function factory_conditionally_select_causal_components(direction) {
     return new_selected_ids;
   });
 }
-export function factory_conditionally_select_components(get_component_ids) {
+export const conditionally_select_interconnections = factory_conditionally_select_components((composed_kv, selected_ids) => {
+  const initial_selected_ids_set = new Set(selected_ids);
+  const new_selected_ids = [...selected_ids];
+  const new_selected_ids_set = new Set(new_selected_ids);
+  const {wc_id_connections_map, composed_visible_wc_id_map} = composed_kv;
+  function is_not_visible(id) {
+    return !composed_visible_wc_id_map[id];
+  }
+  selected_ids.forEach((id) => {
+    if (is_not_visible(id))
+      return;
+    const connected_ids_first_degree = wc_id_connections_map[id];
+    if (!connected_ids_first_degree)
+      return;
+    connected_ids_first_degree.forEach((connected_id_1st_degree) => {
+      if (is_not_visible(connected_id_1st_degree))
+        return;
+      const connected_ids_second_degree = wc_id_connections_map[connected_id_1st_degree];
+      if (!connected_ids_second_degree)
+        return;
+      connected_ids_second_degree.forEach((connected_id_second_degree) => {
+        if (connected_id_second_degree === id)
+          return;
+        if (!initial_selected_ids_set.has(connected_id_second_degree))
+          return;
+        if (is_not_visible(connected_id_second_degree))
+          return;
+        if (new_selected_ids_set.has(connected_id_1st_degree))
+          return;
+        new_selected_ids.push(connected_id_1st_degree);
+        new_selected_ids_set.add(connected_id_1st_degree);
+      });
+    });
+  });
+  return new_selected_ids;
+});
+function factory_conditionally_select_components(get_component_ids) {
   return (store) => {
     const state = store.getState();
     const composed_kv = get_current_composed_knowledge_view_from_state(state);

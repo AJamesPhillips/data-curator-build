@@ -5,7 +5,8 @@ import {
   conditionally_contract_selected_components,
   conditionally_select_all_components,
   conditionally_select_forward_causal_components,
-  conditionally_select_source_causal_components
+  conditionally_select_source_causal_components,
+  conditionally_select_interconnections
 } from "../state/specialised_objects/meta_wcomponents/selecting/helpers.js";
 import {get_store} from "../state/store.js";
 export function SelectionControlSidePanel(props) {
@@ -52,5 +53,13 @@ export function SelectionControlSidePanel(props) {
     onClick: () => conditionally_contract_selected_components(store)
   }), /* @__PURE__ */ h("div", {
     className: "description"
-  }, "ctrl + s + d")));
+  }, "ctrl + s + d")), /* @__PURE__ */ h("p", {
+    className: "section"
+  }, /* @__PURE__ */ h(Button, {
+    value: "Select components inbetween",
+    fullWidth: true,
+    onClick: () => conditionally_select_interconnections(store)
+  }), /* @__PURE__ */ h("div", {
+    className: "description"
+  }, "ctrl + s + i")));
 }

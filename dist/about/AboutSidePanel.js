@@ -8,6 +8,6 @@ const connector = connect(map_state);
 function _AboutSidePanel(props) {
   return /* @__PURE__ */ h("div", null, !props.ready && /* @__PURE__ */ h("div", null, "Loading..."), /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Version"), " ", /* @__PURE__ */ h("b", null, "2021-11-25 d"));
+  }, "Version"), " ", /* @__PURE__ */ h("b", null, "2021-11-30"));
 }
 export const AboutSidePanel = connector(_AboutSidePanel);
