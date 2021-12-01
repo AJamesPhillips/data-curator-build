@@ -22,9 +22,9 @@ export function derive_coords(args) {
   let invert_end_angle = false;
   if (circular_links) {
     if (from_node_position.left < to_node_position.left - NODE_WIDTH_plus_fudge) {
+    } else if (to_node_position.left < from_node_position.left - NODE_WIDTH_plus_fudge) {
       y1_offset = 30;
       y2_offset = 30;
-    } else if (to_node_position.left < from_node_position.left - NODE_WIDTH_plus_fudge) {
       to_connection_type = {...to_connection_type, direction: "from"};
       from_connection_type = {...from_connection_type, direction: "to"};
       invert_end_angle = true;
@@ -32,10 +32,10 @@ export function derive_coords(args) {
       const from_below_to = to_node_position.top < from_node_position.top;
       if (from_below_to) {
         from_connection_type = {...from_connection_type, direction: "to"};
-        y2_offset = 30;
+        y1_offset = 30;
       } else {
         to_connection_type = {...to_connection_type, direction: "from"};
-        y1_offset = 30;
+        y2_offset = 30;
         invert_end_angle = true;
       }
       if (from_node_position.left < to_node_position.left) {
