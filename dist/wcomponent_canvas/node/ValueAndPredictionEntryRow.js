@@ -5,6 +5,7 @@ import {get_wcomponent_VAPs_represent} from "../../wcomponent/get_wcomponent_VAP
 import {WComponentJudgements} from "./WComponentJudgements.js";
 import {ExploreButtonHandle} from "./ExploreButtonHandle.js";
 import {Link} from "../../sharedf/Link.js";
+import {AltRouteIcon} from "../../sharedf/icons/AltRouteIcon.js";
 export function ValueAndPredictionEntryRow(props) {
   const {VAP_visual, show_judgements, counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map} = props;
   const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent);
@@ -73,7 +74,9 @@ function CounterfactualLink(props) {
     item_id: props.counterfactual.counterfactual_v2_id,
     args: void 0,
     extra_css_style: style
-  }, "⑂"), props.counterfactual.counterfactual_has_knowledge_view && /* @__PURE__ */ h("span", {
+  }, /* @__PURE__ */ h(AltRouteIcon, {
+    size: "small"
+  })), props.counterfactual.counterfactual_has_knowledge_view && /* @__PURE__ */ h("span", {
     style: {fontSize: 14}
   }, /* @__PURE__ */ h(ExploreButtonHandle, {
     wcomponent_id: props.counterfactual.counterfactual_v2_id || "",

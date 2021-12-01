@@ -18,8 +18,7 @@ export function create_wcomponent_on_double_tap(store) {
     }
     if (state.display_options.consumption_formatting)
       return;
-    const point = offset_by_half_node(position_to_point(double_tap));
-    const position = round_canvas_point(point, "large");
+    const position = position_from_canvas_pointer_event(double_tap);
     const add_to_knowledge_view = {id: current_knowledge_view.id, position};
     create_wcomponent({
       wcomponent: {base_id, type: "statev2"},
@@ -27,4 +26,9 @@ export function create_wcomponent_on_double_tap(store) {
       store
     });
   });
+}
+export function position_from_canvas_pointer_event(canvas_pointer_event) {
+  const point = offset_by_half_node(position_to_point(canvas_pointer_event));
+  const position = round_canvas_point(point, "large");
+  return position;
 }

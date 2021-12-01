@@ -3,6 +3,7 @@ import {useMemo, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import "./CanvasConnnection.css.proxy.js";
 import {ConnectionEndType, ConnectionEnd} from "./ConnectionEnd.js";
 import {derive_coords} from "./derive_coords.js";
+import {bounded} from "../../shared/utils/bounded.js";
 export function CanvasConnnection(props) {
   const [hovered, set_hovered] = useState(false);
   const current_position = useRef(void 0);
@@ -16,20 +17,14 @@ export function CanvasConnnection(props) {
     circular_links,
     on_pointer_over_out = () => {
     },
-    should_animate = true
+    should_animate = true,
+    connection_end_type = ConnectionEndType.positive
   } = props;
   if (!from_node_position || !to_node_position)
     return null;
-  const {x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle} = derive_coords({
-    from_node_position,
-    to_node_position,
-    from_connection_type,
-    to_connection_type,
-    line_behaviour,
-    circular_links
-  });
   let opacity = props.intensity ?? 1;
   const thickness = hovered ? 2 : props.thickness ?? 2;
+  const end_size = bounded(thickness * 2.5, 10, 35);
   const blur = props.blur ?? 0;
   const style_line_background = {
     strokeWidth: thickness + 10
@@ -41,17 +36,49 @@ export function CanvasConnnection(props) {
   };
   const extra_line_classes = hovered ? " hovered " : !props.is_editing && props.focused_mode ? "" : props.is_highlighted ? " highlighted " : "";
   const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes;
-  const target_position = useMemo(() => ({
-    x1,
-    y1,
-    relative_control_point_x1: relative_control_point1.x,
-    relative_control_point_y1: relative_control_point1.y,
-    relative_control_point_x2: relative_control_point2.x,
-    relative_control_point_y2: relative_control_point2.y,
-    x2,
-    y2,
-    progress: 0
-  }), [x1, y1, relative_control_point1.x, relative_control_point1.y, relative_control_point2.x, relative_control_point2.y, x2, y2]);
+  const {xe2, ye2, end_angle, target_position} = useMemo(() => {
+    const {
+      x1,
+      y1,
+      xe2: xe22,
+      ye2: ye22,
+      xo2,
+      yo2,
+      relative_control_point1,
+      relative_control_point2,
+      end_angle: end_angle2
+    } = derive_coords({
+      from_node_position,
+      to_node_position,
+      from_connection_type,
+      to_connection_type,
+      line_behaviour,
+      circular_links,
+      end_size: end_size / 10,
+      connection_end_type
+    });
+    const target_position2 = {
+      x1,
+      y1,
+      relative_control_point_x1: relative_control_point1.x,
+      relative_control_point_y1: relative_control_point1.y,
+      relative_control_point_x2: relative_control_point2.x,
+      relative_control_point_y2: relative_control_point2.y,
+      x2: xo2,
+      y2: yo2,
+      progress: 0
+    };
+    return {xe2: xe22, ye2: ye22, end_angle: end_angle2, target_position: target_position2};
+  }, [
+    from_node_position,
+    to_node_position,
+    from_connection_type,
+    to_connection_type,
+    line_behaviour,
+    circular_links,
+    end_size,
+    connection_end_type
+  ]);
   const d_args = should_animate ? current_position.current || target_position : target_position;
   return /* @__PURE__ */ h("g", {
     className: "connection_container " + (props.extra_css_classes || ""),
@@ -81,13 +108,13 @@ export function CanvasConnnection(props) {
     },
     style: style_line
   }), /* @__PURE__ */ h(ConnectionEnd, {
-    type: props.connection_end_type || ConnectionEndType.positive,
-    x: x2,
-    y: y2,
+    type: connection_end_type,
+    x: xe2,
+    y: ye2,
     end_angle,
     opacity,
     blur,
-    size: thickness / 2,
+    size: end_size,
     is_hovered: hovered,
     is_highlighted: props.is_highlighted
   }));

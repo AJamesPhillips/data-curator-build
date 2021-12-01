@@ -1,5 +1,4 @@
 import {h} from "../../../snowpack/pkg/preact.js";
-import {bounded} from "../../shared/utils/bounded.js";
 import {rads} from "../../utils/angles.js";
 import {add_vec, to_vec} from "./utils.js";
 export var ConnectionEndType;
@@ -9,13 +8,12 @@ export var ConnectionEndType;
   ConnectionEndType2[ConnectionEndType2["noop"] = 2] = "noop";
 })(ConnectionEndType || (ConnectionEndType = {}));
 export function ConnectionEnd(props) {
-  const {type, x, y, end_angle, opacity, blur, is_hovered, is_highlighted} = props;
+  const {type, x, y, end_angle, opacity, blur, size, is_hovered, is_highlighted} = props;
   let extra_classes = `${is_highlighted ? "highlighted" : ""} ${is_hovered ? "hovered" : ""}`;
   const style_opacity = opacity * (1 - blur / 100);
   const style = {
     fillOpacity: style_opacity
   };
-  let size = props.size === void 0 ? 10 : bounded(props.size * 5, 10, 35);
   let points;
   if (type === 0) {
     points = get_connection_arrow_end(end_angle, size);
@@ -51,7 +49,7 @@ function get_arrow_end_points(angle, type, size) {
 }
 const BAR_WIDTH = 12;
 const BAR_HALF_WIDTH = BAR_WIDTH / 2;
-const BAR_THICKNESS = 4;
+export const BAR_THICKNESS = 4;
 function get_connection_bar_end(end_angle, size) {
   size = size / 10;
   const p1 = to_vec(end_angle + rads._90, BAR_HALF_WIDTH * size);
@@ -61,6 +59,7 @@ function get_connection_bar_end(end_angle, size) {
   return [p1, p2, p3, p4];
 }
 const NOOP_SIZE = 9;
+export const NOOP_THICKNESS = Math.sin(rads._45) * NOOP_SIZE * 2;
 function get_connection_noop_end(end_angle) {
   const p1 = to_vec(end_angle + rads._315, NOOP_SIZE);
   const p2 = add_vec(to_vec(end_angle + rads._45, NOOP_SIZE), p1);
