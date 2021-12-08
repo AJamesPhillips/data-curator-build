@@ -47,12 +47,12 @@ const set_display_time_marks = (display_time_marks) => {
 export const is_set_display_time_marks = (action) => {
   return action.type === set_display_time_marks_type;
 };
-const set_or_toggle_animate_causal_links_type = "set_or_toggle_animate_causal_links";
-const set_or_toggle_animate_causal_links = (animate_causal_links) => {
-  return {type: set_or_toggle_animate_causal_links_type, animate_causal_links};
+const set_or_toggle_animate_connections_type = "set_or_toggle_animate_connections";
+const set_or_toggle_animate_connections = (animate_connections) => {
+  return {type: set_or_toggle_animate_connections_type, animate_connections};
 };
-export const is_set_or_toggle_animate_causal_links = (action) => {
-  return action.type === set_or_toggle_animate_causal_links_type;
+export const is_set_or_toggle_animate_connections = (action) => {
+  return action.type === set_or_toggle_animate_connections_type;
 };
 const set_or_toggle_circular_links_type = "set_or_toggle_circular_links";
 const set_or_toggle_circular_links = (circular_links) => {
@@ -83,7 +83,7 @@ export const display_actions = {
   set_certainty_formatting,
   set_display_by_simulated_time,
   set_display_time_marks,
-  set_or_toggle_animate_causal_links,
+  set_or_toggle_animate_connections,
   set_or_toggle_circular_links,
   set_show_help_menu,
   set_or_toggle_show_large_grid

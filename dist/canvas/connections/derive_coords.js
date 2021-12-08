@@ -19,6 +19,7 @@ export function derive_coords(args) {
   let y2_offset = 0;
   let x_control1_factor = 1;
   let x_control2_factor = 1;
+  let circular_link_from_below_to = void 0;
   let invert_end_angle = false;
   if (circular_links) {
     if (from_node_position.left < to_node_position.left - NODE_WIDTH_plus_fudge) {
@@ -29,25 +30,14 @@ export function derive_coords(args) {
       from_connection_type = {...from_connection_type, direction: "to"};
       invert_end_angle = true;
     } else {
-      const from_below_to = to_node_position.top < from_node_position.top;
-      if (from_below_to) {
+      circular_link_from_below_to = to_node_position.top < from_node_position.top;
+      if (circular_link_from_below_to) {
         from_connection_type = {...from_connection_type, direction: "to"};
         y1_offset = 30;
       } else {
         to_connection_type = {...to_connection_type, direction: "from"};
         y2_offset = 30;
         invert_end_angle = true;
-      }
-      if (from_node_position.left < to_node_position.left) {
-        if (from_below_to)
-          x_control1_factor = -1;
-        else
-          x_control2_factor = -1;
-      } else {
-        if (from_below_to)
-          x_control2_factor = -1;
-        else
-          x_control1_factor = -1;
       }
     }
   }
@@ -57,6 +47,19 @@ export function derive_coords(args) {
   const y1 = -from_connector_position.top + y1_offset;
   const xe2 = to_connector_position.left;
   const ye2 = -to_connector_position.top + y2_offset;
+  if (circular_link_from_below_to !== void 0) {
+    if (x1 < xe2) {
+      if (circular_link_from_below_to)
+        x_control1_factor = -1;
+      else
+        x_control2_factor = -1;
+    } else {
+      if (circular_link_from_below_to)
+        x_control2_factor = -1;
+      else
+        x_control1_factor = -1;
+    }
+  }
   let relative_control_point1 = {x: 0, y: 0};
   let relative_control_point2 = relative_control_point1;
   const angle = get_angle(x1, y1, xe2, ye2);
@@ -69,12 +72,12 @@ export function derive_coords(args) {
     let y_control1 = 0;
     let y_control2 = 0;
     const going_right_to_left = xe2 <= x1;
-    const y_diff = ye2 - y1;
     if (!circular_links && going_right_to_left) {
+      const y_diff = ye2 - y1;
       x_control1 = Math.min(-x_control1, 300);
       x_control2 = Math.max(-x_control2, -300);
-      y_control1 = y_diff;
-      y_control2 = -y_diff;
+      y_control1 = y_diff || -minimum_line_bow;
+      y_control2 = -y_diff || -minimum_line_bow;
     }
     end_angle = invert_end_angle ? 0 : rads._180;
     relative_control_point1 = {x: x_control1, y: y_control1};

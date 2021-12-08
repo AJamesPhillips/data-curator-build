@@ -61,5 +61,5 @@ export function SelectionControlSidePanel(props) {
     onClick: () => conditionally_select_interconnections(store)
   }), /* @__PURE__ */ h("div", {
     className: "description"
-  }, "ctrl + s + i")));
+  }, "ctrl + s + i     Only selects the immediate components inbetween.  e.g. if A---B-->C---D-->E, the selecting selecting node A and node C followed by this command will also select connection B.  But if only node A and node E are selected, then this command will not do anything.")));
 }

@@ -10,11 +10,9 @@ function _UncertainDateTimeForm(props) {
   const {datetime, on_change, show_unused_fields} = props;
   return /* @__PURE__ */ h("div", {
     className: "datetimes"
-  }, (show_unused_fields || datetime.min) && /* @__PURE__ */ h("div", {
+  }, datetime.min && /* @__PURE__ */ h("div", {
     className: "datetime_section"
   }, /* @__PURE__ */ h("div", {
-    className: "datetime_title description_label"
-  }, "min"), /* @__PURE__ */ h("div", {
     className: "datetime_value"
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
     title: "Minimum datetime",
@@ -23,18 +21,14 @@ function _UncertainDateTimeForm(props) {
   }))), (show_unused_fields || datetime.value) && /* @__PURE__ */ h("div", {
     className: "datetime_section"
   }, /* @__PURE__ */ h("div", {
-    className: "datetime_title description_label"
-  }, "DateTime"), /* @__PURE__ */ h("div", {
     className: "datetime_value"
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
     title: "Expected datetime",
     value: datetime.value,
     on_change: (value) => on_change({...datetime, value})
-  }))), (show_unused_fields || datetime.max) && /* @__PURE__ */ h("div", {
+  }))), datetime.max && /* @__PURE__ */ h("div", {
     className: "datetime_section"
   }, /* @__PURE__ */ h("div", {
-    className: "datetime_title description_label"
-  }, "max"), /* @__PURE__ */ h("div", {
     className: "datetime_value"
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
     title: "Maximum datetime",

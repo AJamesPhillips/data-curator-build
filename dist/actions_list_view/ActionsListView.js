@@ -47,13 +47,13 @@ function _ActionsListViewContent(props) {
     return /* @__PURE__ */ h("div", null, "No base id chosen");
   if (action_ids === void 0)
     return /* @__PURE__ */ h("div", null, "No actions");
+  const now = new Date().getTime();
+  let actions = Array.from(action_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_action);
+  actions = sort_list(actions, get_modified_or_created_at, "descending");
   const actions_icebox = [];
   const actions_todo = [];
   const actions_in_progress = [];
   const actions_done_or_rejected = [];
-  const now = new Date().getTime();
-  let actions = Array.from(action_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_action);
-  actions = sort_list(actions, (a) => get_created_at_ms(a), "descending");
   actions.forEach((action) => {
     const attribute_values = get_wcomponent_state_value_and_probabilities({
       wcomponent: action,
@@ -100,6 +100,11 @@ function _ActionsListViewContent(props) {
   }))));
 }
 const ActionsListViewContent = connector(_ActionsListViewContent);
+function get_modified_or_created_at(a) {
+  if (a.modified_at)
+    return a.modified_at.getTime();
+  return get_created_at_ms(a);
+}
 function partition_and_sort_goals(goals, goal_prioritisation_attributes) {
   let potential_goals = [];
   let prioritised_goals = [];

@@ -8,6 +8,8 @@ export function get_meta_wcomponents_starting_state() {
     last_clicked_wcomponent_id: void 0,
     last_pointer_down_connection_terminal: void 0,
     wcomponent_ids_to_move_list: [],
-    wcomponent_ids_to_move_set: new Set()
+    wcomponent_ids_to_move_set: new Set(),
+    find_all_causal_paths_from_wcomponent_ids: [],
+    find_all_causal_paths_to_wcomponent_ids: []
   };
 }

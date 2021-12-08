@@ -42,6 +42,12 @@ function _EditableCustomDateTime(props) {
       r.value = new_working_value;
       r.setSelectionRange(0, r.value.length);
     },
+    onKeyDown: (e) => {
+      const is_enter = e.key === "Enter";
+      const is_escape = e.key === "Escape";
+      if (is_enter || is_escape)
+        e.target?.blur();
+    },
     onChange: (e) => {
       const valid2 = is_value_valid(e.currentTarget.value);
       if (valid2)

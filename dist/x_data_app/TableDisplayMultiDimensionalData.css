@@ -1,0 +1,7 @@
+.multi_dimensional_data_tabletable {
+  border-collapse: collapse;
+}
+.multi_dimensional_data_table td {
+  border: 1px solid #555;
+  padding: 3px 5px;
+}

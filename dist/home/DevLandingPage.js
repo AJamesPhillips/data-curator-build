@@ -8,6 +8,10 @@ export function DevLandingPage() {
   }, "Landing page")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/app/"
   }, "app")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
+    href: "/sim/"
+  }, "Sim")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
+    href: "/data/"
+  }, "Data")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/project_dashboard"
   }, "Project dashboard")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/prob_graph"

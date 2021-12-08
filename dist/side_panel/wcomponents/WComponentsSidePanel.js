@@ -44,7 +44,7 @@ function _WComponentsSidePanel(props) {
     }
   }
   function look_for_wcomponent_in_any_base() {
-    if (!wcomponent && searching_for_unfound === void 0 && id !== null) {
+    if (display_type === DisplayType.render_wcomponent && id && !wcomponent && searching_for_unfound === void 0) {
       (async () => {
         let component_form_closed = false;
         set_searching_for_unfound(true);
@@ -60,7 +60,7 @@ function _WComponentsSidePanel(props) {
     }
   }
   useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id]);
-  useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id]);
+  useEffect(look_for_wcomponent_in_any_base, [display_type, wcomponent, searching_for_unfound, id]);
   if (display_type === DisplayType.need_to_choose_base_id)
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
       value: "Choose a base to view",

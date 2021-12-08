@@ -9,7 +9,7 @@ import {throttle} from "../../utils/throttle.js";
 import {useEffect, useMemo, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 const map_state = (state) => ({
-  presenting: state.display_options.consumption_formatting
+  presenting: state.display_options?.consumption_formatting
 });
 const connector = connect(map_state);
 function _AutocompleteText(props) {

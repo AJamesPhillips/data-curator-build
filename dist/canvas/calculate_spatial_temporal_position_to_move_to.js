@@ -1,6 +1,6 @@
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
-import {screen_width, screen_height, lefttop_to_xy} from "../state/display_options/display.js";
-import {NODE_WIDTH, NODE_HEIGHT_APPROX} from "./position_utils.js";
+import {screen_width, lefttop_to_xy, visible_screen_height, TOP_HEADER_FUDGE} from "../state/display_options/display.js";
+import {NODE_WIDTH, HALF_NODE_HEIGHT} from "./position_utils.js";
 import {SCALE_BY, bound_zoom} from "./zoom_utils.js";
 export function calculate_spatial_temporal_position_to_move_to(args) {
   const {
@@ -40,8 +40,8 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
       });
       min_left -= NODE_WIDTH;
       max_left += NODE_WIDTH;
-      min_top -= NODE_HEIGHT_APPROX * 2;
-      max_top += NODE_HEIGHT_APPROX;
+      min_top -= HALF_NODE_HEIGHT + TOP_HEADER_FUDGE;
+      max_top += HALF_NODE_HEIGHT;
       view_entry = {
         left: (min_left + max_left) / 2,
         top: (min_top + max_top) / 2
@@ -49,7 +49,7 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
       const total_width = max_left - min_left;
       const total_height = max_top - min_top;
       const zoom_width = screen_width(false) / total_width * SCALE_BY;
-      const zoom_height = screen_height() / total_height * SCALE_BY;
+      const zoom_height = visible_screen_height(false) / total_height * SCALE_BY;
       zoom = Math.min(zoom_width, zoom_height);
       zoom = bound_zoom(Math.min(SCALE_BY, zoom));
     }

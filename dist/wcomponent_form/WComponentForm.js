@@ -1,6 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {useEffect, useState} from "../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useRef, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Box, FormControl, FormLabel} from "../../snowpack/pkg/@material-ui/core.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
 import {ConfirmatoryDeleteButton} from "../form/ConfirmatoryDeleteButton.js";
@@ -26,7 +26,6 @@ import {
   wcomponent_is_sub_state,
   wcomponent_has_objectives
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
-import {wcomponent_statev2_subtypes} from "../wcomponent/interfaces/state.js";
 import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
@@ -57,6 +56,7 @@ import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
 import {EasyActionValueAndPredictionSets} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
 import {WarningTriangle} from "../sharedf/WarningTriangle.js";
+import {wcomponent_statev2_subtype_options} from "./subtype_options.js";
 const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -86,15 +86,10 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentForm(props) {
-  const [previous_id, set_previous_id] = useState(void 0);
-  const [focus_title, set_focus_title] = useState(true);
-  const wcomponent_id = props.wcomponent.id;
-  useEffect(() => {
-    set_previous_id(wcomponent_id);
-    set_focus_title(true);
-  }, [wcomponent_id]);
   const {
     wcomponent,
+    ready,
+    base_id,
     wcomponents_by_id,
     wc_id_to_counterfactuals_map,
     from_wcomponent,
@@ -104,17 +99,21 @@ function _WComponentForm(props) {
     created_at_ms,
     sim_ms
   } = props;
-  const {ready, base_id} = props;
+  const wcomponent_id = wcomponent.id;
+  const [previous_id, set_previous_id] = useState(wcomponent_id);
   if (!ready)
     return /* @__PURE__ */ h("div", null, "Loading...");
   if (base_id === void 0)
     return /* @__PURE__ */ h("div", null, "Choose a base first.");
   const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets;
-  if (previous_id !== wcomponent_id && previous_id !== void 0) {
+  const _focus_title = useRef(true);
+  useEffect(() => set_previous_id(wcomponent_id), [wcomponent_id]);
+  if (previous_id !== wcomponent_id) {
+    _focus_title.current = true;
     return null;
   }
-  if (focus_title)
-    set_focus_title(false);
+  const focus_title = _focus_title.current;
+  _focus_title.current = false;
   const upsert_wcomponent = (partial_wcomponent) => {
     if (props.wcomponent_from_different_base)
       return;
@@ -132,9 +131,7 @@ function _WComponentForm(props) {
     orig_value_possibilities = wcomponent.value_possibilities;
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
-  return /* @__PURE__ */ h(Box, {
-    className: `editable-${wcomponent_id}`
-  }, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
+  return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
   }, /* @__PURE__ */ h(WarningTriangle, {
@@ -152,12 +149,7 @@ function _WComponentForm(props) {
     hide_label: true
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
     wcomponent
-  }), UI_value && (editing || UI_value.is_defined) && /* @__PURE__ */ h("a", {
-    style: {color: "#bbb", textDecoration: "none"},
-    title: "This is broken for counterfactuals at the moment.  See issue 81",
-    href: "https://github.com/centerofci/data-curator2/issues/81",
-    target: "_blank"
-  }, /* @__PURE__ */ h("span", {
+  }), UI_value?.is_defined && /* @__PURE__ */ h("span", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
     UI_value
@@ -261,7 +253,7 @@ function _WComponentForm(props) {
       upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   }), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
-    wcomponent_id: wcomponent.id,
+    wcomponent_id,
     VAPs_represent,
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
@@ -325,4 +317,3 @@ function _WComponentForm(props) {
 }
 export const WComponentForm = connector(_WComponentForm);
 const wcomponent_type_options = wcomponent_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
-const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map((type) => ({id: type, title: type}));

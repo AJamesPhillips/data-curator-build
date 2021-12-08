@@ -1,12 +1,12 @@
 import {h_step, position_to_point, round_number, v_step} from "../../canvas/position_utils.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
-import {get_actually_display_time_sliders} from "../controls/accessors.js";
 import {STARTING_ZOOM} from "../routing/starting_state.js";
 export const TOP_HEADER_FUDGE = 48;
-export const bottom_controls_fudge = (state) => get_actually_display_time_sliders(state) ? 215 : 57;
+const bottom_controls_fudge = (display_time_sliders) => display_time_sliders ? 215 : 57;
 const side_panel_fudge = (display_side_panel) => display_side_panel ? 440 : 0;
 export const screen_width = (display_side_panel) => document.body.clientWidth - side_panel_fudge(display_side_panel);
-export const screen_height = () => document.body.clientHeight;
+const screen_height = () => document.body.clientHeight;
+export const visible_screen_height = (display_time_sliders) => screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(display_time_sliders);
 const half_screen_width = (display_side_panel) => screen_width(display_side_panel) / 2;
 const half_screen_height = () => screen_height() / 2;
 function calculate_xy_for_middle(args, display_side_panel) {

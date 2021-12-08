@@ -42,7 +42,7 @@ export function ConnectableCanvasNode(props) {
     }
   }), /* @__PURE__ */ h(CardContent, {
     style: {padding: 16}
-  }, props.node_main_content)), props.terminals.map(({type, style, label}) => {
+  }, props.node_main_content), props.terminals.map(({type, style, label}) => {
     return /* @__PURE__ */ h("div", {
       className: "connection_terminal",
       style: {...connection_style_common, ...style},
@@ -55,7 +55,7 @@ export function ConnectableCanvasNode(props) {
         pointerupdown_on_connection_terminal(type, "up");
       }
     }, label);
-  }), props.other_children);
+  })), props.other_children);
 }
 const use_styles = makeStyles((theme) => ({
   image: {

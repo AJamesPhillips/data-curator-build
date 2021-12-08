@@ -22,6 +22,8 @@ import {SimHome} from "./x_sim_app/SimHome.js";
 import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
 import {set_window_title} from "./window_title.js";
 import {SandboxCircularConnections} from "./scratch_pad/SandboxCircularConnections.js";
+import {DataApp} from "./x_data_app/DataApp.js";
+import {get_data_app_store} from "./x_data_app/state/get_data_app_store.js";
 const root = document.getElementById("root");
 if (root) {
   root.innerText = "";
@@ -73,6 +75,11 @@ if (root) {
     }, /* @__PURE__ */ h(App, null)), root);
   } else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim") {
     render(/* @__PURE__ */ h(SimHome, null), root);
+  } else if (window.location.pathname === "/data/" || window.location.pathname === "/data") {
+    const store = get_data_app_store({load_state_from_storage: false});
+    render(/* @__PURE__ */ h(Provider, {
+      store
+    }, /* @__PURE__ */ h(DataApp, null)), root);
   } else {
     root.innerText = "Unknown path: " + window.location.pathname;
   }

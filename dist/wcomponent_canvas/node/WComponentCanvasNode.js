@@ -2,7 +2,7 @@ import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Box, makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
+import {makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./WComponentCanvasNode.css.proxy.js";
 import {
   connection_terminal_attributes,
@@ -224,32 +224,22 @@ function _WComponentCanvasNode(props) {
       className: "description_label"
     }, "validity"), /* @__PURE__ */ h(WComponentValidityValue, {
       wcomponent
-    })), wcomponent && show_state_value && /* @__PURE__ */ h(Box, {
-      display: "flex",
-      maxWidth: "100%",
-      overflow: "hidden",
+    })), wcomponent && show_state_value && /* @__PURE__ */ h("div", {
       className: "node_state_container"
     }, is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
     }, "state  "), /* @__PURE__ */ h(WComponentJudgements, {
       wcomponent
-    }), /* @__PURE__ */ h(Box, {
-      flexGrow: 1,
-      flexShrink: 1,
-      overflow: "hidden"
+    }), /* @__PURE__ */ h("div", {
+      className: "value_and_prediction_summary"
     }, /* @__PURE__ */ h(NodeValueAndPredictionSetSummary, {
       wcomponent,
       created_at_ms,
       sim_ms
-    }))), sub_state_wcomponent && /* @__PURE__ */ h(Box, {
-      display: "flex",
-      maxWidth: "100%",
-      overflow: "hidden",
+    }))), sub_state_wcomponent && /* @__PURE__ */ h("div", {
       className: "node_sub_state_container"
-    }, /* @__PURE__ */ h(Box, {
-      flexGrow: 1,
-      flexShrink: 1,
-      overflow: "hidden"
+    }, /* @__PURE__ */ h("div", {
+      className: "value_and_prediction_summary"
     }, /* @__PURE__ */ h(NodeSubStateSummary, {
       wcomponent: sub_state_wcomponent,
       created_at_ms,

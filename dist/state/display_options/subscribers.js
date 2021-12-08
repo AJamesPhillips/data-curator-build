@@ -66,7 +66,7 @@ function handle_display_key_combo(key, store) {
   } else if (key === "s") {
     store.dispatch(ACTIONS.controls.set_or_toggle_display_side_panel());
   } else if (key === "a") {
-    store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links());
+    store.dispatch(ACTIONS.display.set_or_toggle_animate_connections());
   } else if (key === "c") {
     store.dispatch(ACTIONS.display.set_or_toggle_circular_links());
   } else {
