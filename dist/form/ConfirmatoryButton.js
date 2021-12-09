@@ -6,10 +6,8 @@ import {Button} from "../sharedf/Button.js";
 export function ConfirmatoryButton(props) {
   const [progressing, set_progressing] = useState(false);
   const {tooltip_text = ""} = props;
-  return /* @__PURE__ */ h(Box, {
-    display: "flex",
-    justifyContent: "space-between",
-    mb: 3
+  return /* @__PURE__ */ h("div", {
+    style: {display: "flex", justifyContent: "space-between"}
   }, /* @__PURE__ */ h(ThemeProvider, {
     theme: WarningTheme
   }, /* @__PURE__ */ h(Button, {

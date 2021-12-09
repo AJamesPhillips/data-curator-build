@@ -87,7 +87,7 @@ function update_args_with_value(args, key, value) {
     if (is_routing_view_types(value))
       args.view = value;
   } else if (routing_arg_is_a_number(key))
-    args[key] = parseInt(value);
+    args[key] = parse_int_or_0(value);
   else if (key === "subview_id")
     args.subview_id = value;
   else if (key === "storage_location")
@@ -96,6 +96,10 @@ function update_args_with_value(args, key, value) {
 const ROUTING_ARGS_WHICH_ARE_NUMBERS = new Set(["x", "y", "zoom"]);
 function routing_arg_is_a_number(key) {
   return ROUTING_ARGS_WHICH_ARE_NUMBERS.has(key);
+}
+function parse_int_or_0(val) {
+  const int = parseInt(val);
+  return Number.isNaN(int) ? 0 : int;
 }
 function parse_int_or_undefined(val) {
   const int = parseInt(val);
