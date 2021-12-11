@@ -7,7 +7,6 @@ import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNo
 import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
 import {KnowledgeGraphTimeMarkers} from "./KnowledgeGraphTimeMarkers.js";
-import {TemporaryDraggedCanvasNodes} from "../canvas/TemporaryDraggedCanvasNodes.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;
@@ -54,7 +53,6 @@ const get_children = (props) => {
       id
     }))
   ];
-  elements.push(/* @__PURE__ */ h(TemporaryDraggedCanvasNodes, null));
   return elements;
 };
 const get_svg_upper_children = ({wcomponent_connections = []}) => {

@@ -1,8 +1,8 @@
 import {offset_by_half_node, position_to_point, round_canvas_point} from "../../../canvas/position_utils.js";
-import {create_wcomponent} from "../wcomponents/create_wcomponent_type.js";
 import {pub_sub} from "../../pub_sub/pub_sub.js";
 import {selector_chosen_base_id} from "../../user_info/selector.js";
 import {get_current_knowledge_view_from_state} from "../accessors.js";
+import {create_wcomponent} from "../wcomponents/create_wcomponent_type.js";
 export function create_wcomponent_on_double_tap(store) {
   pub_sub.canvas.sub("canvas_double_tap", (double_tap) => {
     const state = store.getState();

@@ -42,9 +42,23 @@ export function LandingPage() {
     color: "secondary",
     disableElevation: true,
     size: "large"
-  }, /* @__PURE__ */ h("strong", null, "Get Started"))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map complex systems, then plan, communicate and navigate successful interventions in them for the benefit of all lives."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
+  }, /* @__PURE__ */ h("strong", null, "Get Started"))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/projects/datacurator/"
-  }, "CCI project"), " supported by our generous funders.")), /* @__PURE__ */ h(Box, {
+  }, "CCI project"), " supported by our generous funders."), /* @__PURE__ */ h("a", {
+    href: "/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12"
+  }, /* @__PURE__ */ h("img", {
+    src: "/image_1.png",
+    style: {maxWidth: "100%"}
+  })), /* @__PURE__ */ h("div", null, "Example screenshot of the ", /* @__PURE__ */ h("a", {
+    href: "/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12"
+  }, "Foresight Obesity model in DataCurator")), /* @__PURE__ */ h("p", {
+    style: {textAlign: "center"}
+  }, /* @__PURE__ */ h("a", {
+    href: "https://centerofci.org/about/"
+  }, /* @__PURE__ */ h("img", {
+    src: "/cci_logo.svg",
+    style: {width: 120, marginTop: 40}
+  })))), /* @__PURE__ */ h(Box, {
     component: "footer"
   })));
 }

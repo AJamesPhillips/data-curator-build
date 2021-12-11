@@ -6,15 +6,14 @@ import {pub_sub} from "../state/pub_sub/pub_sub.js";
 import {grid_small_step, h_step, v_step} from "./position_utils.js";
 import {bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy} from "./zoom_utils.js";
 import {SelectionBox} from "./SelectionBox.js";
+import {client_to_canvas, client_to_canvas_x, client_to_canvas_y} from "./canvas_utils.js";
 const GRAPH_CONTAINER_ID = "graph_container";
 const GRAPH_VISUALS_CONTAINER_ID = "graph_visuals_container";
 const MAX_DOUBLE_TAP_DELAY_MS = 900;
 const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10;
 const map_state = (state) => {
-  const zoom = state.routing.args.zoom;
+  const {x, y, zoom} = state.routing.args;
   const scale = zoom / SCALE_BY;
-  const x = state.routing.args.x;
-  const y = state.routing.args.y;
   const shift_key_down = state.global_keys.keys_down.has("Shift");
   const control_key_down = state.global_keys.keys_down.has("Control");
   return {zoom, scale, x, y, shift_key_down, control_key_down};
@@ -35,13 +34,9 @@ const connector = connect(map_state, map_dispatch);
 class _Canvas extends Component {
   constructor(props) {
     super(props);
-    this.client_to_canvas = (client_xy) => client_xy * (SCALE_BY / this.props.zoom);
-    this.client_to_canvas_x = (client_x) => {
-      return this.props.x + this.client_to_canvas(client_x);
-    };
-    this.client_to_canvas_y = (client_y) => {
-      return this.props.y - this.client_to_canvas(client_y);
-    };
+    this.client_to_canvas = (client_xy) => client_to_canvas(this.props.zoom, client_xy);
+    this.client_to_canvas_x = (client_x) => client_to_canvas_x(this.props.x, this.props.zoom, client_x);
+    this.client_to_canvas_y = (client_y) => client_to_canvas_y(this.props.y, this.props.zoom, client_y);
     this.on_pointer_down = (e) => {
       pub_sub.canvas.pub("canvas_pointer_down", true);
       const right_button = e.button === 2;
@@ -95,6 +90,10 @@ class _Canvas extends Component {
         this.on_pointer_up();
     };
     this.on_pointer_move = (e) => {
+      pub_sub.canvas.pub("canvas_move", {
+        x: this.client_to_canvas_x(e.offsetX),
+        y: this.client_to_canvas_y(e.offsetY)
+      });
       if (!this.state.pointer_state.down)
         return;
       const client_x = e.offsetX;

@@ -2,6 +2,8 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import "./Handles.css.proxy.js";
 import {ExploreButtonHandle} from "./ExploreButtonHandle.js";
 import {OverlappingNodesHandle} from "./OverlappingNodesHandle.js";
+import {get_store} from "../../state/store.js";
+import {client_to_canvas_x, client_to_canvas_y} from "../../canvas/canvas_utils.js";
 export function Handles(props) {
   return /* @__PURE__ */ h("div", {
     className: "handles"
@@ -24,10 +26,19 @@ function HandleForMoving(props) {
     }, " ");
   const handle_pointer_down = (e) => {
     e.stopPropagation();
-    user_requested_node_move();
+    const position = canvas_pointer_event_to_position(e);
+    user_requested_node_move(position);
   };
   return /* @__PURE__ */ h("div", {
     className: "node_handle movement",
     onPointerDown: handle_pointer_down
   }, "✥");
+}
+function canvas_pointer_event_to_position(e) {
+  const state = get_store().getState();
+  const {x, y, zoom} = state.routing.args;
+  return {
+    x: client_to_canvas_x(x, zoom, e.clientX),
+    y: client_to_canvas_y(y, zoom, e.clientY)
+  };
 }

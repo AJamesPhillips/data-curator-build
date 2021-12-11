@@ -12,7 +12,7 @@ export class CanvasNode extends Component {
     const mouseable = on_pointer_down || on_pointer_up || on_click || on_pointer_enter || on_pointer_leave ? "mouseable" : "";
     const css_class_names = `node ${mouseable} ${extra_css_class || ""}`;
     return /* @__PURE__ */ h("div", {
-      ...this.props.extra_args || {},
+      ...this.props.extra_args,
       className: css_class_names,
       style: style_outer,
       title,

@@ -1,6 +1,5 @@
 import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
-import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
 import "./WComponentCanvasNode.css.proxy.js";
@@ -17,8 +16,6 @@ import {
 } from "../../wcomponent/interfaces/SpecialisedObjects.js";
 import {ConnectableCanvasNode} from "../../canvas/ConnectableCanvasNode.js";
 import {get_top_left_for_terminal_type} from "../../canvas/connections/terminal.js";
-import {round_canvas_point} from "../../canvas/position_utils.js";
-import {SCALE_BY} from "../../canvas/zoom_utils.js";
 import {LabelsListV2} from "../../labels/LabelsListV2.js";
 import {get_title} from "../../wcomponent_derived/rich_text/get_rich_text.js";
 import {wcomponent_type_to_text} from "../../wcomponent_derived/wcomponent_type_to_text.js";
@@ -30,7 +27,6 @@ import {
   get_wcomponent_from_state,
   get_current_temporal_value_certainty_from_wcomponent
 } from "../../state/specialised_objects/accessors.js";
-import {get_store} from "../../state/store.js";
 import {calc_wcomponent_should_display, calc_display_opacity} from "../calc_should_display.js";
 import {factory_on_click} from "../canvas_common.js";
 import {WComponentJudgements} from "./WComponentJudgements.js";
@@ -40,8 +36,12 @@ import {Handles} from "./Handles.js";
 import {NodeSubStateSummary} from "./NodeSubStateSummary.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../../state/derived/accessor.js";
 import {NodeSubStateTypeIndicators} from "./NodeSubStateTypeIndicators.js";
-import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
+import {
+  start_moving_wcomponents
+} from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 const map_state = (state, own_props) => {
   const {id: wcomponent_id} = own_props;
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
@@ -68,7 +68,7 @@ const map_state = (state, own_props) => {
     certainty_formatting: state.display_options.derived_certainty_formatting,
     focused_mode: state.display_options.focused_mode,
     have_judgements,
-    wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
+    node_is_moving: state.meta_wcomponents.wcomponent_ids_to_move_set.has(wcomponent_id),
     display_time_marks: state.display_options.display_time_marks,
     connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id)
   };
@@ -84,7 +84,6 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentCanvasNode(props) {
-  const [node_is_draggable, set_node_is_draggable] = useState(false);
   const {
     id,
     is_movable = true,
@@ -112,12 +111,23 @@ function _WComponentCanvasNode(props) {
   if (!kv_entry_maybe && !always_show)
     return /* @__PURE__ */ h("div", null, "Could not find knowledge view entry for id ", id);
   const kv_entry = kv_entry_maybe || {left: 0, top: 0};
-  let temporary_drag_kv_entry = void 0;
-  if (props.drag_relative_position) {
-    temporary_drag_kv_entry = {...kv_entry};
-    temporary_drag_kv_entry.left += props.drag_relative_position.left;
-    temporary_drag_kv_entry.top += props.drag_relative_position.top;
-  }
+  const [temporary_drag_kv_entry, set_temporary_drag_kv_entry] = useState(void 0);
+  useEffect(() => {
+    if (!props.node_is_moving)
+      return;
+    const unsubscribe = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", (drag_relative_position) => {
+      if (!drag_relative_position) {
+        set_temporary_drag_kv_entry(void 0);
+        unsubscribe();
+        return;
+      }
+      const temp_drag_kv_entry = {...kv_entry};
+      temp_drag_kv_entry.left += drag_relative_position.left;
+      temp_drag_kv_entry.top += drag_relative_position.top;
+      set_temporary_drag_kv_entry(temp_drag_kv_entry);
+    });
+    return unsubscribe;
+  }, [props.node_is_moving]);
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const validity_value = always_show || !wcomponent ? {display_certainty: 1} : calc_wcomponent_should_display({
     is_editing,
@@ -142,8 +152,7 @@ function _WComponentCanvasNode(props) {
     certainty_formatting,
     focused_mode: props.focused_mode
   });
-  const node_is_moving = props.wcomponent_ids_to_move_set.has(id);
-  const opacity = props.drag_relative_position ? 0.3 : node_is_moving ? 0 : validity_opacity;
+  const opacity = props.node_is_moving ? 0.3 : validity_opacity;
   const on_click = factory_on_click({
     wcomponent_id: id,
     clicked_wcomponent,
@@ -152,16 +161,18 @@ function _WComponentCanvasNode(props) {
     change_route,
     is_current_item
   });
-  const children = !wcomponent ? [] : [
+  const children = !wcomponent || props.node_is_moving ? [] : [
     /* @__PURE__ */ h(Handles, {
       show_move_handle: is_movable && is_editing && is_highlighted,
-      user_requested_node_move: () => {
-        if (!selected_wcomponent_ids_set.has(id)) {
+      user_requested_node_move: (position) => {
+        let wcomponent_ids_to_move = selected_wcomponent_ids_set;
+        if (!wcomponent_ids_to_move.has(id)) {
+          wcomponent_ids_to_move = new Set([id]);
           props.clicked_wcomponent({id});
         }
-        set_node_is_draggable(true);
+        start_moving_wcomponents(wcomponent_ids_to_move, position);
       },
-      wcomponent_id: wcomponent.id,
+      wcomponent_id: id,
       wcomponent_current_kv_entry: kv_entry,
       is_highlighted
     })
@@ -183,7 +194,7 @@ function _WComponentCanvasNode(props) {
     created_at_ms,
     display_time_marks: props.display_time_marks
   });
-  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (node_is_moving ? " node_is_moving " : "") + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + color.font + color.background;
+  const extra_css_class = ` wcomponent_canvas_node ` + (is_editing ? props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv " : "") + (props.node_is_moving ? " node_is_moving " : "") + (is_highlighted ? " node_is_highlighted " : "") + (is_current_item ? " node_is_current_item " : "") + (is_selected ? " node_is_selected " : "") + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "") + (show_all_details ? " compact_title " : "") + color.font + color.background;
   let show_validity_value = false;
   let show_state_value = false;
   if (wcomponent) {
@@ -263,21 +274,6 @@ function _WComponentCanvasNode(props) {
     on_pointer_down,
     on_pointer_up,
     pointerupdown_on_connection_terminal,
-    extra_args: {
-      draggable: node_is_draggable,
-      onDragStart: (e) => {
-        props.set_wcomponent_ids_to_move({wcomponent_ids_to_move: selected_wcomponent_ids_set});
-        e.dataTransfer.dropEffect = "move";
-      },
-      onDrag: (e) => {
-        const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s);
-        pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position);
-      },
-      onDragEnd: (e) => {
-        pub_sub.canvas.pub("canvas_node_drag_relative_position", void 0);
-        set_node_is_draggable(false);
-      }
-    },
     other_children: children
   });
 }
@@ -330,26 +326,4 @@ function get_wcomponent_color(args) {
     background = " node_missing ";
   }
   return {background, font};
-}
-function calculate_new_node_relative_position_from_drag(e, kv_entry_size) {
-  const scale = get_scale();
-  const top_fudge = -18 * (scale / 2);
-  const left_fudge = 8 / (scale / 2);
-  const node_size_fudge = kv_entry_size ?? 1;
-  const top = e.offsetY * node_size_fudge + top_fudge;
-  const left = e.offsetX * node_size_fudge + left_fudge;
-  const new_relative_position = round_canvas_point({top, left});
-  return new_relative_position;
-}
-function get_scale() {
-  const store = get_store();
-  const zoom = store.getState().routing.args.zoom;
-  return zoom / SCALE_BY;
-}
-function calculate_new_position(kv_entry, new_relative_position) {
-  return {
-    ...kv_entry,
-    left: kv_entry.left + new_relative_position.left,
-    top: kv_entry.top + new_relative_position.top
-  };
 }
