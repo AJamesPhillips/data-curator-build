@@ -19,19 +19,22 @@ const map_state = (state) => {
     wcomponent_connections,
     wcomponent_unfound_ids,
     presenting: state.display_options.consumption_formatting,
-    show_large_grid: state.display_options.show_large_grid
+    show_large_grid: state.display_options.show_large_grid,
+    moving_wcomponents: state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0
   };
 };
 const connector = connect(map_state);
 function _KnowledgeGraphView(props) {
   const elements = get_children(props);
+  const extra_class_names = props.moving_wcomponents ? " disable_component_pointer_events " : "";
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(Canvas, {
       svg_children: [],
       svg_upper_children: get_svg_upper_children(props),
       overlay: get_overlay_children(),
       plain_background: props.presenting,
-      show_large_grid: props.show_large_grid
+      show_large_grid: props.show_large_grid,
+      extra_class_names
     }, elements)
   });
 }

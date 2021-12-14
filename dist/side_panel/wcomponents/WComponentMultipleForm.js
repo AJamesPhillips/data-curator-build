@@ -70,12 +70,10 @@ function _WComponentMultipleForm(props) {
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h2", null, "No selected components"));
   }
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h2", null, editing ? "Bulk editing" : "Viewing", " ", selected_wcomponent_ids.length, " components"), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Position"), /* @__PURE__ */ h(EditablePosition, {
-    point: {left: 0, top: 0},
     on_update: (p) => {
       bulk_edit_knowledge_view_entries({
         wcomponent_ids: selected_wcomponent_ids,
-        change_left: p.left,
-        change_top: p.top
+        ...p
       });
     }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(AlignComponentForm, {

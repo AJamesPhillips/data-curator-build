@@ -1,6 +1,6 @@
 import {createStore} from "../../snowpack/pkg/redux.js";
 import {register_window_focus_session_check} from "../sync/user_info/window_focus_session_check.js";
-import {register_window_title_updater_subscriber} from "../window_title.js";
+import {register_window_title_updater_subscriber} from "../window_title/register_window_title_updater_subscriber.js";
 import {controls_subscribers} from "./controls/subscribers.js";
 import {display_options_subscribers} from "./display_options/subscribers.js";
 import {record_keyupdown_activity} from "./global_keys/record_keyupdown_activity.js";

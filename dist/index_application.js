@@ -20,7 +20,7 @@ import {LandingPage} from "./home/LandingPage.js";
 import {DevLandingPage} from "./home/DevLandingPage.js";
 import {SimHome} from "./x_sim_app/SimHome.js";
 import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
-import {set_window_title} from "./window_title.js";
+import {set_window_title} from "./window_title/set_window_title.js";
 import {SandboxCircularConnections} from "./scratch_pad/SandboxCircularConnections.js";
 import {DataApp} from "./x_data_app/DataApp.js";
 import {get_data_app_store} from "./x_data_app/state/get_data_app_store.js";
