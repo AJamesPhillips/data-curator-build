@@ -23,15 +23,17 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
     wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent);
     let view_entry = composed_wc_id_map[initial_wcomponent_id];
     let zoom = SCALE_BY;
-    const {any_node} = wc_ids_by_type || {};
+    const {any_node = new Set()} = wc_ids_by_type || {};
     selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set);
     selected_wcomponent_ids_set.delete(initial_wcomponent_id);
-    const ids = selected_wcomponent_ids_set.size ? selected_wcomponent_ids_set : any_node;
     if (view_entry) {
       const position_and_zoom = lefttop_to_xy({...view_entry, zoom}, true);
       positions.push(position_and_zoom);
-    } else if (!disable_if_not_present && ids?.size) {
-      const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, false, false);
+    } else if (!disable_if_not_present) {
+      let result = calculate_position_groups_with_zoom(selected_wcomponent_ids_set, wcomponents_by_id, composed_wc_id_map, false, false);
+      if (result.position_groups.length === 0) {
+        result = calculate_position_groups_with_zoom(any_node, wcomponents_by_id, composed_wc_id_map, false, false);
+      }
       wcomponent_created_at_ms = result.wcomponent_created_at_ms;
       positions = result.position_groups.map((group) => {
         return lefttop_to_xy({
