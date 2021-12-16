@@ -66,7 +66,7 @@ function _DisplayOptionsSidePanel(props) {
     className: "description"
   }, "Show nodes and connection opacity as ", /* @__PURE__ */ h("i", null, certainty_formatting_descriptions[props.certainty_formatting]), " ", description_of_certainty, ".")), /* @__PURE__ */ h("p", {
     className: "section"
-  }, /* @__PURE__ */ h("b", null, "Time resolution"), /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h("p", {
+  }, /* @__PURE__ */ h("b", null, "Time resolution"), "  ", /* @__PURE__ */ h(TimeResolutionOptions, null)), /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, 'Use "Focused" Mode'), "  ", /* @__PURE__ */ h("span", {
     className: "description"

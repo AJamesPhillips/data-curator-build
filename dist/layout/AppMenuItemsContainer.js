@@ -1,4 +1,4 @@
-import {Box, Button, Menu, MenuItem as MaterialMenuItem} from "../../snowpack/pkg/@material-ui/core.js";
+import {Button, Menu, MenuItem as MaterialMenuItem} from "../../snowpack/pkg/@material-ui/core.js";
 import MenuIcon from "../../snowpack/pkg/@material-ui/icons/Menu.js";
 import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
@@ -41,24 +41,18 @@ function _AppMenuItemsContainer(props) {
     routes = routes.filter((r) => !hide_routes2.has(r) || props.editing && r === "creation_context");
   }
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("div", {
-    style: {display: "flex", flexDirection: "row", alignItems: "center"}
+    style: {display: "flex", flexDirection: "row"}
   }, /* @__PURE__ */ h(Button, {
-    fullWidth: true
-  }, /* @__PURE__ */ h(Box, {
-    component: "span",
-    width: 1,
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-    alignItems: "start",
-    alignContent: "stretch",
+    style: {display: "flex", flex: 1}
+  }, /* @__PURE__ */ h("b", {
+    style: {width: "100%", display: "flex"},
     onClick: () => {
       props.change_route({route: props.route, item_id: null, sub_route: null});
     }
-  }, /* @__PURE__ */ h("b", null, route_to_text(props.route)))), /* @__PURE__ */ h(Button, {
+  }, route_to_text(props.route))), /* @__PURE__ */ h(Button, {
     "aria-controls": "select_tab",
     "aria-haspopup": "true",
+    style: {display: "flex", flex: 1, justifyContent: "end"},
     onClick: handle_menu_icon_click
   }, /* @__PURE__ */ h(MenuIcon, null))), /* @__PURE__ */ h(Menu, {
     anchorEl,
