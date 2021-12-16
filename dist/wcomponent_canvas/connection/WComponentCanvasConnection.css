@@ -1,5 +1,5 @@
 .connection_container .connection_line, .connection_container .connection_end {
-  transition: opacity 0.25s ease-in-out;
+  transition: stroke-opacity 0.5s linear, fill-opacity 0.5s linear;
 }
 .connection_container.connection_type_relation_link .connection_line {
   stroke-dasharray: 2 10;

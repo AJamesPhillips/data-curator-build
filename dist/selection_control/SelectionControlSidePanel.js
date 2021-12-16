@@ -13,7 +13,7 @@ export function SelectionControlSidePanel(props) {
   const store = get_store();
   return /* @__PURE__ */ h("div", {
     className: "side_panel"
-  }, /* @__PURE__ */ h("h3", null, "Selection"), /* @__PURE__ */ h("p", {
+  }, /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h(Button, {
     value: "Expand towards causes (backwards)",

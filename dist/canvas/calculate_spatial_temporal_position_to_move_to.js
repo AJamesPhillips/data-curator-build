@@ -31,7 +31,7 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
       const position_and_zoom = lefttop_to_xy({...view_entry, zoom}, true);
       positions.push(position_and_zoom);
     } else if (!disable_if_not_present && ids?.size) {
-      const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map);
+      const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, false, false);
       wcomponent_created_at_ms = result.wcomponent_created_at_ms;
       positions = result.position_groups.map((group) => {
         return lefttop_to_xy({
@@ -47,16 +47,7 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
   }
   return {positions, go_to_datetime_ms: created_at_ms};
 }
-function calculate_zoom_to_contain_group(group) {
-  const total_width = group.max_left - group.min_left;
-  const total_height = group.max_top - group.min_top;
-  const zoom_width = get_screen_width(false) / total_width * SCALE_BY;
-  const zoom_height = get_visible_screen_height(false) / total_height * SCALE_BY;
-  const raw_zoom = Math.min(zoom_width, zoom_height);
-  const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom));
-  return {zoom: bounded_zoom, fits: raw_zoom >= bounded_zoom};
-}
-function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map) {
+function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, display_side_panel, display_time_sliders) {
   const position_groups = [];
   const NODE_WIDTH2 = NODE_WIDTH * 2;
   const top_min_fudge = HALF_NODE_HEIGHT + TOP_HEADER_FUDGE;
@@ -78,7 +69,7 @@ function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc
         min_top: Math.min(group.min_top, component_min_top),
         max_top: Math.max(group.max_top, component_max_top)
       };
-      const {zoom, fits} = calculate_zoom_to_contain_group(candidate_group);
+      const {zoom, fits} = calculate_zoom_to_contain_group(candidate_group, display_side_panel, display_time_sliders);
       if (!fits)
         return false;
       group.min_left = candidate_group.min_left;
@@ -101,4 +92,13 @@ function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc
     wcomponent_created_at_ms = get_created_at_ms(wcomponent);
   });
   return {position_groups, wcomponent_created_at_ms};
+}
+function calculate_zoom_to_contain_group(group, display_side_panel, display_time_sliders) {
+  const total_width = group.max_left - group.min_left;
+  const total_height = group.max_top - group.min_top;
+  const zoom_width = get_screen_width(display_side_panel) / total_width * SCALE_BY;
+  const zoom_height = get_visible_screen_height(display_time_sliders) / total_height * SCALE_BY;
+  const raw_zoom = Math.min(zoom_width, zoom_height);
+  const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom));
+  return {zoom: bounded_zoom, fits: raw_zoom >= bounded_zoom};
 }

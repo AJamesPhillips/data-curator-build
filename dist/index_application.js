@@ -16,7 +16,6 @@ import {SandboxWComponentCanvasNode} from "./scratch_pad/SandboxWComponentCanvas
 import {SandBoxConnected} from "./scratch_pad/SandBoxConnected.js";
 import {SandBoxSupabase} from "./scratch_pad/SandBoxSupabase.js";
 import {setup_window_on_focus_listener} from "./utils/window_on_focus_listener.js";
-import {LandingPage} from "./home/LandingPage.js";
 import {DevLandingPage} from "./home/DevLandingPage.js";
 import {SimHome} from "./x_sim_app/SimHome.js";
 import {setup_console_api} from "./x_console_api_app/setup_console_api.js";
@@ -27,15 +26,8 @@ import {get_data_app_store} from "./x_data_app/state/get_data_app_store.js";
 const root = document.getElementById("root");
 if (root) {
   root.innerText = "";
-  const in_production = window.location.hostname === "datacurator.org";
   if (window.location.pathname === "" || window.location.pathname === "/") {
-    if (in_production) {
-      render(/* @__PURE__ */ h(LandingPage, null), root);
-    } else {
-      render(/* @__PURE__ */ h(DevLandingPage, null), root);
-    }
-  } else if (window.location.pathname === "/landing_page/") {
-    render(/* @__PURE__ */ h(LandingPage, null), root);
+    render(/* @__PURE__ */ h(DevLandingPage, null), root);
   } else if (window.location.pathname === "/project_dashboard") {
     render(/* @__PURE__ */ h(Provider, {
       store: get_store({load_state_from_storage: true})

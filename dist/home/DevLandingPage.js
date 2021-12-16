@@ -4,7 +4,7 @@ export function DevLandingPage() {
   return /* @__PURE__ */ h(Container, {
     maxWidth: "md"
   }, /* @__PURE__ */ h("ul", null, /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
-    href: "/landing_page/"
+    href: "/production_landing_page/"
   }, "Landing page")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/app/"
   }, "app")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {

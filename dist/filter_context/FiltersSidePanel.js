@@ -33,7 +33,7 @@ function _FiltersSidePanel(props) {
     const all_include_types = [...wc_types || []].concat(filters.include_by_component_types);
     return all_include_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));
   }, [wc_types, filters]);
-  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", null, "Filters"), /* @__PURE__ */ h("p", null, "Enabled: ", /* @__PURE__ */ h(EditableCheckbox, {
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, "Enabled: ", /* @__PURE__ */ h(EditableCheckbox, {
     value: props.apply_filter,
     on_change: () => props.set_apply_filter(!props.apply_filter)
   })), /* @__PURE__ */ h("p", null, "Exclude by label:", /* @__PURE__ */ h(LabelsEditor, {

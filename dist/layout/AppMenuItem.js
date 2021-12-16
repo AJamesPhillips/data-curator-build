@@ -5,33 +5,14 @@ import {Link} from "../sharedf/Link.js";
 import {CreationContextTabTitle} from "../creation_context/CreationContextTabTitle.js";
 import {FilterContextTabTitle} from "../filter_context/FilterContextTabTitle.js";
 import {ACTIONS} from "../state/actions.js";
+import {route_to_text} from "./route_to_text.js";
 function get_title(id) {
   if (id === "filter")
     return /* @__PURE__ */ h(FilterContextTabTitle, null);
-  else if (id === "select")
-    return "Selection";
-  else if (id === "display")
-    return "Display options";
-  else if (id === "statements")
-    return "Statements";
-  else if (id === "objects")
-    return "Objects";
-  else if (id === "patterns")
-    return "Patterns";
   else if (id === "creation_context")
     return /* @__PURE__ */ h(CreationContextTabTitle, null);
-  else if (id === "views")
-    return "Views";
-  else if (id === "perceptions")
-    return "Perceptions";
-  else if (id === "wcomponents")
-    return "Components";
-  else if (id === "about")
-    return "About";
-  else if (id === "search")
-    return "Search";
   else
-    return "?" + id;
+    return route_to_text(id);
 }
 const map_state = (state) => ({current_route: state.routing.route});
 const map_dispatch = {change_route: ACTIONS.routing.change_route};

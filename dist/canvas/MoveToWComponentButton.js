@@ -9,6 +9,7 @@ import {
 import {ACTIONS} from "../state/actions.js";
 import {calculate_if_components_on_screen} from "./calculate_if_components_on_screen.js";
 import {calculate_spatial_temporal_position_to_move_to} from "./calculate_spatial_temporal_position_to_move_to.js";
+import {get_actually_display_time_sliders} from "../state/controls/accessors.js";
 const map_state = (state, own_props) => {
   const initial_wcomponent_id = own_props.wcomponent_id || state.routing.item_id || "";
   let components_on_screen = void 0;
@@ -21,7 +22,9 @@ const map_state = (state, own_props) => {
     components_on_screen,
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set
+    selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
+    display_side_panel: state.controls.display_side_panel,
+    display_time_sliders: get_actually_display_time_sliders(state)
   };
 };
 const map_dispatch = {
@@ -42,7 +45,9 @@ function _MoveToWComponentButton(props) {
     initial_wcomponent_id,
     selected_wcomponent_ids_set,
     created_at_ms,
-    disable_if_not_present
+    disable_if_not_present,
+    display_side_panel,
+    display_time_sliders
   } = props;
   const {positions, go_to_datetime_ms} = useMemo(() => calculate_spatial_temporal_position_to_move_to({
     current_composed_knowledge_view,
@@ -50,7 +55,9 @@ function _MoveToWComponentButton(props) {
     initial_wcomponent_id,
     selected_wcomponent_ids_set,
     created_at_ms,
-    disable_if_not_present
+    disable_if_not_present,
+    display_side_panel,
+    display_time_sliders
   }), [
     current_composed_knowledge_view,
     wcomponents_by_id,

@@ -30,7 +30,7 @@ const connector = connect(map_state, map_dispatch);
 function _DisplayOptionsSidePanel(props) {
   return /* @__PURE__ */ h("div", {
     className: "side_panel"
-  }, /* @__PURE__ */ h("h3", null, "Display Options"), /* @__PURE__ */ h("p", {
+  }, /* @__PURE__ */ h("p", {
     className: "section"
   }, /* @__PURE__ */ h("b", null, "Validity filter"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
