@@ -1,4 +1,4 @@
-import {wcomponent_is_causal_link} from "../../../../wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_is_causal_link, wcomponent_is_plain_connection} from "../../../../wcomponent/interfaces/SpecialisedObjects.js";
 import {ACTIONS} from "../../../actions.js";
 import {get_current_composed_knowledge_view_from_state} from "../../accessors.js";
 export const conditionally_select_all_components = factory_conditionally_select_components((composed_kv) => {
@@ -23,10 +23,10 @@ export const conditionally_expand_selected_components = factory_conditionally_se
   });
   return new_selected_ids;
 });
-export const conditionally_contract_selected_components = factory_conditionally_select_components((composed_kv, selected_ids) => {
+export const conditionally_decrease_selected_components = factory_conditionally_select_components((composed_kv, selected_ids, wcomponents_by_id) => {
   const selected_ids_set = new Set(selected_ids);
   const selected_ids_to_remove = new Set();
-  const {wc_id_connections_map, composed_visible_wc_id_map} = composed_kv;
+  const {wc_id_connections_map, composed_visible_wc_id_map, wc_ids_by_type} = composed_kv;
   selected_ids.forEach((id) => {
     const connected_ids = wc_id_connections_map[id];
     if (!connected_ids)
@@ -35,6 +35,19 @@ export const conditionally_contract_selected_components = factory_conditionally_
       const connected_and_selected_ids = Array.from(connected_ids).filter((id2) => composed_visible_wc_id_map[id2]).filter((id2) => selected_ids_set.has(id2));
       if (connected_and_selected_ids.length <= 1)
         selected_ids_to_remove.add(id);
+      else if (wc_ids_by_type.any_node.has(id)) {
+        let connection_direction_is_from = void 0;
+        const opposite_connection_directions = Array.from(connected_and_selected_ids).map((id2) => wcomponents_by_id[id2]).filter(wcomponent_is_plain_connection).find((connection) => {
+          const is_from = connection.from_id === id;
+          if (connection_direction_is_from === void 0)
+            connection_direction_is_from = is_from;
+          else if (connection_direction_is_from !== is_from)
+            return true;
+          return false;
+        });
+        if (!opposite_connection_directions)
+          selected_ids_to_remove.add(id);
+      }
     }
   });
   return selected_ids.filter((id) => !selected_ids_to_remove.has(id));

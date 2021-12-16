@@ -22,7 +22,15 @@ export const highlighting_reducer = (state, action) => {
         if (id !== void 0 && action.highlighted) {
           const connected_ids = current_kv.wc_id_connections_map[id];
           if (connected_ids) {
-            neighbour_ids_of_highlighted_wcomponent = connected_ids;
+            neighbour_ids_of_highlighted_wcomponent = new Set(connected_ids);
+            if (state.derived.wcomponent_ids_by_type.any_node.has(id)) {
+              connected_ids.forEach((connection_id) => {
+                const node_ids = current_kv.wc_id_connections_map[connection_id];
+                if (node_ids) {
+                  node_ids.forEach((node_id) => neighbour_ids_of_highlighted_wcomponent.add(node_id));
+                }
+              });
+            }
           }
         }
       }

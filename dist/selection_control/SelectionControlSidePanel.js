@@ -2,7 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {Button} from "../sharedf/Button.js";
 import {
   conditionally_expand_selected_components,
-  conditionally_contract_selected_components,
+  conditionally_decrease_selected_components,
   conditionally_select_all_components,
   conditionally_select_forward_causal_components,
   conditionally_select_source_causal_components,
@@ -50,7 +50,7 @@ export function SelectionControlSidePanel(props) {
   }, /* @__PURE__ */ h(Button, {
     value: "Contract selection (in all directions)",
     fullWidth: true,
-    onClick: () => conditionally_contract_selected_components(store)
+    onClick: () => conditionally_decrease_selected_components(store)
   }), /* @__PURE__ */ h("div", {
     className: "description"
   }, "ctrl + s + d")), /* @__PURE__ */ h("p", {
