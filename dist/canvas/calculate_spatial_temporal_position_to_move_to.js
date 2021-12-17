@@ -51,7 +51,6 @@ export function calculate_spatial_temporal_position_to_move_to(args) {
 }
 function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, display_side_panel, display_time_sliders) {
   const position_groups = [];
-  const NODE_WIDTH2 = NODE_WIDTH * 2;
   const top_min_fudge = HALF_NODE_HEIGHT + TOP_HEADER_FUDGE;
   const top_max_add = HALF_NODE_HEIGHT * 3;
   let wcomponent_created_at_ms;
@@ -61,7 +60,7 @@ function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc
     if (!wcomponent || !an_entry)
       return;
     const component_min_left = an_entry.left - NODE_WIDTH;
-    const component_max_left = an_entry.left + NODE_WIDTH2;
+    const component_max_left = an_entry.left + NODE_WIDTH;
     const component_min_top = an_entry.top - top_min_fudge;
     const component_max_top = an_entry.top + top_max_add;
     const fit = position_groups.find((group) => {
