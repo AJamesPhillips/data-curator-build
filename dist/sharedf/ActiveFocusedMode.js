@@ -21,7 +21,7 @@ function _ActiveFocusedMode(props) {
     title
   }, /* @__PURE__ */ h(IconButton, {
     component: "span",
-    size: "small",
+    size: "medium",
     onClick: () => props.set_or_toggle_focused_mode()
   }, /* @__PURE__ */ h(FilterTiltShift, {
     className: classes.warning_icon

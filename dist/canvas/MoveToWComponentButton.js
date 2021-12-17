@@ -1,15 +1,18 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import FilterCenterFocusIcon from "../../snowpack/pkg/@material-ui/icons/FilterCenterFocus.js";
-import {Box, IconButton} from "../../snowpack/pkg/@material-ui/core.js";
+import {Box, IconButton, Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
 import {
   get_current_composed_knowledge_view_from_state
 } from "../state/specialised_objects/accessors.js";
 import {ACTIONS} from "../state/actions.js";
 import {calculate_if_components_on_screen} from "./calculate_if_components_on_screen.js";
-import {calculate_spatial_temporal_position_to_move_to} from "./calculate_spatial_temporal_position_to_move_to.js";
+import {
+  calculate_spatial_temporal_position_to_move_to
+} from "./calculate_spatial_temporal_position_to_move_to.js";
 import {get_actually_display_time_sliders} from "../state/controls/accessors.js";
+import {pub_sub} from "../state/pub_sub/pub_sub.js";
 const map_state = (state, own_props) => {
   const initial_wcomponent_id = own_props.wcomponent_id || state.routing.item_id || "";
   let components_on_screen = void 0;
@@ -73,6 +76,13 @@ function _MoveToWComponentButton(props) {
       next_position_index = 0;
     props.move(go_to_datetime_ms, position);
   };
+  useEffect(() => {
+    return pub_sub.global_keys.sub("key_down", (e) => {
+      console.log(e.key);
+      if (move && e.key === " " && !e.user_is_editing_text)
+        move();
+    });
+  });
   const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen;
   return /* @__PURE__ */ h(MoveToItemButton, {
     move,
@@ -88,12 +98,11 @@ export function MoveToItemButton(props) {
     have_finished_drawing_attention = () => {
     }
   } = props;
-  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Box, {
-    zIndex: 10,
-    m: 2,
+  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {
+    placement: "top",
     title: move ? "Move to component(s)" : "No component(s) present"
   }, /* @__PURE__ */ h(IconButton, {
-    size: "small",
+    size: "medium",
     onClick: move,
     disabled: !move
   }, /* @__PURE__ */ h(FilterCenterFocusIcon, null))), /* @__PURE__ */ h("div", {

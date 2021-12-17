@@ -2,6 +2,7 @@ import {ACTIONS} from "../actions.js";
 import {pub_sub} from "../pub_sub/pub_sub.js";
 export function record_keyupdown_activity(store) {
   document.onkeydown = (e) => {
+    const user_is_editing_text = store.getState().user_activity.is_editing_text;
     const action_args = {
       event: e,
       time_stamp: e.timeStamp,
@@ -10,13 +11,14 @@ export function record_keyupdown_activity(store) {
       ctrl_key: e.ctrlKey,
       key: e.key,
       meta_key: e.metaKey,
-      return_value: e.returnValue,
-      shift_key: e.shiftKey
+      shift_key: e.shiftKey,
+      user_is_editing_text
     };
     store.dispatch(ACTIONS.global_keys.key_down(action_args));
     pub_sub.global_keys.pub("key_down", action_args);
   };
   document.onkeyup = (e) => {
+    const user_is_editing_text = store.getState().user_activity.is_editing_text;
     const action_args = {
       event: e,
       time_stamp: e.timeStamp,
@@ -25,8 +27,8 @@ export function record_keyupdown_activity(store) {
       ctrl_key: e.ctrlKey,
       key: e.key,
       meta_key: e.metaKey,
-      return_value: e.returnValue,
-      shift_key: e.shiftKey
+      shift_key: e.shiftKey,
+      user_is_editing_text
     };
     store.dispatch(ACTIONS.global_keys.key_up(action_args));
     pub_sub.global_keys.pub("key_up", action_args);
