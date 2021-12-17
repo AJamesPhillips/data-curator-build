@@ -1,7 +1,9 @@
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Box, Button, Toolbar, makeStyles, Collapse} from "../../../snowpack/pkg/@material-ui/core.js";
+import {Box, Button, Toolbar, makeStyles, Collapse, IconButton, Tooltip} from "../../../snowpack/pkg/@material-ui/core.js";
+import TuneIcon from "../../../snowpack/pkg/@material-ui/icons/Tune.js";
+import DoubleArrowIcon from "../../../snowpack/pkg/@material-ui/icons/DoubleArrow.js";
 import "./ContentControls.css.proxy.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
 import {ACTIONS} from "../../state/actions.js";
@@ -20,6 +22,7 @@ const map_state = (state) => {
     display_time_sliders: state.controls.display_time_sliders,
     actually_display_time_sliders: get_actually_display_time_sliders(state),
     editing: !state.display_options.consumption_formatting,
+    animate_connections: state.display_options.animate_connections,
     created_at_ms: state.routing.args.created_at_ms
   };
 };
@@ -28,7 +31,8 @@ const map_dispatch = {
   change_display_at_sim_datetime: ACTIONS.display_at_sim_datetime.change_display_at_sim_datetime,
   toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
   set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
-  set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time
+  set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+  set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections
 };
 const connector = connect(map_state, map_dispatch);
 function _ContentControls(props) {
@@ -71,15 +75,24 @@ function _ContentControls(props) {
     allow_drawing_attention,
     have_finished_drawing_attention: () => set_allow_drawing_attention(false),
     disable_if_not_present: false
-  }), /* @__PURE__ */ h(ActiveFocusedMode, null), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(ActiveFilterWarning, null), /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null), /* @__PURE__ */ h(Box, {
-    component: "label",
-    title: props.editing ? "Time sliders always shown whilst editing" : ""
-  }, /* @__PURE__ */ h(Button, {
-    variant: "contained",
-    disableElevation: true,
+  }), /* @__PURE__ */ h(ActiveFocusedMode, null), /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null), /* @__PURE__ */ h(ActiveFilterWarning, null), /* @__PURE__ */ h(ActiveCreationContextWarning, null)), /* @__PURE__ */ h(ToggleDatetimeMarkers, null), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Tooltip, {
+    placement: "top",
+    title: props.animate_connections ? "Stop animating connections" : "Animate connections"
+  }, /* @__PURE__ */ h(IconButton, {
+    component: "span",
+    size: "medium",
+    onClick: () => props.set_or_toggle_animate_connections()
+  }, /* @__PURE__ */ h(DoubleArrowIcon, {
+    style: {color: props.animate_connections ? "rgb(25, 118, 210)" : ""}
+  }))), /* @__PURE__ */ h(Tooltip, {
+    placement: "top",
+    title: props.editing ? "Time sliders always shown whilst editing" : props.display_time_sliders ? "Hide time sliders" : "Show time sliders"
+  }, /* @__PURE__ */ h(IconButton, {
+    component: "span",
+    size: "medium",
     disabled: props.editing,
     onClick: () => props.set_display_time_sliders(!props.display_time_sliders)
-  }, props.display_time_sliders ? "Hide" : "Show", " time sliders"))));
+  }, /* @__PURE__ */ h(TuneIcon, null))))));
 }
 export const ContentControls = connector(_ContentControls);
 const use_styles = makeStyles((theme) => ({
