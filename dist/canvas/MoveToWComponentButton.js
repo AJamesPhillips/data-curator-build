@@ -78,7 +78,6 @@ function _MoveToWComponentButton(props) {
   };
   useEffect(() => {
     return pub_sub.global_keys.sub("key_down", (e) => {
-      console.log(e.key);
       if (move && e.key === " " && !e.user_is_editing_text)
         move();
     });

@@ -8,10 +8,14 @@ import {Options} from "./Options.js";
 import {throttle} from "../../utils/throttle.js";
 import {useEffect, useMemo, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
+import {ACTIONS} from "../../state/actions.js";
 const map_state = (state) => ({
   presenting: state.display_options?.consumption_formatting
 });
-const connector = connect(map_state);
+const map_dispatch = {
+  set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag
+};
+const connector = connect(map_state, map_dispatch);
 function _AutocompleteText(props) {
   const prepared_targets = useRef([]);
   const flexsearch_index = useRef(FlexSearch.Index());
@@ -36,6 +40,9 @@ function _AutocompleteText(props) {
   useEffect(() => {
     set_editing_options(!!props.start_expanded);
   }, [props.start_expanded]);
+  useEffect(() => {
+    props.set_editing_text_flag(editing_options);
+  }, [editing_options]);
   const {threshold_minimum_score = false} = props;
   const [options_to_display, set_options_to_display] = useState([]);
   useEffect(() => {

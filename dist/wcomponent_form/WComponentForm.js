@@ -8,9 +8,13 @@ import {EditableCheckbox} from "../form/EditableCheckbox.js";
 import {EditableCustomDateTime} from "../form/EditableCustomDateTime.js";
 import {EditableText} from "../form/editable_text/EditableText.js";
 import {LabelsEditor} from "../labels/LabelsEditor.js";
-import {prepare_new_contextless_wcomponent_object} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
+import {
+  prepare_new_contextless_wcomponent_object
+} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 import {get_updated_wcomponent} from "../wcomponent/CRUD_helpers/get_updated_wcomponent.js";
-import {get_wcomponent_state_UI_value} from "../wcomponent_derived/get_wcomponent_state_UI_value.js";
+import {
+  get_wcomponent_state_UI_value
+} from "../wcomponent_derived/get_wcomponent_state_UI_value.js";
 import {VAPsType} from "../wcomponent/interfaces/VAPsType.js";
 import {
   wcomponent_is_plain_connection,
@@ -26,10 +30,8 @@ import {
   wcomponent_is_sub_state,
   wcomponent_has_objectives
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
-import {wcomponent_types} from "../wcomponent/interfaces/wcomponent_base.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
-import {wcomponent_type_to_text} from "../wcomponent_derived/wcomponent_type_to_text.js";
 import {ColorPicker} from "../sharedf/ColorPicker.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
@@ -50,13 +52,17 @@ import {WComponentImageForm} from "./WComponentImageForm.js";
 import {Button} from "../sharedf/Button.js";
 import {selector_chosen_base_id} from "../state/user_info/selector.js";
 import {ValuePossibilitiesComponent} from "./value_possibilities/ValuePossibilitiesComponent.js";
-import {update_VAPSets_with_possibilities} from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities.js";
+import {
+  update_VAPSets_with_possibilities
+} from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities.js";
 import {WComponentSubStateForm} from "./WComponentSubStateForm.js";
 import {WComponentConnectionForm} from "./WComponentConnectionForm.js";
 import {ExternalLinkIcon} from "../sharedf/icons/ExternalLinkIcon.js";
-import {EasyActionValueAndPredictionSets} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
+import {
+  EasyActionValueAndPredictionSets
+} from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
 import {WarningTriangle} from "../sharedf/WarningTriangle.js";
-import {wcomponent_statev2_subtype_options} from "./subtype_options.js";
+import {wcomponent_statev2_subtype_options, wcomponent_type_options} from "./type_options.js";
 const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -316,4 +322,3 @@ function _WComponentForm(props) {
   }, "Restore")), /* @__PURE__ */ h("br", null));
 }
 export const WComponentForm = connector(_WComponentForm);
-const wcomponent_type_options = wcomponent_types.map((type) => ({id: type, title: wcomponent_type_to_text(type)}));

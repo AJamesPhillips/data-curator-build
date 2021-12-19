@@ -55,7 +55,7 @@ async function supabase_update_wcomponent(args) {
   }
   return {status: result.status, error, item: new_item};
 }
-export function wcomponent_app_to_supabase(item, base_id) {
+function wcomponent_app_to_supabase(item, base_id) {
   return app_item_to_supabase(item, base_id);
 }
 export function wcomponent_supabase_to_app(item) {

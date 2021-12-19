@@ -14,6 +14,9 @@ import {EditableCustomDateTime} from "../../form/EditableCustomDateTime.js";
 import {AlignComponentForm} from "../../wcomponent_form/AlignComponentForm.js";
 import {wcomponent_is_causal_link} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 import {BasicCausalLinkForm} from "../../wcomponent_form/WComponentCausalLinkForm.js";
+import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
+import {wcomponent_type_options} from "../../wcomponent_form/type_options.js";
+import {prepare_new_contextless_wcomponent_object} from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 const map_state = (state) => {
   const kv = get_current_composed_knowledge_view_from_state(state);
   const {selected_wcomponent_ids_set} = state.meta_wcomponents;
@@ -32,7 +35,8 @@ const map_dispatch = {
   bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
   bulk_remove_from_knowledge_view: ACTIONS.specialised_object.bulk_remove_from_knowledge_view,
   snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
-  bulk_edit_wcomponents: ACTIONS.specialised_object.bulk_edit_wcomponents
+  bulk_edit_wcomponents: ACTIONS.specialised_object.bulk_edit_wcomponents,
+  upsert_wcomponent: ACTIONS.specialised_object.upsert_wcomponent
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentMultipleForm(props) {
@@ -48,7 +52,8 @@ function _WComponentMultipleForm(props) {
     bulk_add_to_knowledge_view,
     bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries,
-    bulk_edit_wcomponents
+    bulk_edit_wcomponents,
+    upsert_wcomponent
   } = props;
   const selected_wcomponents = get_wcomponents_from_ids(wcomponents_by_id, selected_wcomponent_ids_set).filter(is_defined);
   const selected_wcomponent_ids = Array.from(selected_wcomponent_ids_set);
@@ -102,6 +107,24 @@ function _WComponentMultipleForm(props) {
       wcomponent_ids: causal_link_wcomponent_ids,
       change: arg
     })
+  })), editing && /* @__PURE__ */ h("p", null, "Component types", /* @__PURE__ */ h(AutocompleteText, {
+    placeholder: "Type: ",
+    selected_option_id: void 0,
+    allow_none: true,
+    options: wcomponent_type_options,
+    on_change: (type) => {
+      if (!type)
+        return;
+      selected_wcomponents.forEach((wcomponent) => {
+        const vanilla = prepare_new_contextless_wcomponent_object({
+          base_id: wcomponent.base_id,
+          type
+        });
+        const new_wcomponent = {...vanilla, ...wcomponent};
+        new_wcomponent.type = type;
+        upsert_wcomponent({wcomponent: new_wcomponent});
+      });
+    }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Created at"), /* @__PURE__ */ h(EditableCustomDateTime, {
     value: void 0,
     on_change: (custom_created_at) => bulk_edit_wcomponents({

@@ -1,7 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
-import {wcomponent_statev2_subtype_options} from "../wcomponent_form/subtype_options.js";
+import {wcomponent_statev2_subtype_options} from "../wcomponent_form/type_options.js";
 import {TableDisplayMultiDimensionalData} from "./TableDisplayMultiDimensionalData.js";
 export function MultidimensionalDataForm(props) {
   const [title, set_title] = useState("");
