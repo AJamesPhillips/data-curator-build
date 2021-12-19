@@ -18,7 +18,8 @@ const map_state = (state) => {
     prioritisations,
     time_origin_ms: composed_datetime_line_config?.time_origin_ms,
     time_origin_x: composed_datetime_line_config?.time_origin_x,
-    time_scale: composed_datetime_line_config?.time_scale
+    time_scale: composed_datetime_line_config?.time_scale,
+    presenting: state.display_options.consumption_formatting
   };
 };
 const connector = connect(map_state);
@@ -111,7 +112,8 @@ function _PrioritiesView(props) {
     main_content: /* @__PURE__ */ h(Canvas, {
       svg_children: get_svg_children(props),
       svg_upper_children: [],
-      overlay: get_overlay_children()
+      overlay: get_overlay_children(),
+      plain_background: props.presenting
     }, elements)
   });
 }
