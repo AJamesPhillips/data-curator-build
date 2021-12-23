@@ -36,13 +36,16 @@ function _AutocompleteText(props) {
     set_temp_value_str(props.initial_search_term || selected_title);
   }, [props.initial_search_term, selected_title]);
   const {throttled: handle_on_change, flush: flush_temp_value_str} = throttle(set_temp_value_str, 300);
-  const [editing_options, set_editing_options] = useState(false);
+  const [editing_options, _set_editing_options] = useState(false);
+  function set_editing_options(new_editing_options) {
+    if (new_editing_options === editing_options)
+      return;
+    _set_editing_options(new_editing_options);
+    props.set_editing_text_flag(new_editing_options);
+  }
   useEffect(() => {
     set_editing_options(!!props.start_expanded);
   }, [props.start_expanded]);
-  useEffect(() => {
-    props.set_editing_text_flag(editing_options);
-  }, [editing_options]);
   const {threshold_minimum_score = false} = props;
   const [options_to_display, set_options_to_display] = useState([]);
   useEffect(() => {

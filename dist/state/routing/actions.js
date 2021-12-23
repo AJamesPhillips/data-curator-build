@@ -6,7 +6,7 @@ const change_route = (routing_params) => {
     args.y = round_position(args.y);
     args.zoom = round_position(args.zoom);
   }
-  return {type: change_route_type, ...routing_params, ...args};
+  return {type: change_route_type, ...routing_params};
 };
 function round_position(position) {
   if (position === void 0)

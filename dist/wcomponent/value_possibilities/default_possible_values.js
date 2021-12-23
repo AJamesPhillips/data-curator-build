@@ -12,18 +12,16 @@ export function default_possible_values(VAPs_represent, simple_possibilities) {
       {value: "True", id: VALUE_POSSIBILITY_IDS.boolean_true, order: 0},
       {value: "False", id: VALUE_POSSIBILITY_IDS.boolean_false, order: 1}
     ];
+  } else if (VAPs_represent === VAPsType.action) {
+    simple_possibilities = ACTION_VALUE_POSSIBILITY_IDS.map((id, index) => ({
+      id,
+      value: VALUE_POSSIBILITY_IDS_to_text[id] || "?",
+      order: index
+    }));
   } else if (simple_possibilities.length === 0) {
-    if (VAPs_represent === VAPsType.action) {
-      simple_possibilities = ACTION_VALUE_POSSIBILITY_IDS.map((id, index) => ({
-        id,
-        value: VALUE_POSSIBILITY_IDS_to_text[id] || "?",
-        order: index
-      }));
-    } else {
-      (VAPs_represent === VAPsType.number ? ["1"] : [""]).forEach((value, index) => {
-        simple_possibilities.push({value, order: index});
-      });
-    }
+    (VAPs_represent === VAPsType.number ? ["1"] : [""]).forEach((value, index) => {
+      simple_possibilities.push({value, order: index});
+    });
   }
   return simple_possibilities;
 }

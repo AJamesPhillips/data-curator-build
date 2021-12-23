@@ -84,7 +84,7 @@ function App(props) {
     className: `${classes.toolbar_item}`
   }, /* @__PURE__ */ h(SidePanelOrMenuButton, null))))), /* @__PURE__ */ h(Box, {
     id: "app_content",
-    component: "main",
+    component: "div",
     className: clsx(classes.content, {
       [classes.content_with_open_side_panel]: props.display_side_panel,
       animate_connections: props.animate_connections
@@ -127,13 +127,9 @@ const use_styles = makeStyles((theme) => ({
   },
   app_bar_with_open_side_panel: {},
   content: {
-    position: "relative",
-    zIndex: 1,
+    width: "100%",
     flexGrow: 1,
-    flexShrink: 1,
     display: "flex",
-    flexDirection: "column",
-    flexWrap: "nowrap",
     marginRight: -drawerWidth,
     transition: theme.transitions.create(["margin"], {
       easing: theme.transitions.easing.sharp,

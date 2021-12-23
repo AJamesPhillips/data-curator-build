@@ -54,6 +54,7 @@ function _ActionsListViewContent(props) {
   const actions_todo = [];
   const actions_in_progress = [];
   const actions_done_or_rejected = [];
+  let hidden_done = 0;
   actions.forEach((action) => {
     const attribute_values = get_wcomponent_state_value_and_probabilities({
       wcomponent: action,
@@ -64,25 +65,33 @@ function _ActionsListViewContent(props) {
     const most_probable = attribute_values.most_probable_VAP_set_values[0];
     if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_in_progress)
       actions_in_progress.push(action);
-    else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed)
-      actions_done_or_rejected.push(action);
+    else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed) {
+      if (actions_done_or_rejected.length < 5)
+        actions_done_or_rejected.push(action);
+      else
+        hidden_done++;
+    } else if (action.todo_index)
+      actions_todo.push(action);
     else
       actions_icebox.push(action);
   });
+  const sorted_actions_todo = sort_list(actions_todo, (a) => a.todo_index || 0, "descending");
   return /* @__PURE__ */ h("div", {
     className: "action_list_view_content"
   }, /* @__PURE__ */ h("div", {
     className: "icebox"
   }, /* @__PURE__ */ h("h1", null, "Icebox"), actions_icebox.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
-    action
+    action,
+    show_icebox_actions: true
   }))), /* @__PURE__ */ h("div", {
     className: "todo"
   }, /* @__PURE__ */ h("div", {
     className: "prioritisations_header"
-  }, /* @__PURE__ */ h("h1", null, "Todo")), actions_todo.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
+  }, /* @__PURE__ */ h("h1", null, "Todo")), sorted_actions_todo.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
-    action
+    action,
+    show_todo_actions: true
   }))), /* @__PURE__ */ h("div", {
     className: "in_progress"
   }, /* @__PURE__ */ h("div", {
@@ -97,7 +106,9 @@ function _ActionsListViewContent(props) {
   }, /* @__PURE__ */ h("h1", null, "Done")), actions_done_or_rejected.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
     action
-  }))));
+  })), hidden_done > 0 && /* @__PURE__ */ h("div", {
+    style: {textAlign: "center", margin: 40}
+  }, "... ", hidden_done, " hidden ...")));
 }
 const ActionsListViewContent = connector(_ActionsListViewContent);
 function get_modified_or_created_at(a) {

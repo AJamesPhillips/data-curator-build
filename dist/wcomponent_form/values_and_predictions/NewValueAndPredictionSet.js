@@ -18,21 +18,23 @@ export const new_value_and_prediction_set = (VAPs_represent, possible_value_poss
   const [show_advanced, set_show_advanced] = useState(!initial_hide_advanced);
   return (VAP_set, crud) => {
     const {update_item} = crud;
-    return /* @__PURE__ */ h("div", null, VAPs_represent === VAPsType.boolean && /* @__PURE__ */ h(SimplifiedBooleanForm, {
+    return /* @__PURE__ */ h("div", null, !show_advanced && VAPs_represent === VAPsType.boolean && /* @__PURE__ */ h(SimplifiedBooleanForm, {
       VAP_set,
       on_change: update_item
-    }), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(SimplifiedActionForm, {
+    }), !show_advanced && VAPs_represent === VAPsType.action && /* @__PURE__ */ h(SimplifiedActionForm, {
       possible_value_possibilities,
       VAP_set,
       on_change: update_item
-    }), hide_advanced_for_type_other && /* @__PURE__ */ h(SimplifiedOtherForm, {
+    }), !show_advanced && hide_advanced_for_type_other && /* @__PURE__ */ h(SimplifiedOtherForm, {
       possible_value_possibilities,
       VAP_set,
       on_change: update_item
-    }), /* @__PURE__ */ h(SimplifiedUncertainDatetimeForm, {
+    }), !show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
+      className: "description_label"
+    }, "Datetime"), /* @__PURE__ */ h(SimplifiedUncertainDatetimeForm, {
       VAP_set,
       on_change: update_item
-    }), /* @__PURE__ */ h(Button, {
+    })), /* @__PURE__ */ h(Button, {
       value: (show_advanced ? "Hide" : "Show") + " advanced options",
       onClick: () => set_show_advanced(!show_advanced)
     }), show_advanced && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null), get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud), get_details_for_single_VAP_set(possible_value_possibilities, VAPs_represent)(VAP_set, crud), get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)));
