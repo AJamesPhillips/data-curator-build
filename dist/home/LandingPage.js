@@ -44,7 +44,13 @@ export function LandingPage() {
     size: "large"
   }, /* @__PURE__ */ h("strong", null, "Get Started"))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/projects/datacurator/"
-  }, "CCI project"), " supported by our generous funders."), /* @__PURE__ */ h("a", {
+  }, "CCI project"), " supported by ", /* @__PURE__ */ h("a", {
+    href: "https://centerofci.org/about/"
+  }, "our generous funders"), "."), /* @__PURE__ */ h("p", null, "Please post any ", /* @__PURE__ */ h("a", {
+    href: "https://github.com/centerofci/DataCurator/discussions/categories/q-a"
+  }, "support or questions here"), ". For any bugs please ", /* @__PURE__ */ h("a", {
+    href: "https://github.com/centerofci/DataCurator/issues"
+  }, "post here"), "."), /* @__PURE__ */ h("a", {
     href: "/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12"
   }, /* @__PURE__ */ h("img", {
     src: "/image_1.png",
