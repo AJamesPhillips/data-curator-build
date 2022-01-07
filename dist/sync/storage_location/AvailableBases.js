@@ -50,7 +50,7 @@ function _AvailableBases(props) {
       set_error(res.error);
     },
     style: {float: "right"}
-  }), /* @__PURE__ */ h("h4", null, "Select an existing base"), /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
+  }), /* @__PURE__ */ h("h4", null, "Select a base"), /* @__PURE__ */ h(DisplaySupabasePostgrestError, {
     error
   }), /* @__PURE__ */ h("table", null, /* @__PURE__ */ h("thead", null, /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("th", null), /* @__PURE__ */ h("th", null, "Knowledge Base Title"), /* @__PURE__ */ h("th", null), /* @__PURE__ */ h("th", null, "Owner"), /* @__PURE__ */ h("th", null, "Access"), /* @__PURE__ */ h("th", null))), /* @__PURE__ */ h("tbody", null, bases.map((base) => /* @__PURE__ */ h(StorageOption, {
     user,

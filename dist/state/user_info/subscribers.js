@@ -29,6 +29,15 @@ export function user_info_subscribers(store) {
       store.dispatch(ACTIONS.user_info.update_bases({bases: void 0}));
     refresh_bases_for_current_user(store);
   });
+  const supabase = get_supabase();
+  supabase.auth.onAuthStateChange(() => {
+    const current_user = store.getState().user_info.user;
+    const user = supabase.auth.user() || void 0;
+    const diff = current_user !== user;
+    console.log("supabase auth state change", user, "diff", diff, "current_user", current_user);
+    if (diff)
+      store.dispatch(ACTIONS.user_info.set_user({user}));
+  });
 }
 async function get_users(store) {
   const supabase = get_supabase();

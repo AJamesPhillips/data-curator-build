@@ -10,7 +10,8 @@ export function user_info_persist(state) {
 }
 export function user_info_starting_state(args) {
   const obj = get_persisted_state_object("user_info");
-  const need_to_handle_password_recovery = document.location.hash.includes("type=recovery");
+  const hash_has = (str) => document.location.hash.includes(str);
+  const need_to_handle_password_recovery = hash_has("type=recovery");
   const chosen_base_id = args.storage_location !== void 0 ? args.storage_location : obj.chosen_base_id;
   const user = args.load_state_from_storage ? get_supabase().auth.user() || void 0 : local_user;
   const state = {

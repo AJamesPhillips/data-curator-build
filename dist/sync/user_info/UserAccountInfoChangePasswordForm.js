@@ -7,9 +7,12 @@ import {ACTIONS} from "../../state/actions.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
 const map_state = (state) => {
+  const {
+    need_to_handle_password_recovery
+  } = state.user_info;
   return {
     user: state.user_info.user,
-    need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery
+    need_to_handle_password_recovery
   };
 };
 const map_dispatch = {
@@ -18,7 +21,13 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _UserAccountInfoChangePasswordForm(props) {
-  const {on_close, user, need_to_handle_password_recovery, set_user, set_need_to_handle_password_recovery} = props;
+  const {
+    on_close,
+    user,
+    set_user,
+    need_to_handle_password_recovery,
+    set_need_to_handle_password_recovery
+  } = props;
   const [password, set_password] = useState("");
   const [supabase_session_error, set_supabase_session_error] = useState(null);
   if (!user)

@@ -12,7 +12,6 @@ export function sync_starting_state() {
     retry_attempt: void 0
   };
   const state = {
-    storage_type: "supabase",
     last_source_of_truth_specialised_objects_by_id: {
       wcomponents: {},
       knowledge_views: {}

@@ -11,11 +11,12 @@ import {DisplaySupabaseSessionError} from "./DisplaySupabaseErrors.js";
 import {UserAccountInfoChangePasswordForm} from "./UserAccountInfoChangePasswordForm.js";
 import {UserAccountInfoChangeUsernameForm} from "./UserAccountInfoChangeUsernameForm.js";
 const map_state = (state) => {
+  const {need_to_handle_password_recovery} = state.user_info;
   return {
     user: state.user_info.user,
     user_name: selector_user_name(state),
     need_to_set_user_name: selector_need_to_set_user_name(state),
-    need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery
+    need_to_handle_password_recovery
   };
 };
 const map_dispatch = {
@@ -45,6 +46,7 @@ function _UserAccountInfoForm(props) {
   const {user, user_name, need_to_set_user_name, need_to_handle_password_recovery, set_user} = props;
   const [form_state, set_form_state] = useState("initial");
   const [supabase_session_error, set_supabase_session_error] = useState(null);
+  console.log("user account info form need_to_set_user_name", need_to_set_user_name, "form_state", form_state);
   useEffect(() => {
     if (need_to_set_user_name)
       set_form_state("updating_username");
