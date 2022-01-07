@@ -37,26 +37,31 @@ export function BasicCausalLinkForm(props) {
   } = props;
   const primary_effect_description = VAPs_represent_number ? "Effect" : "Effect when true";
   return /* @__PURE__ */ h("p", {
-    style: {display: "flex", flex: "1"}
-  }, show_primary_effect && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
+    style: {display: "flex"}
+  }, show_primary_effect && /* @__PURE__ */ h("div", {
+    style: {flex: 1}
+  }, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, primary_effect_description), "   ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "...",
     value: effect_when_true,
     allow_undefined: true,
+    style: {width: "100px"},
     conditional_on_blur: (effect_when_true2) => change_effect({effect_when_true: effect_when_true2, effect_when_false})
-  })), show_effect_when_false && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
+  })), show_effect_when_false && /* @__PURE__ */ h("div", {
+    style: {flex: 1}
+  }, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Effect when false"), "   ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "...",
     value: effect_when_false,
     allow_undefined: true,
+    style: {width: "100px"},
     conditional_on_blur: (effect_when_false2) => change_effect({effect_when_false: effect_when_false2, effect_when_true})
-  })), show_effect_when_false && /* @__PURE__ */ h("div", {
-    style: {flexGrow: 2, margin: "auto"}
+  })), editing && show_effect_when_false && /* @__PURE__ */ h("div", {
+    style: {flex: 1, margin: "auto"}
   }, /* @__PURE__ */ h(Button, {
-    value: "Invert",
-    disabled: !editing,
+    value: "Invert Effect",
     onClick: () => {
       change_effect({
         effect_when_true: effect_when_false,

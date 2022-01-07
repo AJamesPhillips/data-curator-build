@@ -1,4 +1,5 @@
 import {is_defined} from "../shared/utils/is_defined.js";
+import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
 import {
   wcomponent_is_causal_link,
   wcomponent_is_plain_connection
@@ -154,7 +155,8 @@ export function setup_console_api() {
     matrix_component_ids_to_titles,
     matrix_to_csv,
     get_current_kv,
-    get_wcomponents_by_id
+    get_wcomponents_by_id,
+    create_wcomponent
   };
   window.console_api = console_api;
 }

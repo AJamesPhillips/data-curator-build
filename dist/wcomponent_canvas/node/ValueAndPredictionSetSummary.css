@@ -40,6 +40,7 @@
   right: 0;
   bottom: 0;
   left: 0;
+  pointer-events: none;
 }
 .value_and_prediction_set_summary .value_and_prediction:nth-child(even) {
   background-color: #e6e6e6;

@@ -201,19 +201,26 @@ function _WComponentForm(props) {
   }), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
     wcomponent,
     upsert_wcomponent
-  }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
+  }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
     connection_terminal_description: "From",
     wcomponent_id: from_wcomponent && from_wcomponent.id,
     connection_terminal_type: wcomponent.from_type,
     on_update_id: (from_id) => upsert_wcomponent({from_id}),
     on_update_type: (from_type) => upsert_wcomponent({from_type})
-  })), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
+  })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
     connection_terminal_description: "To",
     wcomponent_id: to_wcomponent && to_wcomponent.id,
     connection_terminal_type: wcomponent.to_type,
     on_update_id: (to_id) => upsert_wcomponent({to_id}),
     on_update_type: (to_type) => upsert_wcomponent({to_type})
-  })), wcomponent_is_causal_link(wcomponent) && /* @__PURE__ */ h(WComponentCausalLinkForm, {
+  })), editing && /* @__PURE__ */ h("p", {
+    style: {display: "flex", alignItems: "center", flexDirection: "column"}
+  }, /* @__PURE__ */ h(Button, {
+    value: "Reverse Direction",
+    onClick: () => {
+      upsert_wcomponent({to_id: wcomponent.from_id, from_id: wcomponent.to_id});
+    }
+  }))), wcomponent_is_causal_link(wcomponent) && /* @__PURE__ */ h(WComponentCausalLinkForm, {
     wcomponent,
     from_wcomponent,
     editing,

@@ -13,10 +13,9 @@ const MAX_DOUBLE_TAP_DELAY_MS = 900;
 const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10;
 const map_state = (state) => {
   const {x, y, zoom} = state.routing.args;
-  const scale = zoom / SCALE_BY;
   const shift_key_down = state.global_keys.keys_down.has("Shift");
   const control_key_down = state.global_keys.keys_down.has("Control");
-  return {zoom, scale, x, y, shift_key_down, control_key_down};
+  return {zoom, x, y, shift_key_down, control_key_down};
 };
 const map_dispatch = (dispatch) => ({
   change_routing_args: (args) => {
@@ -34,6 +33,7 @@ const connector = connect(map_state, map_dispatch);
 class _Canvas extends Component {
   constructor(props) {
     super(props);
+    this.manual_zoom_target = void 0;
     this.client_to_canvas = (client_xy) => client_to_canvas(this.props.zoom, client_xy);
     this.client_to_canvas_x = (client_x) => client_to_canvas_x(this.props.x, this.props.zoom, client_x);
     this.client_to_canvas_y = (client_y) => client_to_canvas_y(this.props.y, this.props.zoom, client_y);
@@ -116,7 +116,8 @@ class _Canvas extends Component {
       const new_zoom = calculate_new_zoom({zoom: this.props.zoom, wheel_change});
       if (new_zoom === this.props.zoom)
         return;
-      const {pointer_x, pointer_y} = get_pointer_position(e, this.props);
+      const scale = this.props.zoom / SCALE_BY;
+      const {pointer_x, pointer_y} = get_pointer_position(e, this.props, scale);
       const {offsetHeight: client_height, offsetWidth: client_width} = e.currentTarget;
       const result = calculate_new_zoom_xy({
         old: this.props,
@@ -127,6 +128,7 @@ class _Canvas extends Component {
         client_width
       });
       this.props.change_routing_args({zoom: new_zoom, x: result.x, y: result.y});
+      this.manual_zoom_target = new_zoom;
     };
     this.on_context_menu = (e) => {
       e.stopPropagation();
@@ -156,22 +158,31 @@ class _Canvas extends Component {
     };
   }
   render() {
-    const {scale} = this.props;
+    const {zoom} = this.props;
+    const scale = zoom / SCALE_BY;
     const x = -1 * this.props.x * scale;
     const y = this.props.y * scale;
     const backgroundSize = grid_small_step * scale;
+    const manual_move = this.state.pointer_state.down;
+    const manual_zoom = this.manual_zoom_target === zoom;
+    this.manual_zoom_target = void 0;
+    const transition_time = manual_move ? 0 : manual_zoom ? 0.1 : 0.5;
     const background_style = {
+      transition: `background-position ${transition_time}s, background-size ${transition_time}s`,
       backgroundPosition: `${x}px ${y}px`,
       backgroundSize: `${backgroundSize}px ${backgroundSize}px`
     };
     const big_squared_background_style = {
+      transition: `background-position ${transition_time}s, background-size ${transition_time}s`,
       backgroundPosition: `${x}px ${y}px`,
       backgroundSize: `${h_step * scale}px ${v_step * scale}px`
     };
     const html_translation_container_style = {
+      transition: `transform ${transition_time}s`,
       transform: `translate(${x}px,${y}px)`
     };
     const html_container_style = {
+      transition: `transform ${transition_time}s`,
       transformOrigin: "left top",
       transform: `scale(${scale})`
     };
@@ -260,7 +271,7 @@ function area_selection_args(state) {
     canvas_end_y: Math.max(canvas_start_y, canvas_current_y)
   };
 }
-function get_pointer_position(e, pos) {
+function get_pointer_position(e, pos, scale) {
   let pointer_x = e.offsetX;
   let pointer_y = e.offsetY;
   let event_target = e.target;
@@ -272,8 +283,8 @@ function get_pointer_position(e, pos) {
     }
     pointer_x -= pos.x;
     pointer_y += pos.y;
-    pointer_x *= pos.scale;
-    pointer_y *= pos.scale;
+    pointer_x *= scale;
+    pointer_y *= scale;
     pointer_x = Math.round(pointer_x);
     pointer_y = Math.round(pointer_y);
   }

@@ -116,17 +116,15 @@ function _WComponentCanvasNode(props) {
     if (!props.node_is_moving)
       return;
     const unsubscribe = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", (drag_relative_position) => {
-      if (!drag_relative_position) {
-        set_temporary_drag_kv_entry(void 0);
-        unsubscribe();
-        return;
-      }
       const temp_drag_kv_entry = {...kv_entry};
       temp_drag_kv_entry.left += drag_relative_position.left;
       temp_drag_kv_entry.top += drag_relative_position.top;
       set_temporary_drag_kv_entry(temp_drag_kv_entry);
     });
-    return unsubscribe;
+    return () => {
+      set_temporary_drag_kv_entry(void 0);
+      unsubscribe();
+    };
   }, [props.node_is_moving]);
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const validity_value = always_show || !wcomponent ? {display_certainty: 1} : calc_wcomponent_should_display({
