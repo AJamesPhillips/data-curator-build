@@ -47,7 +47,7 @@ export function BaseFormEditFields(props) {
       if (res.error)
         return set_error_modifying_base(res.error);
       set_error_modifying_base(void 0);
-      pub_sub.user.pub("stale_bases", true);
+      pub_sub.user.pub("stale_bases", false);
     },
     value: "Save changes"
   }), "  ", /* @__PURE__ */ h("input", {

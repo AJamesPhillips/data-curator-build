@@ -7,6 +7,7 @@ import {get_access_controls_for_base} from "../supabase/access_controls.js";
 import {DisplaySupabasePostgrestError} from "../sync/user_info/DisplaySupabaseErrors.js";
 import {AddAccessControlEntry} from "./AddAccessControl.js";
 import {SyncButton} from "../sharedf/SyncButton.js";
+import {pub_sub} from "../state/pub_sub/pub_sub.js";
 const map_state = (state) => ({
   users_by_id: state.user_info.users_by_id
 });
@@ -25,6 +26,9 @@ function _BaseFormEditSharing(props) {
       set_async_state(res.error ? "error" : "success");
       set_access_controls(res.access_controls);
       set_error(res.error || void 0);
+      if (res.error)
+        return;
+      pub_sub.user.pub("stale_users_by_id", false);
     });
   }
   useEffect(() => refresh_sharing_options(), []);

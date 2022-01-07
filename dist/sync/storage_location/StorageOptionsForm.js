@@ -36,7 +36,7 @@ function _StorageOptionsForm(props) {
     set_base_creation_state(res.error ? "error" : "success");
     set_newly_created_base(res.base);
     if (!res.error)
-      pub_sub.user.pub("stale_bases", true);
+      pub_sub.user.pub("stale_bases", false);
   };
   if (editing_base_id !== void 0)
     return /* @__PURE__ */ h("div", {

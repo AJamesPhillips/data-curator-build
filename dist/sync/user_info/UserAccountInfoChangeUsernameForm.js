@@ -1,5 +1,5 @@
 import {h} from "../../../snowpack/pkg/preact.js";
-import {useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Box, Button, FormControl, FormGroup, makeStyles, TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import "../common.css.proxy.js";
@@ -8,8 +8,10 @@ import {DisplaySupabasePostgrestError} from "./DisplaySupabaseErrors.js";
 import {selector_need_to_set_user_name} from "../../state/user_info/selector.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 const map_state = (state) => {
+  const {user, users_by_id} = state.user_info;
   return {
-    user: state.user_info.user,
+    user,
+    users_by_id,
     need_to_set_user_name: selector_need_to_set_user_name(state)
   };
 };
@@ -18,6 +20,9 @@ const connector = connect(map_state, map_dispatch);
 function _UserAccountInfoChangeUsernameForm(props) {
   const {on_close, user, need_to_set_user_name} = props;
   const [username, set_username] = useState("");
+  const current_user = (props.users_by_id || {})[user?.id || ""];
+  const current_username = current_user?.name || "";
+  useEffect(() => set_username(current_username), [current_username]);
   const [save_state, set_save_state] = useState("initial");
   const is_saving = save_state === "in_progress";
   const [postgrest_error, set_postgrest_error] = useState(null);
@@ -31,7 +36,7 @@ function _UserAccountInfoChangeUsernameForm(props) {
     set_postgrest_error(error);
     const actual_set_username = (data && data[0]?.name) ?? void 0;
     if (actual_set_username)
-      pub_sub.user.pub("stale_users_by_id", true);
+      pub_sub.user.pub("stale_users_by_id", false);
     set_save_state(error ? "error" : "success");
   }
   const classes = use_styles();

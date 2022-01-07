@@ -1,22 +1,34 @@
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {ACTIONS} from "../actions.js";
 import {pub_sub} from "../pub_sub/pub_sub.js";
+import {selector_chosen_base} from "./selector.js";
 import {refresh_bases_for_current_user} from "./utils.js";
 export function user_info_subscribers(store) {
-  const starting_state = store.getState();
   if (!store.load_state_from_storage)
     return;
+  const starting_state = store.getState();
   const {users_by_id, bases_by_id} = starting_state.user_info;
   if (!users_by_id)
     get_users(store);
   if (!bases_by_id)
     refresh_bases_for_current_user(store);
   pub_sub.user.sub("changed_user", () => {
+    if (!selector_chosen_base(store.getState())?.public_read) {
+      store.dispatch(ACTIONS.specialised_object.clear_from_mem_all_specialised_objects());
+    }
+    pub_sub.user.pub("stale_users_by_id", true);
+    pub_sub.user.pub("stale_bases", true);
+  });
+  pub_sub.user.sub("stale_users_by_id", (full_reload) => {
+    if (full_reload)
+      store.dispatch(ACTIONS.user_info.set_users({users: void 0}));
     get_users(store);
+  });
+  pub_sub.user.sub("stale_bases", (full_reload) => {
+    if (full_reload)
+      store.dispatch(ACTIONS.user_info.update_bases({bases: void 0}));
     refresh_bases_for_current_user(store);
   });
-  pub_sub.user.sub("stale_users_by_id", () => get_users(store));
-  pub_sub.user.sub("stale_bases", () => refresh_bases_for_current_user(store));
 }
 async function get_users(store) {
   const supabase = get_supabase();
