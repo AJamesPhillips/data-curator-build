@@ -5,21 +5,33 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
 import {active_warning_styles} from "./active_warning_common.js";
 import {ACTIONS} from "../state/actions.js";
-const map_state = (state) => ({
-  component_number_excluded_by_created_at_datetime_filter: get_current_composed_knowledge_view_from_state(state)?.filters.wc_ids_excluded_by_created_at_datetime_filter.size
-});
+const map_state = (state) => {
+  const {
+    wc_ids_excluded_by_created_at_datetime_filter,
+    vap_set_number_excluded_by_created_at_datetime_filter = 0
+  } = get_current_composed_knowledge_view_from_state(state)?.filters || {};
+  return {
+    components: wc_ids_excluded_by_created_at_datetime_filter?.size || 0,
+    vap_sets: vap_set_number_excluded_by_created_at_datetime_filter
+  };
+};
 const map_dispatch = {
   set_display_time_sliders: ACTIONS.controls.set_display_time_sliders
 };
 const connector = connect(map_state, map_dispatch);
 function _ActiveCreatedAtFilterWarning(props) {
-  const {component_number_excluded_by_created_at_datetime_filter} = props;
-  if (!component_number_excluded_by_created_at_datetime_filter)
+  const {components, vap_sets} = props;
+  if (components + vap_sets === 0)
     return null;
   const classes = active_warning_styles();
+  let title = components ? `${components} components are invisible ` : "";
+  if (components && vap_sets)
+    title += "and ";
+  title += vap_sets ? `${vap_sets} predictions are invisible ` : "";
+  title += `due to created at datetime filter`;
   return /* @__PURE__ */ h(Tooltip, {
     placement: "top",
-    title: `${component_number_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter`
+    title
   }, /* @__PURE__ */ h(IconButton, {
     className: classes.warning_button,
     component: "span",

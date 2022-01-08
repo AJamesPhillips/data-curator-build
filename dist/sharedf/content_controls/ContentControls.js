@@ -86,11 +86,10 @@ function _ContentControls(props) {
     style: {color: props.animate_connections ? "rgb(25, 118, 210)" : ""}
   }))), /* @__PURE__ */ h(Tooltip, {
     placement: "top",
-    title: props.editing ? "Time sliders always shown whilst editing" : props.display_time_sliders ? "Hide time sliders" : "Show time sliders"
+    title: props.display_time_sliders ? "Hide time sliders" : "Show time sliders"
   }, /* @__PURE__ */ h(IconButton, {
     component: "span",
     size: "medium",
-    disabled: props.editing,
     onClick: () => props.set_display_time_sliders(!props.display_time_sliders)
   }, /* @__PURE__ */ h(TuneIcon, null))))));
 }

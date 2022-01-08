@@ -12,7 +12,8 @@ import {
   wcomponent_can_render_connection,
   wcomponent_is_counterfactual_v2,
   wcomponent_is_prioritisation,
-  wcomponent_is_plain_connection
+  wcomponent_is_plain_connection,
+  wcomponent_has_legitimate_non_empty_state_VAP_sets
 } from "../../../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_wcomponent_ids_by_type} from "../../derived/get_wcomponent_ids_by_type.js";
 import {
@@ -91,6 +92,17 @@ export function update_current_composed_knowledge_view_state(state, current_kv) 
 }
 export function calculate_composed_knowledge_view(args) {
   const {knowledge_view, knowledge_views_by_id, wcomponents_by_id} = args;
+  const current_composed_knowledge_view = args.current_composed_knowledge_view || {
+    composed_visible_wc_id_map: {},
+    active_judgement_or_objective_ids_by_target_id: {},
+    active_judgement_or_objective_ids_by_goal_or_action_id: {},
+    filters: {
+      wc_ids_excluded_by_any_filter: new Set(),
+      wc_ids_excluded_by_filters: new Set(),
+      wc_ids_excluded_by_created_at_datetime_filter: new Set(),
+      vap_set_number_excluded_by_created_at_datetime_filter: 0
+    }
+  };
   const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id);
   const {
     composed_wc_id_map,
@@ -123,16 +135,9 @@ export function calculate_composed_knowledge_view(args) {
   const wc_id_connections_map = get_wc_id_connections_map(wc_ids_by_type.any_link, wcomponents_by_id);
   const available_filter_options = get_available_filter_options(wcomponents);
   const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true);
-  const current_composed_knowledge_view = {
-    composed_visible_wc_id_map: {},
-    active_judgement_or_objective_ids_by_target_id: {},
-    active_judgement_or_objective_ids_by_goal_or_action_id: {},
-    filters: {
-      wc_ids_excluded_by_any_filter: new Set(),
-      wc_ids_excluded_by_filters: new Set(),
-      wc_ids_excluded_by_created_at_datetime_filter: new Set()
-    },
+  const updated_composed_knowledge_view = {
     ...knowledge_view,
+    ...current_composed_knowledge_view,
     composed_wc_id_map,
     composed_blocked_wc_id_map,
     overlapping_wc_ids,
@@ -147,8 +152,8 @@ export function calculate_composed_knowledge_view(args) {
     available_filter_options,
     composed_datetime_line_config: datetime_lines_config
   };
-  delete current_composed_knowledge_view.wc_id_map;
-  return current_composed_knowledge_view;
+  delete updated_composed_knowledge_view.wc_id_map;
+  return updated_composed_knowledge_view;
 }
 export function get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, include_self = true) {
   const {foundation_knowledge_view_ids = []} = knowledge_view;
@@ -312,7 +317,17 @@ export function update_composed_knowledge_view_filters(state, current_composed_k
   }
   const wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude);
   const {created_at_ms} = state.routing.args;
-  const component_ids_excluded_by_created_at = wcomponents_on_kv.filter((kv) => get_created_at_ms(kv) > created_at_ms).map(({id}) => id);
+  let vap_set_number_excluded_by_created_at_datetime_filter = 0;
+  const component_ids_excluded_by_created_at = wcomponents_on_kv.filter((wc) => {
+    if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc)) {
+      wc.values_and_prediction_sets.forEach((vap_set) => {
+        if (get_created_at_ms(vap_set) > created_at_ms) {
+          ++vap_set_number_excluded_by_created_at_datetime_filter;
+        }
+      });
+    }
+    return get_created_at_ms(wc) > created_at_ms;
+  }).map(({id}) => id);
   const wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at);
   const wc_ids_excluded_by_any_filter = set_union(wc_ids_excluded_by_filters, wc_ids_excluded_by_created_at_datetime_filter);
   const composed_visible_wc_id_map = {...composed_wc_id_map};
@@ -325,7 +340,8 @@ export function update_composed_knowledge_view_filters(state, current_composed_k
     filters: {
       wc_ids_excluded_by_any_filter,
       wc_ids_excluded_by_filters,
-      wc_ids_excluded_by_created_at_datetime_filter
+      wc_ids_excluded_by_created_at_datetime_filter,
+      vap_set_number_excluded_by_created_at_datetime_filter
     }
   };
 }

@@ -18,6 +18,7 @@ import {
 import {new_value_and_prediction_set} from "./NewValueAndPredictionSet.js";
 import {ValueAndPredictionSetOlderVersions} from "./ValueAndPredictionSetOlderVersions.js";
 import {prepare_new_VAP_set} from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
+import {ActiveCreatedAtFilterWarning} from "../../sharedf/ActiveCreatedAtFilterWarning.js";
 export function ValueAndPredictionSetsComponent(props) {
   const [new_item, set_new_item] = useState(void 0);
   const {
@@ -106,7 +107,7 @@ export function ValueAndPredictionSetsComponent(props) {
     set_new_item,
     item_props: new_VAP_set_form_item_props,
     item_descriptor
-  }), invalid_future_items.length > 0 && /* @__PURE__ */ h("div", null, "Hidden (", invalid_future_items.length, ")"), show_futures && /* @__PURE__ */ h(ExpandableList, {
+  }), invalid_future_items.length > 0 && /* @__PURE__ */ h("div", null, "Hidden (", invalid_future_items.length, ") ", /* @__PURE__ */ h(ActiveCreatedAtFilterWarning, null)), show_futures && /* @__PURE__ */ h(ExpandableList, {
     content: render_future_list_content,
     item_descriptor: "",
     items_descriptor: count_and_versions("Future", future_items, previous_versions_by_id, editing),
