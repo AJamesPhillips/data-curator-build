@@ -1,9 +1,10 @@
 import {h_step, position_to_point, round_number, v_step} from "../../canvas/position_utils.js";
 import {SCALE_BY} from "../../canvas/zoom_utils.js";
+import {SIDE_PANEL_WIDTH} from "../../side_panel/width.js";
 import {STARTING_ZOOM} from "../routing/starting_state.js";
 export const TOP_HEADER_FUDGE = 48;
 const bottom_controls_fudge = (display_time_sliders) => display_time_sliders ? 215 : 57;
-const side_panel_fudge = (display_side_panel) => display_side_panel ? 440 : 0;
+const side_panel_fudge = (display_side_panel) => display_side_panel ? SIDE_PANEL_WIDTH : 0;
 export const get_screen_width = (display_side_panel) => document.body.clientWidth - side_panel_fudge(display_side_panel);
 const get_screen_height = () => document.body.clientHeight;
 export const get_visible_screen_height = (display_time_sliders) => get_screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(display_time_sliders);

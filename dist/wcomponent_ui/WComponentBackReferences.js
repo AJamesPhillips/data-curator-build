@@ -5,7 +5,12 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Button} from "../sharedf/Button.js";
 import {Link} from "../sharedf/Link.js";
 import {ACTIONS} from "../state/actions.js";
-import {wcomponent_is_plain_connection} from "../wcomponent/interfaces/SpecialisedObjects.js";
+import {
+  wcomponent_has_legitimate_non_empty_state_VAP_sets,
+  wcomponent_has_validity_predictions,
+  wcomponent_is_judgement_or_objective,
+  wcomponent_is_plain_connection
+} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 const map_state = (state) => {
   return {wcomponents_by_id: state.specialised_objects.wcomponents_by_id};
@@ -22,7 +27,11 @@ function _WComponentBackReferences(props) {
     let relevant_wcomponents = [];
     if (show_back_references) {
       relevant_wcomponents = Object.values(wcomponents_by_id).filter((wc) => !wc.deleted_at).filter((wc) => {
-        return wc.title.includes(wcomponent_id) || wc.description.includes(wcomponent_id) || wcomponent_is_plain_connection(wc) && (wc.from_id === wcomponent_id || wc.to_id === wcomponent_id);
+        return wc.title.includes(wcomponent_id) || wc.description.includes(wcomponent_id) || wcomponent_is_judgement_or_objective(wc) && wc.judgement_target_wcomponent_id === wcomponent_id || wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wc.values_and_prediction_sets.find((vap_set) => {
+          return vap_set.entries.find((vap) => (vap.explanation || "").includes(wcomponent_id));
+        }) || wcomponent_has_validity_predictions(wc) && wc.validity.find((prediction) => {
+          return (prediction.explanation || "").includes(wcomponent_id);
+        }) || wcomponent_is_plain_connection(wc) && (wc.from_id === wcomponent_id || wc.to_id === wcomponent_id);
       });
     }
     set_other_wcomponents(relevant_wcomponents);

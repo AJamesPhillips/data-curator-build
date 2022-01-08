@@ -32,7 +32,6 @@ function _UserInfo(props) {
     const have_bases_but_base_id_not_present = bases_by_id && chosen_base_id ? !bases_by_id[chosen_base_id] : false;
     const should_sign_in = !user && have_bases_but_base_id_not_present;
     const new_form_state = should_sign_in ? "signin" : is_loading_users ? "loading" : need_to_set_user_name ? "account_info" : previous_signed_out ? "hidden" : form_state;
-    console.log("new_form_state ", form_state, "->", new_form_state, "is_loading_users", is_loading_users, "need_to_set_user_name", need_to_set_user_name);
     set_form_state(new_form_state);
   }, [user, bases_by_id, chosen_base_id, is_loading_users, need_to_set_user_name]);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {

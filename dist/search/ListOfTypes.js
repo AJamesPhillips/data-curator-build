@@ -103,14 +103,11 @@ class _ListOfTypes extends Component {
         backgroundColor: `rgba(255, ${(1 - item.search.weight) * 255},0,${item.search.weight})`
       }
     })), is_statement_id(item.id) && StatementListEntry({
-      statement: item,
-      on_click: () => this.props.on_click(item)
+      statement: item
     }), is_pattern_id(item.id) && PatternListEntry({
-      pattern: item,
-      on_click: () => this.props.on_click(item)
+      pattern: item
     }), is_object_id(item.id) && ObjectListEntry({
-      object: item,
-      on_click: () => this.props.on_click(item)
+      object: item
     }))), /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", null), /* @__PURE__ */ h("td", null, "                                                                                                                                           "))));
   }
 }

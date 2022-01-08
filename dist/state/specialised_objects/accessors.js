@@ -88,7 +88,7 @@ function add_child_views(potential_children, map) {
       lack_parent.push(potential_child);
   });
   if (potential_children.length === lack_parent.length) {
-    console.error(`Circular knowledge view tree`);
+    console.error(`Circular knowledge view tree.  Look in "Views" at the top level knowledge views for those with an error.`);
     lack_parent.forEach(({id, title, sort_type}) => {
       map.top_ids.push(id);
       map.map[id] = {id, title, sort_type, parent_id: void 0, child_ids: [], ERROR_is_circular: true};

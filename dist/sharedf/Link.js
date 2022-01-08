@@ -49,14 +49,14 @@ class _Link extends Component {
   render() {
     const partial_routing_args = this.props.args || {};
     const on_pointer_down = (e) => {
+      e.stopImmediatePropagation();
+      e.preventDefault();
       if (this.props.selected)
         return;
       this.setState({clicked: true});
-      if (this.props.on_pointer_down) {
+      if (this.props.on_pointer_down)
         this.props.on_pointer_down();
-      } else {
-        this.props.link_clicked(partial_routing_args);
-      }
+      this.props.link_clicked(partial_routing_args);
     };
     const full_routing_state = merge_routing_state(this.props.current_routing_state, this.props);
     const full_routing_args = {...this.props.current_routing_state.args, ...partial_routing_args};
@@ -64,6 +64,10 @@ class _Link extends Component {
     const class_name = "link " + (this.state.clicked ? " clicked_animate " : "") + (this.props.selected ? " selected " : "") + (this.props.extra_class_name || "");
     return /* @__PURE__ */ h("a", {
       onPointerDown: on_pointer_down,
+      onClick: (e) => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      },
       href: routing_state_to_string({...full_routing_state}),
       className: class_name,
       style: this.props.extra_css_style
@@ -74,12 +78,11 @@ export const Link = connector(_Link);
 function _LinkButton(props) {
   const partial_routing_args = props.args || {};
   const on_click = (e) => {
-    if (props.on_pointer_down) {
-      e.preventDefault();
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    if (props.on_pointer_down)
       props.on_pointer_down();
-    } else {
-      props.link_clicked(partial_routing_args);
-    }
+    props.link_clicked(partial_routing_args);
   };
   const full_routing_state = merge_routing_state(props.current_routing_state, props);
   const full_routing_args = {...props.current_routing_state.args, ...partial_routing_args};

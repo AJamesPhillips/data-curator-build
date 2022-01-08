@@ -55,11 +55,12 @@ function update_judgement_or_objective_ids_by_goal_or_action_id(goals_and_action
 }
 function conditionally_update_active_judgement_or_objective_ids(initial_state, state) {
   let {current_composed_knowledge_view} = state.derived;
+  const kv_id_changed = initial_state.derived.current_composed_knowledge_view?.id !== current_composed_knowledge_view?.id;
   const judgement_or_objective_ids_by_target_id_changed = initial_state.derived.judgement_or_objective_ids_by_target_id !== state.derived.judgement_or_objective_ids_by_target_id;
   const {created_at_ms, sim_ms} = state.routing.args;
   const created_at_ms_changed = initial_state.routing.args.created_at_ms !== created_at_ms;
   const sim_ms_changed = initial_state.routing.args.sim_ms !== sim_ms;
-  if (current_composed_knowledge_view && (judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed)) {
+  if (current_composed_knowledge_view && (kv_id_changed || judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed)) {
     let judgement_or_objective_id_is_active = function(id) {
       return active_judgement_or_objectives_by_id[id];
     };

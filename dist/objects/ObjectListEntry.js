@@ -8,8 +8,7 @@ export function ObjectListEntry(props) {
       route: "objects",
       sub_route: null,
       item_id: props.object.id,
-      args: void 0,
-      on_pointer_down: props.on_click
+      args: void 0
     }, object_content({object: props.object}))),
     /* @__PURE__ */ h("td", null, /* @__PURE__ */ h(ObjectLabels, {
       object: props.object

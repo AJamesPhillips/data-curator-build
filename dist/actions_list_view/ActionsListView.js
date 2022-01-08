@@ -11,6 +11,7 @@ import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 import {selector_chosen_base_id} from "../state/user_info/selector.js";
 import {get_wcomponent_state_value_and_probabilities} from "../wcomponent_derived/get_wcomponent_state_value.js";
 import {VALUE_POSSIBILITY_IDS} from "../wcomponent/value/parse_value.js";
+import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
 export function ActionsListView(props) {
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(ActionsListViewContent, null)
@@ -34,7 +35,8 @@ const map_state = (state) => {
     action_ids,
     wcomponents_by_id,
     editing: !state.display_options.consumption_formatting,
-    base_id: selector_chosen_base_id(state)
+    base_id: selector_chosen_base_id(state),
+    display_side_panel: state.controls.display_side_panel
   };
 };
 const map_dispatch = {
@@ -79,36 +81,33 @@ function _ActionsListViewContent(props) {
   return /* @__PURE__ */ h("div", {
     className: "action_list_view_content"
   }, /* @__PURE__ */ h("div", {
-    className: "icebox"
+    className: "action_list icebox"
   }, /* @__PURE__ */ h("h1", null, "Icebox"), actions_icebox.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
     action,
     show_icebox_actions: true
   }))), /* @__PURE__ */ h("div", {
-    className: "todo"
-  }, /* @__PURE__ */ h("div", {
-    className: "prioritisations_header"
-  }, /* @__PURE__ */ h("h1", null, "Todo")), sorted_actions_todo.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
+    className: "action_list todo"
+  }, /* @__PURE__ */ h("h1", null, "Todo"), sorted_actions_todo.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
     action,
     show_todo_actions: true
   }))), /* @__PURE__ */ h("div", {
-    className: "in_progress"
-  }, /* @__PURE__ */ h("div", {
-    className: "prioritisations_header"
-  }, /* @__PURE__ */ h("h1", null, "In progress")), actions_in_progress.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
+    className: "action_list in_progress"
+  }, /* @__PURE__ */ h("h1", null, "In progress"), actions_in_progress.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
     action
   }))), /* @__PURE__ */ h("div", {
-    className: "done_or_rejected"
-  }, /* @__PURE__ */ h("div", {
-    className: "prioritisations_header"
-  }, /* @__PURE__ */ h("h1", null, "Done")), actions_done_or_rejected.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
+    className: "action_list done_or_rejected"
+  }, /* @__PURE__ */ h("h1", null, "Done"), actions_done_or_rejected.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
     action
   })), hidden_done > 0 && /* @__PURE__ */ h("div", {
     style: {textAlign: "center", margin: 40}
-  }, "... ", hidden_done, " hidden ...")));
+  }, "... ", hidden_done, " hidden ...")), /* @__PURE__ */ h("div", {
+    className: "side_panel_padding",
+    style: {minWidth: props.display_side_panel ? SIDE_PANEL_WIDTH : 0}
+  }));
 }
 const ActionsListViewContent = connector(_ActionsListViewContent);
 function get_modified_or_created_at(a) {

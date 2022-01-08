@@ -9,7 +9,8 @@ const map_state = (state) => ({
   editing: !state.display_options.consumption_formatting
 });
 const map_dispatch = {
-  change_route: ACTIONS.routing.change_route
+  change_route: ACTIONS.routing.change_route,
+  set_or_toggle_display_side_panel: ACTIONS.controls.set_or_toggle_display_side_panel
 };
 const connector = connect(map_state, map_dispatch);
 function _ActiveCreationContextWarning(props) {
@@ -22,7 +23,10 @@ function _ActiveCreationContextWarning(props) {
     className: classes.warning_button,
     component: "span",
     size: "small",
-    onClick: () => props.change_route({route: "creation_context"})
+    onClick: () => {
+      props.set_or_toggle_display_side_panel(true);
+      props.change_route({route: "creation_context"});
+    }
   }, /* @__PURE__ */ h(PhotoFilterIcon, {
     className: classes.warning_icon
   })));

@@ -23,6 +23,7 @@ import {get_store} from "./state/store.js";
 import {check_and_handle_connection_and_session} from "./sync/user_info/window_focus_session_check.js";
 import {date_to_string} from "./form/datetime_utils.js";
 import {ActiveUserWidget} from "./sharedf/ActiveUserWidget.js";
+import {SIDE_PANEL_WIDTH} from "./side_panel/width.js";
 const map_state = (state) => ({
   display_side_panel: state.controls.display_side_panel,
   animate_connections: state.display_options.animate_connections,
@@ -106,7 +107,6 @@ function App(props) {
   }, /* @__PURE__ */ h(HelpMenu, null))));
 }
 export default connector(App);
-const drawerWidth = 440;
 const use_styles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -130,7 +130,7 @@ const use_styles = makeStyles((theme) => ({
     width: "100%",
     flexGrow: 1,
     display: "flex",
-    marginRight: -drawerWidth,
+    marginRight: -SIDE_PANEL_WIDTH,
     transition: theme.transitions.create(["margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -144,12 +144,12 @@ const use_styles = makeStyles((theme) => ({
     })
   },
   drawer: {
-    width: drawerWidth,
+    width: SIDE_PANEL_WIDTH,
     flexShrink: 0
   },
   side_panel: {
     backgroundColor: theme.palette.background.paper,
-    width: drawerWidth,
+    width: SIDE_PANEL_WIDTH,
     position: "relative",
     paddingTop: 50
   },

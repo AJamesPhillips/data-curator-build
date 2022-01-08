@@ -34,7 +34,6 @@ export function user_info_subscribers(store) {
     const current_user = store.getState().user_info.user;
     const user = supabase.auth.user() || void 0;
     const diff_user = current_user?.id !== user?.id;
-    console.log("supabase auth state change.  Diff user? ", diff_user, "current_user", current_user, "new user", user);
     if (diff_user)
       store.dispatch(ACTIONS.user_info.set_user({user}));
   });

@@ -18,18 +18,19 @@ const map_state = (state) => ({current_route: state.routing.route});
 const map_dispatch = {change_route: ACTIONS.routing.change_route};
 const connector = connect(map_state, map_dispatch);
 function _AppMenuItem(props) {
+  const handle_pointer_down = () => {
+    props.change_route({route: props.id, sub_route: null, item_id: null});
+    props.on_pointer_down();
+  };
   const title = get_title(props.id);
   return /* @__PURE__ */ h(CustomisableAppMenuItem, {
-    on_pointer_down: () => {
-      props.change_route({route: props.id, sub_route: null, item_id: null});
-      props.on_pointer_down();
-    }
+    on_pointer_down: handle_pointer_down
   }, /* @__PURE__ */ h(Link, {
     route: props.id,
     sub_route: null,
     item_id: null,
     args: void 0,
-    on_pointer_down: props.on_pointer_down
+    on_pointer_down: handle_pointer_down
   }, title));
 }
 export const AppMenuItem = connector(_AppMenuItem);

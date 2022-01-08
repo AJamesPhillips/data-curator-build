@@ -4,7 +4,6 @@ import "./PrioritiesListView.css.proxy.js";
 import {MainArea} from "../layout/MainArea.js";
 import {wcomponent_has_objectives} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_current_composed_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
-import {ListHeaderAddButton} from "../form/editable_list/ListHeaderAddButton.js";
 import {create_wcomponent} from "../state/specialised_objects/wcomponents/create_wcomponent_type.js";
 import {Prioritisation} from "./Prioritisation.js";
 import {ACTIONS} from "../state/actions.js";
@@ -12,6 +11,8 @@ import {PrioritisableGoal} from "./PrioritisableGoal.js";
 import {sort_list} from "../shared/utils/sort.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 import {selector_chosen_base_id} from "../state/user_info/selector.js";
+import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
+import {Button} from "../sharedf/Button.js";
 export function PrioritiesListView(props) {
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(PrioritiesListViewContent, null)
@@ -48,7 +49,8 @@ const map_state = (state) => {
     prioritisations,
     editing: !state.display_options.consumption_formatting,
     selected_prioritisation,
-    base_id: selector_chosen_base_id(state)
+    base_id: selector_chosen_base_id(state),
+    display_side_panel: state.controls.display_side_panel
   };
 };
 const map_dispatch = {
@@ -64,7 +66,7 @@ function _PrioritiesListViewContent(props) {
   return /* @__PURE__ */ h("div", {
     className: "priorities_list_view_content"
   }, /* @__PURE__ */ h("div", {
-    className: "goals"
+    className: "priorities_list goals"
   }, /* @__PURE__ */ h("h1", null, "Potential"), potential_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
     key: goal.id,
     goal,
@@ -74,18 +76,17 @@ function _PrioritiesListViewContent(props) {
     goal,
     selected_prioritisation
   }))), /* @__PURE__ */ h("div", {
-    className: "goals"
+    className: "priorities_list goals"
   }, /* @__PURE__ */ h("h1", null, "Prioritised"), prioritised_goals.map((goal) => /* @__PURE__ */ h(PrioritisableGoal, {
     key: goal.id,
     goal,
     selected_prioritisation
   }))), /* @__PURE__ */ h("div", {
-    className: "prioritisations"
-  }, /* @__PURE__ */ h("div", {
-    className: "prioritisations_header"
-  }, /* @__PURE__ */ h("h1", null, "Prioritisations"), editing && knowledge_view_id && /* @__PURE__ */ h(ListHeaderAddButton, {
-    new_item_descriptor: "Prioritisation",
-    on_pointer_down_new_list_entry: () => {
+    className: "priorities_list prioritisations"
+  }, /* @__PURE__ */ h("h1", null, "Prioritisations", editing && knowledge_view_id && /* @__PURE__ */ h("span", null, " ", /* @__PURE__ */ h(Button, {
+    fullWidth: false,
+    onClick: (e) => {
+      e.stopImmediatePropagation();
       create_wcomponent({
         wcomponent: {
           base_id,
@@ -98,11 +99,14 @@ function _PrioritiesListViewContent(props) {
         }
       });
     }
-  })), /* @__PURE__ */ h("div", {
+  }, "Add"))), /* @__PURE__ */ h("div", {
     className: "prioritisations_list"
   }, prioritisations.map((p) => /* @__PURE__ */ h(Prioritisation, {
     prioritisation: p
-  })))));
+  })))), /* @__PURE__ */ h("div", {
+    className: "side_panel_padding",
+    style: {minWidth: props.display_side_panel ? SIDE_PANEL_WIDTH : 0}
+  }));
 }
 const PrioritiesListViewContent = connector(_PrioritiesListViewContent);
 function partition_and_sort_goals(goals, goal_prioritisation_attributes) {

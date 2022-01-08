@@ -83,12 +83,14 @@ function get_knowledge_view(state, id) {
 }
 export function update_current_composed_knowledge_view_state(state, current_kv) {
   const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;
-  const current_composed_knowledge_view = calculate_composed_knowledge_view({
+  const {current_composed_knowledge_view} = state.derived;
+  const updated_current_composed_knowledge_view = calculate_composed_knowledge_view({
     knowledge_view: current_kv,
+    current_composed_knowledge_view,
     knowledge_views_by_id,
     wcomponents_by_id
   });
-  return current_composed_knowledge_view;
+  return updated_current_composed_knowledge_view;
 }
 export function calculate_composed_knowledge_view(args) {
   const {knowledge_view, knowledge_views_by_id, wcomponents_by_id} = args;

@@ -7,8 +7,7 @@ export function StatementListEntry(props) {
       route: "statements",
       sub_route: null,
       item_id: props.statement.id,
-      args: void 0,
-      on_pointer_down: props.on_click
+      args: void 0
     }, props.statement.content)),
     /* @__PURE__ */ h("td", null, /* @__PURE__ */ h(LabelsList, {
       labels: props.statement.labels

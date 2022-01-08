@@ -91,7 +91,7 @@ function _WComponentKnowledgeViewForm(props) {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(MoveToWComponentButton, {
     wcomponent_id,
-    disable_if_not_present: false
+    disable_if_not_present: true
   }), /* @__PURE__ */ h(Box, {
     zIndex: 10,
     m: 4,
