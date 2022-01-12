@@ -8,6 +8,8 @@ import {ACTIONS} from "../state/actions.js";
 import {
   wcomponent_has_legitimate_non_empty_state_VAP_sets,
   wcomponent_has_validity_predictions,
+  wcomponent_is_action,
+  wcomponent_is_goal,
   wcomponent_is_judgement_or_objective,
   wcomponent_is_plain_connection
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
@@ -27,7 +29,7 @@ function _WComponentBackReferences(props) {
     let relevant_wcomponents = [];
     if (show_back_references) {
       relevant_wcomponents = Object.values(wcomponents_by_id).filter((wc) => !wc.deleted_at).filter((wc) => {
-        return wc.title.includes(wcomponent_id) || wc.description.includes(wcomponent_id) || wcomponent_is_judgement_or_objective(wc) && wc.judgement_target_wcomponent_id === wcomponent_id || wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wc.values_and_prediction_sets.find((vap_set) => {
+        return wc.title.includes(wcomponent_id) || wc.description.includes(wcomponent_id) || (wc.label_ids || []).includes(wcomponent_id) || (wcomponent_is_goal(wc) || wcomponent_is_action(wc)) && (wc.parent_goal_or_action_ids || []).includes(wcomponent_id) || wcomponent_is_judgement_or_objective(wc) && wc.judgement_target_wcomponent_id === wcomponent_id || wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wc.values_and_prediction_sets.find((vap_set) => {
           return vap_set.entries.find((vap) => (vap.explanation || "").includes(wcomponent_id));
         }) || wcomponent_has_validity_predictions(wc) && wc.validity.find((prediction) => {
           return (prediction.explanation || "").includes(wcomponent_id);

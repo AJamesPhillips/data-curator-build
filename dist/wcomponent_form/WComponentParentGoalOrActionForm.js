@@ -13,7 +13,7 @@ const map_state = (state) => {
   };
 };
 const connector = connect(map_state);
-function _WComponentActionFormFields(props) {
+function _WComponentParentGoalOrActionForm(props) {
   const {wcomponent, upsert_wcomponent} = props;
   const wcomponent_id_options = get_wcomponent_search_options({
     allowed_wcomponent_ids: props.allowed_wcomponent_ids,
@@ -41,4 +41,4 @@ function _WComponentActionFormFields(props) {
     }
   }));
 }
-export const WComponentActionFormFields = connector(_WComponentActionFormFields);
+export const WComponentParentGoalOrActionForm = connector(_WComponentParentGoalOrActionForm);

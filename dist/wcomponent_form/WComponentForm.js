@@ -29,7 +29,8 @@ import {
   wcomponent_has_existence_predictions,
   wcomponent_is_sub_state,
   wcomponent_has_objectives,
-  wcomponent_is_action
+  wcomponent_is_action,
+  wcomponent_is_goal
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
@@ -64,7 +65,7 @@ import {
 } from "./values_and_predictions/EasyActionValueAndPredictionSets.js";
 import {WarningTriangle} from "../sharedf/WarningTriangle.js";
 import {wcomponent_statev2_subtype_options, wcomponent_type_options} from "./type_options.js";
-import {WComponentActionFormFields} from "./WComponentActionFormFields.js";
+import {WComponentParentGoalOrActionForm} from "./WComponentParentGoalOrActionForm.js";
 const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -233,7 +234,7 @@ function _WComponentForm(props) {
     upsert_wcomponent
   }), wcomponent_is_judgement_or_objective(wcomponent) && /* @__PURE__ */ h(JudgementFormFields, {
     ...{wcomponent, upsert_wcomponent}
-  }), wcomponent_is_action(wcomponent) && /* @__PURE__ */ h(WComponentActionFormFields, {
+  }), (wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && /* @__PURE__ */ h(WComponentParentGoalOrActionForm, {
     ...{wcomponent, upsert_wcomponent}
   }), (editing || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",

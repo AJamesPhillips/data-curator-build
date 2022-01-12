@@ -6,6 +6,7 @@ import {ACTIONS} from "../state/actions.js";
 import {CanvasNode} from "../canvas/CanvasNode.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {MARKDOWN_OPTIONS} from "../sharedf/RichMarkDown.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
   created_at_ms: state.routing.args.created_at_ms
@@ -27,7 +28,9 @@ function _PrioritisationEntryNode(props) {
     created_at_ms,
     sim_ms: new Date().getTime()
   });
-  const w = effort > 0 ? Math.max(width, 150) : 150;
+  const initial_w = effort > 0 ? width : Math.min(width, 250);
+  const hover_w = effort > 0 ? Math.max(width, 250) : 250;
+  const [w, set_w] = useState(initial_w);
   const percent = `${Math.round(effort * 100)}%`;
   const backgroundImage = `linear-gradient(to top, #a6eaff ${percent}, rgba(0,0,0,0) ${percent})`;
   const style_inner = {
@@ -42,6 +45,8 @@ function _PrioritisationEntryNode(props) {
       e.preventDefault();
       props.change_route({item_id: props.wcomponent_id});
     },
+    on_pointer_enter: () => set_w(hover_w),
+    on_pointer_leave: () => set_w(initial_w),
     extra_css_class: " prioritisation_entry "
   }, /* @__PURE__ */ h("div", {
     className: "node_main_content",
