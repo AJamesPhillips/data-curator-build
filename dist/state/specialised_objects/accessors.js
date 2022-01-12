@@ -4,7 +4,7 @@ import {
   wcomponent_is_sub_state,
   wcomponent_should_have_state_VAP_sets
 } from "../../wcomponent/interfaces/SpecialisedObjects.js";
-import {sort_list} from "../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {get_created_at_ms, partition_items_by_created_at_datetime} from "../../shared/utils_datetime/utils_datetime.js";
 import {get_uncertain_datetime, uncertain_datetime_is_eternal} from "../../shared/uncertainty/datetime.js";
 import {group_versions_by_id} from "../../wcomponent_derived/value_and_prediction/group_versions_by_id.js";
@@ -113,7 +113,7 @@ function sort_knowledge_map_ids_by_priority_then_title(ids, map) {
   return sort_list(ids, (id) => {
     const entry = map[id];
     return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase();
-  }, "ascending");
+  }, SortDirection.ascending);
 }
 export function wcomponent_has_knowledge_view(wcomponent_id, knowledge_views_by_id) {
   return !!knowledge_views_by_id[wcomponent_id];
@@ -144,7 +144,7 @@ export function get_current_temporal_value_certainty_from_wcomponent(wcomponent_
     let {values_and_prediction_sets: target_VAP_sets} = target_wcomponent;
     target_VAP_sets = target_VAP_sets.filter(({id}) => id === target_VAP_set_id);
     target_VAP_sets = partition_items_by_created_at_datetime({items: target_VAP_sets, created_at_ms}).current_items;
-    target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, "descending");
+    target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, SortDirection.descending);
     const target_VAP_set = target_VAP_sets[0];
     return convert_VAP_set_to_temporal_certainty(target_VAP_set);
   } else if (wcomponent_is_statev2(wcomponent)) {

@@ -2,8 +2,8 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {EditablePercentage} from "../../form/EditablePercentage.js";
 import {EditableText} from "../../form/editable_text/EditableText.js";
 import {
-  get_probable_VAP_set_values,
-  get_VAP_set_prob,
+  get_probable_VAP_set_values_for_display,
+  get_VAP_set_probable_percentages_for_display,
   get_VAP_set_conviction
 } from "../../wcomponent_derived/value_and_prediction/get_UI_value_of_VAP_set_attributes.js";
 import {PredictionSummary} from "./to_deprecate/PredictionSummary.js";
@@ -14,8 +14,8 @@ import {set_VAP_probabilities} from "../../wcomponent/CRUD_helpers/prepare_new_V
 export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) => (VAP_set, crud) => {
   let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
   VAP_set = {...VAP_set, entries: VAPs};
-  const values = get_probable_VAP_set_values(VAP_set, VAPs_represent);
-  const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + "%";
+  const values = get_probable_VAP_set_values_for_display(VAP_set, VAPs_represent);
+  const prob = get_VAP_set_probable_percentages_for_display(VAP_set, VAPs_represent) + "%";
   const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + "%";
   return /* @__PURE__ */ h(PredictionSummary, {
     created_at: show_created_at ? VAP_set.custom_created_at || VAP_set.created_at : void 0,

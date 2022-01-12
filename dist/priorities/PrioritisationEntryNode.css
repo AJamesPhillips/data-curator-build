@@ -1,0 +1,4 @@
+.prioritisation_entry:hover {
+  min-width: 150px;
+  z-index: 100;
+}

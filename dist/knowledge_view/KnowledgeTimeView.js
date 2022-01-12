@@ -4,7 +4,7 @@ import {Box} from "../../snowpack/pkg/@material-ui/core.js";
 import "./KnowledgeTimeView.css.proxy.js";
 import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNode.js";
 import {MainArea} from "../layout/MainArea.js";
-import {sort_list} from "../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../shared/utils/sort.js";
 import {wcomponent_has_VAP_sets} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms, get_sim_datetime} from "../shared/utils_datetime/utils_datetime.js";
 import {ConnectedValueAndPredictionSetSummary} from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary.js";
@@ -325,7 +325,7 @@ function _KnowledgeTimeView(props) {
     else
       return get_created_at_ms(wc);
   };
-  wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending");
+  wcomponent_nodes = sort_list(wcomponent_nodes, get_key, SortDirection.ascending);
   wcomponent_nodes.forEach((wc) => {
     const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : [];
     VAP_sets.forEach((VAP_set) => {

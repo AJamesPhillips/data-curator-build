@@ -2,7 +2,7 @@ import {test} from "../../shared/utils/test.js";
 import {action_statuses} from "../interfaces/action.js";
 import {VAPsType} from "../interfaces/VAPsType.js";
 import {
-  ACTION_VALUE_POSSIBILITY_IDS,
+  ORDERED_ACTION_VALUE_POSSIBILITY_ID,
   VALUE_POSSIBILITY_IDS,
   VALUE_POSSIBILITY_IDS_to_text
 } from "../value/parse_value.js";
@@ -13,7 +13,7 @@ export function default_possible_values(VAPs_represent, simple_possibilities) {
       {value: "False", id: VALUE_POSSIBILITY_IDS.boolean_false, order: 1}
     ];
   } else if (VAPs_represent === VAPsType.action) {
-    simple_possibilities = ACTION_VALUE_POSSIBILITY_IDS.map((id, index) => ({
+    simple_possibilities = ORDERED_ACTION_VALUE_POSSIBILITY_ID.map((id, index) => ({
       id,
       value: VALUE_POSSIBILITY_IDS_to_text[id] || "?",
       order: index

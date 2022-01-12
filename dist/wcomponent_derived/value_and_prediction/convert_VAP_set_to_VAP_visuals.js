@@ -1,4 +1,4 @@
-import {sort_list} from "../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {get_boolean_representation, parsed_value_to_string} from "../value/parsed_value_presentation.js";
 import {
   add_uncertain_VAP_visual,
@@ -24,6 +24,6 @@ export function convert_VAP_set_to_VAP_visuals(args) {
     };
   });
   const should_sort = args.sort === void 0 || args.sort;
-  const sorted_data = should_sort ? sort_list(data, (i) => i.certainty, "descending") : data;
+  const sorted_data = should_sort ? sort_list(data, (i) => i.certainty, SortDirection.descending) : data;
   return add_uncertain_VAP_visual(total_certainties, sorted_data);
 }

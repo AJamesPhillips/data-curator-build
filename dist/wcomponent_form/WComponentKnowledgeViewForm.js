@@ -104,7 +104,7 @@ function _WComponentKnowledgeViewForm(props) {
     value: (knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view",
     extra_class_names: "left",
     onClick: () => upsert_entry(knowledge_view_id, {blocked: void 0, passthrough: void 0})
-  })), editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  })), editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Delete from knowledge view (allow passthrough from foundations)",
     tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations",
     on_delete: () => {

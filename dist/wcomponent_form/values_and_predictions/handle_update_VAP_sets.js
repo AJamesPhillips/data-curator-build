@@ -1,8 +1,25 @@
 import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
 import {get_created_at_ms} from "../../shared/utils_datetime/utils_datetime.js";
+import {prepare_new_VAP_set} from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
 import {
   update_value_possibilities_with_VAPSets
 } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets.js";
+import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
+import {update_VAP_set_VAP_probabilities} from "./update_VAP_set_VAP_probabilities.js";
+export function set_action_VAP_set_state(args) {
+  const {
+    existing_value_possibilities,
+    orig_values_and_prediction_sets,
+    base_id,
+    creation_context,
+    action_value_possibility_id
+  } = args;
+  const new_VAP_set = prepare_new_VAP_set(VAPsType.action, existing_value_possibilities, orig_values_and_prediction_sets, base_id, creation_context);
+  const entries = update_VAP_set_VAP_probabilities(new_VAP_set, action_value_possibility_id);
+  new_VAP_set.entries = entries;
+  const new_values_and_prediction_sets = [...orig_values_and_prediction_sets, new_VAP_set];
+  return new_values_and_prediction_sets;
+}
 export function handle_update_VAP_sets(args) {
   const value_possibilities = update_value_possibilities_with_VAPSets(args.existing_value_possibilities, args.new_values_and_prediction_sets);
   args.update_VAPSets_and_value_possibilities({

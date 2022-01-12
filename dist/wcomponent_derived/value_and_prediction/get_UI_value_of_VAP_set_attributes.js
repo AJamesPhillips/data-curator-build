@@ -1,7 +1,7 @@
 import {ratio_to_percentage_string} from "../../sharedf/percentages.js";
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
-import {get_VAPs_ordered_by_prob} from "./get_VAPs_ordered_by_prob.js";
-export function get_probable_VAP_set_values(VAP_set, VAPs_represent) {
+import {get_VAPs_ordered_by_prob} from "./probable_VAPs.js";
+export function get_probable_VAP_set_values_for_display(VAP_set, VAPs_represent) {
   const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent);
   const first_VAP = VAPs[0];
   if (VAPs_represent === VAPsType.boolean && first_VAP)
@@ -9,7 +9,7 @@ export function get_probable_VAP_set_values(VAP_set, VAPs_represent) {
   const probable_VAPS = VAPs.filter(({probability}) => probability > 0);
   return probable_VAPS.map((e) => e.value).join(", ") || "-";
 }
-export function get_VAP_set_prob(VAP_set, VAPs_represent) {
+export function get_VAP_set_probable_percentages_for_display(VAP_set, VAPs_represent) {
   const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent);
   const first_VAP = VAPs[0];
   if (VAPs_represent === VAPsType.boolean && first_VAP)

@@ -25,5 +25,5 @@ export function MainArea(props) {
     flexShrink: 1,
     position: "relative",
     zIndex: 10
-  }, /* @__PURE__ */ h(MainContentControls, null)));
+  }, /* @__PURE__ */ h(MainContentControls, null)), props.extra_content);
 }

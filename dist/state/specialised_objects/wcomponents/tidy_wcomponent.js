@@ -1,5 +1,5 @@
 import {set_VAP_probabilities} from "../../../wcomponent/CRUD_helpers/prepare_new_VAP.js";
-import {sort_list} from "../../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../../shared/utils/sort.js";
 import {get_created_at_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 import {
   wcomponent_has_validity_predictions,
@@ -8,11 +8,11 @@ import {
 import {get_wcomponent_VAPs_represent} from "../../../wcomponent/get_wcomponent_VAPs_represent.js";
 export function tidy_wcomponent(wcomponent) {
   if (wcomponent_has_validity_predictions(wcomponent)) {
-    const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, "ascending");
+    const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, SortDirection.ascending);
     wcomponent.validity = sorted_predictions;
   }
   if (wcomponent_has_VAP_sets(wcomponent)) {
-    const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending");
+    const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, SortDirection.ascending);
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent);
     const corrected_VAPs_in_VAP_sets = sorted_VAP_sets.map((VAP_set) => ({
       ...VAP_set,

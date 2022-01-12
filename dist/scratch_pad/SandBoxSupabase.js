@@ -5,7 +5,7 @@ import SyncIcon from "../../snowpack/pkg/@material-ui/icons/Sync.js";
 import "./SandBox.css.proxy.js";
 import {get_new_knowledge_view_object} from "../knowledge_view/create_new_knowledge_view.js";
 import {prepare_new_contextless_wcomponent_object} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
-import {sort_list} from "../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../shared/utils/sort.js";
 import {replace_element} from "../utils/list.js";
 import {get_supabase} from "../supabase/get_supabase.js";
 import {
@@ -52,7 +52,7 @@ export function SandBoxSupabase() {
   const [users_by_id, set_users_by_id] = useState({});
   const [access_controls, _set_access_controls] = useState(void 0);
   const set_access_controls = (acs) => {
-    _set_access_controls(acs && sort_list(acs, (ac) => ac.inserted_at.getTime(), "ascending"));
+    _set_access_controls(acs && sort_list(acs, (ac) => ac.inserted_at.getTime(), SortDirection.ascending));
   };
   useEffect(() => {
     if (current_base_id)

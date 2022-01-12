@@ -34,9 +34,9 @@ const connector = connect(map_state, map_dispatch);
 function _WComponentsSidePanel(props) {
   const [searching_for_unfound, set_searching_for_unfound] = useState(void 0);
   const [searched_for_wcomponent, set_searched_for_wcomponent] = useState(void 0);
-  const {item_id: id} = props;
+  const {ready, item_id: id} = props;
   const wcomponent = props.wcomponent || searched_for_wcomponent;
-  const display_type = props.bases_by_id && !props.chosen_base_id ? DisplayType.need_to_choose_base_id : !props.ready ? DisplayType.loading : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple : id === null ? DisplayType.no_id : DisplayType.render_wcomponent;
+  const display_type = props.bases_by_id && !props.chosen_base_id ? DisplayType.need_to_choose_base_id : !ready ? DisplayType.loading : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple : id === null ? DisplayType.no_id : DisplayType.render_wcomponent;
   function clear_old_wcomponent_from_other_base() {
     if (id && wcomponent && wcomponent.id !== id) {
       set_searching_for_unfound(void 0);
@@ -44,6 +44,8 @@ function _WComponentsSidePanel(props) {
     }
   }
   function look_for_wcomponent_in_any_base() {
+    if (!ready)
+      return;
     if (display_type === DisplayType.render_wcomponent && id && !wcomponent && searching_for_unfound === void 0) {
       (async () => {
         let component_form_closed = false;
@@ -60,7 +62,7 @@ function _WComponentsSidePanel(props) {
     }
   }
   useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id]);
-  useEffect(look_for_wcomponent_in_any_base, [display_type, wcomponent, searching_for_unfound, id]);
+  useEffect(look_for_wcomponent_in_any_base, [ready, display_type, wcomponent, searching_for_unfound, id]);
   if (display_type === DisplayType.need_to_choose_base_id)
     return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
       value: "Choose a base to view",

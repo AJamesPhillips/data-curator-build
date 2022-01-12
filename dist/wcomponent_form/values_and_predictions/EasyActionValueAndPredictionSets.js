@@ -6,10 +6,8 @@ import {selector_chosen_base_id} from "../../state/user_info/selector.js";
 import {Button} from "../../sharedf/Button.js";
 import {group_versions_by_id} from "../../wcomponent_derived/value_and_prediction/group_versions_by_id.js";
 import {sort_by_uncertain_event_datetimes} from "../../shared/utils_datetime/partition_by_uncertain_datetime.js";
-import {VALUE_POSSIBILITY_IDS} from "../../wcomponent/value/parse_value.js";
-import {prepare_new_VAP_set} from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set.js";
-import {handle_update_VAP_sets} from "./handle_update_VAP_sets.js";
-import {update_VAP_set_VAP_probabilities} from "./update_VAP_set_VAP_probabilities.js";
+import {ACTION_VALUE_POSSIBILITY_ID} from "../../wcomponent/value/parse_value.js";
+import {handle_update_VAP_sets, set_action_VAP_set_state} from "./handle_update_VAP_sets.js";
 const map_state = (state) => {
   return {
     created_at_ms: state.routing.args.created_at_ms,
@@ -43,17 +41,20 @@ function _EasyActionValueAndPredictionSets(props) {
   const sorted_items = sort_by_uncertain_event_datetimes(latest);
   const last_VAP_set = sorted_items[0];
   const last_value_id = last_VAP_set?.entries.find((e) => e.probability === 1)?.value_id;
-  const last_is_potential = last_value_id === VALUE_POSSIBILITY_IDS.action_potential;
-  const last_is_paused = last_value_id === VALUE_POSSIBILITY_IDS.action_paused;
-  const last_is_in_progress = last_value_id === VALUE_POSSIBILITY_IDS.action_in_progress;
+  const last_is_potential = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_potential;
+  const last_is_paused = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_paused;
+  const last_is_in_progress = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_in_progress;
   const allow_in_progress = !last_VAP_set || last_is_potential || last_is_paused;
   const allow_pause = last_is_in_progress;
   const allow_completed = !last_VAP_set || last_is_in_progress;
   function mark_as(action_value_possibility_id) {
-    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, orig_values_and_prediction_sets, base_id, creation_context);
-    const entries = update_VAP_set_VAP_probabilities(new_VAP_set, action_value_possibility_id);
-    new_VAP_set.entries = entries;
-    const new_values_and_prediction_sets = [...orig_values_and_prediction_sets, new_VAP_set];
+    const new_values_and_prediction_sets = set_action_VAP_set_state({
+      existing_value_possibilities,
+      orig_values_and_prediction_sets,
+      base_id,
+      creation_context,
+      action_value_possibility_id
+    });
     handle_update_VAP_sets({
       existing_value_possibilities,
       new_values_and_prediction_sets,
@@ -68,17 +69,17 @@ function _EasyActionValueAndPredictionSets(props) {
     value: "In Progress",
     fullWidth: true,
     color: "secondary",
-    onClick: () => mark_as(VALUE_POSSIBILITY_IDS.action_in_progress)
+    onClick: () => mark_as(ACTION_VALUE_POSSIBILITY_ID.action_in_progress)
   }), allow_pause && /* @__PURE__ */ h(Button, {
     value: "Pause",
     fullWidth: true,
     color: "secondary",
-    onClick: () => mark_as(VALUE_POSSIBILITY_IDS.action_paused)
+    onClick: () => mark_as(ACTION_VALUE_POSSIBILITY_ID.action_paused)
   }), allow_completed && /* @__PURE__ */ h(Button, {
     value: "Completed",
     fullWidth: true,
     color: "secondary",
-    onClick: () => mark_as(VALUE_POSSIBILITY_IDS.action_completed)
+    onClick: () => mark_as(ACTION_VALUE_POSSIBILITY_ID.action_completed)
   }));
 }
 export const EasyActionValueAndPredictionSets = connector(_EasyActionValueAndPredictionSets);

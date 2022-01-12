@@ -96,7 +96,7 @@ function calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc
   });
   return {position_groups, wcomponent_created_at_ms};
 }
-function calculate_zoom_to_contain_group(group, display_side_panel, display_time_sliders) {
+export function calculate_zoom_to_contain_group(group, display_side_panel, display_time_sliders) {
   const total_width = group.max_left - group.min_left;
   const total_height = group.max_top - group.min_top;
   const zoom_width = get_screen_width(display_side_panel) / total_width * SCALE_BY;

@@ -8,11 +8,12 @@ import {create_wcomponent} from "../state/specialised_objects/wcomponents/create
 import {Prioritisation} from "./Prioritisation.js";
 import {ACTIONS} from "../state/actions.js";
 import {PrioritisableGoal} from "./PrioritisableGoal.js";
-import {sort_list} from "../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../shared/utils/sort.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 import {selector_chosen_base_id} from "../state/user_info/selector.js";
 import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
 import {Button} from "../sharedf/Button.js";
+import {get_next_available_wc_map_position} from "../knowledge_view/utils/next_wc_map_position.js";
 export function PrioritiesListView(props) {
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(PrioritiesListViewContent, null)
@@ -20,22 +21,22 @@ export function PrioritiesListView(props) {
 }
 const map_state = (state) => {
   const wcomponents_by_id = state.specialised_objects.wcomponents_by_id;
-  const knowledge_view = get_current_composed_knowledge_view_from_state(state);
+  const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
   const goals_and_actions = [];
-  let prioritisations = [];
+  let prioritisations = void 0;
   let selected_prioritisation = void 0;
-  if (knowledge_view) {
-    knowledge_view.wc_ids_by_type.has_objectives.forEach((id) => {
+  if (composed_knowledge_view) {
+    composed_knowledge_view.wc_ids_by_type.has_objectives.forEach((id) => {
       const goal_or_action = wcomponents_by_id[id];
       if (!wcomponent_has_objectives(goal_or_action, id))
         return;
       goals_and_actions.push(goal_or_action);
     });
-    prioritisations = knowledge_view.prioritisations;
+    prioritisations = composed_knowledge_view.prioritisations;
     const {item_id} = state.routing;
     selected_prioritisation = prioritisations.find(({id}) => id === item_id);
     Object.keys(selected_prioritisation?.goals || {}).forEach((id) => {
-      if (knowledge_view.wc_ids_by_type.has_objectives.has(id))
+      if (composed_knowledge_view.wc_ids_by_type.has_objectives.has(id))
         return;
       const goal_or_action = wcomponents_by_id[id];
       if (!wcomponent_has_objectives(goal_or_action, id))
@@ -44,12 +45,12 @@ const map_state = (state) => {
     });
   }
   return {
-    knowledge_view_id: knowledge_view && knowledge_view.id,
+    composed_knowledge_view,
     goals_and_actions,
     prioritisations,
-    editing: !state.display_options.consumption_formatting,
     selected_prioritisation,
     base_id: selector_chosen_base_id(state),
+    wcomponents_by_id,
     display_side_panel: state.controls.display_side_panel
   };
 };
@@ -58,9 +59,18 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _PrioritiesListViewContent(props) {
-  const {goals_and_actions, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id} = props;
-  const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals;
-  const {potential_goals, prioritised_goals, deprioritised_goals} = partition_and_sort_goals(goals_and_actions, goal_prioritisation_attributes);
+  const {
+    goals_and_actions,
+    prioritisations,
+    composed_knowledge_view,
+    selected_prioritisation,
+    base_id,
+    wcomponents_by_id
+  } = props;
+  const knowledge_view_id = composed_knowledge_view?.id;
+  const composed_wc_id_map = composed_knowledge_view?.composed_wc_id_map || {};
+  const selected_goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals;
+  const {potential_goals, prioritised_goals, deprioritised_goals} = partition_and_sort_goals(goals_and_actions, selected_goal_prioritisation_attributes);
   if (base_id === void 0)
     return /* @__PURE__ */ h("div", null, "No base id chosen");
   return /* @__PURE__ */ h("div", {
@@ -83,25 +93,28 @@ function _PrioritiesListViewContent(props) {
     selected_prioritisation
   }))), /* @__PURE__ */ h("div", {
     className: "priorities_list prioritisations"
-  }, /* @__PURE__ */ h("h1", null, "Prioritisations", editing && knowledge_view_id && /* @__PURE__ */ h("span", null, " ", /* @__PURE__ */ h(Button, {
+  }, /* @__PURE__ */ h("h1", null, "Prioritisations", knowledge_view_id && /* @__PURE__ */ h("span", {
+    className: "button_add_new"
+  }, " ", /* @__PURE__ */ h(Button, {
     fullWidth: false,
     onClick: (e) => {
-      e.stopImmediatePropagation();
+      const most_recent_prioritisation_id = (prioritisations || [])[0]?.id || "";
+      const next_prioritisation_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_prioritisation_id, wcomponents_by_id) || {left: 0, top: 0};
       create_wcomponent({
         wcomponent: {
           base_id,
           type: "prioritisation",
-          goals: goal_prioritisation_attributes || {}
+          goals: selected_goal_prioritisation_attributes || {}
         },
         add_to_knowledge_view: {
           id: knowledge_view_id,
-          position: {left: 0, top: 0}
+          position: next_prioritisation_position
         }
       });
     }
-  }, "Add"))), /* @__PURE__ */ h("div", {
+  }, selected_goal_prioritisation_attributes ? "Copy" : "Add"))), /* @__PURE__ */ h("div", {
     className: "prioritisations_list"
-  }, prioritisations.map((p) => /* @__PURE__ */ h(Prioritisation, {
+  }, (prioritisations || []).map((p) => /* @__PURE__ */ h(Prioritisation, {
     prioritisation: p
   })))), /* @__PURE__ */ h("div", {
     className: "side_panel_padding",
@@ -126,9 +139,9 @@ function partition_and_sort_goals(goals, goal_prioritisation_attributes) {
         deprioritised_goals.push(goal);
     });
   }
-  potential_goals = sort_list(potential_goals, get_created_at_ms, "descending");
-  prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), "descending");
-  deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, "descending");
+  potential_goals = sort_list(potential_goals, get_created_at_ms, SortDirection.descending);
+  prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), SortDirection.descending);
+  deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, SortDirection.descending);
   return {potential_goals, prioritised_goals, deprioritised_goals};
 }
 function factory_get_effort(goal_prioritisation_attributes) {

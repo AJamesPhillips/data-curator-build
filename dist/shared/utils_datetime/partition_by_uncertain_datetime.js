@@ -1,5 +1,5 @@
 import {uncertain_datetime_is_eternal} from "../uncertainty/datetime.js";
-import {sort_list} from "../utils/sort.js";
+import {SortDirection, sort_list} from "../utils/sort.js";
 import {test} from "../utils/test.js";
 import {Tense} from "../../wcomponent/interfaces/datetime.js";
 import {get_tense_of_uncertain_datetime} from "./get_tense_of_uncertain_datetime.js";
@@ -8,7 +8,7 @@ export function partition_and_sort_by_uncertain_event_datetimes(args) {
   const sorted_items = sort_by_uncertain_event_datetimes(items);
   return partition_sorted_items_by_datetimes({sorted_items, sim_ms});
 }
-export function sort_by_uncertain_event_datetimes(items) {
+export function sort_by_uncertain_event_datetimes(items, direction = SortDirection.descending) {
   const sorted_items = sort_list(items, ({datetime}) => {
     if (uncertain_datetime_is_eternal(datetime))
       return Number.NEGATIVE_INFINITY;
@@ -20,7 +20,7 @@ export function sort_by_uncertain_event_datetimes(items) {
     if (max)
       return max.getTime() * 10;
     return 1;
-  }, "descending");
+  }, direction);
   return sorted_items;
 }
 function partition_sorted_items_by_datetimes(args) {

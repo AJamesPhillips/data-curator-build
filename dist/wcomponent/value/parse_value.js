@@ -1,22 +1,26 @@
 import {VAPsType} from "../interfaces/VAPsType.js";
+export var ACTION_VALUE_POSSIBILITY_ID;
+(function(ACTION_VALUE_POSSIBILITY_ID2) {
+  ACTION_VALUE_POSSIBILITY_ID2["action_potential"] = "action__value_possibility__potential_id";
+  ACTION_VALUE_POSSIBILITY_ID2["action_in_progress"] = "action__value_possibility__in_progress_id";
+  ACTION_VALUE_POSSIBILITY_ID2["action_paused"] = "action__value_possibility__paused_id";
+  ACTION_VALUE_POSSIBILITY_ID2["action_completed"] = "action__value_possibility__completed_id";
+  ACTION_VALUE_POSSIBILITY_ID2["action_failed"] = "action__value_possibility__failed_id";
+  ACTION_VALUE_POSSIBILITY_ID2["action_rejected"] = "action__value_possibility__rejected_id";
+})(ACTION_VALUE_POSSIBILITY_ID || (ACTION_VALUE_POSSIBILITY_ID = {}));
 export const VALUE_POSSIBILITY_IDS = {
   uncertainty: "value_possibility_uncertainty_id__undefined__",
   boolean_true: "value_possibility_true_id",
   boolean_false: "value_possibility_false_id",
-  action_potential: "action__value_possibility__potential_id",
-  action_in_progress: "action__value_possibility__in_progress_id",
-  action_paused: "action__value_possibility__paused_id",
-  action_completed: "action__value_possibility__completed_id",
-  action_failed: "action__value_possibility__failed_id",
-  action_rejected: "action__value_possibility__rejected_id"
+  ...ACTION_VALUE_POSSIBILITY_ID
 };
-export const ACTION_VALUE_POSSIBILITY_IDS = [
-  VALUE_POSSIBILITY_IDS.action_potential,
-  VALUE_POSSIBILITY_IDS.action_in_progress,
-  VALUE_POSSIBILITY_IDS.action_paused,
-  VALUE_POSSIBILITY_IDS.action_completed,
-  VALUE_POSSIBILITY_IDS.action_failed,
-  VALUE_POSSIBILITY_IDS.action_rejected
+export const ORDERED_ACTION_VALUE_POSSIBILITY_ID = [
+  ACTION_VALUE_POSSIBILITY_ID.action_potential,
+  ACTION_VALUE_POSSIBILITY_ID.action_in_progress,
+  ACTION_VALUE_POSSIBILITY_ID.action_paused,
+  ACTION_VALUE_POSSIBILITY_ID.action_completed,
+  ACTION_VALUE_POSSIBILITY_ID.action_failed,
+  ACTION_VALUE_POSSIBILITY_ID.action_rejected
 ];
 export const VALUE_POSSIBILITY_IDS_to_text = {
   [VALUE_POSSIBILITY_IDS.uncertainty]: "Uncertainty",

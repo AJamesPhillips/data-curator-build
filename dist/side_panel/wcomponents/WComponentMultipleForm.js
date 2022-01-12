@@ -132,7 +132,6 @@ function _WComponentMultipleForm(props) {
       change: {custom_created_at}
     })
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Add to knowledge view"), all_wcomponent_ids_present_in_current_kv ? /* @__PURE__ */ h(SelectKnowledgeView, {
-    exclude_ids: new Set(knowledge_view_id ? [knowledge_view_id] : []),
     on_change: (knowledge_view_id2) => {
       if (!knowledge_view_id2)
         return;

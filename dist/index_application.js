@@ -6,8 +6,6 @@ import "../snowpack/pkg/preact/devtools.js";
 import {Provider} from "../snowpack/pkg/react-redux.js";
 import {get_store} from "./state/store.js";
 import {DemoPredictionsGraph} from "./scratch_pad/PredictionsGraph.js";
-import {DemoStatementProbability} from "./statements/StatementWithProbability.js";
-import {DemoStatementProbabilityExplorer} from "./statements/StatementProbabilityExplorer.js";
 import {DemoPredictionsBadge} from "./scratch_pad/DemoPredictionsBadge.js";
 import {SandBox} from "./scratch_pad/SandBox.js";
 import {SandboxEditableCustomDateTime} from "./scratch_pad/SandboxEditableCustomDateTime.js";
@@ -36,14 +34,6 @@ if (root) {
     render(/* @__PURE__ */ h(DemoPredictionsGraph, null), root);
   } else if (window.location.pathname === "/prob_badge") {
     render(/* @__PURE__ */ h(DemoPredictionsBadge, null), root);
-  } else if (window.location.pathname === "/statement_probability") {
-    render(/* @__PURE__ */ h(Provider, {
-      store: get_store({load_state_from_storage: true})
-    }, /* @__PURE__ */ h(DemoStatementProbability, null)), root);
-  } else if (window.location.pathname === "/statement_probability_explorer") {
-    render(/* @__PURE__ */ h(Provider, {
-      store: get_store({load_state_from_storage: true})
-    }, /* @__PURE__ */ h(DemoStatementProbabilityExplorer, null)), root);
   } else if (window.location.pathname === "/sandbox/editable_custom_datetime") {
     render(/* @__PURE__ */ h(Provider, {
       store: get_store({load_state_from_storage: false})

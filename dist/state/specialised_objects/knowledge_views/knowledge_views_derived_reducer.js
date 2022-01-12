@@ -2,9 +2,10 @@ import {
   calculate_canvas_x_for_wcomponent_temporal_uncertainty,
   DEFAULT_DATETIME_LINE_CONFIG
 } from "../../../knowledge_view/datetime_line.js";
+import {get_wc_position_to_id_map} from "../../../knowledge_view/utils/get_wc_position_to_id_map.js";
 import {is_uuid_v4} from "../../../shared/utils/ids.js";
 import {is_defined} from "../../../shared/utils/is_defined.js";
-import {sort_list} from "../../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../../shared/utils/sort.js";
 import {get_created_at_ms, get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 import {set_union} from "../../../utils/set.js";
 import {update_substate} from "../../../utils/update_state.js";
@@ -63,7 +64,7 @@ export const knowledge_views_derived_reducer = (initial_state, state) => {
 };
 function update_derived_knowledge_view_state(state) {
   const {knowledge_views_by_id} = state.specialised_objects;
-  const knowledge_views = sort_list(Object.values(knowledge_views_by_id), ({title}) => title, "ascending");
+  const knowledge_views = sort_list(Object.values(knowledge_views_by_id), ({title}) => title, SortDirection.ascending);
   const base_knowledge_view = get_base_knowledge_view(knowledge_views);
   const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views);
   sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids);
@@ -224,7 +225,7 @@ function get_wc_id_to_counterfactuals_v2_map(args) {
 }
 function get_prioritisations(prioritisation_ids, wcomponents_by_id) {
   const prioritisations = Array.from(prioritisation_ids).map((id) => wcomponents_by_id[id]).filter(wcomponent_is_prioritisation);
-  return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY, "descending");
+  return sort_list(prioritisations, (p) => get_sim_datetime_ms(p) || get_created_at_ms(p), SortDirection.descending);
 }
 function get_wc_id_connections_map(link_ids, wcomponents_by_id) {
   const map = {};
@@ -365,24 +366,14 @@ function calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, exc
   return {should_exclude, lacks_include};
 }
 function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
+  const entries = get_wc_position_to_id_map(composed_wc_id_map, wcomponents_by_id);
   const map = {};
-  const entries = {};
-  const overlapping_coord_keys = new Set();
-  Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) => {
-    if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id]))
+  Object.values(entries).forEach((ids) => {
+    if (ids.length <= 1)
       return;
-    const coord_key = `${entry.left},${entry.top}`;
-    const ids = entries[coord_key] || [];
-    ids.push(wcomponent_id);
-    entries[coord_key] = ids;
-    if (ids.length > 1)
-      overlapping_coord_keys.add(coord_key);
-  });
-  overlapping_coord_keys.forEach((coord_key) => {
-    const overlapping_wcomponent_ids = entries[coord_key];
-    overlapping_wcomponent_ids.forEach((id, index) => {
-      const i = index + 1;
-      map[id] = [...overlapping_wcomponent_ids.slice(i), ...overlapping_wcomponent_ids.slice(0, i)];
+    ids.forEach((overlapping_wcomponent_id, index) => {
+      const j = index + 1;
+      map[overlapping_wcomponent_id] = [...ids.slice(j), ...ids.slice(0, j)];
     });
   });
   return map;

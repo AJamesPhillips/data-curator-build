@@ -1,7 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {KnowledgeGraphView} from "../knowledge_view/KnowledgeGraphView.js";
-import {ObjectivesView} from "../objectives/ObjectivesView.js";
 import {PrioritiesListView} from "../priorities_list_view/PrioritiesListView.js";
 import {PrioritiesView} from "../priorities/PrioritiesView.js";
 import {KnowledgeTimeView} from "../knowledge_view/KnowledgeTimeView.js";
@@ -19,9 +18,7 @@ function _MainAreaRouter(props) {
       el = /* @__PURE__ */ h(KnowledgeTimeView, null);
     else
       el = /* @__PURE__ */ h(KnowledgeGraphView, null);
-  } else if (props.view === "objectives")
-    el = /* @__PURE__ */ h(ObjectivesView, null);
-  else if (props.view === "priorities")
+  } else if (props.view === "priorities")
     el = /* @__PURE__ */ h(PrioritiesView, null);
   else if (props.view === "priorities_list")
     el = /* @__PURE__ */ h(PrioritiesListView, null);

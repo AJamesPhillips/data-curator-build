@@ -16,7 +16,10 @@ export class CanvasNode extends Component {
       className: css_class_names,
       style: style_outer,
       title,
-      onPointerDown: on_pointer_down,
+      onPointerDown: on_pointer_down || ((e) => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }),
       onPointerUp: on_pointer_up,
       onClick: on_click,
       onPointerEnter: on_pointer_enter,

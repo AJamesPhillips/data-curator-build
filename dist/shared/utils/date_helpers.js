@@ -171,6 +171,20 @@ export function distance_of_time_in_hms(from_date, to_date) {
     return formatter(3600 * 24 * 15);
   }
 }
+const month_to_3text = {
+  0: "Jan",
+  1: "Feb",
+  2: "Mar",
+  3: "Apr",
+  4: "May",
+  5: "Jun",
+  6: "Jul",
+  7: "Aug",
+  8: "Sep",
+  9: "Oct",
+  10: "Nov",
+  11: "Dec"
+};
 export function date2str(date, format) {
   const z = {
     M: date.getMonth() + 1,
@@ -179,6 +193,9 @@ export function date2str(date, format) {
     m: date.getMinutes(),
     s: date.getSeconds()
   };
+  format = format.replace(/MMM/g, function(v) {
+    return month_to_3text[date.getMonth()] || "";
+  });
   format = format.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
     return ((v.length > 1 ? "0" : "") + z[v.slice(-1)]).slice(-2);
   });
@@ -197,4 +214,19 @@ export function get_today_str(include_hours = true) {
 }
 export function get_today_date() {
   return new Date(get_today_str());
+}
+const MSECONDS_IN_DAY = 24 * 3600 * 1e3;
+const TIME_ZONE_IN_MS = new Date().getTimezoneOffset() * 6e4;
+function* get_inclusive_dates(start_date, end_date) {
+  const start_day = Math.floor((start_date.getTime() - TIME_ZONE_IN_MS) / MSECONDS_IN_DAY);
+  const end_day = Math.ceil((end_date.getTime() - TIME_ZONE_IN_MS) / MSECONDS_IN_DAY);
+  let day = start_day;
+  while (day < end_day) {
+    yield new Date(day * MSECONDS_IN_DAY);
+    ++day;
+  }
+}
+export function get_inclusive_date_strs(start_date, end_date) {
+  const format = "yyyy-MM-dd";
+  return [...get_inclusive_dates(start_date, end_date)].map((d) => date2str(d, format));
 }

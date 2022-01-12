@@ -3,7 +3,7 @@ import {useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {StorageOption} from "./StorageOption.js";
 import {ACTIONS} from "../../state/actions.js";
-import {sort_list} from "../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {refresh_bases_for_current_user} from "../../state/user_info/utils.js";
 import {SyncButton} from "../../sharedf/SyncButton.js";
 import {DisplaySupabasePostgrestError} from "../user_info/DisplaySupabaseErrors.js";
@@ -35,7 +35,7 @@ function _AvailableBases(props) {
     return "Loading users...";
   if (!bases_by_id)
     return "Loading bases...";
-  const bases = sort_list(Object.values(bases_by_id), (b) => b.inserted_at.getTime(), "descending");
+  const bases = sort_list(Object.values(bases_by_id), (b) => b.inserted_at.getTime(), SortDirection.descending);
   if (bases.length === 0)
     return null;
   return /* @__PURE__ */ h("div", {

@@ -2,7 +2,7 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import FlexSearch from "../../../snowpack/pkg/flexsearch.js";
 import fuzzysort from "../../../snowpack/pkg/fuzzysort.js";
 import "./AutocompleteText.css.proxy.js";
-import {sort_list} from "../../shared/utils/sort.js";
+import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Options} from "./Options.js";
 import {throttle} from "../../utils/throttle.js";
@@ -246,6 +246,6 @@ function get_options_to_display(temp_value_str, allow_none, options, prepared_ta
   const filterd_options = threshold_minimum_score === false ? options : options.filter((o) => option_to_score(o) > threshold_minimum_score);
   let options_to_display = filterd_options;
   if (!retain_options_order)
-    options_to_display = sort_list(filterd_options, option_to_score, "descending");
+    options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending);
   return {options: options_to_display, search_type_used};
 }

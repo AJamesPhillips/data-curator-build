@@ -5,7 +5,7 @@ import {
 } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions.js";
 import {wcomponent_should_have_state_VAP_sets} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
-import {get_VAPs_ordered_by_prob} from "./value_and_prediction/get_VAPs_ordered_by_prob.js";
+import {get_VAPs_ordered_by_prob} from "./value_and_prediction/probable_VAPs.js";
 import {apply_counterfactuals_v2_to_VAP_set} from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set.js";
 import {parse_VAP_value} from "../wcomponent/value/parse_value.js";
 export function get_wcomponent_state_value_and_probabilities(args) {

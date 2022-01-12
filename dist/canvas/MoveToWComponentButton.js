@@ -76,17 +76,12 @@ function _MoveToWComponentButton(props) {
       next_position_index = 0;
     props.move(go_to_datetime_ms, position);
   };
-  useEffect(() => {
-    return pub_sub.global_keys.sub("key_down", (e) => {
-      if (move && e.key === " " && !e.user_is_editing_text)
-        move();
-    });
-  });
   const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen;
   return /* @__PURE__ */ h(MoveToItemButton, {
     move,
     draw_attention: draw_attention_to_move_to_wcomponent_button,
-    have_finished_drawing_attention
+    have_finished_drawing_attention,
+    enable_spacebar_move_to_shortcut: !props.wcomponent_id
   });
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton);
@@ -97,6 +92,14 @@ export function MoveToItemButton(props) {
     have_finished_drawing_attention = () => {
     }
   } = props;
+  useEffect(() => {
+    if (!props.enable_spacebar_move_to_shortcut)
+      return;
+    return pub_sub.global_keys.sub("key_down", (e) => {
+      if (move && e.key === " " && !e.user_is_editing_text)
+        move();
+    });
+  });
   return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {
     placement: "top",
     title: move ? "Move to component(s)" : "No component(s) present"
