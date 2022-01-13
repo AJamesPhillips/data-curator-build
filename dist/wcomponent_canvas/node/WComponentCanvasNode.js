@@ -238,7 +238,8 @@ function _WComponentCanvasNode(props) {
     }, is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
     }, "state  "), /* @__PURE__ */ h(WComponentJudgements, {
-      wcomponent
+      wcomponent,
+      hide_judgement_trend: false
     }), /* @__PURE__ */ h("div", {
       className: "value_and_prediction_summary"
     }, /* @__PURE__ */ h(NodeValueAndPredictionSetSummary, {

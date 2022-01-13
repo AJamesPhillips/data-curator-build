@@ -20,14 +20,16 @@ const map_state = (state, own_props) => {
 };
 const connector = connect(map_state);
 function _JudgementBadgeSimple(props) {
-  const {judgement_or_objective_id: judgement_id, judgement_wcomponent, position, target_VAPs_represent, value} = props;
+  const {judgement_or_objective_id, judgement_wcomponent, position, target_VAPs_represent, value} = props;
   if (!judgement_wcomponent)
     return null;
   const judgement_value = core_calculate_judgement_value({judgement_wcomponent, target_VAPs_represent, value});
   return /* @__PURE__ */ h(JudgementBadge, {
     judgement: judgement_value,
-    judgement_or_objective_id: judgement_id,
-    position
+    judgement_trend_manual: props.hide_judgement_trend ? void 0 : judgement_wcomponent.judgement_trend_manual,
+    judgement_or_objective_id,
+    position,
+    size: props.hide_judgement_trend ? "small" : "medium"
   });
 }
 export const JudgementBadgeSimple = connector(_JudgementBadgeSimple);

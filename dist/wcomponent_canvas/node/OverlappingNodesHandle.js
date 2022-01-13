@@ -32,7 +32,7 @@ function _OverlappingNodesHandle(props) {
     title,
     onClick: select_next_node
   }, /* @__PURE__ */ h(AutoAwesomeMotionIcon, {
-    size: "small"
+    fontSize: "small"
   }));
 }
 export const OverlappingNodesHandle = connector(_OverlappingNodesHandle);

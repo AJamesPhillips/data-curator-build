@@ -45,7 +45,9 @@ const _ProjectJudgementEntry = (props) => {
       return get_url_for_wcomponent({knowledge_view, wcomponent_id});
     })()
   }, /* @__PURE__ */ h(JudgementBadge, {
-    judgement: calculate_judgement_value({judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms})
+    judgement: calculate_judgement_value({judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms}),
+    judgement_trend_manual: judgement.judgement_trend_manual,
+    size: "medium"
   }), /* @__PURE__ */ h(RichMarkDown, {
     text: get_title({rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms})
   })));

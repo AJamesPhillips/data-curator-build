@@ -2,7 +2,7 @@ import {h} from "../../../snowpack/pkg/preact.js";
 export function CommonIcon(props) {
   let {className = ""} = props;
   className = "MuiSvgIcon-root " + className;
-  if (props.size === "small")
+  if (props.fontSize === "small")
     className += " MuiSvgIcon-fontSizeSmall ";
   return /* @__PURE__ */ h("span", {
     title: props.title

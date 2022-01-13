@@ -34,13 +34,15 @@ function _WComponentJudgements(props) {
     return /* @__PURE__ */ h("div", {
       className: node_judgements_container_class_name
     }, judgement_or_objective_ids.map((id) => /* @__PURE__ */ h(JudgementBadgeConnected, {
-      judgement_or_objective_id: id
+      judgement_or_objective_id: id,
+      hide_judgement_trend: props.hide_judgement_trend
     })));
   }
   return /* @__PURE__ */ h("div", {
     className: node_judgements_container_class_name
   }, judgement_or_objective_ids.map((id) => /* @__PURE__ */ h(JudgementBadgeSimple, {
     judgement_or_objective_id: id,
+    hide_judgement_trend: props.hide_judgement_trend,
     target_VAPs_represent,
     value
   })));

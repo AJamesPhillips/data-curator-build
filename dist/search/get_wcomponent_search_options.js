@@ -27,7 +27,8 @@ export function get_wcomponent_search_options(args) {
     let jsx = void 0;
     if (wcomponent_is_judgement_or_objective(wcomponent)) {
       jsx = /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(JudgementBadgeConnected, {
-        judgement_or_objective_id: wcomponent.id
+        judgement_or_objective_id: wcomponent.id,
+        hide_judgement_trend: false
       }), title);
     }
     return {

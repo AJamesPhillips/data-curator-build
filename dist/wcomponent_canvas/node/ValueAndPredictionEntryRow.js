@@ -28,7 +28,8 @@ export function ValueAndPredictionEntryRow(props) {
   }, VAP_visual.value_text, show_judgements && /* @__PURE__ */ h(WComponentJudgements, {
     wcomponent: props.wcomponent,
     target_VAPs_represent: VAPs_represent,
-    value: VAP_visual.parsed_value
+    value: VAP_visual.parsed_value,
+    hide_judgement_trend: true
   }), cf_entries.map((entry) => /* @__PURE__ */ h(CounterfactualLink, {
     any_active: counterfactual_VAP_set.has_any_counterfactual_applied,
     counterfactual: entry,
@@ -54,7 +55,7 @@ function CounterfactualLink(props) {
     args: void 0,
     extra_css_style: style
   }, /* @__PURE__ */ h(AltRouteIcon, {
-    size: "small"
+    fontSize: "small"
   })), props.counterfactual.counterfactual_has_knowledge_view && /* @__PURE__ */ h("span", {
     style: {fontSize: 14}
   }, /* @__PURE__ */ h(ExploreButtonHandle, {
