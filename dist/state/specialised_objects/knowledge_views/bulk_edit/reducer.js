@@ -45,10 +45,8 @@ function handle_bulk_add_to_knowledge_view(state, action) {
         console.error(`we should always have an entry but wcomponent "${id}" lacking entry in composed_kv composed_wc_id_map for "${knowledge_view_id}"`);
         return;
       }
-      if (entry.blocked || entry.passthrough) {
-        console.warn(`we should not be adding an entry for wcomponent "${id}" in composed_kv composed_wc_id_map for "${knowledge_view_id}" as it is blocked or passed through`);
-        return;
-      }
+      entry.blocked = void 0;
+      entry.passthrough = void 0;
       new_wc_id_map[id] = entry;
     });
     new_wc_id_map = {...new_wc_id_map, ...kv.wc_id_map};

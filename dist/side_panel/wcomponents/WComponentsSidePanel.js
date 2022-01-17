@@ -10,6 +10,7 @@ import {Button} from "../../sharedf/Button.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
 import {supabase_get_wcomponent_from_any_base} from "../../state/sync/supabase/wcomponent.js";
+import {NotFoundWComponentKnowledgeViewForm} from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {bases_by_id, chosen_base_id} = state.user_info;
@@ -23,7 +24,8 @@ const map_state = (state) => {
     sub_route,
     item_id,
     wcomponent,
-    selected_ids
+    selected_ids,
+    editing: !state.display_options.consumption_formatting
   };
 };
 const map_dispatch = {
@@ -93,7 +95,9 @@ function _WComponentsSidePanel(props) {
       wcomponent_from_different_base
     });
   }
-  return /* @__PURE__ */ h("div", null, "Component not found for id: ", id, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), searching_for_unfound && /* @__PURE__ */ h("div", null, "Searching in other bases..."), !searching_for_unfound && /* @__PURE__ */ h("div", null, "Not found in other bases (that you have access to)."));
+  return /* @__PURE__ */ h("div", null, "Component not found for id: ", id, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), searching_for_unfound && /* @__PURE__ */ h("div", null, "Searching in other bases..."), !searching_for_unfound && /* @__PURE__ */ h("div", null, "Not found in other bases (that you have access to).", props.editing && id && /* @__PURE__ */ h(NotFoundWComponentKnowledgeViewForm, {
+    wcomponent_id: id
+  })));
 }
 export const WComponentsSidePanel = connector(_WComponentsSidePanel);
 var DisplayType;

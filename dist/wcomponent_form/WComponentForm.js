@@ -49,7 +49,7 @@ import {WComponentCausalLinkForm} from "./WComponentCausalLinkForm.js";
 import {WComponentCounterfactualForm} from "./WComponentCounterfactualForm.js";
 import {WComponentDateTimeFormField} from "./WComponentDateTimeFormField.js";
 import {WComponentEventAtFormField} from "./WComponentEventAtFormField.js";
-import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
+import {WComponentKnowledgeViewForm} from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm.js";
 import {WComponentImageForm} from "./WComponentImageForm.js";
 import {Button} from "../sharedf/Button.js";
 import {selector_chosen_base_id} from "../state/user_info/selector.js";
@@ -322,9 +322,9 @@ function _WComponentForm(props) {
   }, "Hide node state"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_state,
     on_change: (hide_state) => upsert_wcomponent({hide_state})
-  }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
-    wcomponent
-  })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
+    wcomponent_id: wcomponent.id
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Delete",
     tooltip_text: "Remove from all knowledge views",
     on_delete: () => props.delete_wcomponent({wcomponent_id})

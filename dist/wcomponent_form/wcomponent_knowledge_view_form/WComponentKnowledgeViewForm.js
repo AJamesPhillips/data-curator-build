@@ -1,34 +1,32 @@
-import {Box, FormControl, FormLabel, Slider} from "../../snowpack/pkg/@material-ui/core.js";
-import {h} from "../../snowpack/pkg/preact.js";
-import {connect} from "../../snowpack/pkg/react-redux.js";
-import {MoveToWComponentButton} from "../canvas/MoveToWComponentButton.js";
-import {ConfirmatoryDeleteButton} from "../form/ConfirmatoryDeleteButton.js";
-import {SelectKnowledgeView} from "../knowledge_view/SelectKnowledgeView.js";
-import {Button} from "../sharedf/Button.js";
-import {Link} from "../sharedf/Link.js";
-import {ACTIONS} from "../state/actions.js";
-import {get_middle_of_screen, lefttop_to_xy} from "../state/display_options/display.js";
+import {Box, FormControl, FormLabel, Slider} from "../../../snowpack/pkg/@material-ui/core.js";
+import {h} from "../../../snowpack/pkg/preact.js";
+import {connect} from "../../../snowpack/pkg/react-redux.js";
+import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
+import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
+import {SelectKnowledgeView} from "../../knowledge_view/SelectKnowledgeView.js";
+import {Button} from "../../sharedf/Button.js";
+import {ACTIONS} from "../../state/actions.js";
+import {get_middle_of_screen} from "../../state/display_options/display.js";
 import {
   get_current_knowledge_view_from_state,
   get_current_composed_knowledge_view_from_state
-} from "../state/specialised_objects/accessors.js";
-import {ExploreButtonHandle} from "../wcomponent_canvas/node/ExploreButtonHandle.js";
-import {WComponentBackReferences} from "../wcomponent_ui/WComponentBackReferences.js";
-import {AlignComponentForm} from "./AlignComponentForm.js";
+} from "../../state/specialised_objects/accessors.js";
+import {ExploreButtonHandle} from "../../wcomponent_canvas/node/ExploreButtonHandle.js";
+import {WComponentBackReferences} from "../../wcomponent_ui/WComponentBackReferences.js";
+import {AlignComponentForm} from "../AlignComponentForm.js";
+import {WComponentPresenceInOtherKVs} from "./WComponentPresenceInOtherKVs.js";
 const map_state = (state, own_props) => {
-  const {wcomponent} = own_props;
+  const {wcomponent_id} = own_props;
   const current_knowledge_view = get_current_knowledge_view_from_state(state);
-  const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent.id];
+  const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id];
   const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
-  const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent.id];
-  const all_knowledge_views = state.derived.knowledge_views;
+  const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id];
   const middle_position = get_middle_of_screen(state);
   return {
     knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
     knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
     composed_knowledge_view_entry,
     knowledge_view_entry,
-    all_knowledge_views,
     editing: !state.display_options.consumption_formatting,
     middle_position_left: middle_position.left,
     middle_position_top: middle_position.top
@@ -41,19 +39,13 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch);
 function _WComponentKnowledgeViewForm(props) {
   const {
-    wcomponent,
+    wcomponent_id,
     knowledge_view_id,
     knowledge_view_title,
     composed_knowledge_view_entry,
     knowledge_view_entry,
-    all_knowledge_views,
     editing
   } = props;
-  const wcomponent_id = wcomponent.id;
-  const other_knowledge_views = all_knowledge_views.filter(({id}) => id !== knowledge_view_id).filter(({wc_id_map}) => {
-    const entry = wc_id_map[wcomponent_id];
-    return entry && !entry.blocked && !entry.passthrough;
-  });
   function upsert_entry(knowledge_view_id2, new_entry_partial = {}) {
     const new_entry = {
       ...composed_knowledge_view_entry || {left: props.middle_position_left, top: props.middle_position_top},
@@ -126,17 +118,10 @@ function _WComponentKnowledgeViewForm(props) {
     on_change: (knowledge_view_id2) => {
       if (!knowledge_view_id2)
         return;
-      upsert_entry(knowledge_view_id2);
+      upsert_entry(knowledge_view_id2, {blocked: void 0, passthrough: void 0});
     }
-  })), other_knowledge_views.length > 0 && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), not_present ? "Present" : "Also", " in:", other_knowledge_views.map((kv) => {
-    const entry = kv.wc_id_map[wcomponent_id];
-    const pos = lefttop_to_xy(entry, true);
-    return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Link, {
-      route: void 0,
-      sub_route: void 0,
-      item_id: void 0,
-      args: {subview_id: kv.id, ...pos}
-    }, kv.title));
+  })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentPresenceInOtherKVs, {
+    wcomponent_id
   })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentBackReferences, {
     wcomponent_id
   })));
