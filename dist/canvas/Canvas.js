@@ -112,6 +112,7 @@ class _Canvas extends Component {
     };
     this.on_wheel = (e) => {
       e.stopPropagation();
+      e.preventDefault();
       const wheel_change = e.deltaY;
       const new_zoom = calculate_new_zoom({zoom: this.props.zoom, wheel_change});
       if (new_zoom === this.props.zoom)
