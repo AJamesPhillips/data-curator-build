@@ -25,7 +25,6 @@ function _ViewsBreadcrumb(props) {
   const {kv_id, nested_kv_ids_map} = props;
   let nested_kv = nested_kv_ids_map.map[kv_id];
   const levels = [];
-  let deepest_level = true;
   let last_parent_id = "";
   while (nested_kv) {
     const entries = nested_kv.child_ids.map((id) => nested_kv_ids_map.map[id]).filter(is_defined);
@@ -34,15 +33,14 @@ function _ViewsBreadcrumb(props) {
       levels.unshift({
         options,
         selected_id: last_parent_id,
-        allow_none: deepest_level
+        parent_id: nested_kv.id
       });
     }
-    deepest_level = false;
     last_parent_id = nested_kv.id;
     nested_kv = nested_kv.parent_id !== void 0 ? nested_kv_ids_map.map[nested_kv.parent_id] : void 0;
   }
   const top_level_options = nested_kv_ids_map.top_ids.map((id) => nested_kv_ids_map.map[id]).filter(is_defined).map(calc_if_is_hidden);
-  levels.unshift({options: top_level_options, selected_id: last_parent_id, allow_none: false});
+  levels.unshift({options: top_level_options, selected_id: last_parent_id, parent_id: void 0});
   return /* @__PURE__ */ h(Breadcrumbs, null, /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Select, {
     label: /* @__PURE__ */ h(Typography, {
       noWrap: true
@@ -57,11 +55,11 @@ function _ViewsBreadcrumb(props) {
       props.change_route({args: {view: opt.id}});
     }
   }, opt.title)))), levels.map((level) => /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(AutocompleteText, {
-    allow_none: level.allow_none,
+    allow_none: level.parent_id !== void 0,
     selected_option_id: level.selected_id,
     options: level.options,
-    on_change: (subview_id) => props.change_route({args: {subview_id}}),
-    on_choose_same: (subview_id) => props.change_route({args: {subview_id}}),
+    on_change: (subview_id) => props.change_route({args: {subview_id: subview_id || level.parent_id}}),
+    on_choose_same: (subview_id) => props.change_route({args: {subview_id: subview_id || level.parent_id}}),
     force_editable: true,
     threshold_minimum_score: false
   }))));
