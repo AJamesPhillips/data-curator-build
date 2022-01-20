@@ -19,13 +19,13 @@ export function user_info_subscribers(store) {
     pub_sub.user.pub("stale_users_by_id", true);
     pub_sub.user.pub("stale_bases", true);
   });
-  pub_sub.user.sub("stale_users_by_id", (full_reload) => {
-    if (full_reload)
+  pub_sub.user.sub("stale_users_by_id", (full_reload_required) => {
+    if (full_reload_required)
       store.dispatch(ACTIONS.user_info.set_users({users: void 0}));
     get_users(store);
   });
-  pub_sub.user.sub("stale_bases", (full_reload) => {
-    if (full_reload)
+  pub_sub.user.sub("stale_bases", (full_reload_required) => {
+    if (full_reload_required)
       store.dispatch(ACTIONS.user_info.update_bases({bases: void 0}));
     refresh_bases_for_current_user(store);
   });

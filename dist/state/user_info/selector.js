@@ -1,6 +1,10 @@
-export function selector_user_name(state) {
+function selector_current_user(state) {
   const {user, users_by_id} = state.user_info;
-  return user && users_by_id ? users_by_id[user.id]?.name : void 0;
+  return user && users_by_id ? users_by_id[user.id] : void 0;
+}
+export function selector_user_name(state) {
+  const user = selector_current_user(state);
+  return user?.name;
 }
 export function selector_need_to_set_user_name(state) {
   const {user, users_by_id} = state.user_info;
@@ -36,4 +40,8 @@ export function selector_needs_to_create_a_base(state) {
   if (bases_by_id === void 0)
     return false;
   return selector_have_an_editable_base(state) === false && selector_chosen_base(state) === void 0;
+}
+export function selector_current_user_access_level(state) {
+  const base = selector_chosen_base(state);
+  return base?.access_level;
 }
