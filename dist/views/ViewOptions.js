@@ -24,6 +24,7 @@ const connector = connect(map_state, map_dispatch);
 function _ViewOptions(props) {
   const {access_level} = props;
   const can_not_edit = access_level === "viewer" || access_level === "none";
+  const are_in_edit_mode = !props.presenting;
   const [present_warning, set_present_warning] = useState(void 0);
   const presented_warning_once = useRef(false);
   useEffect(() => {
@@ -43,19 +44,20 @@ function _ViewOptions(props) {
   }, /* @__PURE__ */ h(Tooltip, {
     title: button_edit_title,
     "aria-label": button_edit_title
-  }, /* @__PURE__ */ h("span", null, " ", /* @__PURE__ */ h(IconButton, {
+  }, /* @__PURE__ */ h(IconButton, {
     className: classes.inverse_disabled,
-    disabled: !props.presenting,
-    onClick: props.toggle_consumption_formatting,
+    disabled: are_in_edit_mode,
+    component: are_in_edit_mode ? "div" : void 0,
+    onClick: are_in_edit_mode ? void 0 : props.toggle_consumption_formatting,
     value: "editing"
   }, /* @__PURE__ */ h(EditIcon, {
     style: {color: button_edit_color}
-  })))), /* @__PURE__ */ h(IconButton, {
+  }))), /* @__PURE__ */ h(IconButton, {
     className: classes.inverse_disabled,
     disabled: props.presenting,
     onClick: props.toggle_consumption_formatting,
     value: "presenting"
-  }, /* @__PURE__ */ h(PresentToAllIcon, null)), !props.presenting && present_warning && /* @__PURE__ */ h(Modal, {
+  }, /* @__PURE__ */ h(PresentToAllIcon, null)), are_in_edit_mode && present_warning && /* @__PURE__ */ h(Modal, {
     title: "",
     size: "small",
     scrollable: false,
