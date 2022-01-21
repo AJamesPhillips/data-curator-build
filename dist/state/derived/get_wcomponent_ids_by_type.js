@@ -1,5 +1,7 @@
 import {set_difference, set_union} from "../../utils/set.js";
-import {wcomponent_is_statev2} from "../../wcomponent/interfaces/SpecialisedObjects.js";
+import {
+  wcomponent_has_legitimate_non_empty_state_VAP_sets
+} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 import {wcomponent_has_single_statev2_datetime} from "../specialised_objects/accessors.js";
 export function get_empty_wcomponent_ids_by_type() {
   return {
@@ -36,7 +38,7 @@ export function get_wcomponent_ids_by_type(wcomponents_by_id, ids) {
       return;
     }
     wc_ids_by_type[wc.type].add(id);
-    if (wcomponent_is_statev2(wc) && wcomponent_has_single_statev2_datetime(wc)) {
+    if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wcomponent_has_single_statev2_datetime(wc)) {
       wc_statev2_ids_with_single_datetime.add(wc.id);
     }
   });

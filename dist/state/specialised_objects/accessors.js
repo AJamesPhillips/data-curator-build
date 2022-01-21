@@ -1,6 +1,6 @@
 import {
+  wcomponent_has_legitimate_non_empty_state_VAP_sets,
   wcomponent_is_event,
-  wcomponent_is_statev2,
   wcomponent_is_sub_state,
   wcomponent_should_have_state_VAP_sets
 } from "../../wcomponent/interfaces/SpecialisedObjects.js";
@@ -147,7 +147,7 @@ export function get_current_temporal_value_certainty_from_wcomponent(wcomponent_
     target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, SortDirection.descending);
     const target_VAP_set = target_VAP_sets[0];
     return convert_VAP_set_to_temporal_certainty(target_VAP_set);
-  } else if (wcomponent_is_statev2(wcomponent)) {
+  } else if (wcomponent && wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)) {
     const VAP_set = wcomponent_has_single_statev2_datetime(wcomponent);
     if (VAP_set) {
       return convert_VAP_set_to_temporal_certainty(VAP_set);
