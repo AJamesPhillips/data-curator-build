@@ -12,12 +12,12 @@ const snap_to_grid_knowledge_view_entries = (args) => {
 export const is_snap_to_grid_knowledge_view_entries = (action) => {
   return action.type === snap_to_grid_knowledge_view_entries_type;
 };
-const move_current_knowledge_view_entries_to_top_type = "move_current_knowledge_view_entries_to_top";
-const move_current_knowledge_view_entries_to_top = (args) => {
-  return {type: move_current_knowledge_view_entries_to_top_type, ...args};
+const change_current_knowledge_view_entries_order_type = "change_current_knowledge_view_entries_order";
+const change_current_knowledge_view_entries_order = (args) => {
+  return {type: change_current_knowledge_view_entries_order_type, ...args};
 };
-export const is_move_current_knowledge_view_entries_to_top = (action) => {
-  return action.type === move_current_knowledge_view_entries_to_top_type;
+export const is_change_current_knowledge_view_entries_order = (action) => {
+  return action.type === change_current_knowledge_view_entries_order_type;
 };
 const bulk_add_to_knowledge_view_type = "bulk_add_to_knowledge_view";
 const bulk_add_to_knowledge_view = (args) => {
@@ -38,5 +38,5 @@ export const bulk_editing_knowledge_view_entries_actions = {
   bulk_add_to_knowledge_view,
   bulk_remove_from_knowledge_view,
   snap_to_grid_knowledge_view_entries,
-  move_current_knowledge_view_entries_to_top
+  change_current_knowledge_view_entries_order
 };

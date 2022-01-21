@@ -21,7 +21,7 @@ function _ModalCore(props) {
     }
   }, /* @__PURE__ */ h("div", {
     id: "modal_container",
-    style: {overflowY: props.scrollable === false ? "hidden" : "inherit"},
+    style: props.scrollable === false ? {overflowY: "hidden"} : void 0,
     onClick: (e) => e.stopPropagation()
   }, /* @__PURE__ */ h("div", {
     id: "modal_title"

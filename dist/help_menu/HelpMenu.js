@@ -21,7 +21,7 @@ function _HelpMenu(props) {
     return null;
   return /* @__PURE__ */ h(Modal, {
     size: "medium",
-    title: "Help Menu",
+    title: "",
     on_close: () => props.set_show_help_menu({show: false}),
     child: /* @__PURE__ */ h(Box, {
       p: 10

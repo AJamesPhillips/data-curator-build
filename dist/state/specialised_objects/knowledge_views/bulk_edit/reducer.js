@@ -8,7 +8,7 @@ import {
   is_bulk_add_to_knowledge_view,
   is_bulk_edit_knowledge_view_entries,
   is_bulk_remove_from_knowledge_view,
-  is_move_current_knowledge_view_entries_to_top,
+  is_change_current_knowledge_view_entries_order,
   is_snap_to_grid_knowledge_view_entries
 } from "./actions.js";
 export const bulk_editing_knowledge_view_entries_reducer = (state, action) => {
@@ -18,8 +18,8 @@ export const bulk_editing_knowledge_view_entries_reducer = (state, action) => {
   if (is_snap_to_grid_knowledge_view_entries(action)) {
     state = handle_snap_to_grid_knowledge_view_entries(state, action);
   }
-  if (is_move_current_knowledge_view_entries_to_top(action)) {
-    state = handle_move_current_knowledge_view_entries_to_top(state, action);
+  if (is_change_current_knowledge_view_entries_order(action)) {
+    state = handle_change_current_knowledge_view_entries_order(state, action);
   }
   if (is_bulk_add_to_knowledge_view(action)) {
     state = handle_bulk_add_to_knowledge_view(state, action);
@@ -93,14 +93,17 @@ function handle_snap_to_grid_knowledge_view_entries(state, action) {
   }
   return state;
 }
-function handle_move_current_knowledge_view_entries_to_top(state, action) {
-  const {wcomponent_ids} = action;
+function handle_change_current_knowledge_view_entries_order(state, action) {
+  const {wcomponent_ids, order} = action;
   const kv = get_current_knowledge_view_from_state(state);
   const composed_kv = get_current_composed_knowledge_view_from_state(state);
   if (!kv || !composed_kv) {
-    console.error("There should always be a current and current composed knowledge view if bulk editing (moving to top) world components");
-  } else {
-    const new_wc_id_map = {...kv.wc_id_map};
+    console.error("There should always be a current knowledge view and current composed knowledge view if bulk editing (moving to top) world components");
+    return state;
+  }
+  let new_wc_id_map = {};
+  if (order === "front") {
+    new_wc_id_map = {...kv.wc_id_map};
     wcomponent_ids.forEach((wcomponent_id) => {
       const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id];
       if (!existing_entry)
@@ -108,9 +111,17 @@ function handle_move_current_knowledge_view_entries_to_top(state, action) {
       delete new_wc_id_map[wcomponent_id];
       new_wc_id_map[wcomponent_id] = existing_entry;
     });
-    const new_kv = {...kv, wc_id_map: new_wc_id_map};
-    state = handle_upsert_knowledge_view(state, new_kv);
+  } else if (order === "back") {
+    wcomponent_ids.forEach((wcomponent_id) => {
+      const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id];
+      if (!existing_entry)
+        return;
+      new_wc_id_map[wcomponent_id] = existing_entry;
+    });
+    new_wc_id_map = {...new_wc_id_map, ...kv.wc_id_map};
   }
+  const new_kv = {...kv, wc_id_map: new_wc_id_map};
+  state = handle_upsert_knowledge_view(state, new_kv);
   return state;
 }
 function handle_bulk_edit_knowledge_view_entries(state, action) {
