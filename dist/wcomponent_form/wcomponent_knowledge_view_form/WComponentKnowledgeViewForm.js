@@ -2,9 +2,12 @@ import {Box, FormControl, FormLabel, Slider} from "../../../snowpack/pkg/@materi
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
+import {grid_small_step, h_step, v_step} from "../../canvas/position_utils.js";
 import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
 import {SelectKnowledgeView} from "../../knowledge_view/SelectKnowledgeView.js";
+import {color_is_empty} from "../../shared/interfaces/color.js";
 import {Button} from "../../sharedf/Button.js";
+import {ColorPicker} from "../../sharedf/ColorPicker.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_middle_of_screen} from "../../state/display_options/display.js";
 import {
@@ -14,6 +17,7 @@ import {
 import {ExploreButtonHandle} from "../../wcomponent_canvas/node/ExploreButtonHandle.js";
 import {WComponentBackReferences} from "../../wcomponent_ui/WComponentBackReferences.js";
 import {AlignComponentForm} from "../AlignComponentForm.js";
+import {default_frame_color} from "./default_frame_color.js";
 import {WComponentPresenceInOtherKVs} from "./WComponentPresenceInOtherKVs.js";
 const map_state = (state, own_props) => {
   const {wcomponent_id} = own_props;
@@ -58,6 +62,7 @@ function _WComponentKnowledgeViewForm(props) {
     });
   }
   const not_present = !knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough;
+  const can_delete_frame = knowledge_view_entry?.frame_width !== void 0 && knowledge_view_entry?.frame_height !== void 0;
   return /* @__PURE__ */ h("div", null, editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
@@ -77,6 +82,36 @@ function _WComponentKnowledgeViewForm(props) {
     step: 0.25,
     value: knowledge_view_entry.s ? knowledge_view_entry.s : 1,
     valueLabelDisplay: "on"
+  })), editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked && /* @__PURE__ */ h(FormControl, {
+    component: "fieldset",
+    fullWidth: true,
+    margin: "normal"
+  }, /* @__PURE__ */ h(FormLabel, {
+    component: "legend"
+  }, "Frame"), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(Button, {
+    value: can_delete_frame ? "Remove" : "Add",
+    onClick: () => {
+      const args = {};
+      if (can_delete_frame) {
+        args.frame_color = void 0;
+        args.frame_width = void 0;
+        args.frame_height = void 0;
+      } else {
+        args.frame_color = args.frame_color ?? default_frame_color;
+        args.frame_width = args.frame_width ?? (h_step + grid_small_step) * 2;
+        args.frame_height = args.frame_height ?? (v_step + grid_small_step) * 2;
+      }
+      upsert_entry(knowledge_view_id, args);
+    }
+  })), /* @__PURE__ */ h("span", {
+    className: "description_label"
+  }, "Frame Color"), /* @__PURE__ */ h(ColorPicker, {
+    color: knowledge_view_entry.frame_color,
+    allow_undefined: true,
+    conditional_on_blur: (frame_color) => {
+      frame_color = color_is_empty(frame_color) ? void 0 : frame_color;
+      upsert_entry(knowledge_view_id, {frame_color});
+    }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(AlignComponentForm, {
     wcomponent_id
   }), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("div", {

@@ -113,6 +113,6 @@
   background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
 }
 
-.disable_component_pointer_events .wcomponent_canvas_node {
+.any_drag_event .wcomponent_canvas_node {
   pointer-events: none;
 }

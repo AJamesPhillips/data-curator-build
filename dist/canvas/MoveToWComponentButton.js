@@ -103,11 +103,11 @@ export function MoveToItemButton(props) {
   return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {
     placement: "top",
     title: move ? "Move to component(s)" : "No component(s) present"
-  }, /* @__PURE__ */ h(IconButton, {
+  }, /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(IconButton, {
     size: "medium",
     onClick: move,
     disabled: !move
-  }, /* @__PURE__ */ h(FilterCenterFocusIcon, null))), /* @__PURE__ */ h("div", {
+  }, /* @__PURE__ */ h(FilterCenterFocusIcon, null)))), /* @__PURE__ */ h("div", {
     className: move && draw_attention ? "pulsating_circle" : "",
     ref: (e) => setTimeout(() => {
       e?.classList.remove("pulsating_circle");

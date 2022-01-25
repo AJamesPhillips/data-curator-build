@@ -13,6 +13,9 @@ const map_state = (state) => {
   if (ready && !current_composed_knowledge_view)
     console.log(`No current_composed_knowledge_view`);
   const {wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids} = current_composed_knowledge_view || {};
+  const any_node_is_moving = state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0;
+  const any_frame_is_resizing = state.meta_wcomponents.frame_is_resizing;
+  const any_drag_event = any_node_is_moving || any_frame_is_resizing;
   return {
     ready,
     wcomponent_nodes,
@@ -20,13 +23,13 @@ const map_state = (state) => {
     wcomponent_unfound_ids,
     presenting: state.display_options.consumption_formatting,
     show_large_grid: state.display_options.show_large_grid,
-    moving_wcomponents: state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0
+    any_drag_event
   };
 };
 const connector = connect(map_state);
 function _KnowledgeGraphView(props) {
   const elements = get_children(props);
-  const extra_class_names = props.moving_wcomponents ? " disable_component_pointer_events " : "";
+  const extra_class_names = props.any_drag_event ? " any_drag_event " : "";
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(Canvas, {
       svg_children: [],

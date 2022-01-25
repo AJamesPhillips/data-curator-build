@@ -3,7 +3,7 @@ import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNo
 export function Prioritisation({prioritisation}) {
   return /* @__PURE__ */ h(WComponentCanvasNode, {
     id: prioritisation.id,
-    is_movable: false,
+    is_on_canvas: false,
     always_show: true
   });
 }

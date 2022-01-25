@@ -9,6 +9,7 @@ import {display_at_created_datetime_reducer} from "./routing/datetime/display_at
 import {display_at_sim_datetime_reducer} from "./routing/datetime/display_at_sim_datetime.js";
 import {routing_reducer} from "./routing/reducer.js";
 import {search_reducer} from "./search/actions_reducer.js";
+import {meta_wcomponents_reducer} from "./specialised_objects/meta_wcomponents/reducer.js";
 import {derived_meta_wcomponents_state_reducer} from "./specialised_objects/meta_wcomponents/selecting/derived.js";
 import {specialised_objects_reducer} from "./specialised_objects/reducer.js";
 import {sync_reducer} from "./sync/reducer.js";
@@ -23,6 +24,7 @@ export const root_reducer = (state, action) => {
   state = display_at_created_datetime_reducer(state, action);
   state = display_at_sim_datetime_reducer(state, action);
   state = specialised_objects_reducer(state, action);
+  state = meta_wcomponents_reducer(state, action);
   state = controls_reducer(state, action);
   state = creation_context_reducer(state, action);
   state = filter_context_reducer(state, action);

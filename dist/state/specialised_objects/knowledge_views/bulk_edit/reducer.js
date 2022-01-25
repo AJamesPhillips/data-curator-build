@@ -30,7 +30,7 @@ export const bulk_editing_knowledge_view_entries_reducer = (state, action) => {
   return state;
 };
 function handle_bulk_add_to_knowledge_view(state, action) {
-  const {knowledge_view_id, wcomponent_ids} = action;
+  const {knowledge_view_id, wcomponent_ids, bulk_entry} = action;
   const kv = state.specialised_objects.knowledge_views_by_id[knowledge_view_id];
   const composed_kv = get_current_composed_knowledge_view_from_state(state);
   if (!kv) {
@@ -40,16 +40,19 @@ function handle_bulk_add_to_knowledge_view(state, action) {
   } else {
     let new_wc_id_map = {};
     wcomponent_ids.forEach((id) => {
-      const entry = composed_kv.composed_wc_id_map[id];
+      let entry = bulk_entry || composed_kv.composed_wc_id_map[id];
       if (!entry) {
-        console.error(`we should always have an entry but wcomponent "${id}" lacking entry in composed_kv composed_wc_id_map for "${knowledge_view_id}"`);
+        console.error(`we should always have an entry but no bulk_entry provided and wcomponent "${id}" lacking entry in composed_kv composed_wc_id_map for "${knowledge_view_id}"`);
         return;
       }
-      entry.blocked = void 0;
-      entry.passthrough = void 0;
+      entry = {
+        ...entry,
+        blocked: void 0,
+        passthrough: void 0
+      };
       new_wc_id_map[id] = entry;
     });
-    new_wc_id_map = {...new_wc_id_map, ...kv.wc_id_map};
+    new_wc_id_map = {...kv.wc_id_map, ...new_wc_id_map};
     const new_kv = {...kv, wc_id_map: new_wc_id_map};
     state = handle_upsert_knowledge_view(state, new_kv);
   }

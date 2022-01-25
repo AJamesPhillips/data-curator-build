@@ -187,7 +187,7 @@ class _Canvas extends Component {
       transformOrigin: "left top",
       transform: `scale(${scale})`
     };
-    const graph_class_name = `${this.props.plain_background ? "" : "squared_background"} ${this.state.pointer_state.down ? "graph_background_pointer_down" : ""}`;
+    const graph_class_name = (this.props.plain_background ? "" : "squared_background ") + (this.state.pointer_state.down ? "graph_background_pointer_down " : "");
     return /* @__PURE__ */ h("div", {
       style: {flexGrow: 1},
       className: this.props.extra_class_names

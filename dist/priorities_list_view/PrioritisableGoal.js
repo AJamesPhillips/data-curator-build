@@ -18,7 +18,7 @@ function _PrioritisableGoal(props) {
     style: {display: "flex"}
   }, /* @__PURE__ */ h(WComponentCanvasNode, {
     id: goal.id,
-    is_movable: false,
+    is_on_canvas: false,
     always_show: true
   }), selected_prioritisation && (editing || !!effort) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(EditableNumber, {
     placeholder: "Effort",

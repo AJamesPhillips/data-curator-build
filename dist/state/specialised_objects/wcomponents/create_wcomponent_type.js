@@ -23,7 +23,7 @@ export function create_wcomponent(args) {
   const created_at_ms = Math.max(get_created_at_ms(wcomponent) + one_minute, state.routing.args.created_at_ms);
   const datetime = new Date(created_at_ms);
   store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({wcomponent, add_to_knowledge_view, add_to_top}));
-  store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}));
+  store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents({}));
   store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({datetime}));
   store.dispatch(ACTIONS.routing.change_route({route: "wcomponents", item_id: wcomponent.id}));
   return true;

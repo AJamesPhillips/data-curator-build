@@ -11,6 +11,8 @@ import {selector_editable_bases} from "./selector.js";
 export const user_info_reducer = (state, action) => {
   if (is_set_user(action)) {
     state = update_substate(state, "user_info", "user", action.user);
+    const has_signed_in_at_least_once = state.user_info.has_signed_in_at_least_once || !!action.user;
+    state = update_substate(state, "user_info", "has_signed_in_at_least_once", has_signed_in_at_least_once);
     pub_sub.user.pub("changed_user", true);
   }
   if (is_set_users(action)) {

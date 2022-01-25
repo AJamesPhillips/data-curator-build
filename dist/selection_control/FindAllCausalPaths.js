@@ -17,7 +17,7 @@ const map_state = (state) => ({
   to_ids: state.meta_wcomponents.find_all_causal_paths_to_wcomponent_ids
 });
 const map_dispatch = {
-  set_ids: ACTIONS.specialised_object.set_find_all_causal_paths_wcomponent_ids
+  set_ids: ACTIONS.meta_wcomponents.set_find_all_causal_paths_wcomponent_ids
 };
 const connector = connect(map_state, map_dispatch);
 function _FindAllCausalPaths(props) {

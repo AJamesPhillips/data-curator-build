@@ -12,6 +12,7 @@ import {sync_actions} from "./sync/actions.js";
 import {user_activity_actions} from "./user_activity/actions.js";
 import {user_info_actions} from "./user_info/actions.js";
 import {view_priorities_actions} from "./priorities/actions.js";
+import {meta_wcomponents_actions} from "./specialised_objects/meta_wcomponents/actions.js";
 export const ACTIONS = {
   controls: controls_actions,
   creation_context: creation_context_actions,
@@ -24,6 +25,7 @@ export const ACTIONS = {
   display_at_sim_datetime: display_at_sim_datetime_actions,
   search: search_actions,
   specialised_object: specialised_object_actions,
+  meta_wcomponents: meta_wcomponents_actions,
   user_activity: user_activity_actions,
   user_info: user_info_actions,
   view_priorities: view_priorities_actions

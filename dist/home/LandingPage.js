@@ -3,7 +3,13 @@ import ChevronRightIcon from "../../snowpack/pkg/@material-ui/icons/ChevronRight
 import "./LandingPage.css.proxy.js";
 import {Box, Button, Container, makeStyles, ThemeProvider, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 import {DefaultTheme} from "../ui_themes/material_default.js";
+import {get_supabase} from "../supabase/get_supabase.js";
+import {get_persisted_state_object} from "../state/persistence/persistence_utils.js";
 export function LandingPage() {
+  const supabase = get_supabase();
+  const {has_signed_in_at_least_once} = get_persisted_state_object("user_info");
+  const session = supabase.auth.session();
+  const action_text = session || has_signed_in_at_least_once ? "Go to app" : "Get Started";
   const classes = use_styles();
   return /* @__PURE__ */ h(ThemeProvider, {
     theme: DefaultTheme
@@ -26,23 +32,22 @@ export function LandingPage() {
     className: classes.version
   }, " Alpha "))), /* @__PURE__ */ h(Box, {
     component: "main"
-  }, /* @__PURE__ */ h("h2", null, "Welcome!"), /* @__PURE__ */ h(Box, {
-    className: `${classes.animated_icon_container} animated_icon_container`
-  }, /* @__PURE__ */ h(Button, {
-    component: "span",
-    variant: "text",
-    size: "small",
-    endIcon: /* @__PURE__ */ h(ChevronRightIcon, {
-      className: classes.animated_icon
-    })
-  }, "Click here!"), /* @__PURE__ */ h(Button, {
+  }, /* @__PURE__ */ h("h2", null, "Welcome!"), /* @__PURE__ */ h("div", {
+    className: classes.get_started_button_container
+  }, /* @__PURE__ */ h("div", {
+    className: classes.animated_icon_container
+  }, /* @__PURE__ */ h("span", {
+    className: classes.click_here_text
+  }, "Click here!"), /* @__PURE__ */ h(ChevronRightIcon, {
+    className: classes.animated_icon
+  })), /* @__PURE__ */ h(Button, {
     component: "a",
     href: "/app/",
     variant: "contained",
     color: "secondary",
     disableElevation: true,
     size: "large"
-  }, /* @__PURE__ */ h("strong", null, "Get Started"))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
+  }, /* @__PURE__ */ h("strong", null, action_text))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/projects/datacurator/"
   }, "CCI project"), " supported by ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/about/"
@@ -101,10 +106,18 @@ const use_styles = makeStyles((theme) => ({
     flexShrink: 1,
     minHeight: "100%"
   },
+  get_started_button_container: {
+    display: "flex"
+  },
   animated_icon_container: {
     flexGrow: 1,
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    margin: "auto 0"
+  },
+  click_here_text: {
+    margin: "auto 0",
+    cursor: "default"
   },
   animated_icon: {
     animationName: "bounce_pointer",

@@ -13,7 +13,7 @@ export function create_links_on_connection_terminal_mouse_events__subscriber(sto
     if (base_id === void 0)
       return;
     if (state.global_keys.last_key === "Escape" || state.display_options.consumption_formatting) {
-      store.dispatch(ACTIONS.specialised_object.clear_pointerupdown_on_connection_terminal({}));
+      store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}));
       return;
     }
     if (!state.last_action)
@@ -38,7 +38,7 @@ export function create_links_on_connection_terminal_mouse_events__subscriber(sto
     } else
       return;
     should_not_create_new_connection = should_not_create_new_connection || start_wcomponent_id === end_wcomponent_id && start_direction === end_direction;
-    store.dispatch(ACTIONS.specialised_object.clear_pointerupdown_on_connection_terminal({}));
+    store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}));
     if (should_not_create_new_connection)
       return;
     start_direction = end_direction === "from" ? "to" : "from";
@@ -59,7 +59,7 @@ export function clear_last_pointer_down_connection_terminal(store) {
     const {last_pointer_down_connection_terminal} = state.meta_wcomponents;
     if (!last_pointer_down_connection_terminal)
       return;
-    store.dispatch(ACTIONS.specialised_object.clear_pointerupdown_on_connection_terminal({}));
+    store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}));
   }
   pub_sub.canvas.sub("canvas_right_click", () => {
     optionally_dispatch_action_to_clear_last_pointer_down_connection_terminal();

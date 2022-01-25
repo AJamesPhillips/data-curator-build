@@ -42,6 +42,7 @@ import {
 } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents.js";
 import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
+import {WComponentCanvasNodeBackgroundFrame} from "./WComponentCanvasNodeBackgroundFrame.js";
 const map_state = (state, own_props) => {
   const {id: wcomponent_id} = own_props;
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
@@ -74,19 +75,19 @@ const map_state = (state, own_props) => {
   };
 };
 const map_dispatch = {
-  clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
-  clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+  clicked_wcomponent: ACTIONS.meta_wcomponents.clicked_wcomponent,
+  clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
   change_route: ACTIONS.routing.change_route,
   set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
-  pointerupdown_on_component: ACTIONS.specialised_object.pointerupdown_on_component,
-  pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
-  set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move
+  pointerupdown_on_component: ACTIONS.meta_wcomponents.pointerupdown_on_component,
+  pointerupdown_on_connection_terminal: ACTIONS.meta_wcomponents.pointerupdown_on_connection_terminal,
+  set_wcomponent_ids_to_move: ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentCanvasNode(props) {
   const {
     id,
-    is_movable = true,
+    is_on_canvas = true,
     always_show = false,
     is_editing,
     current_composed_knowledge_view: composed_kv,
@@ -161,7 +162,7 @@ function _WComponentCanvasNode(props) {
   });
   const children = !wcomponent || props.node_is_moving ? [] : [
     /* @__PURE__ */ h(Handles, {
-      show_move_handle: is_movable && is_editing && is_highlighted,
+      show_move_handle: is_on_canvas && is_editing && is_highlighted,
       user_requested_node_move: (position) => {
         let wcomponent_ids_to_move = new Set(selected_wcomponent_ids_set);
         if (!wcomponent_ids_to_move.has(id)) {
@@ -200,7 +201,7 @@ function _WComponentCanvasNode(props) {
     show_state_value = is_editing && wcomponent_should_have_state_VAP_sets(wcomponent) || !wcomponent.hide_state && (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent) || wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0 || props.have_judgements);
   }
   const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent;
-  const terminals = get_terminals({is_movable, is_editing, is_highlighted});
+  const terminals = get_terminals({is_on_canvas, is_editing, is_highlighted});
   const on_pointer_down = (e) => {
     e.stopImmediatePropagation();
     e.preventDefault();
@@ -216,8 +217,12 @@ function _WComponentCanvasNode(props) {
     up_down,
     wcomponent_id: id
   });
-  return /* @__PURE__ */ h(ConnectableCanvasNode, {
-    position: is_movable ? temporary_drag_kv_entry || kv_entry : void 0,
+  const _kv_entry = is_on_canvas ? temporary_drag_kv_entry || kv_entry : void 0;
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WComponentCanvasNodeBackgroundFrame, {
+    wcomponent_id: id,
+    kv_entry: _kv_entry
+  }), /* @__PURE__ */ h(ConnectableCanvasNode, {
+    position: _kv_entry,
     cover_image: wcomponent?.summary_image,
     node_main_content: /* @__PURE__ */ h("div", null, !wcomponent?.summary_image && /* @__PURE__ */ h("div", {
       className: "background_image"
@@ -274,7 +279,7 @@ function _WComponentCanvasNode(props) {
     on_pointer_up,
     pointerupdown_on_connection_terminal,
     other_children: children
-  });
+  }));
 }
 export const WComponentCanvasNode = connector(_WComponentCanvasNode);
 const no_terminals = [];
@@ -288,7 +293,7 @@ connection_terminal_attributes.forEach((attribute) => {
   });
 });
 function get_terminals(args) {
-  if (!args.is_movable)
+  if (!args.is_on_canvas)
     return no_terminals;
   if (!args.is_editing)
     return no_terminals;

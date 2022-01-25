@@ -20,7 +20,7 @@ function _PrioritisableAction(props) {
     className: "prioritisable_action"
   }, /* @__PURE__ */ h(WComponentCanvasNode, {
     id: action.id,
-    is_movable: false,
+    is_on_canvas: false,
     always_show: true
   }), props.show_icebox_actions && /* @__PURE__ */ h("div", {
     className: "controls"
