@@ -12,7 +12,7 @@ import {selector_chosen_base_id} from "../state/user_info/selector.js";
 import {get_wcomponent_state_value_and_probabilities} from "../wcomponent_derived/get_wcomponent_state_value.js";
 import {ACTION_VALUE_POSSIBILITY_ID} from "../wcomponent/value/parse_value.js";
 import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
-import {useMemo, useState} from "../../snowpack/pkg/preact/hooks.js";
+import {useMemo, useRef, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {get_default_parent_goal_or_action_ids} from "./get_default_parent_goal_or_action_ids.js";
 import {AddNewActionButton} from "./AddNewActionButton.js";
 export function ActionsListView(props) {
@@ -50,6 +50,9 @@ const connector = connect(map_state, map_dispatch);
 function _ActionsListViewContent(props) {
   const {composed_knowledge_view, action_ids, wcomponents_by_id, knowledge_views_by_id, base_id} = props;
   const [max_done_visible, set_max_done_visible] = useState(5);
+  const [pointer_down_at, set_pointer_down_at] = useState(void 0);
+  const initial_scroll = useRef(void 0);
+  const action_list_view_content_el = useRef(void 0);
   if (base_id === void 0)
     return /* @__PURE__ */ h("div", null, "No base id chosen");
   if (action_ids === void 0)
@@ -90,7 +93,30 @@ function _ActionsListViewContent(props) {
   const knowledge_view_id = composed_knowledge_view?.id;
   const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id);
   return /* @__PURE__ */ h("div", {
-    className: "action_list_view_content"
+    className: `action_list_view_content ${pointer_down_at === void 0 ? "" : "moving"}`,
+    ref: (e) => action_list_view_content_el.current = e || void 0,
+    onPointerDown: (e) => {
+      e.preventDefault();
+      const el = action_list_view_content_el.current;
+      if (!el)
+        return;
+      set_pointer_down_at({x: e.clientX, y: e.clientY});
+      initial_scroll.current = {left: el.scrollLeft, top: el.scrollTop};
+    },
+    onPointerMove: (e) => {
+      if (pointer_down_at === void 0)
+        return;
+      if (initial_scroll.current === void 0)
+        return;
+      if (!action_list_view_content_el.current)
+        return;
+      const left = initial_scroll.current.left - (e.clientX - pointer_down_at.x);
+      const top = initial_scroll.current.top - (e.clientY - pointer_down_at.y);
+      action_list_view_content_el.current.scroll(left, top);
+    },
+    onPointerUp: (e) => set_pointer_down_at(void 0),
+    onPointerLeave: (e) => set_pointer_down_at(void 0),
+    onPointerOut: (e) => set_pointer_down_at(void 0)
   }, /* @__PURE__ */ h("div", {
     className: "action_list icebox"
   }, /* @__PURE__ */ h("h1", null, "Icebox", /* @__PURE__ */ h(AddNewActionButton, {
