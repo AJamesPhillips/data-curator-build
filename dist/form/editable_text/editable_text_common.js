@@ -6,6 +6,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {RichMarkDown} from "../../sharedf/RichMarkDown.js";
 import {ACTIONS} from "../../state/actions.js";
 import {ConditionalWComponentSearchWindow} from "../ConditionalWComponentSearchWindow.js";
+import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 const map_state = (state) => ({
   presenting: state.display_options.consumption_formatting,
   use_creation_context: state.creation_context.use_creation_context,
@@ -18,8 +19,14 @@ const connector = connect(map_state, map_dispatch);
 function _EditableTextCommon(props) {
   const [value, set_value] = useState(props.value);
   useEffect(() => set_value(props.value), [props.value]);
+  const el_ref = useRef(void 0);
   const [id_insertion_point, set_id_insertion_point] = useState(void 0);
   const on_focus_set_selection = useRef(void 0);
+  const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false);
+  function set_is_editing(is_editing) {
+    set_editing_text_flag(is_editing);
+    set_is_editing_this_specific_text(is_editing);
+  }
   const {
     placeholder,
     conditional_on_change: user_conditional_on_change,
@@ -51,12 +58,16 @@ function _EditableTextCommon(props) {
       user_conditional_on_change && user_conditional_on_change(new_value);
     set_value(new_value);
   };
+  useEffect(() => {
+    return pub_sub.global_keys.sub("key_down", handle_general_key_down(is_editing_this_specific_text, el_ref.current, conditional_on_change));
+  });
   const class_name = `editable_field ${value ? "" : "placeholder"}`;
   const on_render = (el) => {
+    el_ref.current = el;
     handle_text_field_render({id_insertion_point, on_focus_set_selection, el, force_focus});
   };
   const on_focus = (e) => {
-    handle_text_field_focus({e, set_editing_text_flag, select_all_on_focus});
+    handle_text_field_focus({e, set_is_editing, select_all_on_focus});
   };
   const wrapped_conditional_on_change = (e) => {
     if (id_insertion_point !== void 0)
@@ -66,7 +77,7 @@ function _EditableTextCommon(props) {
   const wrapped_on_blur = (e) => {
     if (id_insertion_point !== void 0)
       return;
-    handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_editing_text_flag});
+    handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
   };
   return /* @__PURE__ */ h("div", {
     className: class_name,
@@ -103,7 +114,7 @@ function handle_text_field_render(args) {
   }
 }
 function handle_text_field_focus(args) {
-  args.set_editing_text_flag(true);
+  args.set_is_editing(true);
   if (args.select_all_on_focus) {
     const el = args.e.currentTarget;
     el.setSelectionRange(0, el.value.length);
@@ -118,11 +129,46 @@ function handle_text_field_change(args) {
 }
 function handle_text_field_blur(args) {
   const {value} = args.e.currentTarget;
-  const {set_editing_text_flag, initial_value, conditional_on_blur, always_on_blur} = args;
-  set_editing_text_flag(false);
+  const {set_is_editing, initial_value, conditional_on_blur, always_on_blur} = args;
+  set_is_editing(false);
   if (initial_value !== value)
     conditional_on_blur && conditional_on_blur(value);
   always_on_blur && always_on_blur(value);
+}
+var ReplacingTextType;
+(function(ReplacingTextType2) {
+  ReplacingTextType2[ReplacingTextType2["url"] = 0] = "url";
+  ReplacingTextType2[ReplacingTextType2["title"] = 1] = "title";
+  ReplacingTextType2[ReplacingTextType2["nothing"] = 2] = "nothing";
+})(ReplacingTextType || (ReplacingTextType = {}));
+function handle_general_key_down(is_editing_this_specific_text, el, conditional_on_change) {
+  return (k) => {
+    if (!is_editing_this_specific_text)
+      return;
+    if (!el)
+      return;
+    if (!k.ctrl_key || k.key !== "k")
+      return;
+    const {value, selectionStart} = el;
+    let {selectionEnd} = el;
+    if (typeof selectionStart !== "number")
+      return;
+    if (typeof selectionEnd !== "number")
+      selectionEnd = selectionStart;
+    const selected_text = value.slice(selectionStart, selectionEnd);
+    const replacing_text = selected_text ? selected_text.startsWith("http") ? 0 : 1 : 2;
+    const title_text = replacing_text === 1 ? selected_text : "title";
+    const url_text = replacing_text === 0 ? selected_text : "url";
+    const new_value = value.slice(0, selectionStart) + "[" + title_text + "](" + url_text + ")" + value.slice(selectionEnd);
+    conditional_on_change(new_value);
+    let start = selectionStart + 1;
+    let end = start + title_text.length;
+    if (replacing_text === 1) {
+      start = selectionEnd + 3;
+      end = start + url_text.length;
+    }
+    setTimeout(() => el.setSelectionRange(start, end), 0);
+  };
 }
 function get_id_insertion_point({selectionStart, value}) {
   if (typeof selectionStart === "number") {

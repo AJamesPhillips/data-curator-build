@@ -1,9 +1,9 @@
-.add_new_action_button button {
+.add_new_action_button {
   min-width: 0px;
   width: 35px;
   background-color: #eee;
   float: right;
 }
-.add_new_action_button button:hover {
+.add_new_action_button:hover {
   background-color: #aaa;
 }

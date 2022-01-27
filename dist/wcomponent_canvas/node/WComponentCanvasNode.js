@@ -10,6 +10,7 @@ import {
   wcomponent_has_legitimate_non_empty_state_VAP_sets,
   wcomponent_has_objectives,
   wcomponent_has_validity_predictions,
+  wcomponent_is_action,
   wcomponent_is_judgement_or_objective,
   wcomponent_is_sub_state,
   wcomponent_should_have_state_VAP_sets
@@ -43,6 +44,8 @@ import {
 import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 import {WComponentCanvasNodeBackgroundFrame} from "./WComponentCanvasNodeBackgroundFrame.js";
+import {get_wcomponent_state_value_and_probabilities} from "../../wcomponent_derived/get_wcomponent_state_value.js";
+import {ACTION_VALUE_POSSIBILITY_ID} from "../../wcomponent/value/parse_value.js";
 const map_state = (state, own_props) => {
   const {id: wcomponent_id} = own_props;
   const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down;
@@ -304,30 +307,45 @@ function get_terminals(args) {
 function get_wcomponent_color(args) {
   let background = "";
   let font = "";
-  if (args.wcomponent) {
-    if (args.display_time_marks) {
-      const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms);
-      if (temporal_value_certainty) {
-        const {temporal_uncertainty, certainty} = temporal_value_certainty;
-        const datetime = get_uncertain_datetime(temporal_uncertainty);
-        if (datetime && datetime.getTime() < args.sim_ms) {
-          if (certainty === 1 || certainty === void 0) {
-            background = " past_certain ";
-            font = " color_light ";
-          } else {
-            background = " past_uncertain ";
-          }
-        } else if (!datetime) {
-          if (certainty === 1 || certainty === void 0) {
-            background = " past_certain ";
-            font = " color_light ";
-          }
-        }
+  const {wcomponent, created_at_ms, sim_ms} = args;
+  if (!wcomponent)
+    return {background: " node_missing ", font};
+  if (wcomponent_is_action(wcomponent)) {
+    const attribute_values = get_wcomponent_state_value_and_probabilities({
+      wcomponent,
+      VAP_set_id_to_counterfactual_v2_map: {},
+      created_at_ms,
+      sim_ms
+    });
+    const most_probable = attribute_values.most_probable_VAP_set_values[0];
+    if (attribute_values.any_uncertainty) {
+      background = " past_uncertain ";
+    } else if (most_probable) {
+      const completed = most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_completed || most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_failed || most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_rejected;
+      if (completed) {
+        background = " past_certain ";
+        font = " color_light ";
       }
-    } else {
     }
   } else {
-    background = " node_missing ";
+    const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(wcomponent.id, args.wcomponents_by_id, created_at_ms);
+    if (temporal_value_certainty) {
+      const {temporal_uncertainty, certainty} = temporal_value_certainty;
+      const datetime = get_uncertain_datetime(temporal_uncertainty);
+      if (datetime && datetime.getTime() < sim_ms) {
+        if (certainty === 1 || certainty === void 0) {
+          background = " past_certain ";
+          font = " color_light ";
+        } else {
+          background = " past_uncertain ";
+        }
+      } else if (!datetime) {
+        if (certainty === 1 || certainty === void 0) {
+          background = " past_certain ";
+          font = " color_light ";
+        }
+      }
+    }
   }
   return {background, font};
 }

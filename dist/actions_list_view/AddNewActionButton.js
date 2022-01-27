@@ -71,11 +71,10 @@ function _AddNewActionButton(props) {
       }
     });
   }
-  return /* @__PURE__ */ h("span", {
-    className: "add_new_action_button"
-  }, " ", /* @__PURE__ */ h(Button, {
+  return /* @__PURE__ */ h(Button, {
+    className: "add_new_action_button",
     fullWidth: false,
     onClick: (e) => handle_click()
-  }, /* @__PURE__ */ h(AddIcon, null)));
+  }, /* @__PURE__ */ h(AddIcon, null));
 }
 export const AddNewActionButton = connector(_AddNewActionButton);

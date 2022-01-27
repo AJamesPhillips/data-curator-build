@@ -7,6 +7,7 @@ export function Button(props) {
     xsUp: props.is_hidden,
     title: props.title
   }, /* @__PURE__ */ h(MaterialButton, {
+    className: props.className,
     title: props.title,
     color: props.color || "primary",
     style: props.style,

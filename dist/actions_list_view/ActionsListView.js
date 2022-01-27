@@ -96,7 +96,6 @@ function _ActionsListViewContent(props) {
     className: `action_list_view_content ${pointer_down_at === void 0 ? "" : "moving"}`,
     ref: (e) => action_list_view_content_el.current = e || void 0,
     onPointerDown: (e) => {
-      e.preventDefault();
       const el = action_list_view_content_el.current;
       if (!el)
         return;

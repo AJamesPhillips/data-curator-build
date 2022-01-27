@@ -16,13 +16,13 @@ export function partition_and_prune_items_by_datetimes_and_versions(args) {
     previous_versions_by_id
   };
 }
-export function prune_items_by_created_at_and_versions(items, created_at_ms) {
-  const {current_items} = partition_items_by_created_at_datetime({items, created_at_ms});
-  const {latest} = group_versions_by_id(current_items);
-  return latest;
-}
 export function prune_items_by_created_at_and_versions_and_sort_by_datetimes(items, created_at_ms) {
   const latest = prune_items_by_created_at_and_versions(items, created_at_ms);
   const sorted = sort_by_uncertain_event_datetimes(latest);
   return sorted;
+}
+export function prune_items_by_created_at_and_versions(items, created_at_ms) {
+  const {current_items} = partition_items_by_created_at_datetime({items, created_at_ms});
+  const {latest} = group_versions_by_id(current_items);
+  return latest;
 }

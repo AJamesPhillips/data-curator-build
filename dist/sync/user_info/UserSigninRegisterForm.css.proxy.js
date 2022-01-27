@@ -1,6 +1,6 @@
 // [snowpack] add styles to the page (skip if no document exists)
 if (typeof document !== 'undefined') {
-  const code = ".add_new_action_button {\n  min-width: 0px;\n  width: 35px;\n  background-color: #eee;\n  float: right;\n}\n.add_new_action_button:hover {\n  background-color: #aaa;\n}";
+  const code = ".error_form_input_empty {\n  font-size: 11px;\n  color: #ac0000;\n  transition: font-size 0.1s linear;\n}\n\n.error_form_input_empty.inactive {\n  font-size: 0px;\n  user-select: none;\n}";
 
   const styleEl = document.createElement("style");
   const codeEl = document.createTextNode(code);

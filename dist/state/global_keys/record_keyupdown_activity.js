@@ -14,6 +14,8 @@ export function record_keyupdown_activity(store) {
       shift_key: e.shiftKey,
       user_is_editing_text
     };
+    if (user_is_editing_text && e.ctrlKey && e.key === "k")
+      e.preventDefault();
     store.dispatch(ACTIONS.global_keys.key_down(action_args));
     pub_sub.global_keys.pub("key_down", action_args);
   };
