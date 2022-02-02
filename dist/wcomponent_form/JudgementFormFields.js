@@ -53,7 +53,18 @@ function _JudgementFormFields(props) {
       }
       upsert_wcomponent(update);
     }
-  }), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
+  }), (props.is_editing || selected_option_id_for_manual !== void 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
+    style: {display: "inline-flex"}
+  }, "Manual:   ", /* @__PURE__ */ h(AutocompleteText, {
+    placeholder: "Manual override...",
+    allow_none: true,
+    selected_option_id: selected_option_id_for_manual,
+    options: manual_options,
+    on_change: (option_id) => {
+      const judgement_manual2 = option_id === void 0 ? void 0 : option_id === "true" ? true : false;
+      upsert_wcomponent({judgement_manual: judgement_manual2});
+    }
+  }))), selected_option_id_for_manual === void 0 && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, "Comparator:   ", /* @__PURE__ */ h(AutocompleteText, {
     extra_styles: {width: 30},
@@ -80,17 +91,6 @@ function _JudgementFormFields(props) {
       if (judgement_comparator_value === wcomponent.judgement_comparator_value)
         return;
       upsert_wcomponent({judgement_comparator_value});
-    }
-  }))), (props.is_editing || selected_option_id_for_manual !== void 0) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
-    style: {display: "inline-flex"}
-  }, "Manual:   ", /* @__PURE__ */ h(AutocompleteText, {
-    placeholder: "Manual override...",
-    allow_none: true,
-    selected_option_id: selected_option_id_for_manual,
-    options: manual_options,
-    on_change: (option_id) => {
-      const judgement_manual2 = option_id === void 0 ? void 0 : option_id === "true" ? true : false;
-      upsert_wcomponent({judgement_manual: judgement_manual2});
     }
   }))), (props.is_editing || judgement_trend_manual !== void 0 && judgement_trend_manual !== "not_assessed") && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}

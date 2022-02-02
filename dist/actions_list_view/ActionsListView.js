@@ -115,7 +115,17 @@ function _ActionsListViewContent(props) {
     },
     onPointerUp: (e) => set_pointer_down_at(void 0),
     onPointerLeave: (e) => set_pointer_down_at(void 0),
-    onPointerOut: (e) => set_pointer_down_at(void 0)
+    onPointerOut: (e) => {
+      let target = e.relatedTarget;
+      while (target) {
+        const {classList} = target;
+        if (classList && (classList.contains("action_list") || classList.contains("action_list_view_content"))) {
+          return;
+        }
+        target = target.parentElement;
+      }
+      set_pointer_down_at(void 0);
+    }
   }, /* @__PURE__ */ h("div", {
     className: "action_list icebox"
   }, /* @__PURE__ */ h("h1", null, "Icebox", /* @__PURE__ */ h(AddNewActionButton, {

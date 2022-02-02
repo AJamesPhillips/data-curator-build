@@ -26,6 +26,8 @@ export function DevLandingPage() {
   }, "Sandbox - Circular Connections")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/sandbox/supabase"
   }, "Sandbox - Supabase")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
+    href: "/sandbox/connected"
+  }, "Sandbox - Connected")), /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("a", {
     href: "/sandbox"
   }, "Sandbox"))));
 }

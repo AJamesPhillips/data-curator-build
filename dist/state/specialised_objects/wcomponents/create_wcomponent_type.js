@@ -11,6 +11,8 @@ import {
   get_wcomponent_from_state
 } from "../accessors.js";
 import {get_store} from "../../store.js";
+import {get_latest_sim_ms_for_routing} from "../../routing/utils/get_latest_sim_ms_for_routing.js";
+const ONE_MINUTE = 60 * 1e3;
 export function create_wcomponent(args) {
   const store = args.store || get_store();
   const state = store.getState();
@@ -19,13 +21,16 @@ export function create_wcomponent(args) {
   wcomponent = set_judgement_or_objective_target(wcomponent, state);
   const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state);
   const add_to_top = !wcomponent_is_judgement_or_objective(wcomponent);
-  const one_minute = 60 * 1e3;
-  const created_at_ms = Math.max(get_created_at_ms(wcomponent) + one_minute, state.routing.args.created_at_ms);
-  const datetime = new Date(created_at_ms);
+  let created_at_ms = get_created_at_ms(wcomponent);
+  created_at_ms = Math.max(created_at_ms + ONE_MINUTE, state.routing.args.created_at_ms);
+  const sim_ms = get_latest_sim_ms_for_routing(wcomponent, state);
   store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({wcomponent, add_to_knowledge_view, add_to_top}));
   store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents({}));
-  store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({datetime}));
-  store.dispatch(ACTIONS.routing.change_route({route: "wcomponents", item_id: wcomponent.id}));
+  store.dispatch(ACTIONS.routing.change_route({
+    route: "wcomponents",
+    item_id: wcomponent.id,
+    args: {created_at_ms, sim_ms}
+  }));
   return true;
 }
 function set_judgement_or_objective_target(wcomponent, state) {

@@ -1,12 +1,12 @@
 import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import {h} from "../../../snowpack/pkg/preact.js";
+import {useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import {
   EditableTextCommon
 } from "./editable_text_common.js";
 export function EditableTextSingleLine(props) {
-  return /* @__PURE__ */ h(EditableTextCommon, {
-    ...props,
-    component: ({value, on_render, on_focus, on_change, on_blur}) => /* @__PURE__ */ h(TextField, {
+  const component = useMemo(() => {
+    return ({value, on_render, on_focus, on_change, on_blur}) => /* @__PURE__ */ h(TextField, {
       fullWidth: true,
       label: props.placeholder,
       variant: "outlined",
@@ -20,6 +20,10 @@ export function EditableTextSingleLine(props) {
           return;
         on_render(el);
       }
-    })
+    });
+  }, [props.placeholder, props.size]);
+  return /* @__PURE__ */ h(EditableTextCommon, {
+    ...props,
+    component
   });
 }

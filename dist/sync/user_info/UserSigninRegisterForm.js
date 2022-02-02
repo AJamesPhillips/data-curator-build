@@ -78,7 +78,7 @@ function _UserSigninRegisterForm(props) {
       onBlur: (e) => set_email(e.currentTarget.value)
     }), /* @__PURE__ */ h("div", {
       className: "error_form_input_empty " + (user_needs_to_provide_email ? "" : "inactive")
-    }, "Email required"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    }, "Email required"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
       type: "password",
       placeholder: "password",
       value: password,
@@ -87,7 +87,7 @@ function _UserSigninRegisterForm(props) {
       onBlur: (e) => set_password(e.currentTarget.value)
     }), /* @__PURE__ */ h("div", {
       className: "error_form_input_empty " + (user_needs_to_provide_password ? "" : "inactive")
-    }, "Password required"), /* @__PURE__ */ h("br", null)), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    }, "Password required")), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
       type: "button",
       onClick: sign_in,
       value: "Signin"
