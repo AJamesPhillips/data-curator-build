@@ -9,7 +9,7 @@ import {
 import {ACTIONS} from "../state/actions.js";
 import {calculate_if_components_on_screen} from "./calculate_if_components_on_screen.js";
 import {
-  calculate_spatial_temporal_position_to_move_to
+  calculate_all_display_combinations_of_spatial_temporal_position_to_move_to
 } from "./calculate_spatial_temporal_position_to_move_to.js";
 import {get_actually_display_time_sliders} from "../state/controls/accessors.js";
 import {pub_sub} from "../state/pub_sub/pub_sub.js";
@@ -52,15 +52,19 @@ function _MoveToWComponentButton(props) {
     display_side_panel,
     display_time_sliders
   } = props;
-  const {positions, go_to_datetime_ms} = useMemo(() => calculate_spatial_temporal_position_to_move_to({
+  const {
+    positions_no_sidepanel_or_timesliders,
+    positions_sidepanel_no_timesliders,
+    positions_timesliders_no_sidepanel,
+    positions_with_sidepanel_or_timesliders,
+    go_to_datetime_ms
+  } = useMemo(() => calculate_all_display_combinations_of_spatial_temporal_position_to_move_to({
     current_composed_knowledge_view,
     wcomponents_by_id,
     initial_wcomponent_id,
     selected_wcomponent_ids_set,
     created_at_ms,
-    disable_if_not_present,
-    display_side_panel,
-    display_time_sliders
+    disable_if_not_present
   }), [
     current_composed_knowledge_view,
     wcomponents_by_id,
@@ -69,14 +73,17 @@ function _MoveToWComponentButton(props) {
     created_at_ms,
     disable_if_not_present
   ]);
+  const positions = display_side_panel || display_time_sliders ? display_side_panel && display_time_sliders ? positions_with_sidepanel_or_timesliders : display_side_panel ? positions_sidepanel_no_timesliders : positions_timesliders_no_sidepanel : positions_no_sidepanel_or_timesliders;
   let next_position_index = 0;
   const move = positions.length === 0 ? void 0 : () => {
     let position = positions[next_position_index++];
-    if (next_position_index >= positions.length)
+    if (!position) {
       next_position_index = 0;
+      position = positions[next_position_index++];
+    }
     props.move(go_to_datetime_ms, position);
   };
-  const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen;
+  const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions.length > 0 && !components_on_screen;
   return /* @__PURE__ */ h(MoveToItemButton, {
     move,
     draw_attention: draw_attention_to_move_to_wcomponent_button,
@@ -96,8 +103,9 @@ export function MoveToItemButton(props) {
     if (!props.enable_spacebar_move_to_shortcut)
       return;
     return pub_sub.global_keys.sub("key_down", (e) => {
-      if (move && e.key === " " && !e.user_is_editing_text)
+      if (move && e.key === " " && !e.user_is_editing_text) {
         move();
+      }
     });
   });
   return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {

@@ -1,7 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {useEffect, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {CanvasNode} from "../canvas/CanvasNode.js";
-import {NODE_HEIGHT_APPROX, NODE_WIDTH} from "../canvas/position_utils.js";
+import {node_height_approx, NODE_WIDTH} from "../canvas/position_utils.js";
 import {pub_sub} from "../state/pub_sub/pub_sub.js";
 import {position_from_canvas_pointer_event} from "../state/specialised_objects/subscribers/create_wcomponent_on_double_tap.js";
 export function WComponentCanvasNodeDebugCanvasPointerPosition() {
@@ -19,7 +19,7 @@ export function WComponentCanvasNodeDebugCanvasPointerPosition() {
   }, /* @__PURE__ */ h("div", {
     style: {
       width: NODE_WIDTH,
-      height: NODE_HEIGHT_APPROX,
+      height: node_height_approx(),
       backgroundColor: "white"
     }
   }, "Some text"));

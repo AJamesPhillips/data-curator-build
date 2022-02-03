@@ -50,7 +50,7 @@ function _PrioritiesContentControls(props) {
   });
   x_min -= 100;
   x_max += 200;
-  const zoom = calculate_zoom_to_contain_group({min_left: x_min, max_left: x_max, min_top: y, max_top: y}, false, false).zoom;
+  const zoom = calculate_zoom_to_contain_group({min_left: x_min, max_left: x_max, min_top: y, max_top: y}, {display_side_panel: false, display_time_sliders: false}).zoom;
   const position = {x: x_min, y, zoom};
   const components_on_screen = true;
   const draw_attention = allow_drawing_attention && position && !components_on_screen;

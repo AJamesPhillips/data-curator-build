@@ -3,6 +3,7 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Accordion, AccordionDetails, AccordionSummary, Box, makeStyles, Typography} from "../../snowpack/pkg/@material-ui/core.js";
 import ExpandMoreIcon from "../../snowpack/pkg/@material-ui/icons/ExpandMore.js";
+import "./HelpMenu.css.proxy.js";
 import {Modal} from "../modal/Modal.js";
 import {ACTIONS} from "../state/actions.js";
 const map_state = (state) => {
@@ -35,7 +36,7 @@ function _HelpMenu(props) {
     }, /* @__PURE__ */ h(AccordionSummary, null, /* @__PURE__ */ h(Typography, {
       component: "h2",
       variant: "h6"
-    }, "Commands / shortcuts")), /* @__PURE__ */ h(AccordionDetails, null, /* @__PURE__ */ h(Box, null, "These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.", keyboard_shortcuts.map((args) => /* @__PURE__ */ h(KeyboardShortcutCommand, {
+    }, "Commands / shortcuts")), /* @__PURE__ */ h(AccordionDetails, null, /* @__PURE__ */ h(Box, null, "These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.", shortcuts.map((args) => /* @__PURE__ */ h(ShortcutCommand, {
       ...args
     }))))), /* @__PURE__ */ h(Accordion, {
       expanded: expanded === "linking-tips",
@@ -70,43 +71,49 @@ function _HelpMenu(props) {
   });
 }
 export const HelpMenu = connector(_HelpMenu);
-const keyboard_shortcuts = [
-  {keyboard_shortcut: ["?"], outcome: "Opens this help menu"},
-  {keyboard_shortcut: ["space"], outcome: "Fit view to components / cycle between groups of components"},
-  {keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes"},
-  {keyboard_shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off`},
-  {keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders`},
-  {keyboard_shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel`},
-  {keyboard_shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating connections`},
-  {keyboard_shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing connections as (more) circular`},
-  {keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes"},
-  {keyboard_shortcut: ["Shift", "Ctrl", "click", "drag"], outcome: "Deselect multiple nodes"},
-  {keyboard_shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection forward along causal connections"},
-  {keyboard_shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection along source causal connections"},
-  {keyboard_shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view"},
-  {keyboard_shortcut: ["Ctrl", "s", "e"], outcome: "Expand selection along connections and nodes"},
-  {keyboard_shortcut: ["Ctrl", "s", "d"], outcome: "Decrease selection along non circular connections and nodes"},
-  {keyboard_shortcut: ["Ctrl", "s", "i"], outcome: "Selection components inbetween (interconnections)"},
-  {keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu"}
+var ActionCommands;
+(function(ActionCommands2) {
+  ActionCommands2["click"] = "click";
+  ActionCommands2["drag"] = "drag";
+})(ActionCommands || (ActionCommands = {}));
+const shortcuts = [
+  {shortcut: ["?"], outcome: "Opens this help menu"},
+  {shortcut: ["space"], outcome: "Fit view to components / cycle between groups of components."},
+  {shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes"},
+  {shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel`},
+  {shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders`},
+  {shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off`},
+  {shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating connections`},
+  {shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing connections as (more) circular`},
+  {shortcut: ["Shift", ActionCommands.click, ActionCommands.drag], outcome: "Select multiple nodes"},
+  {shortcut: ["Shift", "Ctrl", ActionCommands.click, ActionCommands.drag], outcome: "Deselect multiple nodes"},
+  {shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view"},
+  {shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection towards effects (forwards)"},
+  {shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection towards causes (backwards)"},
+  {shortcut: ["Ctrl", "s", "e"], outcome: "Expand selection"},
+  {shortcut: ["Ctrl", "s", "d"], outcome: "Decrease selection (along non circular connections and nodes)"},
+  {shortcut: ["Ctrl", "s", "i"], outcome: "Selection components inbetween (interconnections)"},
+  {shortcut: ["Ctrl", "f"], outcome: "Open the search menu"}
 ];
-function KeyboardShortcutCommand(props) {
+function ShortcutCommand(props) {
   const classes = use_styles();
   return /* @__PURE__ */ h(Box, {
     component: "dl"
   }, /* @__PURE__ */ h(Typography, {
     component: "dt",
     className: classes.command
-  }, props.keyboard_shortcut.map((command, index) => {
-    return /* @__PURE__ */ h(Typography, {
-      component: "kbd",
-      variant: "body1"
-    }, command, index < props.keyboard_shortcut.length - 1 && /* @__PURE__ */ h(Typography, {
-      component: "span"
+  }, props.shortcut.map((command, index) => {
+    const class_name = command === ActionCommands.click || command === ActionCommands.drag ? "physical_action" : "physical_button";
+    return /* @__PURE__ */ h("div", {
+      style: {display: "inline"}
+    }, /* @__PURE__ */ h("div", {
+      className: class_name
+    }, command), index < props.shortcut.length - 1 && /* @__PURE__ */ h("span", {
+      className: "shortcut_plus"
     }, " + "));
-  })), /* @__PURE__ */ h(Typography, {
-    component: "dd",
+  })), /* @__PURE__ */ h("div", {
     className: classes.command
-  }, " -> ", props.outcome, " "));
+  }, "   ", props.outcome, " "));
 }
 const use_styles = makeStyles((theme) => ({
   command: {
@@ -118,23 +125,22 @@ const use_styles = makeStyles((theme) => ({
 }));
 const tips_on_linking = [
   `Type "@@" in any text field to access a menu to link to any other component.
-    This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab or @@wc123 (short ids).`,
+    This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab.`,
   `Follow "@@some-id" with .url, .title and .description to get the attributes
     of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title"`,
   /* @__PURE__ */ h("span", null, "Markdown is available so you can use things like ", /* @__PURE__ */ h("b", null, "**some text**"), 'to make it bold once it is rendered during presentation mode. Other Markdown syntax like "1. some text" will give you numbered lists. See the full ', /* @__PURE__ */ h("a", {
     href: "https: //www.markdownguide.org/basic-syntax/"
-  }, "Markdown guide here")),
-  `Type "@@" in any text field to access a menu to link to any other component.  This will insert the id of that component, e.g. @@wc123.`
+  }, "Markdown guide here"))
 ];
 const general_tips = [
   /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {
     component: "h3",
     variant: "h6"
-  }, '"Should" word usage'), 'If you yourself writing states with "should", e.g. "People ', /* @__PURE__ */ h("b", null, "should"), ' listen more and be less reductionist" then you might consider seperating this out into its 4 seperate parts and phrasing as the positive or desired state.  Specifically:', /* @__PURE__ */ h("ol", null, /* @__PURE__ */ h("li", null, `the attribute, e.g.: "People listen more and be less reductionist".  Note it's usually easier to express this as the desired state instead of the pure attribute of "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".`), /* @__PURE__ */ h("li", null, 'the current value, e.g.: "False"'), /* @__PURE__ */ h("li", null, "the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values."), /* @__PURE__ */ h("li", null, "the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator"))),
+  }, '"Should" word usage'), 'If you find yourself writing states with "should", e.g. "People ', /* @__PURE__ */ h("b", null, "should"), ' listen more and be less reductionist" then you might consider separating this out into its 4 separate parts and phrasing as the positive or desired state.  Specifically:', /* @__PURE__ */ h("ol", null, /* @__PURE__ */ h("li", null, `the attribute, e.g.: "People listen more and be less reductionist".  Note it is usually easier to express this as the desired state of the attribute instead of the pure attribute itself which is usually longer and less easy to work with: "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".`), /* @__PURE__ */ h("li", null, 'the current value, e.g.: "False"'), /* @__PURE__ */ h("li", null, "the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values."), /* @__PURE__ */ h("li", null, "the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator"))),
   /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {
     component: "h3",
     variant: "h6"
-  }, '"Action" node type versus "State"'), "The action and state node types are very similar.  The former can be used to draw attention to the areas were you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.")
+  }, '"Action" node type versus "State"'), "The action and state node types are very similar.  The former can be used to draw attention to the areas where you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.")
 ];
 const detailed_tips = [
   /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Typography, {
