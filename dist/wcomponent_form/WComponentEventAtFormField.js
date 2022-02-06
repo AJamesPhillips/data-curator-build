@@ -36,13 +36,13 @@ function _WComponentEventAtFormField(props) {
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("div", {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(EditablePercentage, {
-    placeholder: "Confidence",
-    value: event_at?.conviction,
-    conditional_on_blur: (new_conviction) => upsert_event_at({conviction: new_conviction})
-  }), /* @__PURE__ */ h(EditablePercentage, {
     placeholder: "Probability",
     value: event_at?.probability,
     conditional_on_blur: (new_probability) => upsert_event_at({probability: new_probability})
+  }), /* @__PURE__ */ h(EditablePercentage, {
+    placeholder: "Confidence",
+    value: event_at?.conviction,
+    conditional_on_blur: (new_conviction) => upsert_event_at({conviction: new_conviction})
   }), "  ", event_at && /* @__PURE__ */ h(PredictionBadge, {
     disabled: true,
     size: 20,

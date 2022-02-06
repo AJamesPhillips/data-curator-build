@@ -106,11 +106,7 @@ const get_summary = (args) => (VAP, crud) => {
     conditional_on_blur: (max) => crud.update_item({...VAP, max})
   }), /* @__PURE__ */ h("br", null))), /* @__PURE__ */ h("div", {
     className: "predictions"
-  }, is_boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditablePercentage, {
-    placeholder: "Confidence",
-    value: orig_conviction,
-    conditional_on_blur: (new_conviction) => crud.update_item({...VAP, conviction: new_conviction})
-  })), is_boolean && /* @__PURE__ */ h("div", {
+  }, is_boolean && /* @__PURE__ */ h("div", {
     className: disabled_prob ? "disabled" : ""
   }, /* @__PURE__ */ h(EditablePercentage, {
     disabled: disabled_prob,
@@ -119,6 +115,10 @@ const get_summary = (args) => (VAP, crud) => {
     conditional_on_blur: (new_probability) => {
       crud.update_item({...VAP, probability: new_probability});
     }
+  })), is_boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditablePercentage, {
+    placeholder: "Confidence",
+    value: orig_conviction,
+    conditional_on_blur: (new_conviction) => crud.update_item({...VAP, conviction: new_conviction})
   })), !is_boolean && orig_relative_probability !== void 0 && /* @__PURE__ */ h("div", {
     className: disabled_rel_prob ? "disabled" : ""
   }, /* @__PURE__ */ h(EditableNumber, {

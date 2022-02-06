@@ -1,6 +1,5 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import {offset_by_half_node, round_canvas_point} from "../canvas/position_utils.js";
 import {Button} from "../sharedf/Button.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_middle_of_screen} from "../state/display_options/display.js";
@@ -42,8 +41,7 @@ function _AlignComponentForm(props) {
       if (!knowledge_view_id)
         return;
       const state = get_store().getState();
-      const point = offset_by_half_node(get_middle_of_screen(state));
-      const bulk_entry = round_canvas_point(point, "large");
+      const bulk_entry = get_middle_of_screen(state);
       props.bulk_add_to_knowledge_view({knowledge_view_id, wcomponent_ids: ids, bulk_entry});
     },
     is_left: true

@@ -89,7 +89,7 @@ function _WComponentKnowledgeViewForm(props) {
   }, /* @__PURE__ */ h(FormLabel, {
     component: "legend"
   }, "Frame"), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(Button, {
-    value: can_delete_frame ? "Remove" : "Add",
+    value: can_delete_frame ? "Remove Frame" : "Add Frame",
     onClick: () => {
       const args = {};
       if (can_delete_frame) {

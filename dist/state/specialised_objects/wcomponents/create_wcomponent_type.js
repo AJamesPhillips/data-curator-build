@@ -1,4 +1,3 @@
-import {offset_by_half_node, round_canvas_point} from "../../../canvas/position_utils.js";
 import {prepare_new_wcomponent_object} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 import {
   wcomponent_is_judgement_or_objective
@@ -57,8 +56,7 @@ function get_knowledge_view_entry(add_to_knowledge_view, wcomponent, state) {
       position = current_knowledge_view.composed_wc_id_map[wcomponent.judgement_target_wcomponent_id];
     }
     if (!position) {
-      const point = offset_by_half_node(get_middle_of_screen(state));
-      position = round_canvas_point(point, "large");
+      position = get_middle_of_screen(state);
     }
     add_to_knowledge_view = {id: current_knowledge_view.id, position};
   }

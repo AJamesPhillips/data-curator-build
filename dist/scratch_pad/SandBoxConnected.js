@@ -11,7 +11,7 @@ function _SandBoxConnected(props) {
   const [some_string, set_some_string] = useState("testing 123");
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "1",
-    force_focus: true,
+    force_focus_on_first_render: true,
     value: some_string,
     conditional_on_blur: set_some_string
   }));

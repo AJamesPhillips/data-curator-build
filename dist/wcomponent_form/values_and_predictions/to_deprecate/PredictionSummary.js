@@ -24,8 +24,8 @@ function _PredictionSummary(props) {
     className: "summary_row"
   }, /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Confidence"), " ", conviction), /* @__PURE__ */ h("div", null, "  ", /* @__PURE__ */ h("span", {
+  }, "Prob"), " ", probability), "   ", /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Prob"), " ", probability))));
+  }, "Confidence"), " ", conviction))));
 }
 export const PredictionSummary = connector(_PredictionSummary);

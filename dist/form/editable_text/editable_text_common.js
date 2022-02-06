@@ -26,14 +26,13 @@ function _EditableTextCommon(props) {
     presenting,
     force_editable,
     select_all_on_focus,
-    force_focus,
+    force_focus_on_first_render,
     set_editing_text_flag
   } = props;
   const [value, set_value] = useState(props.value);
   useEffect(() => set_value(props.value), [props.value]);
   const el_ref = useRef(void 0);
   const id_insertion_point = useRef(void 0);
-  const on_focus_set_selection = useRef(void 0);
   const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false);
   const set_is_editing = useMemo(() => (is_editing) => {
     set_editing_text_flag(is_editing);
@@ -66,8 +65,8 @@ function _EditableTextCommon(props) {
     if (el_ref.current === el)
       return;
     el_ref.current = el;
-    handle_text_field_render({id_insertion_point, on_focus_set_selection, el, force_focus});
-  }, [on_focus_set_selection, force_focus]);
+    handle_text_field_render({el, force_focus_on_first_render});
+  }, []);
   const on_focus = useMemo(() => (e) => {
     handle_text_field_focus({e, set_is_editing, select_all_on_focus});
   }, [set_is_editing, select_all_on_focus]);
@@ -81,6 +80,13 @@ function _EditableTextCommon(props) {
       return;
     handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
   }, [props.value, conditional_on_blur, always_on_blur, set_is_editing]);
+  const [_, force_refreshing_render] = useState({});
+  const refocus_after_search_window = useMemo(() => (on_focus_set_selection) => {
+    el_ref.current?.focus();
+    id_insertion_point.current = void 0;
+    force_refreshing_render({});
+    el_ref.current?.setSelectionRange(on_focus_set_selection.start, on_focus_set_selection.end);
+  }, []);
   const input_component = useMemo(() => {
     return props.component({
       value,
@@ -98,27 +104,19 @@ function _EditableTextCommon(props) {
   }, /* @__PURE__ */ h(ConditionalWComponentSearchWindow, {
     value,
     id_insertion_point: id_insertion_point.current,
-    on_focus_set_selection,
-    conditional_on_change: (new_value) => {
-      id_insertion_point.current = void 0;
+    conditional_on_change: ({new_value, on_focus_set_selection}) => {
       conditional_on_change(new_value);
+      setTimeout(() => refocus_after_search_window(on_focus_set_selection), 0);
+    },
+    on_close: (on_focus_set_selection) => {
+      refocus_after_search_window(on_focus_set_selection);
     }
   })));
 }
 export const EditableTextCommon = connector(_EditableTextCommon);
 function handle_text_field_render(args) {
-  if (args.id_insertion_point.current !== void 0)
-    return;
-  const position = args.on_focus_set_selection.current;
-  args.on_focus_set_selection.current = void 0;
-  const should_gain_focus = position || args.force_focus;
-  if (should_gain_focus) {
-    setTimeout(() => {
-      console.log("gaining focus for ", args.el, position, args.force_focus);
-      args.el.focus();
-      if (position)
-        args.el.setSelectionRange(position[0], position[1]);
-    }, 0);
+  if (args.force_focus_on_first_render) {
+    setTimeout(() => args.el.focus(), 0);
   }
 }
 function handle_text_field_focus(args) {
