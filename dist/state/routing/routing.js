@@ -2,7 +2,9 @@ import {date2str} from "../../shared/utils/date_helpers.js";
 import {
   ALLOWED_ROUTES,
   ALLOWED_SUB_ROUTES,
-  is_routing_view_types
+  is_routing_view_types,
+  ALLOWED_ROUTE_ARGS,
+  ALLOWED_ROUTE_ARGS_COUNT
 } from "./interfaces.js";
 import {routing_arg_datetime_strings_to_datetime} from "./datetime/routing_datetime.js";
 import {test} from "../../shared/utils/test.js";
@@ -32,13 +34,21 @@ export function routing_args_to_string(routing_args) {
   const routing_args_str = Object.keys(routing_args).filter((k) => !exclude_routing_keys.has(k)).sort().concat(["sdate", "stime", "cdate", "ctime"]).map((key) => `&${key}=${data[key] ?? ""}`).join("");
   return routing_args_str;
 }
-export function merge_route_params_prioritising_url_over_state(url, routing_state) {
+export function url_is_incomplete(url) {
+  const result = parse_url(url);
+  return !result.route || result.args_from_url.length !== ALLOWED_ROUTE_ARGS_COUNT;
+}
+function parse_url(url) {
   const hash = url.split("#")[1] || "";
   const main_parts = hash.split("&");
   const path = main_parts[0];
   const path_parts = path.split("/").filter((p) => !!p);
   const {route, sub_route, item_id} = get_route_subroute_and_item_id(path_parts);
-  const args_from_url = main_parts.slice(1);
+  const args_from_url = main_parts.slice(1).map((part) => part.split("=")).filter((p) => ALLOWED_ROUTE_ARGS[p[0]]);
+  return {route, sub_route, item_id, args_from_url};
+}
+export function merge_route_params_prioritising_url_over_state(url, routing_state) {
+  const {route, sub_route, item_id, args_from_url} = parse_url(url);
   const args = update_args_from_url(routing_state.args, args_from_url);
   return {route, sub_route, item_id, args};
 }
@@ -64,7 +74,7 @@ function update_args_from_url(args, args_from_url) {
   let sdate = null;
   let stime = null;
   args_from_url.forEach((part) => {
-    const [key, value] = part.split("=");
+    const [key, value] = part;
     if (key === "cdate")
       cdate = value;
     else if (key === "ctime")

@@ -1,17 +1,23 @@
 import {old_ids_and_functions_regex, uuids_and_functions_regex} from "./id_regexs.js";
 import {format_wcomponent_url, format_wcomponent_link} from "./templates.js";
-export function replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, get_title) {
+export function replace_function_ids_in_text(text, current_depth, kwargs) {
+  const {get_title, root_url, render_links, depth_limit} = kwargs;
   const functional_ids = get_functional_ids_from_text(text);
   if (functional_ids.length === 0)
     return text;
   functional_ids.forEach(({id, funktion}) => {
-    const referenced_wcomponent = wcomponents_by_id[id];
+    const referenced_wcomponent = kwargs.wcomponents_by_id[id];
     if (!is_supported_funktion(funktion))
       return;
-    if (!referenced_wcomponent)
-      return;
     let replacement = "";
-    if (funktion === "url")
+    if (funktion === "map") {
+      const referenced_knowledge_view = kwargs.knowledge_views_by_id[id];
+      const title = referenced_knowledge_view?.title || id;
+      const wcomponent_id = referenced_wcomponent ? id : "";
+      replacement = format_wcomponent_link(root_url, wcomponent_id, title, id);
+    } else if (!referenced_wcomponent)
+      return;
+    else if (funktion === "url")
       replacement = format_wcomponent_url(root_url, id);
     else {
       replacement = render_links ? format_wcomponent_link(root_url, id) : "";
@@ -24,7 +30,7 @@ export function replace_function_ids_in_text(text, wcomponents_by_id, depth_limi
     text = text.replace(replacer, replacement);
   });
   if (current_depth < depth_limit) {
-    text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth + 1, render_links, root_url, get_title);
+    text = replace_function_ids_in_text(text, current_depth + 1, kwargs);
   }
   return text;
 }
@@ -38,7 +44,8 @@ function get_functional_ids_from_text(text) {
 const _supported_functions = {
   url: true,
   title: true,
-  description: true
+  description: true,
+  map: true
 };
 const supported_funktions = new Set(Object.keys(_supported_functions));
 function is_supported_funktion(funktion) {

@@ -127,7 +127,8 @@ const tips_on_linking = [
   `Type "@@" in any text field to access a menu to link to any other component.
     This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab.`,
   `Follow "@@some-id" with .url, .title and .description to get the attributes
-    of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title"`,
+    of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title".  Or if it has an
+    associated knowledge view then add .map to go to that knowledge view.`,
   /* @__PURE__ */ h("span", null, "Markdown is available so you can use things like ", /* @__PURE__ */ h("b", null, "**some text**"), 'to make it bold once it is rendered during presentation mode. Other Markdown syntax like "1. some text" will give you numbered lists. See the full ', /* @__PURE__ */ h("a", {
     href: "https: //www.markdownguide.org/basic-syntax/"
   }, "Markdown guide here"))

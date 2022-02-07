@@ -20,6 +20,7 @@ const map_state = (state, own_props) => {
   const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent;
   return {
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wcomponent_ids_with_state_VAPs: state.derived.wcomponent_ids_by_type.any_state_VAPs,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
@@ -36,6 +37,7 @@ const connector = connect(map_state, map_dispatch);
 function _WComponentSubStateForm(props) {
   const {
     wcomponents_by_id,
+    knowledge_views_by_id,
     wcomponent,
     upsert_wcomponent,
     target_wcomponent,
@@ -45,6 +47,7 @@ function _WComponentSubStateForm(props) {
   const wcomponent_id_options = get_wcomponent_search_options({
     wcomponents: wcomponents_with_state_VAP_sets,
     wcomponents_by_id,
+    knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,
     sim_ms: props.sim_ms

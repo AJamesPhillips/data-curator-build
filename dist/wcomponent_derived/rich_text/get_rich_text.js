@@ -45,6 +45,7 @@ export function replace_ids_in_text(args) {
     rich_text,
     render_links,
     wcomponents_by_id,
+    knowledge_views_by_id,
     depth_limit = DEFAULT_MAX_DEPTH_LIMIT,
     current_depth = 0,
     root_url = "",
@@ -54,16 +55,17 @@ export function replace_ids_in_text(args) {
   } = args;
   if (!rich_text)
     return text;
-  const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms);
+  const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, knowledge_views_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms);
   return replaced_text;
 }
-function _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms) {
+function _replace_ids_in_text(text, wcomponents_by_id, knowledge_views_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms) {
   render_links = render_links === false ? false : current_depth === 0;
   function _get_title(wcomponent) {
     return get_title({
       rich_text: true,
       render_links,
       wcomponents_by_id,
+      knowledge_views_by_id,
       wc_id_to_counterfactuals_map,
       created_at_ms,
       sim_ms,
@@ -73,8 +75,16 @@ function _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit
       wcomponent
     });
   }
-  text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title);
-  text = replace_normal_ids(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title);
+  const args = {
+    wcomponents_by_id,
+    knowledge_views_by_id,
+    depth_limit,
+    render_links,
+    root_url,
+    get_title: _get_title
+  };
+  text = replace_function_ids_in_text(text, current_depth, args);
+  text = replace_normal_ids(text, current_depth, args);
   return text;
 }
 function test_replace_ids_in_text() {
@@ -89,10 +99,12 @@ function test_replace_ids_in_text() {
     "456": prepare_new_wcomponent_object({base_id: -1, id: "456", title: "Person A"}, creation_context),
     "789": prepare_new_wcomponent_object({base_id: -1, id: "789", title: "Person B"}, creation_context)
   };
+  const knowledge_views_by_id = {};
   let result;
   const args = {
     rich_text: true,
     wcomponents_by_id,
+    knowledge_views_by_id,
     wc_id_to_counterfactuals_map: void 0,
     created_at_ms: ms,
     sim_ms: ms
@@ -163,6 +175,7 @@ function test_rendering_title() {
     [wcomponent6.id]: wcomponent6,
     [wcomponent7.id]: wcomponent7
   };
+  const knowledge_views_by_id = {};
   const expected_non_rich_text = {
     [wcomponent1.id]: "aaa",
     [wcomponent2.id]: "bbb @@111",
@@ -195,6 +208,7 @@ function test_rendering_title() {
       rich_text,
       render_links,
       wcomponents_by_id,
+      knowledge_views_by_id,
       wcomponent: wcomponents_by_id[id],
       wc_id_to_counterfactuals_map: wc_id_to_counterfactuals_map2,
       created_at_ms: ms,

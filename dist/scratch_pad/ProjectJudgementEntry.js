@@ -13,6 +13,7 @@ const map_state = (state, {judgement}) => {
   const target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wc_id];
   return {
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     target_wcomponent,
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state)
   };
@@ -21,7 +22,16 @@ const connector = connect(map_state);
 const _ProjectJudgementEntry = (props) => {
   if (!props.target_wcomponent)
     return /* @__PURE__ */ h("div", null, "Can not find judgement's target wcomponent of id: ", props.judgement.judgement_target_wcomponent_id);
-  const {knowledge_view, judgement, target_wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms} = props;
+  const {
+    knowledge_view,
+    judgement,
+    target_wcomponent,
+    wc_id_to_counterfactuals_map,
+    wcomponents_by_id,
+    knowledge_views_by_id,
+    created_at_ms,
+    sim_ms
+  } = props;
   const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[target_wcomponent.id]?.VAP_sets;
   return /* @__PURE__ */ h("div", {
     style: {display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa"}
@@ -33,7 +43,7 @@ const _ProjectJudgementEntry = (props) => {
       window.location.href = url;
     }
   }, /* @__PURE__ */ h(RichMarkDown, {
-    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms})
+    text: get_title({rich_text: true, wcomponents_by_id, knowledge_views_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms})
   })), /* @__PURE__ */ h("div", {
     style: {flex: "1", textAlign: "right"}
   }, get_wcomponent_state_UI_value({wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms}).values_string), /* @__PURE__ */ h("div", {
@@ -49,7 +59,7 @@ const _ProjectJudgementEntry = (props) => {
     judgement_trend_manual: judgement.judgement_trend_manual,
     size: "medium"
   }), /* @__PURE__ */ h(RichMarkDown, {
-    text: get_title({rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms})
+    text: get_title({rich_text: true, wcomponents_by_id, knowledge_views_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms})
   })));
 };
 export const ProjectJudgementEntry = connector(_ProjectJudgementEntry);

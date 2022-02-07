@@ -1,11 +1,12 @@
 import {test} from "../../shared/utils/test.js";
 import {uuids_regex} from "./id_regexs.js";
 import {format_wcomponent_id_error, format_wcomponent_link} from "./templates.js";
-export function replace_normal_ids(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, get_title) {
+export function replace_normal_ids(text, current_depth, args) {
+  const {root_url, depth_limit, get_title, render_links} = args;
   const ids = get_ids_from_text(text);
   ids.forEach((id) => {
     const replacer = new RegExp(`@@${id}`, "g");
-    const referenced_wcomponent = wcomponents_by_id[id];
+    const referenced_wcomponent = args.wcomponents_by_id[id];
     if (!referenced_wcomponent) {
       text = text.replace(replacer, format_wcomponent_id_error(root_url, id, "not found"));
       return;

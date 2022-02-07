@@ -14,7 +14,7 @@ function _WComponentMoveConflicts(props) {
   const sim_ms = created_at_ms;
   return /* @__PURE__ */ h("div", null, Object.entries(wcomponents_move_conflicts || {}).map(([wc_id, conflicts], index) => {
     const wcomponent = wcomponents_by_id[wc_id];
-    const wcomponent_title = wcomponent && get_title({rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}) || wc_id;
+    const wcomponent_title = wcomponent && get_title({rich_text: true, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}) || wc_id;
     return /* @__PURE__ */ h("div", {
       key: wc_id
     }, /* @__PURE__ */ h(Link, {

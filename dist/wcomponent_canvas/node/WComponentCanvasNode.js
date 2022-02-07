@@ -2,6 +2,7 @@ import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {makeStyles} from "../../../snowpack/pkg/@material-ui/core.js";
+import DescriptionIcon from "../../../snowpack/pkg/@material-ui/icons/Description.js";
 import "./WComponentCanvasNode.css.proxy.js";
 import {
   connection_terminal_attributes,
@@ -61,6 +62,7 @@ const map_state = (state, own_props) => {
     wcomponent: get_wcomponent_from_state(state, wcomponent_id),
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     is_current_item: state.routing.item_id === wcomponent_id,
     selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
     is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
@@ -97,6 +99,7 @@ function _WComponentCanvasNode(props) {
     wcomponent,
     wc_id_to_counterfactuals_map,
     wcomponents_by_id,
+    knowledge_views_by_id,
     is_current_item,
     selected_wcomponent_ids_set,
     is_highlighted,
@@ -179,7 +182,7 @@ function _WComponentCanvasNode(props) {
       is_highlighted
     })
   ];
-  const title = !wcomponent ? "&lt;Not found&gt;" : get_title({wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
+  const title = !wcomponent ? "&lt;Not found&gt;" : get_title({wcomponent, rich_text: true, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
   const show_all_details = is_editing;
   const use_styles = makeStyles((theme) => ({
     sizer: {
@@ -266,9 +269,14 @@ function _WComponentCanvasNode(props) {
       wcomponent: sub_state_wcomponent
     }), wcomponent && is_editing && /* @__PURE__ */ h("div", {
       className: "description_label"
-    }, wcomponent_type_to_text(wcomponent.type)), wcomponent && /* @__PURE__ */ h(LabelsListV2, {
+    }, wcomponent_type_to_text(wcomponent.type)), /* @__PURE__ */ h("div", {
+      style: {display: "flex"}
+    }, wcomponent?.description.trim() && /* @__PURE__ */ h(DescriptionIcon, {
+      fontSize: "small",
+      color: "disabled"
+    }), wcomponent && /* @__PURE__ */ h(LabelsListV2, {
       label_ids: wcomponent.label_ids
-    })),
+    }))),
     extra_css_class,
     extra_css_class_node_main_content: classes.sizer,
     opacity,

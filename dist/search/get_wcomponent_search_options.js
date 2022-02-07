@@ -6,7 +6,15 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 export function get_wcomponent_search_options(args) {
-  const {wcomponents: wcs, allowed_wcomponent_ids, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms} = args;
+  const {
+    wcomponents: wcs,
+    allowed_wcomponent_ids,
+    wcomponents_by_id,
+    knowledge_views_by_id,
+    wc_id_to_counterfactuals_map,
+    created_at_ms,
+    sim_ms
+  } = args;
   let wcomponents = wcs || Object.values(wcomponents_by_id);
   if (allowed_wcomponent_ids)
     wcomponents = wcomponents.filter(({id}) => allowed_wcomponent_ids.has(id));
@@ -16,6 +24,7 @@ export function get_wcomponent_search_options(args) {
       rich_text: true,
       render_links: false,
       wcomponents_by_id,
+      knowledge_views_by_id,
       wc_id_to_counterfactuals_map,
       created_at_ms,
       sim_ms

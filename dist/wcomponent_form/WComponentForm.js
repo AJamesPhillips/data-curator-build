@@ -78,6 +78,7 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     ready: state.sync.ready_for_reading,
     base_id: selector_chosen_base_id(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
@@ -100,6 +101,7 @@ function _WComponentForm(props) {
     ready,
     base_id,
     wcomponents_by_id,
+    knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
@@ -152,7 +154,7 @@ function _WComponentForm(props) {
   }, /* @__PURE__ */ h(EditableText, {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
-    value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
+    value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
     conditional_on_blur: (title) => upsert_wcomponent({title}),
     force_focus_on_first_render: focus_title,
     hide_label: true

@@ -4,14 +4,17 @@ import {is_defined} from "../shared/utils/is_defined.js";
 import {ACTIONS} from "../state/actions.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 const map_state = (state) => {
-  return {wcomponents_by_id: state.specialised_objects.wcomponents_by_id};
+  return {
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id
+  };
 };
 const map_dispatch = {
   change_route: ACTIONS.routing.change_route
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentsList(props) {
-  const {wcomponent_ids = [], wcomponents_by_id} = props;
+  const {wcomponent_ids = [], wcomponents_by_id, knowledge_views_by_id} = props;
   const wcomponents = wcomponent_ids.map((id) => wcomponents_by_id[id]).filter(is_defined);
   const wc_id_to_counterfactuals_map = {};
   const created_at_ms = new Date().getTime();
@@ -25,6 +28,7 @@ function _WComponentsList(props) {
     rich_text: true,
     wcomponent,
     wcomponents_by_id,
+    knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
     created_at_ms,
     sim_ms

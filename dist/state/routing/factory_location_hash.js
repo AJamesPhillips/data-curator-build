@@ -1,6 +1,6 @@
 import {throttle} from "../../utils/throttle.js";
 import {ACTIONS} from "../actions.js";
-import {merge_route_params_prioritising_url_over_state, routing_state_to_string} from "./routing.js";
+import {merge_route_params_prioritising_url_over_state, routing_state_to_string, url_is_incomplete} from "./routing.js";
 export const factory_location_hash = (store) => {
   let routing_state;
   const throttled_update_location_hash = factory_throttled_update_location_hash();
@@ -27,9 +27,13 @@ function factory_throttled_update_location_hash() {
   }, 1e3);
   const debounced_update_location_hash = throttle((routing_state) => {
     const route = routing_state_to_string(routing_state);
+    const incomplete_current_url = url_is_incomplete(window.location.toString());
     if (window.DEBUG_ROUTING)
-      console.log("Debounced changing route from ", window.location.hash.toString(), "   to:   ", route);
-    window.location.hash = route;
+      console.log(`Debounced changing route from "${incomplete_current_url ? "incomplete" : "complete"}"`, window.location.hash.toString(), "   to:   ", route);
+    if (incomplete_current_url)
+      history.replaceState(null, "", route);
+    else
+      window.location.hash = route;
     hash_pending_update = false;
   }, 0);
   return (changed_only_xy, routing_state) => {

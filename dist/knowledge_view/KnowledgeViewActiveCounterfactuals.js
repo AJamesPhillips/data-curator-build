@@ -40,6 +40,7 @@ function _KnowledgeViewActiveCounterFactuals(props) {
         rich_text: true,
         render_links: false,
         wcomponents_by_id,
+        knowledge_views_by_id,
         wc_id_to_counterfactuals_map: void 0,
         created_at_ms: FUTURE_TIME_MS,
         sim_ms: FUTURE_TIME_MS

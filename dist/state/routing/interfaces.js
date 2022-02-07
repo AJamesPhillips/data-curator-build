@@ -22,17 +22,16 @@ const _view_types = {
 };
 const routing_view_types = Object.keys(_view_types);
 export const is_routing_view_types = (str) => routing_view_types.includes(str);
-const ALLOWED_ROUTE_ARG_KEYS = [
-  "view",
-  "subview_id",
-  "zoom",
-  "x",
-  "y",
-  "storage_location",
-  "order",
-  "rotation",
-  "cdate",
-  "ctime",
-  "sdate",
-  "stime"
-];
+export const ALLOWED_ROUTE_ARGS = {
+  view: true,
+  subview_id: true,
+  zoom: true,
+  x: true,
+  y: true,
+  storage_location: true,
+  cdate: true,
+  ctime: true,
+  sdate: true,
+  stime: true
+};
+export const ALLOWED_ROUTE_ARGS_COUNT = Object.keys(ALLOWED_ROUTE_ARGS).length;

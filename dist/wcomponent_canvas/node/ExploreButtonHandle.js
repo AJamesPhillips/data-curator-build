@@ -78,6 +78,7 @@ function prepare_wcomponent_knowledge_view(props, store) {
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     rich_text: true,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
   });

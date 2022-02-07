@@ -24,6 +24,7 @@
     "@material-ui/icons/Clear": "./@material-ui/icons/Clear.js",
     "@material-ui/icons/Close": "./@material-ui/icons/Close.js",
     "@material-ui/icons/Delete": "./@material-ui/icons/Delete.js",
+    "@material-ui/icons/Description": "./@material-ui/icons/Description.js",
     "@material-ui/icons/DoubleArrow": "./@material-ui/icons/DoubleArrow.js",
     "@material-ui/icons/Edit": "./@material-ui/icons/Edit.js",
     "@material-ui/icons/ExitToApp": "./@material-ui/icons/ExitToApp.js",

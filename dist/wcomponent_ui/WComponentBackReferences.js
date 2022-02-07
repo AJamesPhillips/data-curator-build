@@ -15,14 +15,17 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 const map_state = (state) => {
-  return {wcomponents_by_id: state.specialised_objects.wcomponents_by_id};
+  return {
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id
+  };
 };
 const map_dispatch = {
   change_route: ACTIONS.routing.change_route
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentBackReferences(props) {
-  const {wcomponent_id, wcomponents_by_id} = props;
+  const {wcomponent_id, wcomponents_by_id, knowledge_views_by_id} = props;
   const [show_back_references, set_show_back_references] = useState(false);
   const [other_wcomponents, set_other_wcomponents] = useState([]);
   useEffect(() => {
@@ -53,7 +56,7 @@ function _WComponentBackReferences(props) {
       sub_route: void 0,
       item_id: wcomponent.id,
       args: void 0
-    }, /* @__PURE__ */ h(Markdown, null, get_title({rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}))));
+    }, /* @__PURE__ */ h(Markdown, null, get_title({rich_text: true, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}))));
   }));
 }
 export const WComponentBackReferences = connector(_WComponentBackReferences);

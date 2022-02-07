@@ -9,6 +9,7 @@ import {MARKDOWN_OPTIONS} from "../sharedf/RichMarkDown.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+  knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
   created_at_ms: state.routing.args.created_at_ms
 });
 const map_dispatch = {
@@ -16,7 +17,7 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _PrioritisationEntryNode(props) {
-  const {wcomponents_by_id, created_at_ms, x, y, width, height, effort, display} = props;
+  const {wcomponents_by_id, knowledge_views_by_id, created_at_ms, x, y, width, height, effort, display} = props;
   const wcomponent = wcomponents_by_id[props.wcomponent_id];
   if (!wcomponent)
     return null;
@@ -24,6 +25,7 @@ function _PrioritisationEntryNode(props) {
     rich_text: true,
     wcomponent,
     wcomponents_by_id,
+    knowledge_views_by_id,
     wc_id_to_counterfactuals_map: void 0,
     created_at_ms,
     sim_ms: new Date().getTime()
