@@ -15,7 +15,7 @@ const connector = connect(map_state, map_dispatch);
 function _ActiveFocusedMode(props) {
   const {presenting, focused_mode} = props;
   const title = presenting ? focused_mode ? "WARNING: Focused Mode is active, unselected components will be almost invisible" : "Activate focused mode" : "Focused mode only available when presenting";
-  const classes = focused_mode ? active_warning_styles() : inactive_warning_styles();
+  const classes = presenting && focused_mode ? active_warning_styles() : inactive_warning_styles();
   return /* @__PURE__ */ h(Tooltip, {
     placement: "top",
     title

@@ -5,7 +5,6 @@ import {MoveToWComponentButton} from "../../canvas/MoveToWComponentButton.js";
 import {grid_small_step, h_step, v_step} from "../../canvas/position_utils.js";
 import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
 import {SelectKnowledgeView} from "../../knowledge_view/SelectKnowledgeView.js";
-import {color_is_empty} from "../../shared/interfaces/color.js";
 import {Button} from "../../sharedf/Button.js";
 import {ColorPicker} from "../../sharedf/ColorPicker.js";
 import {ACTIONS} from "../../state/actions.js";
@@ -107,9 +106,7 @@ function _WComponentKnowledgeViewForm(props) {
     className: "description_label"
   }, "Frame Color"), /* @__PURE__ */ h(ColorPicker, {
     color: knowledge_view_entry.frame_color,
-    allow_undefined: true,
     conditional_on_blur: (frame_color) => {
-      frame_color = color_is_empty(frame_color) ? void 0 : frame_color;
       upsert_entry(knowledge_view_id, {frame_color});
     }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(AlignComponentForm, {

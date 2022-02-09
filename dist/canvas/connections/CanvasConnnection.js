@@ -7,6 +7,7 @@ import {bounded} from "../../shared/utils/bounded.js";
 export function CanvasConnnection(props) {
   const [hovered, set_hovered] = useState(false);
   const current_position = useRef(void 0);
+  const path_background = useRef(void 0);
   const animate_to_target_timeout = useRef(void 0);
   const {
     from_node_position,
@@ -95,16 +96,18 @@ export function CanvasConnnection(props) {
       set_hovered(false);
       on_pointer_over_out(false);
     },
-    style: style_line_background
+    style: style_line_background,
+    ref: (e) => path_background.current = e || void 0
   }), /* @__PURE__ */ h("path", {
     className: "connection_line " + extra_line_classes,
     d: calc_d(d_args),
-    ref: (e) => {
-      if (!e || !should_animate)
+    ref: (path) => {
+      if (!path || !should_animate)
         return;
       if (animate_to_target_timeout.current)
         clearTimeout(animate_to_target_timeout.current);
-      animate_to_target_timeout.current = animate_to_target(e, current_position, target_position);
+      const path_background_el = hovered || props.is_highlighted ? path_background.current : void 0;
+      animate_to_target_timeout.current = animate_to_target(path, path_background_el, current_position, target_position);
     },
     style: style_line
   }), /* @__PURE__ */ h(ConnectionEnd, {
@@ -126,7 +129,10 @@ function calc_d({x1, y1, relative_control_point_x1, relative_control_point_y1, r
   const cy2 = -y2 - relative_control_point_y2;
   return `M ${x1} ${-y1} C ${cx1},${cy1}, ${cx2},${cy2}, ${x2},${-y2}`;
 }
-function animate_to_target(e, current_position, target_position) {
+const step_ms = 30;
+const animation_total_ms = 1 * 1e3;
+const progress_step = step_ms / animation_total_ms;
+function animate_to_target(path, path_background, current_position, target_position) {
   if (current_position.current === void 0 || current_position.current === target_position) {
     target_position.progress = 1;
     current_position.current = target_position;
@@ -135,7 +141,8 @@ function animate_to_target(e, current_position, target_position) {
   const current = current_position.current;
   let timeout = void 0;
   function advance() {
-    const progress = Math.min(target_position.progress + 0.1, 1);
+    let progress = target_position.progress + progress_step;
+    progress = Math.min(progress, 1);
     target_position.progress = progress;
     const intermediate = {
       x1: tween(current.x1, target_position.x1, progress),
@@ -148,14 +155,15 @@ function animate_to_target(e, current_position, target_position) {
       y2: tween(current.y2, target_position.y2, progress)
     };
     const d = calc_d(intermediate);
-    e.setAttribute("d", d);
+    path.setAttribute("d", d);
+    path_background?.setAttribute("d", d);
     if (progress >= 1) {
       if (timeout)
         clearTimeout(timeout);
       current_position.current = target_position;
     }
   }
-  timeout = setInterval(advance, 20);
+  timeout = setInterval(advance, step_ms);
   return timeout;
 }
 function tween(a, b, progress) {

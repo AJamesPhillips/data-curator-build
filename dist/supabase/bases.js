@@ -1,7 +1,7 @@
 import {get_supabase} from "./get_supabase.js";
 export async function get_all_bases(user_id) {
   const supabase = get_supabase();
-  const res = await supabase.from("bases").select("*, access_controls(access_level)").order("inserted_at", {ascending: true});
+  const res = await supabase.from("bases").select("*, access_controls(access_level,user_id)").order("inserted_at", {ascending: true});
   const data = !res.data ? void 0 : res.data.map((r) => {
     return base_supabase_to_app(r, r.access_controls, user_id);
   });
@@ -30,7 +30,7 @@ function base_supabase_to_app(base, access_controls, user_id) {
   let {inserted_at, updated_at, owner_user_id, public_read} = base;
   inserted_at = new Date(inserted_at);
   updated_at = new Date(updated_at);
-  const access_control = access_controls && access_controls[0];
+  const access_control = access_controls?.find((ac) => ac.user_id === user_id);
   const access_level = access_control?.access_level || (user_id === owner_user_id ? "owner" : public_read ? "viewer" : "none");
   return {...santise_base(base), inserted_at, updated_at, access_level};
 }

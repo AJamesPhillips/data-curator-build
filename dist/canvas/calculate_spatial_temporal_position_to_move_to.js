@@ -129,7 +129,6 @@ function get_wcomponent_group_positions_and_last_created_at(args) {
     }
     wcomponent_created_at_ms = result.wcomponent_created_at_ms;
     positions = result.position_groups.map((group) => {
-      debugger;
       return lefttop_to_xy({
         left: (group.min_left + group.max_left) / 2,
         top: (group.min_top + group.max_top) / 2,

@@ -1,6 +1,5 @@
-import {color_is_whole} from "../shared/interfaces/color.js";
 export function color_to_string(color) {
-  if (!color || !color_is_whole(color))
+  if (!color)
     return "";
   return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
 }
@@ -12,7 +11,7 @@ export function color_to_opposite(color) {
   return {r: v, g: v, b: v, a: 1};
 }
 export function darker_color(color) {
-  if (!color || !color_is_whole(color))
+  if (!color)
     return void 0;
   return {r: color.r / 2, g: color.g / 2, b: color.b / 2, a: color.a};
 }

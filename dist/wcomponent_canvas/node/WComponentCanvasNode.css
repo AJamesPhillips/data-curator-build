@@ -1,5 +1,5 @@
 .wcomponent_canvas_node.connectable_canvas_node.node {
-  transition: left 0.5s linear, top 0.5s linear, opacity 0.5s linear;
+  transition: left 1s linear, top 1s linear, opacity 1s linear;
 }
 .wcomponent_canvas_node.connectable_canvas_node.node.node_is_moving {
   z-index: 100;
@@ -13,7 +13,7 @@
   white-space: initial;
   overflow: initial;
   /* Attempt to allow opacity to transition smoothly */
-  transition: background-color 0.5s, color 0.5s, box-shadow 0.2s, opacity 0.2s;
+  transition: background-color 1s, color 1s, box-shadow 0.2s, opacity 0.2s;
 }
 
 .node_title {

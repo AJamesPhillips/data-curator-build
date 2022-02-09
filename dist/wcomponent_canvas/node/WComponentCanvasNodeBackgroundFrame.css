@@ -5,7 +5,7 @@
   border-width: 2px;
   border-style: solid;
   pointer-events: none;
-  transition: top, left, width, height 0.2s linear;
+  transition: top, left, width, height 1s linear;
 }
 .wcomponent_background_frame .editable_edge {
   pointer-events: initial;

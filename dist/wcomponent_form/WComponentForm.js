@@ -307,7 +307,6 @@ function _WComponentForm(props) {
     className: "description_label"
   }, "Label color"), /* @__PURE__ */ h(ColorPicker, {
     color: wcomponent.label_color,
-    allow_undefined: false,
     conditional_on_blur: (color) => upsert_wcomponent({label_color: color})
   })), editing && /* @__PURE__ */ h(WComponentImageForm, {
     wcomponent,
