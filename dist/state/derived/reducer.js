@@ -2,7 +2,7 @@ import {wcomponent_is_goal, wcomponent_is_judgement_or_objective} from "../../wc
 import {is_defined} from "../../shared/utils/is_defined.js";
 import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {update_substate} from "../../utils/update_state.js";
-import {knowledge_views_derived_reducer} from "../specialised_objects/knowledge_views/knowledge_views_derived_reducer.js";
+import {knowledge_views_derived_reducer} from "../specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
 import {get_wcomponent_ids_by_type} from "./get_wcomponent_ids_by_type.js";
 import {get_wcomponents_from_state} from "../specialised_objects/accessors.js";
 import {get_wcomponent_validity_value} from "../../wcomponent_derived/get_wcomponent_validity_value.js";

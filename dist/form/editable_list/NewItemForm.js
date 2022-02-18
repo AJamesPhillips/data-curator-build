@@ -13,7 +13,9 @@ export function NewItemForm(props) {
   return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Dialog, {
     "aria-labelledby": "new_item_title",
     open: true,
-    onClose: () => set_new_item(void 0)
+    onClose: () => set_new_item(void 0),
+    fullWidth: true,
+    maxWidth: "sm"
   }, /* @__PURE__ */ h(DialogTitle, {
     id: "new_item_title"
   }, "New ", item_descriptor), /* @__PURE__ */ h(DialogContent, null, /* @__PURE__ */ h(EditableListEntry, {

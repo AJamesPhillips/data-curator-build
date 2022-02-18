@@ -1,14 +1,14 @@
 import {h} from "../../../snowpack/pkg/preact.js";
+import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
 import FlexSearch from "../../../snowpack/pkg/flexsearch.js";
 import fuzzysort from "../../../snowpack/pkg/fuzzysort.js";
-import "./AutocompleteText.css.proxy.js";
-import {SortDirection, sort_list} from "../../shared/utils/sort.js";
+import {useRef, useEffect, useState, useMemo} from "../../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
-import {Options} from "./Options.js";
-import {throttle} from "../../utils/throttle.js";
-import {useEffect, useMemo, useRef, useState} from "../../../snowpack/pkg/preact/hooks.js";
-import {TextField} from "../../../snowpack/pkg/@material-ui/core.js";
+import "./AutocompleteText.css.proxy.js";
+import {sort_list, SortDirection} from "../../shared/utils/sort.js";
 import {ACTIONS} from "../../state/actions.js";
+import {throttle} from "../../utils/throttle.js";
+import {Options} from "./Options.js";
 const map_state = (state) => ({
   presenting: state.display_options?.consumption_formatting
 });
@@ -49,11 +49,21 @@ function _AutocompleteText(props) {
   const {threshold_minimum_score = false} = props;
   const [options_to_display, set_options_to_display] = useState([]);
   useEffect(() => {
-    const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "best", threshold_minimum_score, props.retain_options_order || false);
+    const result = get_options_to_display({
+      temp_value_str,
+      allow_none: !!props.allow_none,
+      show_none_when_none: !!props.show_none_when_none,
+      options: internal_options.current,
+      prepared_targets: prepared_targets.current,
+      flexsearch_index: flexsearch_index.current,
+      search_type: props.search_type || "best",
+      threshold_minimum_score,
+      retain_options_order: props.retain_options_order || false
+    });
     set_options_to_display(result.options);
     props.set_search_type_used && props.set_search_type_used(result.search_type_used);
     flush_temp_value_str();
-  }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score]);
+  }, [temp_value_str, props.allow_none, props.show_none_when_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score]);
   const [highlighted_option_index, set_highlighted_option_index] = useState(0);
   const moused_over_options = useRef(new Set());
   const on_mouse_over_option = useMemo(() => {
@@ -120,7 +130,7 @@ function _AutocompleteText(props) {
     }
   };
   const final_value = get_valid_value(options_to_display, temp_value_str);
-  const valid = !final_value || temp_value_str.toLowerCase() === final_value.title.toLowerCase();
+  const valid = !final_value && props.allow_none || temp_value_str.toLowerCase() === final_value?.title.toLowerCase();
   return /* @__PURE__ */ h("div", {
     class: "editable_field autocomplete " + (valid ? "" : "invalid "),
     style: props.extra_styles
@@ -204,17 +214,25 @@ function prepare_targets(new_internal_options) {
 const OPTION_NONE = {
   id: void 0,
   id_num: 0,
-  title: "-",
-  limited_total_text: "",
+  title: "(clear)",
+  limited_total_text: "clear",
   unlimited_total_text: ""
 };
-function get_options_to_display(temp_value_str, allow_none, options, prepared_targets, flexsearch_index, search_type, threshold_minimum_score, retain_options_order) {
+function get_options_to_display(args) {
+  const {
+    temp_value_str,
+    allow_none,
+    show_none_when_none,
+    options,
+    prepared_targets,
+    flexsearch_index,
+    search_type,
+    threshold_minimum_score,
+    retain_options_order
+  } = args;
   let search_type_used = void 0;
   if (!temp_value_str) {
-    if (allow_none)
-      return {options: [OPTION_NONE, ...options], search_type_used};
-    else
-      return {options, search_type_used};
+    return {options, search_type_used};
   }
   let option_to_exact_score = (option) => 0;
   let option_to_score = (option) => 0;
@@ -247,5 +265,7 @@ function get_options_to_display(temp_value_str, allow_none, options, prepared_ta
   let options_to_display = filterd_options;
   if (!retain_options_order)
     options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending);
+  if (allow_none && show_none_when_none)
+    options_to_display = [OPTION_NONE, ...options_to_display];
   return {options: options_to_display, search_type_used};
 }

@@ -1,5 +1,5 @@
 import {Button, Typography} from "../../../snowpack/pkg/@material-ui/core.js";
-import ExitToAppIcon from "../../../snowpack/pkg/@material-ui/icons/ExitToApp.js";
+import AccountCircleIcon from "../../../snowpack/pkg/@material-ui/icons/AccountCircle.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {useRef} from "../../../snowpack/pkg/preact/hooks.js";
 import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
@@ -36,7 +36,7 @@ function _UserInfo(props) {
   }, [user, bases_by_id, chosen_base_id, is_loading_users, need_to_set_user_name]);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
     color: "primary",
-    endIcon: /* @__PURE__ */ h(ExitToAppIcon, null),
+    endIcon: /* @__PURE__ */ h(AccountCircleIcon, null),
     fullWidth: true,
     disableElevation: true,
     onClick: () => set_form_state(user ? "account_info" : "signin"),

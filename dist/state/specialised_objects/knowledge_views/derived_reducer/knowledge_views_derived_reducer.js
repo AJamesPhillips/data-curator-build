@@ -1,28 +1,29 @@
 import {
   calculate_canvas_x_for_wcomponent_temporal_uncertainty,
   DEFAULT_DATETIME_LINE_CONFIG
-} from "../../../knowledge_view/datetime_line.js";
-import {get_wc_position_to_id_map} from "../../../knowledge_view/utils/get_wc_position_to_id_map.js";
-import {is_uuid_v4} from "../../../shared/utils/ids.js";
-import {is_defined} from "../../../shared/utils/is_defined.js";
-import {SortDirection, sort_list} from "../../../shared/utils/sort.js";
-import {get_created_at_ms, get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
-import {set_union} from "../../../utils/set.js";
-import {update_substate} from "../../../utils/update_state.js";
+} from "../../../../knowledge_view/datetime_line.js";
+import {get_wc_position_to_id_map} from "../../../../knowledge_view/utils/get_wc_position_to_id_map.js";
+import {is_uuid_v4} from "../../../../shared/utils/ids.js";
+import {is_defined} from "../../../../shared/utils/is_defined.js";
+import {SortDirection, sort_list} from "../../../../shared/utils/sort.js";
+import {get_created_at_ms, get_sim_datetime_ms} from "../../../../shared/utils_datetime/utils_datetime.js";
+import {set_union} from "../../../../utils/set.js";
+import {update_substate} from "../../../../utils/update_state.js";
 import {
   wcomponent_can_render_connection,
   wcomponent_is_counterfactual_v2,
   wcomponent_is_prioritisation,
   wcomponent_is_plain_connection,
   wcomponent_has_legitimate_non_empty_state_VAP_sets
-} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
-import {get_wcomponent_ids_by_type} from "../../derived/get_wcomponent_ids_by_type.js";
+} from "../../../../wcomponent/interfaces/SpecialisedObjects.js";
+import {get_wcomponent_ids_by_type} from "../../../derived/get_wcomponent_ids_by_type.js";
 import {
   get_base_knowledge_view,
   get_nested_knowledge_view_ids,
   sort_nested_knowledge_map_ids_by_priority_then_title,
   get_wcomponents_from_state
-} from "../accessors.js";
+} from "../../accessors.js";
+import {calc_if_wcomponent_should_exclude_because_label_or_type} from "./calc_if_wcomponent_should_exclude_because_label_or_type.js";
 export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id;
   if (one_or_more_knowledge_views_changed) {
@@ -347,23 +348,6 @@ export function update_composed_knowledge_view_filters(state, current_composed_k
       vap_set_number_excluded_by_created_at_datetime_filter
     }
   };
-}
-function calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, exclusion_args) {
-  const {label_ids = [], type} = wcomponent;
-  const {
-    exclude_by_label_ids,
-    include_by_label_ids,
-    include_by_label_ids_list,
-    exclude_by_component_types,
-    include_by_component_types
-  } = exclusion_args;
-  const labels__should_exclude = !!label_ids.find((label_id) => exclude_by_label_ids.has(label_id));
-  const labels__lacks_include = include_by_label_ids.size > 0 && !label_ids.find((label_id) => include_by_label_ids.has(label_id));
-  const types__should_exclude = exclude_by_component_types.has(type);
-  const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type);
-  const should_exclude = labels__should_exclude || types__should_exclude;
-  const lacks_include = labels__lacks_include || types__lacks_include;
-  return {should_exclude, lacks_include};
 }
 function get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id) {
   const entries = get_wc_position_to_id_map(composed_wc_id_map, wcomponents_by_id);

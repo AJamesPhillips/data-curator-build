@@ -58,7 +58,7 @@ function App(props) {
     elevation: 1,
     id: "header",
     position: "fixed",
-    className: classes.app_bar
+    className: "app_header " + classes.app_bar
   }, /* @__PURE__ */ h(Toolbar, {
     variant: "dense",
     className: classes.toolbar
@@ -115,10 +115,6 @@ const use_styles = makeStyles((theme) => ({
     display: "flex"
   },
   app_bar: {
-    marginRight: 0,
-    width: "100%",
-    maxWidth: "100%",
-    minWidth: 0,
     transition: theme.transitions.create(["all"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen

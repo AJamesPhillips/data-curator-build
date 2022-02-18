@@ -6,7 +6,7 @@ import {get_actually_display_time_sliders} from "../../controls/accessors.js";
 import {
   update_composed_knowledge_view_filters,
   update_current_composed_knowledge_view_state
-} from "../../specialised_objects/knowledge_views/knowledge_views_derived_reducer.js";
+} from "../../specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
 import {selector_chosen_base} from "../../user_info/selector.js";
 export function ensure_any_knowledge_view_displayed(store) {
   const state = store.getState();

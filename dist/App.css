@@ -8,3 +8,18 @@ blockquote p {
   border-left: thin solid #aaa;
   padding-left: 4px;
 }
+
+.app_header {
+  margin-right: 0px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0px;
+  position: fixed;
+}
+
+@media screen and (max-width: 600px) {
+  .app_header {
+    max-height: 70px;
+    overflow-y: auto;
+  }
+}
