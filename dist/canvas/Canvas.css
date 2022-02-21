@@ -2,7 +2,7 @@
   height: 100%;
   flex-grow: 1;
   flex-shrink: 1;
-  cursor: move;
+  cursor: grab;
   overflow: hidden;
 }
 #graph_container.squared_background {
@@ -14,6 +14,9 @@
   width: 100%;
   position: absolute;
   pointer-events: none;
+}
+#graph_container.graph_background_pointer_down {
+  cursor: grabbing;
 }
 #graph_container.graph_background_pointer_down #graph_lowest_elements_container {
   pointer-events: none;
