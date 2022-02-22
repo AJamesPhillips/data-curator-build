@@ -1,7 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {Box, Breadcrumbs, MenuItem, Select, Typography} from "../../snowpack/pkg/@material-ui/core.js";
-import {AutocompleteText} from "../form/Autocomplete/AutocompleteText.js";
+import {AutocompleteText, OPTION_NONE_ID} from "../form/Autocomplete/AutocompleteText.js";
 import {is_defined} from "../shared/utils/is_defined.js";
 import {ACTIONS} from "../state/actions.js";
 const map_state = (state) => {
@@ -25,7 +25,7 @@ function _ViewsBreadcrumb(props) {
   const {kv_id, nested_kv_ids_map} = props;
   let nested_kv = nested_kv_ids_map.map[kv_id];
   const levels = [];
-  let last_parent_id = "";
+  let last_parent_id = OPTION_NONE_ID;
   while (nested_kv) {
     const entries = nested_kv.child_ids.map((id) => nested_kv_ids_map.map[id]).filter(is_defined);
     if (entries.length) {

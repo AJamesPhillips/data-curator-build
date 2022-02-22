@@ -79,4 +79,3 @@ function run_tests() {
   test(should_exclude, false);
   test(lacks_include, false);
 }
-run_tests();

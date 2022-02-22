@@ -47,23 +47,34 @@ function _AutocompleteText(props) {
     set_editing_options(!!props.start_expanded);
   }, [props.start_expanded]);
   const {threshold_minimum_score = false} = props;
-  const [options_to_display, set_options_to_display] = useState([]);
+  const [internal_options_to_display, set_internal_options_to_display] = useState([]);
   useEffect(() => {
     const result = get_options_to_display({
       temp_value_str,
+      selected_any_option: props.selected_option_id !== OPTION_NONE_ID,
       allow_none: !!props.allow_none,
       show_none_when_none: !!props.show_none_when_none,
-      options: internal_options.current,
+      internal_options: internal_options.current,
       prepared_targets: prepared_targets.current,
       flexsearch_index: flexsearch_index.current,
       search_type: props.search_type || "best",
       threshold_minimum_score,
       retain_options_order: props.retain_options_order || false
     });
-    set_options_to_display(result.options);
+    set_internal_options_to_display(result.internal_options);
     props.set_search_type_used && props.set_search_type_used(result.search_type_used);
     flush_temp_value_str();
-  }, [temp_value_str, props.allow_none, props.show_none_when_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score]);
+  }, [
+    temp_value_str,
+    props.selected_option_id,
+    props.allow_none,
+    props.show_none_when_none,
+    internal_options.current,
+    prepared_targets.current,
+    flexsearch_index.current,
+    props.search_type,
+    threshold_minimum_score
+  ]);
   const [highlighted_option_index, set_highlighted_option_index] = useState(0);
   const moused_over_options = useRef(new Set());
   const on_mouse_over_option = useMemo(() => {
@@ -79,8 +90,8 @@ function _AutocompleteText(props) {
     };
   }, [props.on_mouse_leave_option]);
   function get_selected_option_title_str() {
-    const selected_option = get_selected_option(props, props.options);
-    return selected_option ? selected_option.title : "";
+    const selected_option = get_selected_option(props);
+    return selected_option?.title || "";
   }
   const handle_key_down = async (e, displayed_options) => {
     const key = e.key;
@@ -129,8 +140,8 @@ function _AutocompleteText(props) {
       props.on_change(id);
     }
   };
-  const final_value = get_valid_value(options_to_display, temp_value_str);
-  const valid = !final_value && props.allow_none || temp_value_str.toLowerCase() === final_value?.title.toLowerCase();
+  const final_value = get_selected_internal_option(internal_options_to_display, temp_value_str);
+  const valid = final_value?.id === OPTION_NONE.id && props.allow_none || temp_value_str.toLowerCase() === final_value?.title.toLowerCase();
   return /* @__PURE__ */ h("div", {
     class: "editable_field autocomplete " + (valid ? "" : "invalid "),
     style: props.extra_styles
@@ -154,11 +165,11 @@ function _AutocompleteText(props) {
       e.currentTarget.setSelectionRange(0, e.currentTarget.value.length);
     },
     onChange: (e) => handle_on_change(e.currentTarget.value),
-    onKeyDown: (e) => handle_key_down(e, options_to_display),
+    onKeyDown: (e) => handle_key_down(e, internal_options_to_display),
     onBlur: () => handle_on_blur()
   }), /* @__PURE__ */ h(Options, {
     editing_options,
-    options_to_display,
+    internal_options_to_display,
     is_option_wrapper_highlighted: (_, index) => index === highlighted_option_index,
     conditional_on_change,
     set_highlighted_option_index,
@@ -172,21 +183,19 @@ export function AutocompleteText(props) {
     ...props
   });
 }
-function get_selected_option(props, options) {
+function get_selected_option(props) {
   if (props.selected_option_id === void 0) {
-    return props.allow_none ? void 0 : options[0];
+    return props.allow_none ? void 0 : props.options[0];
   }
-  return options.find(({id}) => id === props.selected_option_id);
+  return props.options.find(({id}) => id === props.selected_option_id);
 }
-function get_valid_value(options, value_str) {
+function get_selected_internal_option(internal_options, value_str) {
   const lower_value_str = value_str.toLowerCase();
-  const match = options.find((option) => option.title.toLowerCase() === lower_value_str);
-  if (match)
-    return match;
-  return options[0];
+  return internal_options.find((option) => option.title.toLowerCase() === lower_value_str);
 }
+const OPTION_ID_NUM_START = 1;
 function prepare_options(options, limit, search_fields = "all") {
-  let id_num = 1;
+  let id_num = OPTION_ID_NUM_START;
   const all = search_fields === "all";
   const new_internal_options = options.filter(({is_hidden}) => !is_hidden).map((o) => {
     const limited_total_text = get_total_text(o, limit, all);
@@ -211,9 +220,10 @@ function limit_string_length(str, limit) {
 function prepare_targets(new_internal_options) {
   return new_internal_options.map(({limited_total_text: total_text}) => fuzzysort.prepare(total_text));
 }
+export const OPTION_NONE_ID = void 0;
 const OPTION_NONE = {
-  id: void 0,
-  id_num: 0,
+  id: OPTION_NONE_ID,
+  id_num: OPTION_ID_NUM_START - 1,
   title: "(clear)",
   limited_total_text: "clear",
   unlimited_total_text: ""
@@ -221,21 +231,23 @@ const OPTION_NONE = {
 function get_options_to_display(args) {
   const {
     temp_value_str,
+    selected_any_option,
     allow_none,
     show_none_when_none,
-    options,
     prepared_targets,
     flexsearch_index,
     search_type,
     threshold_minimum_score,
     retain_options_order
   } = args;
+  let {internal_options: options} = args;
   let search_type_used = void 0;
   if (!temp_value_str) {
-    return {options, search_type_used};
+    options = allow_none && selected_any_option ? [OPTION_NONE, ...options] : options;
+    return {internal_options: options, search_type_used};
   }
-  let option_to_exact_score = (option) => 0;
-  let option_to_score = (option) => 0;
+  let option_to_exact_score = (internal_option) => 0;
+  let option_to_score = (internal_option) => 0;
   let exact_results = 0;
   if (search_type === "best" || search_type === "exact") {
     search_type_used = "exact";
@@ -267,5 +279,5 @@ function get_options_to_display(args) {
     options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending);
   if (allow_none && show_none_when_none)
     options_to_display = [OPTION_NONE, ...options_to_display];
-  return {options: options_to_display, search_type_used};
+  return {internal_options: options_to_display, search_type_used};
 }
