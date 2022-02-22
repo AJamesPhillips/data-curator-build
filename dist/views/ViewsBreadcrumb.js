@@ -56,7 +56,6 @@ function _ViewsBreadcrumb(props) {
     }
   }, opt.title)))), levels.map((level) => /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(AutocompleteText, {
     allow_none: level.parent_id !== void 0,
-    show_none_when_none: true,
     selected_option_id: level.selected_id,
     options: level.options,
     on_change: (subview_id) => props.change_route({args: {subview_id: subview_id || level.parent_id}}),

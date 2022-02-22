@@ -183,15 +183,14 @@ function _WComponentForm(props) {
     }
   })), wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Sub type"), " ", /* @__PURE__ */ h("div", {
+  }, "Subtype"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}
   }, /* @__PURE__ */ h(AutocompleteText, {
     force_editable,
-    placeholder: "Sub type...",
+    placeholder: "Subtype...",
     selected_option_id: wcomponent.subtype,
     options: wcomponent_statev2_subtype_options,
     allow_none: true,
-    show_none_when_none: true,
     on_change: (option_id) => upsert_wcomponent({subtype: option_id})
   }))), (editing || wcomponent.description) && /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
@@ -267,7 +266,7 @@ function _WComponentForm(props) {
     update_predictions: (new_predictions) => upsert_wcomponent({
       existence: new_predictions.length ? new_predictions : void 0
     })
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Values: Set subtype to view"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Set subtype to show Value Predictions"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
     VAPs_represent,
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,

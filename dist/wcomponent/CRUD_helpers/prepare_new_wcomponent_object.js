@@ -46,7 +46,7 @@ export function prepare_new_contextless_wcomponent_object(partial_wcomponent) {
   } else if (partial_wcomponent.type === "statev2") {
     const statev2 = {
       ...base,
-      subtype: "boolean",
+      subtype: void 0,
       values_and_prediction_sets: [],
       ...partial_wcomponent,
       type: partial_wcomponent.type
