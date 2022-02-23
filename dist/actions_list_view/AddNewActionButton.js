@@ -17,7 +17,6 @@ function _AddNewActionButton(props) {
     most_recent_action_id,
     composed_knowledge_view,
     wcomponents_by_id,
-    parent_goal_or_action_ids,
     base_id,
     list_type,
     creation_context
@@ -60,7 +59,6 @@ function _AddNewActionButton(props) {
       wcomponent: {
         base_id,
         type: "action",
-        parent_goal_or_action_ids,
         values_and_prediction_sets,
         value_possibilities,
         todo_index: is_todo ? new Date().getTime() : void 0

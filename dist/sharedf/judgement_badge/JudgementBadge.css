@@ -12,7 +12,7 @@
 
 .judgement_badge.positive {
   /* background-color: rgb(56, 175, 35); */
-  background-color: #4aa733;
+  background-color: #40a71f;
 }
 
 .judgement_badge.negative {
@@ -34,8 +34,8 @@
 }
 
 .judgement_badge.worsening svg {
-  stroke: #ff0000;
-  fill: #ff0000;
+  stroke: #ff5555;
+  fill: #ff5555;
 }
 
 .judgement_badge.unknown svg {

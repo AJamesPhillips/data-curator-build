@@ -56,7 +56,7 @@ function _EditableTextCommon(props) {
     if (new_value !== value)
       user_conditional_on_change && user_conditional_on_change(new_value);
     set_value(new_value);
-  }, []);
+  }, [props.creation_context, user_conditional_on_change]);
   useEffect(() => {
     return pub_sub.global_keys.sub("key_down", handle_general_key_down(is_editing_this_specific_text, el_ref.current, conditional_on_change));
   });

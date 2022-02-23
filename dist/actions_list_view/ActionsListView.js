@@ -13,7 +13,6 @@ import {get_wcomponent_state_value_and_probabilities} from "../wcomponent_derive
 import {ACTION_VALUE_POSSIBILITY_ID} from "../wcomponent/value/parse_value.js";
 import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
 import {useMemo, useRef, useState} from "../../snowpack/pkg/preact/hooks.js";
-import {get_default_parent_goal_or_action_ids} from "./get_default_parent_goal_or_action_ids.js";
 import {AddNewActionButton} from "./AddNewActionButton.js";
 export function ActionsListView(props) {
   return /* @__PURE__ */ h(MainArea, {
@@ -21,24 +20,20 @@ export function ActionsListView(props) {
   });
 }
 const map_state = (state) => {
-  const {wcomponents_by_id, knowledge_views_by_id} = state.specialised_objects;
-  let filtered_by_knowledge_view_id = "";
-  const filter_by_knowledge_view = false;
+  const {wcomponents_by_id} = state.specialised_objects;
   let action_ids = void 0;
   const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state);
+  const filter_by_knowledge_view = false;
   if (filter_by_knowledge_view) {
     if (composed_knowledge_view) {
-      filtered_by_knowledge_view_id = composed_knowledge_view.id;
       action_ids = composed_knowledge_view.wc_ids_by_type.action;
     }
   } else
     action_ids = state.derived.wcomponent_ids_by_type.action;
   return {
     composed_knowledge_view,
-    filtered_by_knowledge_view_id,
     action_ids,
     wcomponents_by_id,
-    knowledge_views_by_id,
     base_id: selector_chosen_base_id(state),
     display_side_panel: state.controls.display_side_panel
   };
@@ -48,7 +43,7 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _ActionsListViewContent(props) {
-  const {composed_knowledge_view, action_ids, wcomponents_by_id, knowledge_views_by_id, base_id} = props;
+  const {composed_knowledge_view, action_ids, wcomponents_by_id, base_id} = props;
   const [max_done_visible, set_max_done_visible] = useState(5);
   const [pointer_down_at, set_pointer_down_at] = useState(void 0);
   const initial_scroll = useRef(void 0);
@@ -90,8 +85,6 @@ function _ActionsListViewContent(props) {
     const most_recent_action_id2 = (actions_on_current_kv || [])[0]?.id || "";
     return most_recent_action_id2;
   }, [action_ids_for_current_kv]);
-  const knowledge_view_id = composed_knowledge_view?.id;
-  const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id);
   return /* @__PURE__ */ h("div", {
     className: `action_list_view_content ${pointer_down_at === void 0 ? "" : "moving"}`,
     ref: (e) => action_list_view_content_el.current = e || void 0,
@@ -133,7 +126,6 @@ function _ActionsListViewContent(props) {
     most_recent_action_id,
     composed_knowledge_view,
     wcomponents_by_id,
-    parent_goal_or_action_ids,
     base_id
   })), actions_icebox.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
@@ -146,7 +138,6 @@ function _ActionsListViewContent(props) {
     most_recent_action_id,
     composed_knowledge_view,
     wcomponents_by_id,
-    parent_goal_or_action_ids,
     base_id
   })), sorted_actions_todo.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
@@ -159,7 +150,6 @@ function _ActionsListViewContent(props) {
     most_recent_action_id,
     composed_knowledge_view,
     wcomponents_by_id,
-    parent_goal_or_action_ids,
     base_id
   })), actions_in_progress.map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
@@ -171,7 +161,6 @@ function _ActionsListViewContent(props) {
     most_recent_action_id,
     composed_knowledge_view,
     wcomponents_by_id,
-    parent_goal_or_action_ids,
     base_id
   })), actions_done_or_rejected.slice(0, max_done_visible).map((action) => /* @__PURE__ */ h(PrioritisableAction, {
     key: action.id,
