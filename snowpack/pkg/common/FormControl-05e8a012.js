@@ -180,7 +180,7 @@ var Typography = /*#__PURE__*/k(function Typography(props, ref) {
     ref: ref
   }, other));
 });
-var Typography$1 = withStyles(styles, {
+var require$$6 = withStyles(styles, {
   name: 'MuiTypography'
 })(Typography);
 
@@ -408,4 +408,4 @@ var FormControl$1 = withStyles(styles$1, {
   name: 'MuiFormControl'
 })(FormControl);
 
-export { FormControlContext as F, Typography$1 as T, useFormControl$1 as a, FormControl$1 as b, isFilled as i, useFormControl as u };
+export { FormControlContext as F, useFormControl$1 as a, FormControl$1 as b, isFilled as i, require$$6 as r, useFormControl as u };

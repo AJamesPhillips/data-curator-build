@@ -4,12 +4,11 @@ import { i as interopRequireWildcard } from '../../common/interopRequireWildcard
 import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-ecdc3a69.js';
 import { a as arrayWithHoles, u as unsupportedIterableToArray, n as nonIterableRest, s as slicedToArray, b as useControlled_1 } from '../../common/useControlled-f31ead54.js';
 import { a as compat_module } from '../../common/compat.module-44e2e532.js';
-import { C as Collapse } from '../../common/Collapse-8cd7d7bd.js';
+import { a as require$$7, r as require$$8 } from '../../common/Paper-f5a9731e.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-d740ad2c.js';
 import { _ as __pika_web_default_export_for_treeshaking__$1 } from '../../common/clsx.m-e1755476.js';
 import { w as withStyles_1 } from '../../common/withStyles-82e4af86.js';
 import { A as AccordionContext_1 } from '../../common/AccordionContext-0dc48847.js';
-import { P as Paper } from '../../common/Paper-a945fb75.js';
 import '../../common/hooks.module-b65ed191.js';
 import '../../common/preact.module-5693ab29.js';
 import '../../common/withStyles-db69868f.js';
@@ -66,9 +65,9 @@ var _clsx = interopRequireDefault(__pika_web_default_export_for_treeshaking__$1)
 
 
 
-var _Collapse = interopRequireDefault(Collapse);
+var _Collapse = interopRequireDefault(require$$7);
 
-var _Paper = interopRequireDefault(Paper);
+var _Paper = interopRequireDefault(require$$8);
 
 var _withStyles = interopRequireDefault(withStyles_1);
 

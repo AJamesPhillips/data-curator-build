@@ -915,8 +915,8 @@ var ButtonBase = /*#__PURE__*/k(function ButtonBase(props, ref) {
     center: centerRipple
   }, TouchRippleProps)) : null);
 });
-var ButtonBase$1 = withStyles(styles$1, {
+var require$$6 = withStyles(styles$1, {
   name: 'MuiButtonBase'
 })(ButtonBase);
 
-export { ButtonBase$1 as B };
+export { require$$6 as r };

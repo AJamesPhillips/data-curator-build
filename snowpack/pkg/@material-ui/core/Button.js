@@ -8,7 +8,7 @@ import { _ as __pika_web_default_export_for_treeshaking__$1 } from '../../common
 import { w as withStyles_1 } from '../../common/withStyles-82e4af86.js';
 import { c as colorManipulator } from '../../common/defaultTheme-bad95161.js';
 import { c as capitalize_1 } from '../../common/capitalize-f472ba50.js';
-import { B as ButtonBase } from '../../common/ButtonBase-1db2b241.js';
+import { r as require$$6 } from '../../common/ButtonBase-c1818052.js';
 import '../../common/hooks.module-b65ed191.js';
 import '../../common/preact.module-5693ab29.js';
 import '../../common/withStyles-db69868f.js';
@@ -43,7 +43,7 @@ var _withStyles = interopRequireDefault(withStyles_1);
 
 
 
-var _ButtonBase = interopRequireDefault(ButtonBase);
+var _ButtonBase = interopRequireDefault(require$$6);
 
 var _capitalize = interopRequireDefault(capitalize_1);
 

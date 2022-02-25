@@ -48,6 +48,44 @@ function createSvgIcon(path, displayName) {
   return /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(Component));
 }
 
+// Corresponds to 10 frames at 60 Hz.
+// A few bytes payload overhead when lodash/debounce is ~3 kB and debounce ~300 B.
+function debounce(func) {
+  var wait = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 166;
+  var timeout;
+
+  function debounced() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    // eslint-disable-next-line consistent-this
+    var that = this;
+
+    var later = function later() {
+      func.apply(that, args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  }
+
+  debounced.clear = function () {
+    clearTimeout(timeout);
+  };
+
+  return debounced;
+}
+
+function ownerDocument(node) {
+  return node && node.ownerDocument || document;
+}
+
+function ownerWindow(node) {
+  var doc = ownerDocument(node);
+  return doc.defaultView || window;
+}
+
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 function useControlled(_ref) {
   var controlled = _ref.controlled,
@@ -93,4 +131,4 @@ function useId(idOverride) {
   return id;
 }
 
-export { createChainedFunction as a, useId as b, createSvgIcon as c, useControlled as u };
+export { ownerWindow as a, createChainedFunction as b, createSvgIcon as c, debounce as d, useId as e, ownerDocument as o, useControlled as u };

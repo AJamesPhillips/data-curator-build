@@ -4,7 +4,7 @@ import { i as interopRequireWildcard } from '../../common/interopRequireWildcard
 import { _ as _extends_1, o as objectWithoutProperties } from '../../common/objectWithoutProperties-ecdc3a69.js';
 import { a as compat_module } from '../../common/compat.module-44e2e532.js';
 import { p as propTypes } from '../../common/hoist-non-react-statics.cjs-d740ad2c.js';
-import { _ as __pika_web_default_export_for_treeshaking__ } from '../../common/clsx.m-e1755476.js';
+import { _ as __pika_web_default_export_for_treeshaking__$1 } from '../../common/clsx.m-e1755476.js';
 import { w as withStyles_1 } from '../../common/withStyles-82e4af86.js';
 import { c as capitalize_1 } from '../../common/capitalize-f472ba50.js';
 import '../../common/hooks.module-b65ed191.js';
@@ -32,7 +32,7 @@ var React = interopRequireWildcard(compat_module);
 
 var _propTypes = interopRequireDefault(propTypes);
 
-var _clsx = interopRequireDefault(__pika_web_default_export_for_treeshaking__);
+var _clsx = interopRequireDefault(__pika_web_default_export_for_treeshaking__$1);
 
 var _withStyles = interopRequireDefault(withStyles_1);
 
@@ -236,6 +236,6 @@ Object.defineProperty(exports, "default", {
 var _Typography = interopRequireDefault(Typography_1);
 });
 
-var Typography$1 = /*@__PURE__*/getDefaultExportFromCjs(Typography);
+var __pika_web_default_export_for_treeshaking__ = /*@__PURE__*/getDefaultExportFromCjs(Typography);
 
-export default Typography$1;
+export default __pika_web_default_export_for_treeshaking__;

@@ -4,7 +4,7 @@ import './hoist-non-react-statics.cjs-d740ad2c.js';
 import { _ as __pika_web_default_export_for_treeshaking__ } from './clsx.m-e1755476.js';
 import { w as withStyles, f as fade } from './withStyles-c88b9f29.js';
 import { c as capitalize } from './capitalize-e4ddbb9a.js';
-import { B as ButtonBase } from './ButtonBase-1db2b241.js';
+import { r as require$$6 } from './ButtonBase-c1818052.js';
 import { v } from './preact.module-5693ab29.js';
 
 var styles = function styles(theme) {
@@ -119,7 +119,7 @@ var IconButton = /*#__PURE__*/k(function IconButton(props, ref) {
       size = _props$size === void 0 ? 'medium' : _props$size,
       other = _objectWithoutProperties(props, ["edge", "children", "classes", "className", "color", "disabled", "disableFocusRipple", "size"]);
 
-  return /*#__PURE__*/v(ButtonBase, _extends({
+  return /*#__PURE__*/v(require$$6, _extends({
     className: __pika_web_default_export_for_treeshaking__(classes.root, className, color !== 'default' && classes["color".concat(capitalize(color))], disabled && classes.disabled, size === "small" && classes["size".concat(capitalize(size))], {
       'start': classes.edgeStart,
       'end': classes.edgeEnd
@@ -132,8 +132,8 @@ var IconButton = /*#__PURE__*/k(function IconButton(props, ref) {
     className: classes.label
   }, children));
 });
-var IconButton$1 = withStyles(styles, {
+var require$$9 = withStyles(styles, {
   name: 'MuiIconButton'
 })(IconButton);
 
-export { IconButton$1 as I };
+export { require$$9 as r };
