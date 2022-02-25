@@ -25,6 +25,12 @@ function _EditableCustomDateTime(props) {
   const not_editable = props.force_editable !== void 0 ? !props.force_editable : props.presenting;
   const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : ""}`;
   const title = (props.title || "DateTime") + (props.invariant_value && props.value ? " (custom)" : "");
+  function conditional_on_change(new_value) {
+    if (!on_change)
+      return;
+    if (diff_value(props.value, new_value))
+      on_change(new_value);
+  }
   return /* @__PURE__ */ h("div", {
     className: class_name,
     title
@@ -58,19 +64,19 @@ function _EditableCustomDateTime(props) {
     onBlur: (e) => {
       const working_value = e.currentTarget.value;
       const new_value = handle_on_blur({working_value, invariant_value});
-      on_change(new_value);
+      conditional_on_change(new_value);
       set_editing(false);
     },
     size: "small",
     variant: "outlined",
     fullWidth: true
   }), editing && show_now_shortcut_button && /* @__PURE__ */ h(NowButton, {
-    on_change
+    on_change: conditional_on_change
   }), editing && show_today_shortcut_button && /* @__PURE__ */ h(Button, {
     value: "Today",
     onPointerDown: () => {
       const today_dt_str = get_today_str();
-      on_change(new Date(today_dt_str));
+      conditional_on_change(new Date(today_dt_str));
     }
   }));
 }
@@ -92,6 +98,11 @@ function NowButton(props) {
 function props_value(args) {
   const value = args.value || args.invariant_value;
   return value;
+}
+function diff_value(value1, value2) {
+  const value1_ms = value1?.getTime();
+  const value2_ms = value2?.getTime();
+  return value1_ms === value2_ms;
 }
 function props_to_str_value(args) {
   const date = props_value(args);

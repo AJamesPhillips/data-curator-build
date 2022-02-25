@@ -274,7 +274,7 @@ function get_options_to_display(args) {
   let options_to_display = filterd_options;
   if (!retain_options_order)
     options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending);
-  if (allow_none)
+  if (allow_none && selected_any_option)
     options_to_display = [OPTION_NONE, ...options_to_display];
   return {internal_options: options_to_display, search_type_used};
 }

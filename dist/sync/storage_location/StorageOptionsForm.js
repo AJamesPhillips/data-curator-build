@@ -35,8 +35,10 @@ function _StorageOptionsForm(props) {
     const res = await create_a_base({owner_user_id: user_id, title: new_base_title.trim()});
     set_base_creation_state(res.error ? "error" : "success");
     set_newly_created_base(res.base);
-    if (!res.error)
+    if (!res.error) {
       pub_sub.user.pub("stale_bases", false);
+      set_new_base_title("");
+    }
   };
   if (editing_base_id !== void 0)
     return /* @__PURE__ */ h("div", {
