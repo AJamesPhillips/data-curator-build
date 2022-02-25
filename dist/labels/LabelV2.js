@@ -30,7 +30,7 @@ function _LabelV2(props) {
     wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,
     sim_ms: props.sim_ms
-  }) : "Not found";
+  }) : "&lt;Label not found&gt;";
   return /* @__PURE__ */ h("div", {
     className: "label_v2",
     style: {
