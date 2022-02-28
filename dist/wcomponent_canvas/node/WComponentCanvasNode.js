@@ -135,7 +135,6 @@ function _WComponentCanvasNode(props) {
   }, [props.node_is_moving]);
   const {wc_ids_excluded_by_filters} = composed_kv.filters;
   const validity_value = always_show || !wcomponent ? {display_certainty: 1} : calc_wcomponent_should_display({
-    is_editing,
     wcomponent,
     kv_entry,
     created_at_ms,

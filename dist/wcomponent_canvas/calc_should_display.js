@@ -5,7 +5,7 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../shared/utils_datetime/utils_datetime.js";
 export function calc_wcomponent_should_display(args) {
-  const {is_editing, wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters} = args;
+  const {wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters} = args;
   if (!kv_entry || kv_entry.blocked)
     return false;
   if (selected_wcomponent_ids_set.has(wcomponent.id))
@@ -103,7 +103,7 @@ export function calc_judgement_connection_wcomponent_should_display(args) {
   };
 }
 export function calc_display_opacity(args) {
-  if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item)
+  if (args.is_highlighted || args.is_selected || args.is_current_item)
     return 1;
   if (args.certainty_formatting.render_100_opacity && !args.focused_mode)
     return 1;
@@ -111,6 +111,8 @@ export function calc_display_opacity(args) {
     return 1;
   if (args.focused_mode)
     return 0.1;
+  if (args.is_editing)
+    return 1;
   const min50 = args.certainty_formatting.render_certainty_as_easier_opacity;
   return args.certainty === 1 ? 1 : min50 ? rescale(args.certainty, 0.4, 0.7) : rescale(args.certainty, 0.1, 0.5);
 }
