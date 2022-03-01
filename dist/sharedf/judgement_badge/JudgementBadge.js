@@ -6,6 +6,8 @@ import {QuestionMarkIcon} from "../icons/QuestionMarkIcon.js";
 import "./JudgementBadge.css.proxy.js";
 import {Link} from "../Link.js";
 import {lefttop_to_xy} from "../../state/display_options/display.js";
+import {get_store} from "../../state/store.js";
+import {ACTIONS} from "../../state/actions.js";
 export function JudgementBadge(props) {
   const {judgement, judgement_trend_manual, size} = props;
   const judgement_type = judgement ? "positive" : judgement === void 0 ? "inactive" : "negative";
@@ -23,6 +25,18 @@ export function JudgementBadge(props) {
     sub_route: void 0,
     item_id: props.judgement_or_objective_id,
     args,
-    extra_class_name: class_name
+    extra_class_name: class_name,
+    on_pointer_down: () => {
+      const store = get_store();
+      const state = store.getState();
+      const {display_side_panel, display_time_sliders} = state.controls;
+      if (props.position)
+        args = lefttop_to_xy({...props.position, zoom: 100}, true, {display_side_panel, display_time_sliders});
+      store.dispatch(ACTIONS.routing.change_route({
+        item_id: props.judgement_or_objective_id,
+        args
+      }));
+      return true;
+    }
   }, trend_icon);
 }

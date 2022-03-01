@@ -6,6 +6,7 @@ import {date_to_string, correct_datetime_for_local_time_zone, valid_date} from "
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
 import {date2str, get_today_str} from "../shared/utils/date_helpers.js";
+import {find_parent_element_by_class} from "../utils/html.js";
 const map_state = (state) => ({
   time_resolution: state.display_options.time_resolution,
   presenting: state.display_options.consumption_formatting
@@ -56,10 +57,13 @@ function _EditableCustomDateTime(props) {
     },
     onChange: (e) => {
       const valid2 = is_value_valid(e.currentTarget.value);
+      const el = find_parent_element_by_class(e.currentTarget, "editable_field");
+      if (!el)
+        return;
       if (valid2)
-        e.currentTarget.classList.remove("invalid");
+        el.classList.remove("invalid");
       else
-        e.currentTarget.classList.add("invalid");
+        el.classList.add("invalid");
     },
     onBlur: (e) => {
       const working_value = e.currentTarget.value;
@@ -82,6 +86,8 @@ function _EditableCustomDateTime(props) {
 }
 export const EditableCustomDateTime = connector(_EditableCustomDateTime);
 function is_value_valid(str) {
+  if (!str.trim())
+    return true;
   const working_value_date = correct_datetime_for_local_time_zone(str);
   return !!working_value_date && valid_date(working_value_date);
 }
@@ -102,7 +108,7 @@ function props_value(args) {
 function diff_value(value1, value2) {
   const value1_ms = value1?.getTime();
   const value2_ms = value2?.getTime();
-  return value1_ms === value2_ms;
+  return value1_ms !== value2_ms;
 }
 function props_to_str_value(args) {
   const date = props_value(args);

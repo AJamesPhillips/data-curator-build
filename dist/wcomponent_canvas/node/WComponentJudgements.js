@@ -29,7 +29,7 @@ function _WComponentJudgements(props) {
     active_judgement_or_objective_ids_by_target_id,
     active_judgement_or_objective_ids_by_goal_or_action_id
   ]);
-  const node_judgements_container_class_name = "node_judgements_container " + (judgement_or_objective_ids.length ? "" : "empty");
+  const node_judgements_container_class_name = "node_judgements_container ";
   if (value === void 0 || target_VAPs_represent === void 0) {
     return /* @__PURE__ */ h("div", {
       className: node_judgements_container_class_name

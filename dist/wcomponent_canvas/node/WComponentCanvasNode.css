@@ -25,6 +25,7 @@
 }
 
 .node_validity_container, .node_state_container {
+  flex-wrap: wrap;
   display: flex;
   overflow: hidden;
   padding: 2px;
@@ -40,6 +41,7 @@
 }
 
 .node_state_container .value_and_prediction_summary, .node_sub_state_container .value_and_prediction_summary {
+  width: 70%;
   flex-grow: 1;
   flex-shrink: 1;
   overflow: hidden;

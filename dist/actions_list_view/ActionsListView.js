@@ -14,6 +14,7 @@ import {ACTION_VALUE_POSSIBILITY_ID} from "../wcomponent/value/parse_value.js";
 import {SIDE_PANEL_WIDTH} from "../side_panel/width.js";
 import {useMemo, useRef, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {AddNewActionButton} from "./AddNewActionButton.js";
+import {find_parent_element_by_classes} from "../utils/html.js";
 export function ActionsListView(props) {
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(ActionsListViewContent, null)
@@ -110,13 +111,9 @@ function _ActionsListViewContent(props) {
     onPointerLeave: (e) => set_pointer_down_at(void 0),
     onPointerOut: (e) => {
       let target = e.relatedTarget;
-      while (target) {
-        const {classList} = target;
-        if (classList && (classList.contains("action_list") || classList.contains("action_list_view_content"))) {
-          return;
-        }
-        target = target.parentElement;
-      }
+      target = find_parent_element_by_classes(target, ["action_list", "action_list_view_content"]);
+      if (target)
+        return;
       set_pointer_down_at(void 0);
     }
   }, /* @__PURE__ */ h("div", {

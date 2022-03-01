@@ -4,7 +4,6 @@ import {MenuItem as MaterialMenuItem} from "../../snowpack/pkg/@material-ui/core
 import {Link} from "../sharedf/Link.js";
 import {CreationContextTabTitle} from "../creation_context/CreationContextTabTitle.js";
 import {FilterContextTabTitle} from "../filter_context/FilterContextTabTitle.js";
-import {ACTIONS} from "../state/actions.js";
 import {route_to_text} from "./route_to_text.js";
 function get_title(id) {
   if (id === "filter")
@@ -14,13 +13,11 @@ function get_title(id) {
   else
     return route_to_text(id);
 }
-const map_state = (state) => ({current_route: state.routing.route});
-const map_dispatch = {change_route: ACTIONS.routing.change_route};
-const connector = connect(map_state, map_dispatch);
+const connector = connect();
 function _AppMenuItem(props) {
   const handle_pointer_down = () => {
-    props.change_route({route: props.id, sub_route: null, item_id: null});
     props.on_pointer_down();
+    return false;
   };
   const title = get_title(props.id);
   return /* @__PURE__ */ h(CustomisableAppMenuItem, {

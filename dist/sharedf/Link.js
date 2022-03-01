@@ -25,7 +25,7 @@ const map_state = (state, own_props) => {
   };
 };
 const map_dispatch = (dispatch, own_props) => ({
-  link_clicked: (routing_args) => dispatch(ACTIONS.routing.change_route({
+  change_route: (routing_args) => dispatch(ACTIONS.routing.change_route({
     route: own_props.route,
     sub_route: own_props.sub_route,
     item_id: own_props.item_id,
@@ -54,9 +54,9 @@ class _Link extends Component {
       if (this.props.selected)
         return;
       this.setState({clicked: true});
-      if (this.props.on_pointer_down)
-        this.props.on_pointer_down();
-      this.props.link_clicked(partial_routing_args);
+      if (this.props.on_pointer_down && this.props.on_pointer_down())
+        return;
+      this.props.change_route(partial_routing_args);
     };
     const full_routing_state = merge_routing_state(this.props.current_routing_state, this.props);
     const full_routing_args = {...this.props.current_routing_state.args, ...partial_routing_args};
@@ -82,7 +82,7 @@ function _LinkButton(props) {
     e.preventDefault();
     if (props.on_pointer_down)
       props.on_pointer_down();
-    props.link_clicked(partial_routing_args);
+    props.change_route(partial_routing_args);
   };
   const full_routing_state = merge_routing_state(props.current_routing_state, props);
   const full_routing_args = {...props.current_routing_state.args, ...partial_routing_args};

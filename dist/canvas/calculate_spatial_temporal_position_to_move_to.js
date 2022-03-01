@@ -4,7 +4,7 @@ import {
   lefttop_to_xy,
   get_visible_screen_height
 } from "../state/display_options/display.js";
-import {NODE_WIDTH, node_height_approx} from "./position_utils.js";
+import {NODE_WIDTH, node_height_approx, offset_entry_by_half_node} from "./position_utils.js";
 import {SCALE_BY, bound_zoom} from "./zoom_utils.js";
 export function calculate_spatial_temporal_position_to_move_to(args) {
   const {
@@ -114,10 +114,7 @@ function get_wcomponent_group_positions_and_last_created_at(args) {
   const display_args = {display_side_panel, display_time_sliders};
   const view_entry = composed_wc_id_map[initial_wcomponent?.id || ""];
   if (initial_wcomponent && view_entry) {
-    let {left, top, s} = view_entry;
-    const size = s ?? 1;
-    left += NODE_WIDTH * size * 0.5;
-    top += node_height_approx(!!initial_wcomponent.summary_image) * size * 0.5;
+    const {left, top} = offset_entry_by_half_node(view_entry, !!initial_wcomponent.summary_image);
     const position_and_zoom = lefttop_to_xy({left, top, zoom: SCALE_BY}, true, display_args);
     positions.push(position_and_zoom);
   } else if (!disable_if_not_present && composed_visible_wc_id_map) {

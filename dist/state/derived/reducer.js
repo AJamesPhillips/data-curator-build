@@ -75,6 +75,11 @@ function conditionally_update_active_judgement_or_objective_ids(initial_state, s
         return;
       active_judgement_or_objectives_by_id[judgement.id] = true;
     });
+    const wcomponent_ids_sort_key = {};
+    Object.keys(composed_visible_wc_id_map).forEach((id, index) => {
+      wcomponent_ids_sort_key[id] = index;
+    });
+    const get_wcomponent_ids_sort_key = (id) => wcomponent_ids_sort_key[id] || -1;
     const {
       judgement_or_objective_ids_by_target_id,
       judgement_or_objective_ids_by_goal_or_action_id
@@ -85,13 +90,15 @@ function conditionally_update_active_judgement_or_objective_ids(initial_state, s
       if (target_ids) {
         const active_judgement_or_objective_ids = target_ids.filter(judgement_or_objective_id_is_active);
         if (active_judgement_or_objective_ids.length) {
-          active_judgement_or_objective_ids_by_target_id[id] = active_judgement_or_objective_ids;
+          const sorted = sort_list(active_judgement_or_objective_ids, get_wcomponent_ids_sort_key, SortDirection.descending);
+          active_judgement_or_objective_ids_by_target_id[id] = sorted;
         }
       }
       if (ids_from_goal_or_action) {
         const active_judgement_or_objective_ids = ids_from_goal_or_action.filter(judgement_or_objective_id_is_active);
         if (active_judgement_or_objective_ids.length) {
-          active_judgement_or_objective_ids_by_goal_or_action_id[id] = active_judgement_or_objective_ids;
+          const sorted = sort_list(active_judgement_or_objective_ids, get_wcomponent_ids_sort_key, SortDirection.descending);
+          active_judgement_or_objective_ids_by_goal_or_action_id[id] = sorted;
         }
       }
     });

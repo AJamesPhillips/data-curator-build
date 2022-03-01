@@ -21,6 +21,12 @@ export const NODE_WIDTH = 250;
 export const node_height_approx = (has_image = false) => has_image ? 120 : 59;
 const half_node_width = NODE_WIDTH / 2;
 const half_node_height = (has_image) => node_height_approx(has_image) / 2;
-export function offset_by_half_node(point) {
+export function offset_input_by_half_node(point) {
   return {left: point.left - half_node_width, top: point.top - half_node_height(false)};
+}
+export function offset_entry_by_half_node(kv_entry, has_image) {
+  const s = kv_entry.s ?? 1;
+  const left = kv_entry.left + s * half_node_width;
+  const top = kv_entry.top + s * half_node_height(has_image);
+  return {left, top};
 }
