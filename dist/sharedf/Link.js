@@ -80,8 +80,8 @@ function _LinkButton(props) {
   const on_click = (e) => {
     e.stopImmediatePropagation();
     e.preventDefault();
-    if (props.on_pointer_down)
-      props.on_pointer_down();
+    if (props.on_pointer_down && props.on_pointer_down())
+      return;
     props.change_route(partial_routing_args);
   };
   const full_routing_state = merge_routing_state(props.current_routing_state, props);
