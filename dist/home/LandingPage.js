@@ -47,15 +47,27 @@ export function LandingPage() {
     color: "secondary",
     disableElevation: true,
     size: "large"
-  }, /* @__PURE__ */ h("strong", null, action_text))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present."), /* @__PURE__ */ h("p", null, "This is a ", /* @__PURE__ */ h("a", {
+  }, /* @__PURE__ */ h("strong", null, action_text))), /* @__PURE__ */ h("h3", null, "What is ", /* @__PURE__ */ h("strong", null, "Data Curator"), "?"), /* @__PURE__ */ h("p", null, "DataCurator is a tool to map and manage complex problems."), /* @__PURE__ */ h("p", null, "Data is messy, and the more types of data you need the messier it gets. DataCurator helps you to understand complex problems by breaking down large, disparate, and overlapping sets of information into modular component parts."), /* @__PURE__ */ h("p", null, "Navigating a complex system requires gathering and interpreting a variety of data from a diverse range of sources: quantitative and qualitative data from different kinds of surveys and studies, research and insights from numerous experts in different fields, sets of goals and priorities from different stakeholders."), /* @__PURE__ */ h("p", null, "DataCurator allows you to build a usable, shareable model of a complex system to help you organize successful interventions."), /* @__PURE__ */ h("h3", null, "How does it work?"), /* @__PURE__ */ h("p", null, "DataCurator visualizes connections between different types of data. You can put all your different types of information into one place, then isolate certain components and identify relationships and patterns across the full range of data."), /* @__PURE__ */ h("p", null, "There are two dimensions of time built into the tool: one that lets you track your time within the tool itself, allowing you to check what you did when; and one that lets you plan interventions at simulated timescales."), /* @__PURE__ */ h("p", null, "DataCurator allows you to plan for the uncertainty built into potential interventions. Uncertainty is inherent to complex systems: numbers may be inaccurate, people may behave differently than expected, circumstances can change rapidly. Planning a successful intervention requires accounting for various potential outcomes. With DataCurator you can enter a potential event in the simulated timescale of your planned intervention, then assign uncertainty to specific values."), /* @__PURE__ */ h("p", null, "For example, you might say that if a positive test rate is at or below 3% it's not a problem, but if it gets above that level different scenarios emerge."), /* @__PURE__ */ h("p", null, "DataCurator aims to facilitate and encourage more precise and systematic recording of all the key elements we use to create models: the definitions, statuses, processes, assumptions, and imagined potential outcomes, based on all the information you have."), /* @__PURE__ */ h("h3", null, "Who is it for?"), /* @__PURE__ */ h("p", null, "DataCurator is for anyone trying to understand a complex system and intervene in it, who has a lot of information to understand and interpret."), /* @__PURE__ */ h("p", null, "Use it for simple note-taking and organizing, or model and plan an entire intervention. Choose key indicators to simplify the map or use the goal-priority view to keep your goals on track."), /* @__PURE__ */ h("h3", null, "How do I get started?"), /* @__PURE__ */ h("p", null, "Click on the ", /* @__PURE__ */ h("a", {
+    href: "/app/"
+  }, "button"), " above or ", /* @__PURE__ */ h("a", {
+    href: "https://www.youtube.com/playlist?list=PLdbIJ7BPHJ_lHTDvBE8PhpLccPNq4Mu7E"
+  }, "watch the video tutorial series")), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("iframe", {
+    width: "560",
+    height: "315",
+    src: "https://www.youtube.com/embed/videoseries?list=PLdbIJ7BPHJ_lHTDvBE8PhpLccPNq4Mu7E",
+    title: "YouTube video player",
+    frameBorder: "0",
+    ...{allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"},
+    allowFullScreen: true
+  })), /* @__PURE__ */ h("h3", null, "Who built it?"), /* @__PURE__ */ h("p", null, "DataCurator is a ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/projects/datacurator/"
   }, "CCI project"), " supported by ", /* @__PURE__ */ h("a", {
     href: "https://centerofci.org/about/"
-  }, "our generous funders"), "."), /* @__PURE__ */ h("p", null, "Please post any ", /* @__PURE__ */ h("a", {
+  }, "our generous funders"), "."), /* @__PURE__ */ h("h3", null, "I have an idea, question or I have found a bug!"), /* @__PURE__ */ h("p", null, "Please post any requests for ", /* @__PURE__ */ h("a", {
     href: "https://github.com/centerofci/DataCurator/discussions/categories/q-a"
-  }, "support or questions here"), ". For any bugs please ", /* @__PURE__ */ h("a", {
+  }, "support or questions here"), " or email us at webadmin at centerofci dot org . For any bugs please ", /* @__PURE__ */ h("a", {
     href: "https://github.com/centerofci/DataCurator/issues"
-  }, "post here"), "."), /* @__PURE__ */ h("a", {
+  }, "post here"), "."), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("a", {
     href: "/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12"
   }, /* @__PURE__ */ h("img", {
     src: "/image_1.png",
