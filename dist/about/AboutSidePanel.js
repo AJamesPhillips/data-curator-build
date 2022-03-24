@@ -7,6 +7,6 @@ const connector = connect(map_state);
 function _AboutSidePanel(props) {
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Version"), " ", /* @__PURE__ */ h("b", null, "2022-03-23"));
+  }, "Version"), " ", /* @__PURE__ */ h("b", null, "2022-03-24"));
 }
 export const AboutSidePanel = connector(_AboutSidePanel);

@@ -62,6 +62,8 @@ function _EditableTextCommon(props) {
   });
   const class_name = `editable_field ${value ? "" : "placeholder"}`;
   const on_render = useMemo(() => (el) => {
+    if (!el)
+      return;
     if (el_ref.current === el)
       return;
     el_ref.current = el;
@@ -78,8 +80,19 @@ function _EditableTextCommon(props) {
   const wrapped_on_blur = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
-    handle_text_field_blur({e, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
+    const {value: value2} = e.currentTarget;
+    handle_text_field_blur({value: value2, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
   }, [props.value, conditional_on_blur, always_on_blur, set_is_editing]);
+  useEffect(() => {
+    return () => {
+      if (!is_editing_this_specific_text)
+        return;
+      if (!el_ref.current)
+        return;
+      const {value: value2} = el_ref.current;
+      handle_text_field_blur({value: value2, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
+    };
+  }, [is_editing_this_specific_text]);
   const [_, force_refreshing_render] = useState({});
   const refocus_after_search_window = useMemo(() => (on_focus_set_selection) => {
     el_ref.current?.focus();
@@ -133,8 +146,7 @@ function handle_text_field_change(args) {
   args.conditional_on_change(args.e.currentTarget.value);
 }
 function handle_text_field_blur(args) {
-  const {value} = args.e.currentTarget;
-  const {set_is_editing, initial_value, conditional_on_blur, always_on_blur} = args;
+  const {set_is_editing, value, initial_value, conditional_on_blur, always_on_blur} = args;
   set_is_editing(false);
   if (initial_value !== value)
     conditional_on_blur && conditional_on_blur(value);

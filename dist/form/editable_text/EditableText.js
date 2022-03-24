@@ -16,11 +16,7 @@ export function EditableText(props) {
       onFocus: on_focus,
       onChange: on_change,
       onBlur: on_blur,
-      inputRef: (el) => {
-        if (!el)
-          return;
-        on_render(el);
-      }
+      inputRef: on_render
     })
   });
 }

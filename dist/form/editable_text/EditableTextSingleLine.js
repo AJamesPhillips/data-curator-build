@@ -15,11 +15,7 @@ export function EditableTextSingleLine(props) {
       onChange: on_change,
       onBlur: on_blur,
       size: props.size,
-      inputRef: (el) => {
-        if (!el)
-          return;
-        on_render(el);
-      }
+      inputRef: on_render
     });
   }, [props.placeholder, props.size]);
   return /* @__PURE__ */ h(EditableTextCommon, {

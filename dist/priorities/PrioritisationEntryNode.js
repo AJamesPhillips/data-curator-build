@@ -1,12 +1,12 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
+import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import Markdown from "../../snowpack/pkg/markdown-to-jsx.js";
 import "./PrioritisationEntryNode.css.proxy.js";
 import {ACTIONS} from "../state/actions.js";
 import {CanvasNode} from "../canvas/CanvasNode.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {MARKDOWN_OPTIONS} from "../sharedf/RichMarkDown.js";
-import {useState} from "../../snowpack/pkg/preact/hooks.js";
 const map_state = (state) => ({
   wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
   knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
@@ -30,8 +30,8 @@ function _PrioritisationEntryNode(props) {
     created_at_ms,
     sim_ms: new Date().getTime()
   });
-  const initial_w = effort > 0 ? width : Math.min(width, 250);
-  const hover_w = effort > 0 ? Math.max(width, 250) : 250;
+  const initial_w = Math.max(width, 60);
+  const hover_w = Math.max(width, 250);
   const [w, set_w] = useState(initial_w);
   const percent = `${Math.round(effort * 100)}%`;
   const backgroundImage = `linear-gradient(to top, #a6eaff ${percent}, rgba(0,0,0,0) ${percent})`;
@@ -57,8 +57,8 @@ function _PrioritisationEntryNode(props) {
     title
   }, /* @__PURE__ */ h(Markdown, {
     options: MARKDOWN_OPTIONS
-  }, title)), effort > 0 && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
+  }, title)), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
     style: {color: "grey", fontSize: 10}
-  }, "  Effort ", percent))));
+  }, "  ", effort > 0 && `Effort ${percent}`))));
 }
 export const PrioritisationEntryNode = connector(_PrioritisationEntryNode);
