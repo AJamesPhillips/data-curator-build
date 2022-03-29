@@ -19,15 +19,11 @@ const connector = connect(map_state, map_dispatch);
 function _EditableTextCommon(props) {
   const {
     placeholder,
-    conditional_on_change: user_conditional_on_change,
-    conditional_on_blur,
-    always_on_blur,
     disabled,
     presenting,
     force_editable,
     select_all_on_focus,
-    force_focus_on_first_render,
-    set_editing_text_flag
+    force_focus_on_first_render
   } = props;
   const [value, set_value] = useState(props.value);
   useEffect(() => set_value(props.value), [props.value]);
@@ -35,10 +31,10 @@ function _EditableTextCommon(props) {
   const id_insertion_point = useRef(void 0);
   const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false);
   const set_is_editing = useMemo(() => (is_editing) => {
-    set_editing_text_flag(is_editing);
+    props.set_editing_text_flag(is_editing);
     set_is_editing_this_specific_text(is_editing);
-  }, [set_editing_text_flag, set_is_editing_this_specific_text]);
-  if (force_editable === false || !user_conditional_on_change && !conditional_on_blur && !always_on_blur || disabled || presenting && force_editable !== true) {
+  }, [props.set_editing_text_flag, set_is_editing_this_specific_text]);
+  if (force_editable === false || !props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur || disabled || presenting && force_editable !== true) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
@@ -54,9 +50,9 @@ function _EditableTextCommon(props) {
       new_value = custom_creation_context_replace_text(props.creation_context, new_value);
     }
     if (new_value !== value)
-      user_conditional_on_change && user_conditional_on_change(new_value);
+      props.conditional_on_change && props.conditional_on_change(new_value);
     set_value(new_value);
-  }, [props.creation_context, user_conditional_on_change]);
+  }, [props.creation_context, props.conditional_on_change]);
   useEffect(() => {
     return pub_sub.global_keys.sub("key_down", handle_general_key_down(is_editing_this_specific_text, el_ref.current, conditional_on_change));
   });
@@ -81,18 +77,28 @@ function _EditableTextCommon(props) {
     if (id_insertion_point.current !== void 0)
       return;
     const {value: value2} = e.currentTarget;
-    handle_text_field_blur({value: value2, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
-  }, [props.value, conditional_on_blur, always_on_blur, set_is_editing]);
-  useEffect(() => {
-    return () => {
-      if (!is_editing_this_specific_text)
-        return;
-      if (!el_ref.current)
-        return;
-      const {value: value2} = el_ref.current;
-      handle_text_field_blur({value: value2, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing});
-    };
-  }, [is_editing_this_specific_text]);
+    handle_text_field_blur({
+      value: value2,
+      initial_value: props.value,
+      conditional_on_blur: props.conditional_on_blur,
+      always_on_blur: props.always_on_blur,
+      set_is_editing
+    });
+  }, [props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing]);
+  useEffect(() => () => {
+    if (!is_editing_this_specific_text)
+      return;
+    if (!el_ref.current)
+      return;
+    const {value: value2} = el_ref.current;
+    handle_text_field_blur({
+      value: value2,
+      initial_value: props.value,
+      conditional_on_blur: props.conditional_on_blur,
+      always_on_blur: props.always_on_blur,
+      set_is_editing
+    });
+  }, [is_editing_this_specific_text, props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing]);
   const [_, force_refreshing_render] = useState({});
   const refocus_after_search_window = useMemo(() => (on_focus_set_selection) => {
     el_ref.current?.focus();

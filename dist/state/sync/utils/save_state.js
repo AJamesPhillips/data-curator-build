@@ -76,17 +76,17 @@ async function save_knowledge_view(id, store) {
   const post_upsert_check_result = post_upsert_check(id, store, object_type, response);
   if (post_upsert_check_result.error)
     return post_upsert_check_result.error;
-  const {create_successful, update_successful, latest_source_of_truth} = post_upsert_check_result;
-  const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id);
+  const {create_successful, update_successful, latest_source_of_truth_value} = post_upsert_check_result;
+  const last_source_of_truth_value = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id);
   const current_value = get_knowledge_view_from_state(store.getState(), id);
   store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
-    knowledge_view: latest_source_of_truth,
-    source_of_truth: true
+    knowledge_view: latest_source_of_truth_value,
+    is_source_of_truth: true
   }));
   const check_merge_args_result = check_merge_args({
     object_type,
     initial_item,
-    last_source_of_truth,
+    last_source_of_truth_value,
     current_value
   });
   if (check_merge_args_result.error)
@@ -94,7 +94,7 @@ async function save_knowledge_view(id, store) {
   if (check_merge_args_result.merge_args) {
     const merge = merge_knowledge_view({
       ...check_merge_args_result.merge_args,
-      source_of_truth: latest_source_of_truth,
+      source_of_truth_value: latest_source_of_truth_value,
       update_successful
     });
     if (merge.needs_save) {
@@ -102,7 +102,7 @@ async function save_knowledge_view(id, store) {
         knowledge_view: {
           ...merge.value
         },
-        source_of_truth: false
+        is_source_of_truth: false
       }));
     }
     if (merge.unresolvable_conflicted_fields.length) {
@@ -122,17 +122,17 @@ async function save_wcomponent(id, store) {
   const post_upsert_check_result = post_upsert_check(id, store, object_type, response);
   if (post_upsert_check_result.error)
     return post_upsert_check_result.error;
-  const {create_successful, update_successful, latest_source_of_truth} = post_upsert_check_result;
-  const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id);
+  const {create_successful, update_successful, latest_source_of_truth_value} = post_upsert_check_result;
+  const last_source_of_truth_value = get_last_source_of_truth_wcomponent_from_state(store.getState(), id);
   const current_value = get_wcomponent_from_state(store.getState(), id);
   store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
-    wcomponent: latest_source_of_truth,
-    source_of_truth: true
+    wcomponent: latest_source_of_truth_value,
+    is_source_of_truth: true
   }));
   const check_merge_args_result = check_merge_args({
     object_type,
     initial_item,
-    last_source_of_truth,
+    last_source_of_truth_value,
     current_value
   });
   if (check_merge_args_result.error)
@@ -140,7 +140,7 @@ async function save_wcomponent(id, store) {
   if (check_merge_args_result.merge_args) {
     const merge = merge_wcomponent({
       ...check_merge_args_result.merge_args,
-      source_of_truth: latest_source_of_truth,
+      source_of_truth_value: latest_source_of_truth_value,
       update_successful
     });
     if (merge.needs_save) {
@@ -148,7 +148,7 @@ async function save_wcomponent(id, store) {
         wcomponent: {
           ...merge.value
         },
-        source_of_truth: false
+        is_source_of_truth: false
       }));
     }
     if (merge.unresolvable_conflicted_fields.length) {
@@ -175,29 +175,29 @@ function post_upsert_check(id, store, object_type, response) {
   if (!create_successful && !update_successful && response.status !== 409) {
     const error_string = error_to_string(response.error);
     const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${error_string}"`);
-    return {error, create_successful, update_successful, latest_source_of_truth: void 0};
+    return {error, create_successful, update_successful, latest_source_of_truth_value: void 0};
   }
-  const latest_source_of_truth = response.item;
-  if (!latest_source_of_truth) {
-    const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth item.  Error: "${response.error}".`);
-    return {error, create_successful, update_successful, latest_source_of_truth};
+  const latest_source_of_truth_value = response.item;
+  if (!latest_source_of_truth_value) {
+    const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth_value item.  Error: "${JSON.stringify(response.error)}".`);
+    return {error, create_successful, update_successful, latest_source_of_truth_value};
   }
-  return {error: void 0, create_successful, update_successful, latest_source_of_truth};
+  return {error: void 0, create_successful, update_successful, latest_source_of_truth_value};
 }
 function check_merge_args(args) {
-  const {object_type, initial_item, last_source_of_truth, current_value} = args;
-  if (!last_source_of_truth) {
+  const {object_type, initial_item, last_source_of_truth_value, current_value} = args;
+  if (!last_source_of_truth_value) {
     if (initial_item.modified_at) {
-      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`);
+      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth_value "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`);
       return {error, merge_args: void 0};
     } else {
     }
   } else {
     if (!current_value) {
-      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth but no current_value for id "${initial_item.id}".`);
+      const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth_value but no current_value for id "${initial_item.id}".`);
       return {error, merge_args: void 0};
     }
-    return {error: void 0, merge_args: {last_source_of_truth, current_value}};
+    return {error: void 0, merge_args: {last_source_of_truth_value, current_value}};
   }
   return {error: void 0, merge_args: void 0};
 }

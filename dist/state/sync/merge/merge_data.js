@@ -1,14 +1,14 @@
 export function merge_base_object(args) {
   const {
-    last_source_of_truth,
+    last_source_of_truth_value,
     current_value,
-    source_of_truth,
+    source_of_truth_value,
     get_custom_field_merger
   } = args;
-  let value = {...source_of_truth};
+  let value = {...source_of_truth_value};
   let needs_save = false;
   let unresolvable_conflicted_fields = [];
-  const fields = get_fields(current_value, last_source_of_truth, source_of_truth);
+  const fields = get_fields(current_value, last_source_of_truth_value, source_of_truth_value);
   fields.forEach((field) => {
     const field_merger = get_custom_field_merger(field) || get_default_base_object_field_merger(field);
     const merge = field_merger(args);
@@ -39,15 +39,15 @@ function get_default_base_object_field_merger(field) {
     "modified_at"
   ]);
   function default_field_merger(args) {
-    const source_of_truth = args.source_of_truth[field];
-    const current_value = args.current_value[field];
+    const source_of_truth_field_value = args.source_of_truth_value[field];
+    const current_field_value = args.current_value[field];
     let needs_save = false;
     let unresolvable_conflict = false;
     if (always_current_value_fields.has(field)) {
-      return {needs_save, unresolvable_conflict, value: current_value};
+      return {needs_save, unresolvable_conflict, value: current_field_value};
     }
     if (always_source_of_truth_fields.has(field)) {
-      return {needs_save, unresolvable_conflict, value: source_of_truth};
+      return {needs_save, unresolvable_conflict, value: source_of_truth_field_value};
     }
     return get_default_field_merger(field)(args);
   }
@@ -58,21 +58,21 @@ export function get_default_field_merger(field) {
     return JSON.stringify(a) === JSON.stringify(b);
   }
   function default_field_merger(args) {
-    const source_of_truth = args.source_of_truth[field];
-    const current_value = args.current_value[field];
-    const last_source_of_truth = args.last_source_of_truth[field];
+    const source_of_truth_field_value = args.source_of_truth_value[field];
+    const current_field_value = args.current_value[field];
+    const last_source_of_truth_field_value = args.last_source_of_truth_value[field];
     let needs_save = false;
     let unresolvable_conflict = false;
     let value;
-    if (args.update_successful || are_equal(source_of_truth, last_source_of_truth)) {
-      value = current_value;
-      needs_save = !are_equal(current_value, source_of_truth);
+    if (args.update_successful || are_equal(source_of_truth_field_value, last_source_of_truth_field_value)) {
+      value = current_field_value;
+      needs_save = !are_equal(current_field_value, source_of_truth_field_value);
     } else {
-      value = source_of_truth;
-      if (!are_equal(current_value, last_source_of_truth)) {
-        unresolvable_conflict = !are_equal(current_value, source_of_truth);
+      value = source_of_truth_field_value;
+      if (!are_equal(current_field_value, last_source_of_truth_field_value)) {
+        unresolvable_conflict = !are_equal(current_field_value, source_of_truth_field_value);
         if (unresolvable_conflict) {
-          console.log("unresolvable_conflict with field: ", field, "last_source_of_truth", last_source_of_truth, "source_of_truth", source_of_truth, "current_value", current_value);
+          console.log("unresolvable_conflict with field: ", field, "last_source_of_truth_field_value", last_source_of_truth_field_value, "source_of_truth_field_value", source_of_truth_field_value, "current_field_value", current_field_value);
         }
       }
     }

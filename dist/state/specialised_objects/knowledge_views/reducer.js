@@ -10,7 +10,7 @@ import {bulk_editing_knowledge_view_entries_reducer} from "./bulk_edit/reducer.j
 import {handle_upsert_knowledge_view} from "./utils.js";
 export const knowledge_views_reducer = (state, action) => {
   if (is_upsert_knowledge_view(action)) {
-    state = handle_upsert_knowledge_view(state, action.knowledge_view, action.source_of_truth);
+    state = handle_upsert_knowledge_view(state, action.knowledge_view, action.is_source_of_truth);
   }
   if (is_upsert_wcomponent(action)) {
     const {wcomponent, add_to_knowledge_view, add_to_top} = action;
@@ -21,7 +21,7 @@ export const knowledge_views_reducer = (state, action) => {
     const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id];
     if (associated_kv && associated_kv.title !== wcomponent.title) {
       const updated_knowledge_view = {...associated_kv, title: wcomponent.title};
-      state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.source_of_truth);
+      state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.is_source_of_truth);
     }
   }
   if (is_upsert_knowledge_view_entry(action)) {

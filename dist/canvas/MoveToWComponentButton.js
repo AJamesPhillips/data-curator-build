@@ -107,7 +107,7 @@ export function MoveToItemButton(props) {
         move();
       }
     });
-  });
+  }, [props.enable_spacebar_move_to_shortcut]);
   return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {
     placement: "top",
     title: move ? "Move to component(s)" : "No component(s) present"

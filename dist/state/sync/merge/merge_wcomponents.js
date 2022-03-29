@@ -26,18 +26,18 @@ function run_tests() {
   test_should_handle_non_and_conflicting_updates_with_multiple_client_updates();
   test_should_handle_different_custom_created_at();
   function test_should_handle_update_on_client() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TB", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TB", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TB", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TB", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: true
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -46,19 +46,19 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_nonconflicting_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TB", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TA", description: "DX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TB", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TA", description: "DX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -68,18 +68,18 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_conflicting_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TB", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TB", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -88,18 +88,18 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["title"]);
   }
   function test_should_handle_multiple_updates_on_client() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TC", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TB", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TC", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TB", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: true
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -108,19 +108,19 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_nonconflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TC", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TA", description: "DX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TC", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TA", description: "DX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -130,18 +130,18 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, []);
   }
   function test_should_handle_conflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TC", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB"};
-    const source_of_truth = {...last_source_of_truth, title: "TX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TC", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -150,19 +150,19 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["title"]);
   }
   function test_should_handle_non_and_conflicting_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TB", description: "DB", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB", description: "DB"};
-    const source_of_truth = {...last_source_of_truth, title: "TA", description: "DX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TB", description: "DB", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB", description: "DB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TA", description: "DX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -172,19 +172,19 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["description"]);
   }
   function test_should_handle_non_and_conflicting_updates_with_multiple_client_updates() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       title: "TA",
       description: "DA",
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, title: "TC", description: "DC", needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, title: "TB", description: "DB"};
-    const source_of_truth = {...last_source_of_truth, title: "TA", description: "DX", modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, title: "TC", description: "DC", needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, title: "TB", description: "DB"};
+    const source_of_truth_value = {...last_source_of_truth_value, title: "TA", description: "DX", modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: false
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));
@@ -194,18 +194,18 @@ function run_tests() {
     test(merge.unresolvable_conflicted_fields, ["description"]);
   }
   function test_should_handle_different_custom_created_at() {
-    const last_source_of_truth = prepare_new_contextless_wcomponent_object({
+    const last_source_of_truth_value = prepare_new_contextless_wcomponent_object({
       base_id: -1,
       custom_created_at: new Date("2021"),
       modified_at: dt1
     });
-    const current_value = {...last_source_of_truth, custom_created_at: new Date("2015"), needs_save: true, saving: true};
-    const attempted_update_value = {...last_source_of_truth, custom_created_at: new Date("2015")};
-    const source_of_truth = {...last_source_of_truth, custom_created_at: new Date("2015"), modified_at: latest_modified_at};
+    const current_value = {...last_source_of_truth_value, custom_created_at: new Date("2015"), needs_save: true, saving: true};
+    const attempted_update_value = {...last_source_of_truth_value, custom_created_at: new Date("2015")};
+    const source_of_truth_value = {...last_source_of_truth_value, custom_created_at: new Date("2015"), modified_at: latest_modified_at};
     const merge = merge_wcomponent({
-      last_source_of_truth,
+      last_source_of_truth_value,
       current_value,
-      source_of_truth,
+      source_of_truth_value,
       update_successful: true
     });
     test(dt_ms(merge.value.modified_at), dt_ms(latest_modified_at));

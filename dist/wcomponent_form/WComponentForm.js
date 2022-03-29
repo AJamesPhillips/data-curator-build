@@ -142,6 +142,7 @@ function _WComponentForm(props) {
     orig_value_possibilities = wcomponent.value_possibilities;
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
+  const conditional_on_blur = (title) => upsert_wcomponent({title});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
@@ -155,7 +156,7 @@ function _WComponentForm(props) {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
-    conditional_on_blur: (title) => upsert_wcomponent({title}),
+    conditional_on_blur,
     force_focus_on_first_render: focus_title,
     hide_label: true
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
