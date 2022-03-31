@@ -1,8 +1,6 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import {useEffect, useMemo} from "../../snowpack/pkg/preact/hooks.js";
+import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
-import FilterCenterFocusIcon from "../../snowpack/pkg/@material-ui/icons/FilterCenterFocus.js";
-import {Box, IconButton, Tooltip} from "../../snowpack/pkg/@material-ui/core.js";
 import {
   get_current_composed_knowledge_view_from_state
 } from "../state/specialised_objects/accessors.js";
@@ -12,7 +10,7 @@ import {
   calculate_all_display_combinations_of_spatial_temporal_position_to_move_to
 } from "./calculate_spatial_temporal_position_to_move_to.js";
 import {get_actually_display_time_sliders} from "../state/controls/accessors.js";
-import {pub_sub} from "../state/pub_sub/pub_sub.js";
+import {MoveToItemButton} from "./MoveToItemButton.js";
 const map_state = (state, own_props) => {
   const initial_wcomponent_id = own_props.wcomponent_id || state.routing.item_id || "";
   let components_on_screen = void 0;
@@ -92,34 +90,3 @@ function _MoveToWComponentButton(props) {
   });
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton);
-export function MoveToItemButton(props) {
-  const {
-    move,
-    draw_attention,
-    have_finished_drawing_attention = () => {
-    }
-  } = props;
-  useEffect(() => {
-    if (!props.enable_spacebar_move_to_shortcut)
-      return;
-    return pub_sub.global_keys.sub("key_down", (e) => {
-      if (move && e.key === " " && !e.user_is_editing_text) {
-        move();
-      }
-    });
-  }, [props.enable_spacebar_move_to_shortcut]);
-  return /* @__PURE__ */ h(Box, null, /* @__PURE__ */ h(Tooltip, {
-    placement: "top",
-    title: move ? "Move to component(s)" : "No component(s) present"
-  }, /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(IconButton, {
-    size: "medium",
-    onClick: move,
-    disabled: !move
-  }, /* @__PURE__ */ h(FilterCenterFocusIcon, null)))), /* @__PURE__ */ h("div", {
-    className: move && draw_attention ? "pulsating_circle" : "",
-    ref: (e) => setTimeout(() => {
-      e?.classList.remove("pulsating_circle");
-      have_finished_drawing_attention();
-    }, 1e4)
-  }));
-}

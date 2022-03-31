@@ -6,16 +6,12 @@ import {useRef, useEffect, useState, useMemo} from "../../../snowpack/pkg/preact
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import "./AutocompleteText.css.proxy.js";
 import {sort_list, SortDirection} from "../../shared/utils/sort.js";
-import {ACTIONS} from "../../state/actions.js";
 import {throttle} from "../../utils/throttle.js";
 import {Options} from "./Options.js";
 const map_state = (state) => ({
   presenting: state.display_options?.consumption_formatting
 });
-const map_dispatch = {
-  set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag
-};
-const connector = connect(map_state, map_dispatch);
+const connector = connect(map_state);
 function _AutocompleteText(props) {
   const prepared_targets = useRef([]);
   const flexsearch_index = useRef(FlexSearch.Index());
@@ -41,7 +37,6 @@ function _AutocompleteText(props) {
     if (new_editing_options === editing_options)
       return;
     _set_editing_options(new_editing_options);
-    props.set_editing_text_flag(new_editing_options);
   }
   useEffect(() => {
     set_editing_options(!!props.start_expanded);
@@ -92,6 +87,7 @@ function _AutocompleteText(props) {
     return selected_option?.title || "";
   }
   const handle_key_down = async (e, displayed_options) => {
+    e.stopImmediatePropagation();
     const key = e.key;
     const is_arrow_down = key === "ArrowDown";
     const is_arrow_up = key === "ArrowUp";

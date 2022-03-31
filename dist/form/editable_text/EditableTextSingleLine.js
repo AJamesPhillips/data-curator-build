@@ -6,7 +6,7 @@ import {
 } from "./editable_text_common.js";
 export function EditableTextSingleLine(props) {
   const component = useMemo(() => {
-    return ({value, on_render, on_focus, on_change, on_blur}) => /* @__PURE__ */ h(TextField, {
+    return ({value, on_render, on_focus, on_change, on_blur, on_key_down}) => /* @__PURE__ */ h(TextField, {
       fullWidth: true,
       label: props.placeholder,
       variant: "outlined",
@@ -14,6 +14,7 @@ export function EditableTextSingleLine(props) {
       onFocus: on_focus,
       onChange: on_change,
       onBlur: on_blur,
+      onKeyDown: on_key_down,
       size: props.size,
       inputRef: on_render
     });

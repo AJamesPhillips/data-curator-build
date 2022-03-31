@@ -4,18 +4,13 @@ import "../Editable.css.proxy.js";
 import {get_store} from "../../state/store.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {RichMarkDown} from "../../sharedf/RichMarkDown.js";
-import {ACTIONS} from "../../state/actions.js";
 import {ConditionalWComponentSearchWindow} from "./ConditionalWComponentSearchWindow.js";
-import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 const map_state = (state) => ({
   presenting: state.display_options.consumption_formatting,
   use_creation_context: state.creation_context.use_creation_context,
   creation_context: state.creation_context.creation_context
 });
-const map_dispatch = {
-  set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag
-};
-const connector = connect(map_state, map_dispatch);
+const connector = connect(map_state);
 function _EditableTextCommon(props) {
   const {
     placeholder,
@@ -29,11 +24,6 @@ function _EditableTextCommon(props) {
   useEffect(() => set_value(props.value), [props.value]);
   const el_ref = useRef(void 0);
   const id_insertion_point = useRef(void 0);
-  const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false);
-  const set_is_editing = useMemo(() => (is_editing) => {
-    props.set_editing_text_flag(is_editing);
-    set_is_editing_this_specific_text(is_editing);
-  }, [props.set_editing_text_flag, set_is_editing_this_specific_text]);
   if (force_editable === false || !props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur || disabled || presenting && force_editable !== true) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
@@ -53,9 +43,6 @@ function _EditableTextCommon(props) {
       props.conditional_on_change && props.conditional_on_change(new_value);
     set_value(new_value);
   }, [props.creation_context, props.conditional_on_change]);
-  useEffect(() => {
-    return pub_sub.global_keys.sub("key_down", handle_general_key_down(is_editing_this_specific_text, el_ref.current, conditional_on_change));
-  });
   const class_name = `editable_field ${value ? "" : "placeholder"}`;
   const on_render = useMemo(() => (el) => {
     if (!el)
@@ -66,8 +53,8 @@ function _EditableTextCommon(props) {
     handle_text_field_render({el, force_focus_on_first_render});
   }, []);
   const on_focus = useMemo(() => (e) => {
-    handle_text_field_focus({e, set_is_editing, select_all_on_focus});
-  }, [set_is_editing, select_all_on_focus]);
+    handle_text_field_focus({e, select_all_on_focus});
+  }, [select_all_on_focus]);
   const wrapped_conditional_on_change = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
@@ -81,24 +68,28 @@ function _EditableTextCommon(props) {
       value: value2,
       initial_value: props.value,
       conditional_on_blur: props.conditional_on_blur,
-      always_on_blur: props.always_on_blur,
-      set_is_editing
+      always_on_blur: props.always_on_blur
     });
-  }, [props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing]);
-  useEffect(() => () => {
-    if (!is_editing_this_specific_text)
-      return;
-    if (!el_ref.current)
-      return;
-    const {value: value2} = el_ref.current;
-    handle_text_field_blur({
-      value: value2,
-      initial_value: props.value,
-      conditional_on_blur: props.conditional_on_blur,
-      always_on_blur: props.always_on_blur,
-      set_is_editing
-    });
-  }, [is_editing_this_specific_text, props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing]);
+  }, [props.value, props.conditional_on_blur, props.always_on_blur]);
+  const on_key_down = useMemo(() => (e) => {
+    handle_general_key_down(e, el_ref.current, conditional_on_change);
+  }, [conditional_on_change]);
+  useEffect(() => {
+    return () => {
+      if (!el_ref.current)
+        return;
+      const is_editing_this_specific_text = document.activeElement === el_ref.current;
+      if (!is_editing_this_specific_text)
+        return;
+      const {value: value2} = el_ref.current;
+      handle_text_field_blur({
+        value: value2,
+        initial_value: props.value,
+        conditional_on_blur: props.conditional_on_blur,
+        always_on_blur: props.always_on_blur
+      });
+    };
+  }, [props.value, props.conditional_on_blur, props.always_on_blur]);
   const [_, force_refreshing_render] = useState({});
   const refocus_after_search_window = useMemo(() => (on_focus_set_selection) => {
     el_ref.current?.focus();
@@ -112,7 +103,8 @@ function _EditableTextCommon(props) {
       on_render,
       on_focus,
       on_change: wrapped_conditional_on_change,
-      on_blur: wrapped_on_blur
+      on_blur: wrapped_on_blur,
+      on_key_down
     });
   }, [value, on_render, on_focus, wrapped_conditional_on_change, wrapped_on_blur]);
   return /* @__PURE__ */ h("div", {
@@ -139,7 +131,6 @@ function handle_text_field_render(args) {
   }
 }
 function handle_text_field_focus(args) {
-  args.set_is_editing(true);
   if (args.select_all_on_focus) {
     const el = args.e.currentTarget;
     el.setSelectionRange(0, el.value.length);
@@ -152,8 +143,7 @@ function handle_text_field_change(args) {
   args.conditional_on_change(args.e.currentTarget.value);
 }
 function handle_text_field_blur(args) {
-  const {set_is_editing, value, initial_value, conditional_on_blur, always_on_blur} = args;
-  set_is_editing(false);
+  const {value, initial_value, conditional_on_blur, always_on_blur} = args;
   if (initial_value !== value)
     conditional_on_blur && conditional_on_blur(value);
   always_on_blur && always_on_blur(value);
@@ -164,34 +154,45 @@ var ReplacingTextType;
   ReplacingTextType2[ReplacingTextType2["title"] = 1] = "title";
   ReplacingTextType2[ReplacingTextType2["nothing"] = 2] = "nothing";
 })(ReplacingTextType || (ReplacingTextType = {}));
-function handle_general_key_down(is_editing_this_specific_text, el, conditional_on_change) {
-  return (k) => {
-    if (!is_editing_this_specific_text)
-      return;
-    if (!el)
-      return;
-    if (!k.ctrl_key || k.key !== "k")
-      return;
-    const {value, selectionStart} = el;
-    let {selectionEnd} = el;
-    if (typeof selectionStart !== "number")
-      return;
-    if (typeof selectionEnd !== "number")
-      selectionEnd = selectionStart;
-    const selected_text = value.slice(selectionStart, selectionEnd);
-    const replacing_text = selected_text ? selected_text.startsWith("http") ? 0 : 1 : 2;
-    const title_text = replacing_text === 1 ? selected_text : "title";
-    const url_text = replacing_text === 0 ? selected_text : "url";
-    const new_value = value.slice(0, selectionStart) + "[" + title_text + "](" + url_text + ")" + value.slice(selectionEnd);
-    conditional_on_change(new_value);
-    let start = selectionStart + 1;
-    let end = start + title_text.length;
-    if (replacing_text === 1) {
-      start = selectionEnd + 3;
-      end = start + url_text.length;
-    }
-    setTimeout(() => el.setSelectionRange(start, end), 0);
-  };
+function handle_general_key_down(e, el, conditional_on_change) {
+  const is_editing_this_specific_text = document.activeElement === el;
+  if (!is_editing_this_specific_text)
+    return;
+  if (!el)
+    return;
+  handle_ctrl_k_link_insert(e, el, conditional_on_change);
+  handle_ctrl_e(e);
+}
+function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
+  if (!e.ctrlKey)
+    return;
+  if (e.key !== "k")
+    return;
+  e.preventDefault();
+  const {value, selectionStart} = el;
+  let {selectionEnd} = el;
+  if (typeof selectionStart !== "number")
+    return;
+  if (typeof selectionEnd !== "number")
+    selectionEnd = selectionStart;
+  const selected_text = value.slice(selectionStart, selectionEnd);
+  const replacing_text = selected_text ? selected_text.startsWith("http") ? 0 : 1 : 2;
+  const title_text = replacing_text === 1 ? selected_text : "title";
+  const url_text = replacing_text === 0 ? selected_text : "url";
+  const new_value = value.slice(0, selectionStart) + "[" + title_text + "](" + url_text + ")" + value.slice(selectionEnd);
+  conditional_on_change(new_value);
+  let start = selectionStart + 1;
+  let end = start + title_text.length;
+  if (replacing_text === 1) {
+    start = selectionEnd + 3;
+    end = start + url_text.length;
+  }
+  setTimeout(() => el.setSelectionRange(start, end), 0);
+}
+function handle_ctrl_e(e) {
+  if (e.ctrlKey && e.key === "e")
+    return;
+  e.stopImmediatePropagation();
 }
 function get_id_insertion_point({selectionStart, value}) {
   if (typeof selectionStart === "number") {

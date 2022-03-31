@@ -13,7 +13,6 @@ import {meta_wcomponents_reducer} from "./specialised_objects/meta_wcomponents/r
 import {derived_meta_wcomponents_state_reducer} from "./specialised_objects/meta_wcomponents/selecting/derived.js";
 import {specialised_objects_reducer} from "./specialised_objects/reducer.js";
 import {sync_reducer} from "./sync/reducer.js";
-import {user_activity_reducer} from "./user_activity/reducer.js";
 import {user_info_reducer} from "./user_info/reducer.js";
 export const root_reducer = (state, action) => {
   const initial_state = state;
@@ -28,7 +27,6 @@ export const root_reducer = (state, action) => {
   state = controls_reducer(state, action);
   state = creation_context_reducer(state, action);
   state = filter_context_reducer(state, action);
-  state = user_activity_reducer(state, action);
   state = user_info_reducer(state, action);
   state = view_priorities_reducer(state, action);
   state = search_reducer(state, action);

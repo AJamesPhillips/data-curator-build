@@ -2,7 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {connect} from "../../snowpack/pkg/react-redux.js";
 import {calculate_zoom_to_contain_group} from "../canvas/calculate_spatial_temporal_position_to_move_to.js";
-import {MoveToItemButton} from "../canvas/MoveToWComponentButton.js";
+import {MoveToItemButton} from "../canvas/MoveToItemButton.js";
 import {calculate_canvas_x_for_datetime, default_time_origin_parameters} from "../knowledge_view/datetime_line.js";
 import {get_uncertain_datetime} from "../shared/uncertainty/datetime.js";
 import {ACTIONS} from "../state/actions.js";

@@ -2,6 +2,8 @@ import {old_ids_and_functions_regex, uuids_and_functions_regex} from "./id_regex
 import {format_wcomponent_url, format_wcomponent_link} from "./templates.js";
 export function replace_function_ids_in_text(text, current_depth, kwargs) {
   const {get_title, root_url, render_links, depth_limit} = kwargs;
+  if (current_depth >= depth_limit)
+    return text;
   const functional_ids = get_functional_ids_from_text(text);
   if (functional_ids.length === 0)
     return text;

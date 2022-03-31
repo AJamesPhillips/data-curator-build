@@ -43,7 +43,6 @@ async function check_connection_and_session(store, supabase) {
       console.log("Unexpected error whilst check_connection_and_session", response.error);
       return 3;
     } else {
-      console.log("On window focus event, successfully accessed user info.");
       return 4;
     }
   } catch (err) {

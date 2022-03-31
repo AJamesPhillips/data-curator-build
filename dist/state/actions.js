@@ -9,7 +9,6 @@ import {display_at_sim_datetime_actions} from "./routing/datetime/display_at_sim
 import {search_actions} from "./search/actions_reducer.js";
 import {specialised_object_actions} from "./specialised_objects/actions.js";
 import {sync_actions} from "./sync/actions.js";
-import {user_activity_actions} from "./user_activity/actions.js";
 import {user_info_actions} from "./user_info/actions.js";
 import {view_priorities_actions} from "./priorities/actions.js";
 import {meta_wcomponents_actions} from "./specialised_objects/meta_wcomponents/actions.js";
@@ -26,7 +25,6 @@ export const ACTIONS = {
   search: search_actions,
   specialised_object: specialised_object_actions,
   meta_wcomponents: meta_wcomponents_actions,
-  user_activity: user_activity_actions,
   user_info: user_info_actions,
   view_priorities: view_priorities_actions
 };

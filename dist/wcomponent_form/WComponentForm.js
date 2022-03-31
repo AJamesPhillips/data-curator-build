@@ -142,7 +142,7 @@ function _WComponentForm(props) {
     orig_value_possibilities = wcomponent.value_possibilities;
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
-  const conditional_on_blur = (title) => upsert_wcomponent({title});
+  const conditional_on_blur_title = (title) => upsert_wcomponent({title});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
@@ -156,7 +156,7 @@ function _WComponentForm(props) {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
-    conditional_on_blur,
+    conditional_on_blur: conditional_on_blur_title,
     force_focus_on_first_render: focus_title,
     hide_label: true
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
@@ -334,7 +334,7 @@ function _WComponentForm(props) {
     on_delete: () => props.delete_wcomponent({wcomponent_id})
   })), editing && wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
     title: "Undo delete",
-    onClick: () => props.upsert_wcomponent({wcomponent: {...wcomponent, deleted_at: void 0}})
+    onClick: () => upsert_wcomponent({deleted_at: void 0})
   }, "Restore")), /* @__PURE__ */ h("br", null));
 }
 export const WComponentForm = connector(_WComponentForm);
