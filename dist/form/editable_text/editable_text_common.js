@@ -161,7 +161,7 @@ function handle_general_key_down(e, el, conditional_on_change) {
   if (!el)
     return;
   handle_ctrl_k_link_insert(e, el, conditional_on_change);
-  handle_ctrl_e(e);
+  handle_stop_propagation(e);
 }
 function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
   if (!e.ctrlKey)
@@ -189,8 +189,12 @@ function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
   }
   setTimeout(() => el.setSelectionRange(start, end), 0);
 }
-function handle_ctrl_e(e) {
+function handle_stop_propagation(e) {
   if (e.ctrlKey && e.key === "e")
+    return;
+  if (e.key === "Shift")
+    return;
+  if (e.key === "Control")
     return;
   e.stopImmediatePropagation();
 }

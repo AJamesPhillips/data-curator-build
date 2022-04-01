@@ -18,9 +18,9 @@ import { r as require$$6$1, u as useFormControl, i as isFilled, F as FormControl
 export { b as FormControl, r as Typography } from '../common/FormControl-05e8a012.js';
 import { i as isMuiElement } from '../common/isMuiElement-c285a3f2.js';
 import { r as require$$6 } from '../common/ButtonBase-c1818052.js';
-import { g as global } from '../common/_polyfill-node:global-acbc543a.js';
 import { r as require$$9 } from '../common/IconButton-08a07599.js';
 export { r as IconButton } from '../common/IconButton-08a07599.js';
+import { g as global } from '../common/_polyfill-node:global-acbc543a.js';
 export { r as FormGroup } from '../common/FormGroup-8767341f.js';
 import '../common/_commonjsHelpers-4f955397.js';
 import '../common/TransitionGroupContext-717896c3.js';

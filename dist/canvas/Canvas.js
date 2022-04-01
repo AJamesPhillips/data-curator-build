@@ -67,6 +67,7 @@ class _Canvas extends Component {
       });
     };
     this.on_pointer_up = (e) => {
+      e?.preventDefault();
       pub_sub.canvas.pub("canvas_pointer_up", true);
       if (this.state.pointer_state.area_select) {
         const args = area_selection_args(this.state);
