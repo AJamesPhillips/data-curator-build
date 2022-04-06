@@ -12,7 +12,8 @@ export function get_wcomponent_state_value_and_probabilities(args) {
   const {wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms} = args;
   if (!wcomponent_should_have_state_VAP_sets(wcomponent))
     return {most_probable_VAP_set_values: []};
-  const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent);
+  const wcomponents_by_id = {};
+  const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id);
   const {values_and_prediction_sets = []} = wcomponent;
   const counterfactual_VAP_sets = values_and_prediction_sets.map((VAP_set) => {
     return apply_counterfactuals_v2_to_VAP_set({

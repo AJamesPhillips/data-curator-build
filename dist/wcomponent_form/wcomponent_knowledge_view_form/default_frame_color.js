@@ -1,1 +1,1 @@
-export const default_frame_color = {r: 225, g: 225, b: 225, a: 0.3};
+export const default_frame_color = {r: 175, g: 175, b: 175, a: 0.18};

@@ -9,7 +9,6 @@ export const ALLOWED_SUB_ROUTES = {
   objects: ["objects_bulk_import", "objects_bulk_import/setup"],
   patterns: [],
   creation_context: [],
-  perceptions: [],
   about: []
 };
 export const ALLOWED_ROUTES = Object.keys(ALLOWED_SUB_ROUTES);

@@ -12,7 +12,7 @@ import {tidy_wcomponent} from "./tidy_wcomponent.js";
 import {handle_upsert_wcomponent} from "./utils.js";
 export const wcomponents_reducer = (state, action) => {
   if (is_upsert_wcomponent(action)) {
-    const tidied = tidy_wcomponent(action.wcomponent);
+    const tidied = tidy_wcomponent(action.wcomponent, state.specialised_objects.wcomponents_by_id);
     state = handle_upsert_wcomponent(state, tidied, action.is_source_of_truth);
   }
   if (is_delete_wcomponent(action)) {
@@ -47,13 +47,14 @@ function run_tests() {
   let VAPs;
   let tidied;
   let tidied_VAPs;
+  let wcomponents_by_id = {};
   const base_id = -1;
   wcomponent = prepare_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
   wcomponent.values_and_prediction_sets = [
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps2", created_at: dt2, custom_created_at: void 0},
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps1", created_at: dt1, custom_created_at: void 0}
   ];
-  tidied = tidy_wcomponent(wcomponent);
+  tidied = tidy_wcomponent(wcomponent, wcomponents_by_id);
   test(tidied.values_and_prediction_sets.map(({id}) => id), ["vps1", "vps2"], "", sort_list);
   wcomponent = prepare_new_wcomponent_object({base_id, type: "statev2", subtype: "other"}, creation_context);
   VAPs = [
@@ -63,10 +64,10 @@ function run_tests() {
   wcomponent.values_and_prediction_sets = [
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), entries: VAPs}
   ];
-  tidied = tidy_wcomponent(wcomponent);
+  tidied = tidy_wcomponent(wcomponent, wcomponents_by_id);
   test(tidied.values_and_prediction_sets[0].entries.map(({probability}) => probability), [1, 0], "", sort_list);
   wcomponent = {...wcomponent, subtype: "boolean"};
-  tidied = tidy_wcomponent(wcomponent);
+  tidied = tidy_wcomponent(wcomponent, wcomponents_by_id);
   tidied_VAPs = tidied.values_and_prediction_sets[0].entries;
   test(tidied_VAPs.map(({relative_probability: rp}) => rp), [5, 0], "", sort_list);
   test(tidied_VAPs.map(({probability}) => probability), [1, 0], "", sort_list);
@@ -78,7 +79,7 @@ function run_tests() {
     {...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), entries: VAPs}
   ];
   wcomponent = {...wcomponent, subtype: "boolean", values_and_prediction_sets};
-  tidied = tidy_wcomponent(wcomponent);
+  tidied = tidy_wcomponent(wcomponent, wcomponents_by_id);
   tidied_VAPs = tidied.values_and_prediction_sets[0].entries;
   test(tidied_VAPs.map(({relative_probability: rp}) => rp), [5, 0], "", sort_list);
   test(tidied_VAPs.map(({probability}) => probability), [0, 1], "", sort_list);

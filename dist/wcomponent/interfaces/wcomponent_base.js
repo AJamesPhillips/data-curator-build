@@ -1,6 +1,7 @@
 const _wcomponent_types = {
   event: true,
   statev2: true,
+  state_value: true,
   sub_state: true,
   multidimensional_state: true,
   process: true,

@@ -20,7 +20,8 @@ export function calculate_judgement_value(args) {
   }
   const current_value = most_probable_VAP_set_values[0];
   const value = current_value.parsed_value;
-  const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent);
+  const wcomponents_by_id = {};
+  const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id);
   return core_calculate_judgement_value({judgement_wcomponent, target_VAPs_represent, value});
 }
 export function core_calculate_judgement_value(args) {

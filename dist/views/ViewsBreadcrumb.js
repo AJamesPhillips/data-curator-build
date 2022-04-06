@@ -61,7 +61,8 @@ function _ViewsBreadcrumb(props) {
     on_change: (subview_id) => props.change_route({args: {subview_id: subview_id || level.parent_id}}),
     on_choose_same: (subview_id) => props.change_route({args: {subview_id: subview_id || level.parent_id}}),
     force_editable: true,
-    threshold_minimum_score: false
+    threshold_minimum_score: false,
+    retain_options_order: true
   }))));
 }
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb);

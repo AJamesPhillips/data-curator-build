@@ -224,7 +224,8 @@ function calculate_effect(wcomponent, from_wc, state) {
           VAP_set,
           VAP_set_id_to_counterfactual_v2_map
         });
-        const VAPs_represent = get_wcomponent_VAPs_represent(from_wc);
+        const wcomponents_by_id = {};
+        const VAPs_represent = get_wcomponent_VAPs_represent(from_wc, wcomponents_by_id);
         const visual_VAPs = convert_VAP_set_to_VAP_visuals({
           wcomponent: from_wc,
           VAP_set: counterfactual_VAP_set,

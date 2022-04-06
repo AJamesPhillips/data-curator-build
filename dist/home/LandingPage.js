@@ -30,7 +30,7 @@ export function LandingPage() {
   }, "Data Curator", /* @__PURE__ */ h(Typography, {
     component: "sup",
     className: classes.version
-  }, " Alpha "))), /* @__PURE__ */ h(Box, {
+  }, " Beta "))), /* @__PURE__ */ h(Box, {
     component: "main"
   }, /* @__PURE__ */ h("h2", null, "Welcome!"), /* @__PURE__ */ h("div", {
     className: classes.get_started_button_container

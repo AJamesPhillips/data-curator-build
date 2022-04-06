@@ -33,7 +33,8 @@ function _JudgementFormFields(props) {
   const {judgement_manual, judgement_trend_manual} = wcomponent;
   const selected_option_id_for_manual = judgement_manual === void 0 ? void 0 : judgement_manual.toString();
   const judgement = calculate_judgement_value({judgement_wcomponent: wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms});
-  const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent);
+  const wcomponents_by_id = {};
+  const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id);
   let boolean_options = [];
   if (target_VAPs_represent === VAPsType.boolean) {
     const result = get_boolean_representation(target_wcomponent, true);

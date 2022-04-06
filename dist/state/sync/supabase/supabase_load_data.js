@@ -15,7 +15,6 @@ export async function supabase_load_data(load_state_from_storage, base_id) {
     return Promise.reject(wcomponents_response.error);
   return Promise.resolve({
     knowledge_views: knowledge_views_response.items,
-    wcomponents: wcomponents_response.items,
-    perceptions: []
+    wcomponents: wcomponents_response.items
   });
 }

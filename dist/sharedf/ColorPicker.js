@@ -1,18 +1,23 @@
 import {h} from "../../snowpack/pkg/preact.js";
-import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useState} from "../../snowpack/pkg/preact/hooks.js";
 import "./ColorPicker.css.proxy.js";
 import {EditableNumber} from "../form/EditableNumber.js";
 import {bounded} from "../shared/utils/bounded.js";
 import {color_to_string} from "./color.js";
+const default_color = () => ({r: 255, g: 255, b: 255, a: 1});
 export function ColorPicker(props) {
-  const [color, _set_color] = useState(props.color || {r: 255, g: 255, b: 255, a: 1});
+  const [color, _set_color] = useState(props.color || default_color());
+  useEffect(() => {
+    _set_color(props.color || default_color());
+  }, [color_to_string(props.color)]);
   const set_color = (partial_color) => {
     const valid_new_color = get_valid_new_color(color, partial_color);
     _set_color(valid_new_color);
   };
   const on_blur = (partial_color) => {
     const valid_new_color = get_valid_new_color(color, partial_color);
-    _set_color(valid_new_color);
+    if (colours_different(color, valid_new_color))
+      _set_color(valid_new_color);
     if (colours_different(props.color, valid_new_color))
       props.conditional_on_blur(valid_new_color);
   };
@@ -23,28 +28,28 @@ export function ColorPicker(props) {
     value: color.r,
     allow_undefined: false,
     conditional_on_change: (r) => set_color({r}),
-    always_on_blur: (r) => on_blur({r}),
+    conditional_on_blur: (r) => on_blur({r}),
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "g",
     value: color.g,
     allow_undefined: false,
     conditional_on_change: (g) => set_color({g}),
-    always_on_blur: (g) => on_blur({g}),
+    conditional_on_blur: (g) => on_blur({g}),
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "b",
     value: color.b,
     allow_undefined: false,
     conditional_on_change: (b) => set_color({b}),
-    always_on_blur: (b) => on_blur({b}),
+    conditional_on_blur: (b) => on_blur({b}),
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "a",
     value: color.a,
     allow_undefined: false,
     conditional_on_change: (a) => set_color({a}),
-    always_on_blur: (a) => on_blur({a}),
+    conditional_on_blur: (a) => on_blur({a}),
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h("div", {
     className: "color_swatch",
@@ -67,5 +72,5 @@ function validate_color(color) {
 function colours_different(color1, color2) {
   if (!color1)
     return true;
-  return color1.r !== color2.r || color1.g !== color2.g || color1.b !== color2.b || color1.a !== color2.a;
+  return color_to_string(color1) !== color_to_string(color2);
 }

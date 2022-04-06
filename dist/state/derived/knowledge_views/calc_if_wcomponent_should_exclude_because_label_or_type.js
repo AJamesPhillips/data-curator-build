@@ -1,7 +1,7 @@
-import {test} from "../../../../shared/utils/test.js";
+import {test} from "../../../shared/utils/test.js";
 import {
   prepare_new_contextless_wcomponent_object
-} from "../../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
+} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 export function calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, label_filter_args) {
   const {id, label_ids = [], type} = wcomponent;
   const {

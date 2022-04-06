@@ -5,7 +5,7 @@ import {DEFAULT_DATETIME_LINE_CONFIG} from "./datetime_line.js";
 import {
   get_composed_datetime_lines_config,
   get_foundational_knowledge_views
-} from "../state/specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
+} from "../state/derived/knowledge_views/knowledge_views_derived_reducer.js";
 import {Button} from "../sharedf/Button.js";
 export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
   const {editing, knowledge_view} = props;

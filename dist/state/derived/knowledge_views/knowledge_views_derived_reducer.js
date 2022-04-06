@@ -1,44 +1,40 @@
 import {
   calculate_canvas_x_for_wcomponent_temporal_uncertainty,
   DEFAULT_DATETIME_LINE_CONFIG
-} from "../../../../knowledge_view/datetime_line.js";
-import {get_wc_position_to_id_map} from "../../../../knowledge_view/utils/get_wc_position_to_id_map.js";
-import {is_uuid_v4} from "../../../../shared/utils/ids.js";
-import {is_defined} from "../../../../shared/utils/is_defined.js";
-import {SortDirection, sort_list} from "../../../../shared/utils/sort.js";
-import {get_created_at_ms, get_sim_datetime_ms} from "../../../../shared/utils_datetime/utils_datetime.js";
-import {set_union} from "../../../../utils/set.js";
-import {update_substate} from "../../../../utils/update_state.js";
+} from "../../../knowledge_view/datetime_line.js";
+import {get_wc_position_to_id_map} from "../../../knowledge_view/utils/get_wc_position_to_id_map.js";
+import {is_defined} from "../../../shared/utils/is_defined.js";
+import {SortDirection, sort_list} from "../../../shared/utils/sort.js";
+import {get_created_at_ms, get_sim_datetime_ms} from "../../../shared/utils_datetime/utils_datetime.js";
+import {set_union} from "../../../utils/set.js";
+import {update_substate} from "../../../utils/update_state.js";
 import {
   wcomponent_can_render_connection,
   wcomponent_is_counterfactual_v2,
   wcomponent_is_prioritisation,
   wcomponent_is_plain_connection,
   wcomponent_has_legitimate_non_empty_state_VAP_sets
-} from "../../../../wcomponent/interfaces/SpecialisedObjects.js";
-import {get_wcomponent_ids_by_type} from "../../../derived/get_wcomponent_ids_by_type.js";
+} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
+import {get_wcomponent_ids_by_type} from "../get_wcomponent_ids_by_type.js";
 import {
   get_base_knowledge_view,
   get_nested_knowledge_view_ids,
   sort_nested_knowledge_map_ids_by_priority_then_title,
   get_wcomponents_from_state
-} from "../../accessors.js";
+} from "../../specialised_objects/accessors.js";
 import {calc_if_wcomponent_should_exclude_because_label_or_type} from "./calc_if_wcomponent_should_exclude_because_label_or_type.js";
+import {get_knowledge_view_given_routing} from "./get_knowledge_view_given_routing.js";
 export const knowledge_views_derived_reducer = (initial_state, state) => {
   const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id;
   if (one_or_more_knowledge_views_changed) {
     state = update_derived_knowledge_view_state(state);
   }
-  let initial_kv_id = initial_state.routing.args.subview_id;
-  initial_kv_id = is_uuid_v4(initial_kv_id) ? initial_kv_id : "";
-  let current_kv_id = state.routing.args.subview_id;
-  current_kv_id = is_uuid_v4(current_kv_id) ? current_kv_id : "";
-  const kv_object_id_changed = initial_kv_id !== current_kv_id;
+  const initial_kv = get_knowledge_view_given_routing(initial_state);
+  const current_kv = get_knowledge_view_given_routing(state);
+  const kv_object_id_changed = initial_kv?.id !== current_kv?.id;
   if (kv_object_id_changed) {
     state = update_substate(state, "derived", "current_composed_knowledge_view", void 0);
   }
-  const initial_kv = get_knowledge_view(initial_state, initial_kv_id);
-  const current_kv = get_knowledge_view(state, current_kv_id);
   const kv_object_changed = initial_kv !== current_kv;
   const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id;
   const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed;
@@ -79,9 +75,6 @@ function update_derived_knowledge_view_state(state) {
     }
   };
   return state;
-}
-function get_knowledge_view(state, id) {
-  return state.specialised_objects.knowledge_views_by_id[id];
 }
 export function update_current_composed_knowledge_view_state(state, current_kv) {
   const {knowledge_views_by_id, wcomponents_by_id} = state.specialised_objects;

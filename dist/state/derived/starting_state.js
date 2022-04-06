@@ -1,8 +1,7 @@
 import {get_empty_wcomponent_ids_by_type} from "./get_wcomponent_ids_by_type.js";
 export function get_derived_starting_state() {
   return {
-    perceptions: [],
-    wcomponents: [],
+    composed_wcomponents_by_id: {},
     wcomponent_ids_by_type: get_empty_wcomponent_ids_by_type(),
     knowledge_views: [],
     base_knowledge_view: void 0,

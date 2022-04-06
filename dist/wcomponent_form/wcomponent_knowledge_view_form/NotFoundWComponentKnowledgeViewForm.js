@@ -25,8 +25,8 @@ function _NotFoundWComponentKnowledgeViewForm(props) {
     editing
   } = props;
   return /* @__PURE__ */ h("div", null, editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Delete from knowledge view (allow passthrough from foundations)",
-    tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations",
+    button_text: "Delete from knowledge view",
+    tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => {
       props.bulk_remove_from_knowledge_view({
         wcomponent_ids: [wcomponent_id],

@@ -1,7 +1,7 @@
 import {h} from "../../snowpack/pkg/preact.js";
 import {useMemo, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
-import {calculate_composed_knowledge_view} from "../state/specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
+import {calculate_composed_knowledge_view} from "../state/derived/knowledge_views/knowledge_views_derived_reducer.js";
 import {get_wcomponent_state_value_and_probabilities} from "../wcomponent_derived/get_wcomponent_state_value.js";
 import {ScenarioGroupRunResultComponent} from "./ScenarioGroupRunResult.js";
 import {beer_game_simulator} from "./simulators.js";

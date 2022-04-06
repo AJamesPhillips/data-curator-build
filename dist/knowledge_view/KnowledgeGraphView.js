@@ -7,6 +7,8 @@ import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNo
 import {Canvas} from "../canvas/Canvas.js";
 import {MainArea} from "../layout/MainArea.js";
 import {KnowledgeGraphTimeMarkers} from "./KnowledgeGraphTimeMarkers.js";
+import {useEffect, useState} from "../../snowpack/pkg/preact/hooks.js";
+import {pub_sub} from "../state/pub_sub/pub_sub.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
   const {current_composed_knowledge_view} = state.derived;
@@ -15,7 +17,7 @@ const map_state = (state) => {
   const {wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids} = current_composed_knowledge_view || {};
   const any_node_is_moving = state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0;
   const any_frame_is_resizing = state.meta_wcomponents.frame_is_resizing;
-  const any_drag_event = any_node_is_moving || any_frame_is_resizing;
+  const canvas_drag_event = any_node_is_moving || any_frame_is_resizing;
   return {
     ready,
     wcomponent_nodes,
@@ -23,13 +25,24 @@ const map_state = (state) => {
     wcomponent_unfound_ids,
     presenting: state.display_options.consumption_formatting,
     show_large_grid: state.display_options.show_large_grid,
-    any_drag_event
+    canvas_drag_event
   };
 };
 const connector = connect(map_state);
 function _KnowledgeGraphView(props) {
   const elements = get_children(props);
-  const extra_class_names = props.any_drag_event ? " any_drag_event " : "";
+  const [canvas_pointed_down, set_canvas_pointed_down] = useState(false);
+  useEffect(() => {
+    return pub_sub.canvas.sub("canvas_pointer_down", () => {
+      set_canvas_pointed_down(true);
+    });
+  });
+  useEffect(() => {
+    return pub_sub.canvas.sub("canvas_pointer_up", () => {
+      set_canvas_pointed_down(false);
+    });
+  });
+  const extra_class_names = props.canvas_drag_event || canvas_pointed_down ? " canvas_drag_event " : "";
   return /* @__PURE__ */ h(MainArea, {
     main_content: /* @__PURE__ */ h(Canvas, {
       svg_children: [],

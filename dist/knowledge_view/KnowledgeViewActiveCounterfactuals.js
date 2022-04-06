@@ -5,7 +5,7 @@ import {MultiAutocompleteText} from "../form/Autocomplete/MultiAutocompleteText.
 import {is_defined} from "../shared/utils/is_defined.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {get_knowledge_view_from_state} from "../state/specialised_objects/accessors.js";
-import {get_composed_wc_id_map, get_foundational_knowledge_views} from "../state/specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
+import {get_composed_wc_id_map, get_foundational_knowledge_views} from "../state/derived/knowledge_views/knowledge_views_derived_reducer.js";
 import {Button} from "../sharedf/Button.js";
 const map_state = (state, own_props) => {
   const knowledge_view = get_knowledge_view_from_state(state, own_props.knowledge_view_id);

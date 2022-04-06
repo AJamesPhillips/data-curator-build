@@ -7,6 +7,7 @@ export function get_empty_wcomponent_ids_by_type() {
   return {
     event: new Set(),
     statev2: new Set(),
+    state_value: new Set(),
     sub_state: new Set(),
     multidimensional_state: new Set(),
     process: new Set(),
@@ -37,6 +38,8 @@ export function get_wcomponent_ids_by_type(wcomponents_by_id, ids) {
       console.warn(`Could not find wcomponent by id: ${id}.  Wrong ID or in another base?`);
       return;
     }
+    if (wc.deleted_at)
+      return;
     wc_ids_by_type[wc.type].add(id);
     if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wcomponent_has_single_statev2_datetime(wc)) {
       wc_statev2_ids_with_single_datetime.add(wc.id);

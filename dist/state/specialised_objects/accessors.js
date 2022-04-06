@@ -21,9 +21,6 @@ export function get_wcomponents_from_state(state, ids) {
   ids = ids instanceof Set ? Array.from(ids) : ids;
   return ids.map((id) => get_wcomponent_from_state(state, id));
 }
-export function get_perception_from_state(state, id) {
-  return id ? state.specialised_objects.perceptions_by_id[id] : void 0;
-}
 export function get_current_composed_knowledge_view_from_state(state) {
   return state.derived.current_composed_knowledge_view;
 }

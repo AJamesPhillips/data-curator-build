@@ -47,10 +47,10 @@ function _EditableTextCommon(props) {
   const on_render = useMemo(() => (el) => {
     if (!el)
       return;
-    if (el_ref.current === el)
-      return;
+    const rendering_first_time = !el_ref.current;
     el_ref.current = el;
-    handle_text_field_render({el, force_focus_on_first_render});
+    if (rendering_first_time)
+      handle_text_field_render({el, force_focus_on_first_render});
   }, []);
   const on_focus = useMemo(() => (e) => {
     handle_text_field_focus({e, select_all_on_focus});

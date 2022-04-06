@@ -1,3 +1,4 @@
+import {get_wcomponent_state_UI_value} from "../get_wcomponent_state_UI_value.js";
 import {old_ids_and_functions_regex, uuids_and_functions_regex} from "./id_regexs.js";
 import {format_wcomponent_url, format_wcomponent_link} from "./templates.js";
 export function replace_function_ids_in_text(text, current_depth, kwargs) {
@@ -21,7 +22,16 @@ export function replace_function_ids_in_text(text, current_depth, kwargs) {
       return;
     else if (funktion === "url")
       replacement = format_wcomponent_url(root_url, id);
-    else {
+    else if (funktion === "value") {
+      const created_at_ms = new Date().getTime();
+      const value = get_wcomponent_state_UI_value({
+        wcomponent: referenced_wcomponent,
+        VAP_set_id_to_counterfactual_v2_map: {},
+        created_at_ms,
+        sim_ms: created_at_ms
+      });
+      replacement = value.values_string;
+    } else {
       replacement = render_links ? format_wcomponent_link(root_url, id) : "";
       if (funktion === "title")
         replacement = get_title(referenced_wcomponent);
@@ -47,7 +57,8 @@ const _supported_functions = {
   url: true,
   title: true,
   description: true,
-  map: true
+  map: true,
+  value: true
 };
 const supported_funktions = new Set(Object.keys(_supported_functions));
 function is_supported_funktion(funktion) {

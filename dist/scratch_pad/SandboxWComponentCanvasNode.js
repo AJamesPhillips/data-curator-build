@@ -91,7 +91,7 @@ export function SandboxWComponentCanvasNode() {
   };
   const store = get_store({load_state_from_storage: false, override_preloaded_state});
   store.dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({
-    specialised_objects: {perceptions: [], wcomponents, knowledge_views: [kv10]}
+    specialised_objects: {wcomponents, knowledge_views: [kv10]}
   }));
   return /* @__PURE__ */ h(Provider, {
     store

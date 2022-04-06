@@ -2,18 +2,13 @@ import {wcomponent_is_goal, wcomponent_is_judgement_or_objective} from "../../wc
 import {is_defined} from "../../shared/utils/is_defined.js";
 import {SortDirection, sort_list} from "../../shared/utils/sort.js";
 import {update_substate} from "../../utils/update_state.js";
-import {knowledge_views_derived_reducer} from "../specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer.js";
+import {knowledge_views_derived_reducer} from "./knowledge_views/knowledge_views_derived_reducer.js";
 import {get_wcomponent_ids_by_type} from "./get_wcomponent_ids_by_type.js";
 import {get_wcomponents_from_state} from "../specialised_objects/accessors.js";
 import {get_wcomponent_validity_value} from "../../wcomponent_derived/get_wcomponent_validity_value.js";
+import {derived_composed_wcomponents_by_id_reducer} from "./composed_wcomponents_by_id.js";
 export function derived_state_reducer(initial_state, state) {
-  if (initial_state.specialised_objects.perceptions_by_id !== state.specialised_objects.perceptions_by_id) {
-    const perceptions = sort_list(Object.values(state.specialised_objects.perceptions_by_id), ({created_at}) => created_at.getTime(), SortDirection.ascending);
-    state = update_substate(state, "derived", "perceptions", perceptions);
-  }
   if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id) {
-    const wcomponents = sort_list(Object.values(state.specialised_objects.wcomponents_by_id), ({created_at}) => created_at.getTime(), SortDirection.ascending);
-    state = update_substate(state, "derived", "wcomponents", wcomponents);
     const ids = Object.keys(state.specialised_objects.wcomponents_by_id);
     const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state.specialised_objects.wcomponents_by_id, ids);
     state = update_substate(state, "derived", "wcomponent_ids_by_type", wcomponent_ids_by_type);
@@ -25,6 +20,7 @@ export function derived_state_reducer(initial_state, state) {
     state = update_substate(state, "derived", "judgement_or_objective_ids_by_goal_or_action_id", judgement_or_objective_ids_by_goal_or_action_id);
   }
   state = knowledge_views_derived_reducer(initial_state, state);
+  state = derived_composed_wcomponents_by_id_reducer(initial_state, state);
   state = conditionally_update_active_judgement_or_objective_ids(initial_state, state);
   return state;
 }

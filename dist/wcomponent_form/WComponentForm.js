@@ -30,7 +30,8 @@ import {
   wcomponent_is_sub_state,
   wcomponent_has_objectives,
   wcomponent_is_action,
-  wcomponent_is_goal
+  wcomponent_is_goal,
+  wcomponent_is_state_value
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
@@ -66,6 +67,7 @@ import {
 import {WarningTriangle} from "../sharedf/WarningTriangle.js";
 import {wcomponent_statev2_subtype_options, wcomponent_type_options} from "./type_options.js";
 import {WComponentParentGoalOrActionForm} from "./WComponentParentGoalOrActionForm.js";
+import {WComponentStateValueForm} from "./WComponentStateValueForm.js";
 const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -132,7 +134,7 @@ function _WComponentForm(props) {
     props.upsert_wcomponent({wcomponent: updated});
   };
   const orig_validity_predictions = wcomponent_can_have_validity_predictions(wcomponent) ? wcomponent.validity || [] : void 0;
-  const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent);
+  const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id);
   let UI_value = void 0;
   let orig_values_and_prediction_sets = void 0;
   let orig_value_possibilities = void 0;
@@ -142,7 +144,8 @@ function _WComponentForm(props) {
     orig_value_possibilities = wcomponent.value_possibilities;
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
-  const conditional_on_blur_title = (title) => upsert_wcomponent({title});
+  const title = get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
+  const conditional_on_blur_title = (title2) => upsert_wcomponent({title: title2});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
@@ -155,7 +158,7 @@ function _WComponentForm(props) {
   }, /* @__PURE__ */ h(EditableText, {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
-    value: get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms}),
+    value: title,
     conditional_on_blur: conditional_on_blur_title,
     force_focus_on_first_render: focus_title,
     hide_label: true
@@ -202,7 +205,10 @@ function _WComponentForm(props) {
     value: wcomponent.description,
     conditional_on_blur: (description) => upsert_wcomponent({description}),
     hide_label: true
-  })), wcomponent_is_sub_state(wcomponent) && /* @__PURE__ */ h(WComponentSubStateForm, {
+  })), wcomponent_is_state_value(wcomponent) && /* @__PURE__ */ h(WComponentStateValueForm, {
+    wcomponent,
+    upsert_wcomponent
+  }), wcomponent_is_sub_state(wcomponent) && /* @__PURE__ */ h(WComponentSubStateForm, {
     wcomponent,
     upsert_wcomponent
   }), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {

@@ -12,7 +12,8 @@ export function WComponentCausalLinkForm(props) {
     upsert_wcomponent
   } = props;
   const from_statev2 = wcomponent_is_statev2(from_wcomponent);
-  const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent) === VAPsType.number;
+  const wcomponents_by_id = {};
+  const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent, wcomponents_by_id) === VAPsType.number;
   const show_primary_effect = editing || wcomponent.effect_when_true !== void 0;
   const show_effect_when_false = !VAPs_represent_number && editing ? from_wcomponent === void 0 || from_statev2 : from_statev2 && wcomponent.effect_when_false !== void 0;
   return /* @__PURE__ */ h(BasicCausalLinkForm, {

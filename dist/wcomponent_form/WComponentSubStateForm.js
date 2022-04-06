@@ -13,7 +13,9 @@ import {
   convert_VAP_sets_to_visual_sub_state_value_possibilities
 } from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
-import {prune_items_by_created_at_and_versions_and_sort_by_datetimes} from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions.js";
+import {
+  prune_items_by_created_at_and_versions_and_sort_by_datetimes
+} from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions.js";
 const map_state = (state, own_props) => {
   const {target_wcomponent_id} = own_props.wcomponent;
   const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""];

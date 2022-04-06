@@ -17,6 +17,9 @@ import {BasicCausalLinkForm} from "../../wcomponent_form/WComponentCausalLinkFor
 import {AutocompleteText} from "../../form/Autocomplete/AutocompleteText.js";
 import {wcomponent_type_options} from "../../wcomponent_form/type_options.js";
 import {prepare_new_contextless_wcomponent_object} from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
+import {WarningTriangle} from "../../sharedf/WarningTriangle.js";
+import {get_middle_of_screen} from "../../state/display_options/display.js";
+import {get_store} from "../../state/store.js";
 const map_state = (state) => {
   const kv = get_current_composed_knowledge_view_from_state(state);
   const {selected_wcomponent_ids_set} = state.meta_wcomponents;
@@ -131,18 +134,23 @@ function _WComponentMultipleForm(props) {
       wcomponent_ids: selected_wcomponent_ids,
       change: {custom_created_at}
     })
-  })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Add to knowledge view"), all_wcomponent_ids_present_in_current_kv ? /* @__PURE__ */ h(SelectKnowledgeView, {
+  })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("h3", null, "Add to knowledge view"), all_wcomponent_ids_present_in_current_kv ? "" : /* @__PURE__ */ h("span", null, /* @__PURE__ */ h(WarningTriangle, {
+    message: "Not all components present in current view so will be added to center of view."
+  }), "Not all components present in current view so will be added to center of view."), /* @__PURE__ */ h(SelectKnowledgeView, {
     on_change: (knowledge_view_id2) => {
       if (!knowledge_view_id2)
         return;
+      const state = get_store().getState();
+      const default_entry = get_middle_of_screen(state);
       bulk_add_to_knowledge_view({
         wcomponent_ids: selected_wcomponent_ids,
-        knowledge_view_id: knowledge_view_id2
+        knowledge_view_id: knowledge_view_id2,
+        default_entry
       });
     }
-  }) : " (Disabled - not all components present in current view)"), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Delete from knowledge view (allow passthrough from foundations)",
-    tooltip_text: "Delete from knowledge view (allow passthrough from foundations)",
+  })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+    button_text: "Delete from knowledge view",
+    tooltip_text: "Delete from knowledge view",
     on_delete: () => {
       bulk_remove_from_knowledge_view({
         wcomponent_ids: selected_wcomponent_ids,
@@ -150,8 +158,8 @@ function _WComponentMultipleForm(props) {
       });
     }
   })), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Block from knowledge view",
-    tooltip_text: "Block from showing in current knowledge view",
+    button_text: "Delete and Block from knowledge view",
+    tooltip_text: "Delete and Block from showing in current knowledge view",
     on_delete: () => {
       bulk_remove_from_knowledge_view({
         wcomponent_ids: selected_wcomponent_ids,

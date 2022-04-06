@@ -7,7 +7,8 @@ import {Link} from "../../sharedf/Link.js";
 import {AltRouteIcon} from "../../sharedf/icons/AltRouteIcon.js";
 export function ValueAndPredictionEntryRow(props) {
   const {VAP_visual, show_judgements, counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map} = props;
-  const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent);
+  const wcomponents_by_id = {};
+  const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent, wcomponents_by_id);
   const certainty_percent_num = VAP_visual.certainty * 100;
   const certainty_percent_str = `${certainty_percent_num}%`;
   const rounded_certainty_percent = Math.round(certainty_percent_num);

@@ -47,6 +47,10 @@
   overflow: hidden;
 }
 
+.color_light .description_icon {
+  color: #cecece;
+}
+
 .node_is_selected {
   z-index: 97;
 }
@@ -116,6 +120,6 @@
   background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
 }
 
-.any_drag_event .wcomponent_canvas_node {
+.canvas_drag_event .wcomponent_canvas_node {
   pointer-events: none;
 }

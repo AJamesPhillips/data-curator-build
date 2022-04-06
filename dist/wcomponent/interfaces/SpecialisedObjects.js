@@ -7,6 +7,9 @@ export function wcomponent_is_event(wcomponent) {
 export function wcomponent_is_statev2(wcomponent) {
   return wcomponent_is_a("statev2", wcomponent);
 }
+export function wcomponent_is_state_value(wcomponent, log_error_id = "") {
+  return wcomponent_is_a("state_value", wcomponent, log_error_id);
+}
 export function wcomponent_is_process(wcomponent) {
   return wcomponent_is_a("process", wcomponent);
 }
@@ -86,13 +89,12 @@ export function wcomponent_has_value_possibilities(wcomponent) {
   return wcomponent?.value_possibilities !== void 0;
 }
 export function wcomponent_should_have_state_VAP_sets(wcomponent) {
-  return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent);
+  return wcomponent_is_statev2(wcomponent) || wcomponent_is_state_value(wcomponent) || wcomponent_is_action(wcomponent);
 }
 export function wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) {
   return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_should_have_state_VAP_sets(wcomponent);
 }
 const _specialised_objects_from_to_server_expected_keys = {
-  perceptions: true,
   wcomponents: true,
   knowledge_views: true
 };

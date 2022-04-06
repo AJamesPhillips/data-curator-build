@@ -14,16 +14,12 @@ export function get_title(args) {
     created_at_ms,
     sim_ms
   } = args;
-  if (!args.rich_text)
-    return wcomponent.title;
   let title = wcomponent.title;
   if (!title)
     title = get_default_wcomponent_title(args);
+  if (!args.rich_text)
+    return title;
   const text = replace_value_in_text({text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
-  return replace_ids_in_text({...args, text});
-}
-export function get_description(args) {
-  const text = args.wcomponent.description;
   return replace_ids_in_text({...args, text});
 }
 function replace_value_in_text(args) {

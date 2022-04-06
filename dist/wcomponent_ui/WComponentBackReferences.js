@@ -11,7 +11,8 @@ import {
   wcomponent_is_action,
   wcomponent_is_goal,
   wcomponent_is_judgement_or_objective,
-  wcomponent_is_plain_connection
+  wcomponent_is_plain_connection,
+  wcomponent_is_state_value
 } from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_title} from "../wcomponent_derived/rich_text/get_rich_text.js";
 const map_state = (state) => {
@@ -36,8 +37,8 @@ function _WComponentBackReferences(props) {
           return vap_set.entries.find((vap) => (vap.explanation || "").includes(wcomponent_id));
         }) || wcomponent_has_validity_predictions(wc) && wc.validity.find((prediction) => {
           return (prediction.explanation || "").includes(wcomponent_id);
-        }) || wcomponent_is_plain_connection(wc) && (wc.from_id === wcomponent_id || wc.to_id === wcomponent_id);
-      });
+        }) || wcomponent_is_plain_connection(wc) && (wc.from_id === wcomponent_id || wc.to_id === wcomponent_id) || wcomponent_is_state_value(wc) && wc.attribute_wcomponent_id === wcomponent_id;
+      }).filter((wc) => wc.id !== wcomponent_id);
     }
     set_other_wcomponents(relevant_wcomponents);
   }, [wcomponent_id, wcomponents_by_id, show_back_references]);
@@ -56,7 +57,15 @@ function _WComponentBackReferences(props) {
       sub_route: void 0,
       item_id: wcomponent.id,
       args: void 0
-    }, /* @__PURE__ */ h(Markdown, null, get_title({rich_text: true, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map: void 0, created_at_ms, sim_ms}))));
+    }, /* @__PURE__ */ h(Markdown, null, get_title({
+      rich_text: true,
+      wcomponent,
+      wcomponents_by_id,
+      knowledge_views_by_id,
+      wc_id_to_counterfactuals_map: void 0,
+      created_at_ms,
+      sim_ms
+    }) || `No title for component ${wcomponent.id}`)));
   }));
 }
 export const WComponentBackReferences = connector(_WComponentBackReferences);

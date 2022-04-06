@@ -14,25 +14,32 @@ import {ratio_to_percentage_string} from "../../sharedf/percentages.js";
 import {prune_items_by_created_at_and_versions} from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions.js";
 const map_state = (state, own_props) => {
   const {target_wcomponent_id} = own_props.wcomponent;
-  const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""];
+  const {wcomponents_by_id} = state.specialised_objects;
+  const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""];
   const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent;
   const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_wcomponent_id);
   return {
     target_wcomponent,
+    wcomponents_by_id,
     VAP_set_id_to_counterfactual_v2_map,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id
   };
 };
 const connector = connect(map_state);
 function _NodeSubStateSummary(props) {
-  const {target_wcomponent, VAP_set_id_to_counterfactual_v2_map, knowledge_views_by_id} = props;
+  const {
+    target_wcomponent,
+    wcomponents_by_id,
+    VAP_set_id_to_counterfactual_v2_map,
+    knowledge_views_by_id
+  } = props;
   if (!target_wcomponent)
     return null;
   const {selector} = props.wcomponent;
   const {target_VAP_set_id, target_value_id_type, target_value} = selector || {};
   const have_target_value = target_value_id_type !== void 0 && target_value !== void 0;
   let target_VAP_sets = target_wcomponent.values_and_prediction_sets || [];
-  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent);
+  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id);
   if (target_VAP_set_id === void 0) {
     if (!have_target_value) {
       return /* @__PURE__ */ h(NodeValueAndPredictionSetSummary, {

@@ -29,9 +29,9 @@
   width: 10px;
 }
 
-.any_drag_event .wcomponent_background_frame {
+.canvas_drag_event .wcomponent_background_frame {
   transition: top, left, width, height 0s linear;
 }
-.any_drag_event .wcomponent_background_frame .editable_edge {
+.canvas_drag_event .wcomponent_background_frame .editable_edge {
   pointer-events: none;
 }

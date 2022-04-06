@@ -129,8 +129,8 @@ function _WComponentKnowledgeViewForm(props) {
     extra_class_names: "left",
     onClick: () => upsert_entry(knowledge_view_id, {blocked: void 0, passthrough: void 0})
   })), editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Delete from knowledge view (allow passthrough from foundations)",
-    tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations",
+    button_text: "Delete from knowledge view",
+    tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => {
       props.bulk_remove_from_knowledge_view({
         wcomponent_ids: [wcomponent_id],
@@ -138,8 +138,8 @@ function _WComponentKnowledgeViewForm(props) {
       });
     }
   })), editing && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
-    button_text: "Block from knowledge view",
-    tooltip_text: "Block from showing in current knowledge view (" + knowledge_view_title + ")",
+    button_text: "Delete and Block from knowledge view",
+    tooltip_text: "Delete and Block from showing in current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => {
       props.bulk_remove_from_knowledge_view({
         wcomponent_ids: [wcomponent_id],

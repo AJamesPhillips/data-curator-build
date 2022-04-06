@@ -67,7 +67,7 @@ function _WComponentCounterfactualForm(props) {
       return {id, title};
     });
   }
-  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent);
+  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id);
   const target_VAP_set = target_VAP_sets.find(({id}) => id === wcomponent.target_VAP_set_id);
   let counterfactual_active_for_current_knowledge_view = false;
   if (knowledge_view) {

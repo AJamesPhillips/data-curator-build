@@ -22,7 +22,7 @@
   pointer-events: stroke;
 }
 
-.any_drag_event .connection_line_background.mouseable, .any_drag_event .connection_end.mouseable, .graph_background_pointer_down .connection_line_background.mouseable, .graph_background_pointer_down .connection_end.mouseable {
+.canvas_drag_event .connection_line_background.mouseable, .canvas_drag_event .connection_end.mouseable, .graph_background_pointer_down .connection_line_background.mouseable, .graph_background_pointer_down .connection_end.mouseable {
   cursor: inherit;
   pointer-events: none;
 }

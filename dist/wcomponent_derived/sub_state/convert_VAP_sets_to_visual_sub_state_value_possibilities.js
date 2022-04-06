@@ -7,7 +7,8 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities(args) {
   const {selector, target_wcomponent} = args;
   const {target_VAP_set_id, target_value_id_type, target_value} = selector || {};
   const target_VAP_sets = get_substate_target_VAP_sets(target_wcomponent, target_VAP_set_id);
-  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent);
+  const wcomponents_by_id = {};
+  const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id);
   const values = [];
   target_VAP_sets.forEach((VAP_set) => {
     convert_VAP_set_to_VAP_visuals({VAP_set, VAPs_represent, wcomponent: target_wcomponent}).forEach(({value_id, value_text}) => values.push({value_id, value: value_text}));
