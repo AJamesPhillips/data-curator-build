@@ -24,7 +24,7 @@ function _EditableTextCommon(props) {
   useEffect(() => set_value(props.value), [props.value]);
   const el_ref = useRef(void 0);
   const id_insertion_point = useRef(void 0);
-  if (force_editable === false || !props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur || disabled || presenting && force_editable !== true) {
+  if (force_editable === false || !props.conditional_on_change && !props.conditional_on_blur || disabled || presenting && force_editable !== true) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
@@ -35,14 +35,6 @@ function _EditableTextCommon(props) {
       text: value || placeholder
     }));
   }
-  const conditional_on_change = useMemo(() => (new_value) => {
-    if (props.use_creation_context) {
-      new_value = custom_creation_context_replace_text(props.creation_context, new_value);
-    }
-    if (new_value !== value)
-      props.conditional_on_change && props.conditional_on_change(new_value);
-    set_value(new_value);
-  }, [props.creation_context, props.conditional_on_change]);
   const class_name = `editable_field ${value ? "" : "placeholder"}`;
   const on_render = useMemo(() => (el) => {
     if (!el)
@@ -55,25 +47,40 @@ function _EditableTextCommon(props) {
   const on_focus = useMemo(() => (e) => {
     handle_text_field_focus({e, select_all_on_focus});
   }, [select_all_on_focus]);
-  const wrapped_conditional_on_change = useMemo(() => (e) => {
+  const wrapped_conditional_on_change = useMemo(() => (new_value) => {
+    if (props.use_creation_context) {
+      new_value = custom_creation_context_replace_text(props.creation_context, new_value);
+    }
+    if (new_value !== props.value)
+      props.conditional_on_change && props.conditional_on_change(new_value);
+    set_value(new_value);
+  }, [props.value, props.creation_context, props.conditional_on_change]);
+  const wrapped_conditional_on_blur = useMemo(() => (new_value) => {
+    if (props.use_creation_context) {
+      new_value = custom_creation_context_replace_text(props.creation_context, new_value);
+    }
+    if (new_value !== props.value)
+      props.conditional_on_blur && props.conditional_on_blur(new_value);
+    set_value(new_value);
+  }, [props.value, props.creation_context, props.conditional_on_blur]);
+  const handle_on_change = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
-    handle_text_field_change({e, id_insertion_point, conditional_on_change});
-  }, [conditional_on_change]);
-  const wrapped_on_blur = useMemo(() => (e) => {
+    const new_id_insertion_point = get_id_insertion_point(e.currentTarget);
+    if (new_id_insertion_point !== void 0)
+      id_insertion_point.current = new_id_insertion_point;
+    wrapped_conditional_on_change(e.currentTarget.value);
+  }, [wrapped_conditional_on_change]);
+  const handle_on_blur = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
-    const {value: value2} = e.currentTarget;
-    handle_text_field_blur({
-      value: value2,
-      initial_value: props.value,
-      conditional_on_blur: props.conditional_on_blur,
-      always_on_blur: props.always_on_blur
-    });
-  }, [props.value, props.conditional_on_blur, props.always_on_blur]);
+    wrapped_conditional_on_blur(e.currentTarget.value);
+  }, [props.value, wrapped_conditional_on_blur]);
   const on_key_down = useMemo(() => (e) => {
-    handle_general_key_down(e, el_ref.current, conditional_on_change);
-  }, [conditional_on_change]);
+    handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_conditional_on_blur);
+  }, [wrapped_conditional_on_change, wrapped_conditional_on_blur]);
+  const ref_wrapped_conditional_on_blur = useRef(wrapped_conditional_on_blur);
+  ref_wrapped_conditional_on_blur.current = wrapped_conditional_on_blur;
   useEffect(() => {
     return () => {
       if (!el_ref.current)
@@ -81,15 +88,9 @@ function _EditableTextCommon(props) {
       const is_editing_this_specific_text = document.activeElement === el_ref.current;
       if (!is_editing_this_specific_text)
         return;
-      const {value: value2} = el_ref.current;
-      handle_text_field_blur({
-        value: value2,
-        initial_value: props.value,
-        conditional_on_blur: props.conditional_on_blur,
-        always_on_blur: props.always_on_blur
-      });
+      ref_wrapped_conditional_on_blur.current(el_ref.current.value);
     };
-  }, [props.value, props.conditional_on_blur, props.always_on_blur]);
+  }, []);
   const [_, force_refreshing_render] = useState({});
   const refocus_after_search_window = useMemo(() => (on_focus_set_selection) => {
     el_ref.current?.focus();
@@ -102,11 +103,11 @@ function _EditableTextCommon(props) {
       value,
       on_render,
       on_focus,
-      on_change: wrapped_conditional_on_change,
-      on_blur: wrapped_on_blur,
+      on_change: handle_on_change,
+      on_blur: handle_on_blur,
       on_key_down
     });
-  }, [value, on_render, on_focus, wrapped_conditional_on_change, wrapped_on_blur]);
+  }, [value, on_render, on_focus, handle_on_change, handle_on_blur]);
   return /* @__PURE__ */ h("div", {
     className: class_name,
     style: props.style
@@ -116,7 +117,7 @@ function _EditableTextCommon(props) {
     value,
     id_insertion_point: id_insertion_point.current,
     conditional_on_change: ({new_value, on_focus_set_selection}) => {
-      conditional_on_change(new_value);
+      wrapped_conditional_on_change(new_value);
       setTimeout(() => refocus_after_search_window(on_focus_set_selection), 0);
     },
     on_close: (on_focus_set_selection) => {
@@ -136,17 +137,14 @@ function handle_text_field_focus(args) {
     el.setSelectionRange(0, el.value.length);
   }
 }
-function handle_text_field_change(args) {
-  const new_id_insertion_point = get_id_insertion_point(args.e.currentTarget);
-  if (new_id_insertion_point !== void 0)
-    args.id_insertion_point.current = new_id_insertion_point;
-  args.conditional_on_change(args.e.currentTarget.value);
-}
-function handle_text_field_blur(args) {
-  const {value, initial_value, conditional_on_blur, always_on_blur} = args;
-  if (initial_value !== value)
-    conditional_on_blur && conditional_on_blur(value);
-  always_on_blur && always_on_blur(value);
+function handle_general_key_down(e, el, wrapped_conditional_on_change, wrapped_conditional_on_blur) {
+  const is_editing_this_specific_text = document.activeElement === el;
+  if (!is_editing_this_specific_text)
+    return;
+  if (!el)
+    return;
+  handle_ctrl_k_link_insert(e, el, wrapped_conditional_on_change);
+  handle_stop_propagation(e, el, wrapped_conditional_on_blur);
 }
 var ReplacingTextType;
 (function(ReplacingTextType2) {
@@ -154,15 +152,6 @@ var ReplacingTextType;
   ReplacingTextType2[ReplacingTextType2["title"] = 1] = "title";
   ReplacingTextType2[ReplacingTextType2["nothing"] = 2] = "nothing";
 })(ReplacingTextType || (ReplacingTextType = {}));
-function handle_general_key_down(e, el, conditional_on_change) {
-  const is_editing_this_specific_text = document.activeElement === el;
-  if (!is_editing_this_specific_text)
-    return;
-  if (!el)
-    return;
-  handle_ctrl_k_link_insert(e, el, conditional_on_change);
-  handle_stop_propagation(e);
-}
 function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
   if (!e.ctrlKey)
     return;
@@ -189,9 +178,11 @@ function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
   }
   setTimeout(() => el.setSelectionRange(start, end), 0);
 }
-function handle_stop_propagation(e) {
-  if (e.ctrlKey && e.key === "e")
+function handle_stop_propagation(e, el, wrapped_conditional_on_blur) {
+  if (e.ctrlKey && e.key === "e") {
+    wrapped_conditional_on_blur(el.value);
     return;
+  }
   if (e.key === "Shift")
     return;
   if (e.key === "Control")

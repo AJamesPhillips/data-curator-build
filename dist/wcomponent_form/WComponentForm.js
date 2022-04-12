@@ -127,7 +127,7 @@ function _WComponentForm(props) {
   }
   const focus_title = _focus_title.current;
   _focus_title.current = false;
-  const upsert_wcomponent = (partial_wcomponent) => {
+  const wrapped_upsert_wcomponent = (partial_wcomponent) => {
     if (props.wcomponent_from_different_base)
       return;
     const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent;
@@ -145,7 +145,7 @@ function _WComponentForm(props) {
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
   const title = get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
-  const conditional_on_blur_title = (title2) => upsert_wcomponent({title: title2});
+  const conditional_on_blur_title = (title2) => wrapped_upsert_wcomponent({title: title2});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
@@ -183,7 +183,7 @@ function _WComponentForm(props) {
       const vanilla = prepare_new_contextless_wcomponent_object({base_id, type});
       const new_wcomponent = {...vanilla, ...wcomponent};
       new_wcomponent.type = type;
-      upsert_wcomponent(new_wcomponent);
+      wrapped_upsert_wcomponent(new_wcomponent);
     }
   })), wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
@@ -195,7 +195,7 @@ function _WComponentForm(props) {
     selected_option_id: wcomponent.subtype,
     options: wcomponent_statev2_subtype_options,
     allow_none: true,
-    on_change: (option_id) => upsert_wcomponent({subtype: option_id})
+    on_change: (option_id) => wrapped_upsert_wcomponent({subtype: option_id})
   }))), (editing || wcomponent.description) && /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal"
@@ -203,49 +203,49 @@ function _WComponentForm(props) {
     force_editable,
     placeholder: "Description...",
     value: wcomponent.description,
-    conditional_on_blur: (description) => upsert_wcomponent({description}),
+    conditional_on_blur: (description) => wrapped_upsert_wcomponent({description}),
     hide_label: true
   })), wcomponent_is_state_value(wcomponent) && /* @__PURE__ */ h(WComponentStateValueForm, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_sub_state(wcomponent) && /* @__PURE__ */ h(WComponentSubStateForm, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_counterfactual_v2(wcomponent) && /* @__PURE__ */ h(WComponentCounterfactualForm, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
     connection_terminal_description: "From",
     wcomponent_id: from_wcomponent && from_wcomponent.id,
     connection_terminal_type: wcomponent.from_type,
-    on_update_id: (from_id) => upsert_wcomponent({from_id}),
-    on_update_type: (from_type) => upsert_wcomponent({from_type})
+    on_update_id: (from_id) => wrapped_upsert_wcomponent({from_id}),
+    on_update_type: (from_type) => wrapped_upsert_wcomponent({from_type})
   })), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(WComponentFromTo, {
     connection_terminal_description: "To",
     wcomponent_id: to_wcomponent && to_wcomponent.id,
     connection_terminal_type: wcomponent.to_type,
-    on_update_id: (to_id) => upsert_wcomponent({to_id}),
-    on_update_type: (to_type) => upsert_wcomponent({to_type})
+    on_update_id: (to_id) => wrapped_upsert_wcomponent({to_id}),
+    on_update_type: (to_type) => wrapped_upsert_wcomponent({to_type})
   })), editing && /* @__PURE__ */ h("p", {
     style: {display: "flex", alignItems: "center", flexDirection: "column"}
   }, /* @__PURE__ */ h(Button, {
     value: "Reverse Direction",
     onClick: () => {
-      upsert_wcomponent({to_id: wcomponent.from_id, from_id: wcomponent.to_id});
+      wrapped_upsert_wcomponent({to_id: wcomponent.from_id, from_id: wcomponent.to_id});
     }
   }))), wcomponent_is_causal_link(wcomponent) && /* @__PURE__ */ h(WComponentCausalLinkForm, {
     wcomponent,
     from_wcomponent,
     editing,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h(WComponentConnectionForm, {
     wcomponent,
     editing,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_judgement_or_objective(wcomponent) && /* @__PURE__ */ h(JudgementFormFields, {
-    ...{wcomponent, upsert_wcomponent}
+    ...{wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent}
   }), (wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && /* @__PURE__ */ h(WComponentParentGoalOrActionForm, {
-    ...{wcomponent, upsert_wcomponent}
+    ...{wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent}
   }), (editing || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
@@ -254,23 +254,23 @@ function _WComponentForm(props) {
     component: "legend"
   }, "Labels"), /* @__PURE__ */ h(LabelsEditor, {
     label_ids: wcomponent.label_ids,
-    on_change: (label_ids) => upsert_wcomponent({label_ids})
+    on_change: (label_ids) => wrapped_upsert_wcomponent({label_ids})
   })), wcomponent_is_event(wcomponent) && /* @__PURE__ */ h(WComponentEventAtFormField, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_prioritisation(wcomponent) && /* @__PURE__ */ h(WComponentDateTimeFormField, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(PredictionList, {
     item_descriptor: (wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction",
     predictions: orig_validity_predictions,
-    update_predictions: (new_predictions) => upsert_wcomponent({validity: new_predictions})
+    update_predictions: (new_predictions) => wrapped_upsert_wcomponent({validity: new_predictions})
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", {
     style: {color: "red"}
   }, /* @__PURE__ */ h(PredictionList, {
     item_descriptor: "(Deprecated, please delete) Existence prediction",
     predictions: wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : [],
-    update_predictions: (new_predictions) => upsert_wcomponent({
+    update_predictions: (new_predictions) => wrapped_upsert_wcomponent({
       existence: new_predictions.length ? new_predictions : void 0
     })
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Set subtype to show Value Predictions"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
@@ -278,7 +278,7 @@ function _WComponentForm(props) {
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
     update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
-      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
+      wrapped_upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   }), VAPs_represent !== VAPsType.undefined && /* @__PURE__ */ h(ValueAndPredictionSets, {
     wcomponent_id,
@@ -286,7 +286,7 @@ function _WComponentForm(props) {
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
     update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
-      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
+      wrapped_upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), VAPs_represent !== VAPsType.undefined && orig_values_and_prediction_sets !== void 0 && (editing || Object.keys(orig_value_possibilities || {}).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
     editing,
@@ -295,12 +295,12 @@ function _WComponentForm(props) {
     values_and_prediction_sets: orig_values_and_prediction_sets,
     update_value_possibilities: (value_possibilities) => {
       const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities);
-      upsert_wcomponent({value_possibilities, values_and_prediction_sets});
+      wrapped_upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
   }), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), wcomponent_has_objectives(wcomponent) && /* @__PURE__ */ h(ChosenObjectivesFormFields, {
     force_editable,
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(FormControl, {
     fullWidth: true
   }, /* @__PURE__ */ h(EditableCustomDateTime, {
@@ -309,16 +309,16 @@ function _WComponentForm(props) {
     invariant_value: wcomponent.created_at,
     value: wcomponent.custom_created_at,
     on_change: (new_custom_created_at) => {
-      upsert_wcomponent({custom_created_at: new_custom_created_at});
+      wrapped_upsert_wcomponent({custom_created_at: new_custom_created_at});
     }
   }), /* @__PURE__ */ h("br", null)), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Label color"), /* @__PURE__ */ h(ColorPicker, {
     color: wcomponent.label_color,
-    conditional_on_blur: (color) => upsert_wcomponent({label_color: color})
+    conditional_on_blur: (color) => wrapped_upsert_wcomponent({label_color: color})
   })), editing && /* @__PURE__ */ h(WComponentImageForm, {
     wcomponent,
-    upsert_wcomponent
+    upsert_wcomponent: wrapped_upsert_wcomponent
   }), !editing && wcomponent.summary_image && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("a", {
     href: wcomponent.summary_image,
     target: "_blank"
@@ -326,12 +326,12 @@ function _WComponentForm(props) {
     className: "description_label"
   }, "Hide node title"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_title,
-    on_change: (hide_title) => upsert_wcomponent({hide_title})
+    on_change: (hide_title) => wrapped_upsert_wcomponent({hide_title})
   }), /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Hide node state"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_state,
-    on_change: (hide_state) => upsert_wcomponent({hide_state})
+    on_change: (hide_state) => wrapped_upsert_wcomponent({hide_state})
   }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
     wcomponent_id: wcomponent.id
   }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
@@ -340,7 +340,7 @@ function _WComponentForm(props) {
     on_delete: () => props.delete_wcomponent({wcomponent_id})
   })), editing && wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
     title: "Undo delete",
-    onClick: () => upsert_wcomponent({deleted_at: void 0})
+    onClick: () => wrapped_upsert_wcomponent({deleted_at: void 0})
   }, "Restore")), /* @__PURE__ */ h("br", null));
 }
 export const WComponentForm = connector(_WComponentForm);

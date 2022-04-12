@@ -13,13 +13,12 @@ function _EditableNumber(props) {
     allow_undefined,
     conditional_on_change,
     conditional_on_blur,
-    always_on_blur,
     disabled,
     editing,
     default_value_when_invalid = 0
   } = props;
   let class_name = "editable_number";
-  if (!editing || !conditional_on_change && !conditional_on_blur && !always_on_blur || disabled) {
+  if (!editing || !conditional_on_change && !conditional_on_blur || disabled) {
     class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "");
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
@@ -51,11 +50,6 @@ function _EditableNumber(props) {
       if (!conditional_on_blur)
         return;
       handle_blur({value: value2, default_value_when_invalid, on_blur: conditional_on_blur, allow_undefined});
-    },
-    always_on_blur: (value2) => {
-      if (!always_on_blur)
-        return;
-      handle_blur({value: value2, default_value_when_invalid, on_blur: always_on_blur, allow_undefined});
     }
   }));
 }

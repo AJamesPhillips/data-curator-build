@@ -81,7 +81,11 @@ export function LandingPage() {
   }, /* @__PURE__ */ h("img", {
     src: "/cci_logo.svg",
     style: {width: 120, marginTop: 40}
-  })))), /* @__PURE__ */ h(Box, {
+  }))), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("a", {
+    href: "/privacy-policy/"
+  }, "Privacy Policy"), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("a", {
+    href: "/terms-and-conditions/"
+  }, "Terms and Conditions"))), /* @__PURE__ */ h(Box, {
     component: "footer"
   })));
 }
