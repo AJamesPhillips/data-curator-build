@@ -10,13 +10,15 @@ import {is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pendi
 import {update_knowledge_view_last_source_of_truth, update_wcomponent_last_source_of_truth} from "./utils.js";
 export const sync_reducer = (state, action) => {
   if (is_update_sync_status(action)) {
-    const {status, error_message = "", attempt: retry_attempt} = action;
+    const {status, loading_base_id, error_message = "", attempt: retry_attempt} = action;
     const sync_state_for_data_type = {
       ...state.sync[action.data_type],
       status,
       error_message,
       retry_attempt
     };
+    if (loading_base_id !== void 0)
+      sync_state_for_data_type.loading_base_id = loading_base_id;
     state = update_substate(state, "sync", action.data_type, sync_state_for_data_type);
     state = update_ready_for_fields(state);
   }
@@ -30,7 +32,7 @@ export const sync_reducer = (state, action) => {
     state = update_specialised_object_ids_pending_save(state, {knowledge_view_ids: new Set(), wcomponent_ids: new Set()});
     const last = {wcomponents: {}, knowledge_views: {}};
     state = update_substate(state, "sync", "last_source_of_truth_specialised_objects_by_id", last);
-    state = update_substate(state, "sync", "specialised_objects", {status: void 0, error_message: "", retry_attempt: 0});
+    state = update_substate(state, "sync", "specialised_objects", {status: void 0, loading_base_id: void 0, error_message: "", retry_attempt: 0});
     state = update_ready_for_fields(state);
   }
   if (is_replace_all_specialised_objects(action)) {

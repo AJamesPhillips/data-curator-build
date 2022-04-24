@@ -11,7 +11,6 @@ function map_state(state, {wcomponent_id}) {
   const wcomponent = wcomponents_by_id[wcomponent_id];
   return {
     wcomponent,
-    rich_text: state.display_options.consumption_formatting,
     wcomponents_by_id,
     knowledge_views_by_id,
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
@@ -24,7 +23,7 @@ function _LabelV2(props) {
   const {wcomponent} = props;
   const title = wcomponent ? get_title({
     wcomponent,
-    rich_text: props.rich_text,
+    rich_text: true,
     wcomponents_by_id: props.wcomponents_by_id,
     knowledge_views_by_id: props.knowledge_views_by_id,
     wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,

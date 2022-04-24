@@ -9,7 +9,8 @@ export function sync_starting_state() {
   const default_sync_state_for_one_data_type = {
     status: void 0,
     error_message: "",
-    retry_attempt: void 0
+    retry_attempt: void 0,
+    loading_base_id: void 0
   };
   const state = {
     last_source_of_truth_specialised_objects_by_id: {

@@ -13,6 +13,7 @@ import {ValuePossibilityDuplicate} from "./ValuePossibilityDuplicate.js";
 import {
   get_possibilities_from_VAP_sets
 } from "../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets.js";
+import {wcomponent_is_statev2} from "../../wcomponent/interfaces/SpecialisedObjects.js";
 export function ValuePossibilitiesComponent(props) {
   const [show_value_possibilities, set_show_value_possibilities] = useState(false);
   if (props.VAPs_represent === VAPsType.undefined)
@@ -21,6 +22,7 @@ export function ValuePossibilitiesComponent(props) {
   const {count_of_value_possibilities, max_count} = get_count_of_value_possibilities(value_possibilities_list);
   const warning = max_count > 1 ? "Duplicate value possibilities present" : "";
   const class_name = `editable_list_entry ${show_value_possibilities ? "expanded" : ""}`;
+  const {attribute_wcomponent} = props;
   return /* @__PURE__ */ h("div", {
     className: class_name
   }, /* @__PURE__ */ h("div", {
@@ -68,12 +70,20 @@ export function ValuePossibilitiesComponent(props) {
       };
       props.update_value_possibilities(modified_value_possibilities);
     }
-  }), props.editing && props.value_possibilities === void 0 && /* @__PURE__ */ h(Button, {
+  }), props.editing && /* @__PURE__ */ h(Button, {
     value: "Use defaults",
     fullWidth: true,
     onClick: () => {
       const possible_values = get_possibilities_from_VAP_sets(props.VAPs_represent, void 0, props.values_and_prediction_sets);
       const value_possibilities = get_items_by_id(possible_values, "default_possible_values");
+      props.update_value_possibilities(value_possibilities);
+    }
+  }), props.editing && attribute_wcomponent && wcomponent_is_statev2(attribute_wcomponent) && /* @__PURE__ */ h(Button, {
+    value: "Use attribute's possibilities",
+    fullWidth: true,
+    onClick: () => {
+      const possible_values = get_possibilities_from_VAP_sets(props.VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || []);
+      const value_possibilities = get_items_by_id(possible_values, "attribute's possible_values");
       props.update_value_possibilities(value_possibilities);
     }
   })));

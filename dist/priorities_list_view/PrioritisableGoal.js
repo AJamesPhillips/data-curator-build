@@ -3,6 +3,7 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {EditableNumber} from "../form/EditableNumber.js";
 import {WComponentCanvasNode} from "../wcomponent_canvas/node/WComponentCanvasNode.js";
 import {ACTIONS} from "../state/actions.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 const map_state = (state) => ({
   editing: !state.display_options.consumption_formatting
 });
@@ -24,7 +25,7 @@ function _PrioritisableGoal(props) {
     placeholder: "Effort",
     allow_undefined: true,
     value: effort,
-    conditional_on_blur: (new_effort) => {
+    on_blur: (new_effort) => {
       const goals_attributes = {...goal_prioritisation_attributes};
       if (new_effort === void 0)
         delete goals_attributes[goal.id];
@@ -32,7 +33,8 @@ function _PrioritisableGoal(props) {
         goals_attributes[goal.id] = {effort: new_effort};
       const new_selected_prioritisation = {...selected_prioritisation, goals: goals_attributes};
       props.upsert_wcomponent({wcomponent: new_selected_prioritisation});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   })));
 }
 export const PrioritisableGoal = connector(_PrioritisableGoal);

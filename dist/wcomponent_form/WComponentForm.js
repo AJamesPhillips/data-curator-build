@@ -68,6 +68,7 @@ import {WarningTriangle} from "../sharedf/WarningTriangle.js";
 import {wcomponent_statev2_subtype_options, wcomponent_type_options} from "./type_options.js";
 import {WComponentParentGoalOrActionForm} from "./WComponentParentGoalOrActionForm.js";
 import {WComponentStateValueForm} from "./WComponentStateValueForm.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
@@ -84,8 +85,8 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
-    unmodified_editing: !state.display_options.consumption_formatting,
-    editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
+    is_in_editing_mode: !state.display_options.consumption_formatting,
+    editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
     force_editable: wcomponent_from_different_base ? false : void 0,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
@@ -107,7 +108,7 @@ function _WComponentForm(props) {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
-    editing,
+    editable,
     force_editable,
     created_at_ms,
     sim_ms
@@ -144,14 +145,14 @@ function _WComponentForm(props) {
     orig_value_possibilities = wcomponent.value_possibilities;
   }
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
-  const title = get_title({rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
+  const title = get_title({rich_text: !editable, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
   const conditional_on_blur_title = (title2) => wrapped_upsert_wcomponent({title: title2});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
   }, /* @__PURE__ */ h(WarningTriangle, {
     message: ""
-  }), " ", props.unmodified_editing ? /* @__PURE__ */ h("span", null, "Editing disabled. Change to base ", props.wcomponent.base_id, " to edit") : /* @__PURE__ */ h("span", null, "Change to base ", props.wcomponent.base_id, " to view")), /* @__PURE__ */ h(FormControl, {
+  }), " ", props.is_in_editing_mode ? /* @__PURE__ */ h("span", null, "Editing disabled. Change to base ", props.wcomponent.base_id, " to edit") : /* @__PURE__ */ h("span", null, "Change to base ", props.wcomponent.base_id, " to view")), /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal",
     style: {fontWeight: 600, fontSize: 22}
@@ -159,7 +160,8 @@ function _WComponentForm(props) {
     force_editable,
     placeholder: wcomponent.type === "action" ? "Passive imperative title..." : wcomponent.type === "relation_link" ? "Verb..." : "Title...",
     value: title,
-    conditional_on_blur: conditional_on_blur_title,
+    on_blur: conditional_on_blur_title,
+    on_blur_type: EditableTextOnBlurType.conditional,
     force_focus_on_first_render: focus_title,
     hide_label: true
   })), /* @__PURE__ */ h(WComponentLatestPrediction, {
@@ -168,7 +170,7 @@ function _WComponentForm(props) {
     className: "description_label"
   }, "Value"), /* @__PURE__ */ h(DisplayValue, {
     UI_value
-  })), (editing || wcomponent.type !== "statev2" || has_VAP_sets) && /* @__PURE__ */ h(FormControl, {
+  })), (editable || wcomponent.type !== "statev2" || has_VAP_sets) && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
     margin: "normal"
@@ -185,7 +187,7 @@ function _WComponentForm(props) {
       new_wcomponent.type = type;
       wrapped_upsert_wcomponent(new_wcomponent);
     }
-  })), wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), wcomponent_is_statev2(wcomponent) && (editable || wcomponent.subtype) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Subtype"), " ", /* @__PURE__ */ h("div", {
     style: {width: "60%", display: "inline-block"}
@@ -196,14 +198,15 @@ function _WComponentForm(props) {
     options: wcomponent_statev2_subtype_options,
     allow_none: true,
     on_change: (option_id) => wrapped_upsert_wcomponent({subtype: option_id})
-  }))), (editing || wcomponent.description) && /* @__PURE__ */ h(FormControl, {
+  }))), (editable || wcomponent.description) && /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal"
   }, /* @__PURE__ */ h(EditableText, {
     force_editable,
     placeholder: "Description...",
     value: wcomponent.description,
-    conditional_on_blur: (description) => wrapped_upsert_wcomponent({description}),
+    on_blur: (description) => wrapped_upsert_wcomponent({description}),
+    on_blur_type: EditableTextOnBlurType.conditional,
     hide_label: true
   })), wcomponent_is_state_value(wcomponent) && /* @__PURE__ */ h(WComponentStateValueForm, {
     wcomponent,
@@ -226,7 +229,7 @@ function _WComponentForm(props) {
     connection_terminal_type: wcomponent.to_type,
     on_update_id: (to_id) => wrapped_upsert_wcomponent({to_id}),
     on_update_type: (to_type) => wrapped_upsert_wcomponent({to_type})
-  })), editing && /* @__PURE__ */ h("p", {
+  })), editable && /* @__PURE__ */ h("p", {
     style: {display: "flex", alignItems: "center", flexDirection: "column"}
   }, /* @__PURE__ */ h(Button, {
     value: "Reverse Direction",
@@ -236,17 +239,17 @@ function _WComponentForm(props) {
   }))), wcomponent_is_causal_link(wcomponent) && /* @__PURE__ */ h(WComponentCausalLinkForm, {
     wcomponent,
     from_wcomponent,
-    editing,
+    editing: editable,
     upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_plain_connection(wcomponent) && /* @__PURE__ */ h(WComponentConnectionForm, {
     wcomponent,
-    editing,
+    editing: editable,
     upsert_wcomponent: wrapped_upsert_wcomponent
   }), wcomponent_is_judgement_or_objective(wcomponent) && /* @__PURE__ */ h(JudgementFormFields, {
     ...{wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent}
   }), (wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && /* @__PURE__ */ h(WComponentParentGoalOrActionForm, {
     ...{wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent}
-  }), (editing || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h(FormControl, {
+  }), (editable || wcomponent.label_ids && wcomponent.label_ids.length > 0) && /* @__PURE__ */ h(FormControl, {
     component: "fieldset",
     fullWidth: true,
     margin: "normal"
@@ -261,7 +264,7 @@ function _WComponentForm(props) {
   }), wcomponent_is_prioritisation(wcomponent) && /* @__PURE__ */ h(WComponentDateTimeFormField, {
     wcomponent,
     upsert_wcomponent: wrapped_upsert_wcomponent
-  }), orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(PredictionList, {
+  }), orig_validity_predictions && (editable || orig_validity_predictions.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(PredictionList, {
     item_descriptor: (wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction",
     predictions: orig_validity_predictions,
     update_predictions: (new_predictions) => wrapped_upsert_wcomponent({validity: new_predictions})
@@ -273,7 +276,7 @@ function _WComponentForm(props) {
     update_predictions: (new_predictions) => wrapped_upsert_wcomponent({
       existence: new_predictions.length ? new_predictions : void 0
     })
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editing || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Set subtype to show Value Predictions"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editable || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Set subtype to show Value Predictions"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
     VAPs_represent,
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
@@ -288,8 +291,9 @@ function _WComponentForm(props) {
     update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {
       wrapped_upsert_wcomponent({value_possibilities, values_and_prediction_sets});
     }
-  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), VAPs_represent !== VAPsType.undefined && orig_values_and_prediction_sets !== void 0 && (editing || Object.keys(orig_value_possibilities || {}).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
-    editing,
+  })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), VAPs_represent !== VAPsType.undefined && orig_values_and_prediction_sets !== void 0 && (editable || Object.keys(orig_value_possibilities || {}).length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ValuePossibilitiesComponent, {
+    editing: editable,
+    attribute_wcomponent: wcomponents_by_id[wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id || ""],
     VAPs_represent,
     value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
@@ -311,18 +315,18 @@ function _WComponentForm(props) {
     on_change: (new_custom_created_at) => {
       wrapped_upsert_wcomponent({custom_created_at: new_custom_created_at});
     }
-  }), /* @__PURE__ */ h("br", null)), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  }), /* @__PURE__ */ h("br", null)), editable && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Label color"), /* @__PURE__ */ h(ColorPicker, {
     color: wcomponent.label_color,
     conditional_on_blur: (color) => wrapped_upsert_wcomponent({label_color: color})
-  })), editing && /* @__PURE__ */ h(WComponentImageForm, {
+  })), editable && /* @__PURE__ */ h(WComponentImageForm, {
     wcomponent,
     upsert_wcomponent: wrapped_upsert_wcomponent
-  }), !editing && wcomponent.summary_image && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("a", {
+  }), !editable && wcomponent.summary_image && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("a", {
     href: wcomponent.summary_image,
     target: "_blank"
-  }, /* @__PURE__ */ h(ExternalLinkIcon, null), "Open image")), editing && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  }, /* @__PURE__ */ h(ExternalLinkIcon, null), "Open image")), editable && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Hide node title"), /* @__PURE__ */ h(EditableCheckbox, {
     value: wcomponent.hide_title,
@@ -334,11 +338,11 @@ function _WComponentForm(props) {
     on_change: (hide_state) => wrapped_upsert_wcomponent({hide_state})
   }), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
     wcomponent_id: wcomponent.id
-  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editing && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), editable && !wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Delete",
     tooltip_text: "Remove from all knowledge views",
     on_delete: () => props.delete_wcomponent({wcomponent_id})
-  })), editing && wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
+  })), editable && wcomponent.deleted_at && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Button, {
     title: "Undo delete",
     onClick: () => wrapped_upsert_wcomponent({deleted_at: void 0})
   }, "Restore")), /* @__PURE__ */ h("br", null));

@@ -2,6 +2,10 @@ import {update_substate} from "../../../utils/update_state.js";
 import {update_specialised_object_ids_pending_save} from "../../sync/utils.js";
 import {update_modified_by} from "../update_modified_by.js";
 export function handle_upsert_knowledge_view(state, knowledge_view, is_source_of_truth) {
+  if (state.user_info.chosen_base_id !== knowledge_view.base_id) {
+    console.error(`Trying to save knowledge_view "${knowledge_view.id}" but its base_id "${knowledge_view.base_id}" || ${state.user_info.chosen_base_id}`);
+    return state;
+  }
   const map = {...state.specialised_objects.knowledge_views_by_id};
   knowledge_view = is_source_of_truth ? knowledge_view : update_modified_by(knowledge_view, state);
   map[knowledge_view.id] = knowledge_view;

@@ -3,7 +3,7 @@ export function get_items_by_id(items, description) {
   const map = {};
   items.forEach((item) => {
     if (map[item.id]) {
-      throw new Error(`Duplicate ${description}.id: "${map[item.id]}".  "${map[item.id].title}" and "${item.title}"`);
+      throw new Error(`Duplicate "${description}".id: "${map[item.id]}".  "${map[item.id].title}" and "${item.title}"`);
     }
     map[item.id] = item;
   });

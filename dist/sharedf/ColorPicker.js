@@ -4,6 +4,7 @@ import "./ColorPicker.css.proxy.js";
 import {EditableNumber} from "../form/EditableNumber.js";
 import {bounded} from "../shared/utils/bounded.js";
 import {color_to_string} from "./color.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 const default_color = () => ({r: 255, g: 255, b: 255, a: 1});
 export function ColorPicker(props) {
   const [color, _set_color] = useState(props.color || default_color());
@@ -28,28 +29,32 @@ export function ColorPicker(props) {
     value: color.r,
     allow_undefined: false,
     conditional_on_change: (r) => set_color({r}),
-    conditional_on_blur: (r) => on_blur({r}),
+    on_blur: (r) => on_blur({r}),
+    on_blur_type: EditableTextOnBlurType.always,
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "g",
     value: color.g,
     allow_undefined: false,
     conditional_on_change: (g) => set_color({g}),
-    conditional_on_blur: (g) => on_blur({g}),
+    on_blur: (g) => on_blur({g}),
+    on_blur_type: EditableTextOnBlurType.always,
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "b",
     value: color.b,
     allow_undefined: false,
     conditional_on_change: (b) => set_color({b}),
-    conditional_on_blur: (b) => on_blur({b}),
+    on_blur: (b) => on_blur({b}),
+    on_blur_type: EditableTextOnBlurType.always,
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "a",
     value: color.a,
     allow_undefined: false,
     conditional_on_change: (a) => set_color({a}),
-    conditional_on_blur: (a) => on_blur({a}),
+    on_blur: (a) => on_blur({a}),
+    on_blur_type: EditableTextOnBlurType.always,
     style: {width: 65}
   }), "  ", /* @__PURE__ */ h("div", {
     className: "color_swatch",

@@ -30,3 +30,11 @@ export function offset_entry_by_half_node(kv_entry, has_image) {
   const top = kv_entry.top + s * half_node_height(has_image);
   return {left, top};
 }
+export function distance_between_kv_entries(position, other_position) {
+  return square_distance_between_kv_entries(position, other_position) ** 0.5;
+}
+export function square_distance_between_kv_entries(position, other_position) {
+  if (!position || !other_position)
+    return Number.POSITIVE_INFINITY;
+  return (position.left - other_position.left) ** 2 + (position.top - other_position.top) ** 2;
+}

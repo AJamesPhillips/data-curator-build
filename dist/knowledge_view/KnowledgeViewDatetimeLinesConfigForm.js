@@ -7,6 +7,7 @@ import {
   get_foundational_knowledge_views
 } from "../state/derived/knowledge_views/knowledge_views_derived_reducer.js";
 import {Button} from "../sharedf/Button.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
   const {editing, knowledge_view} = props;
   const foundational_knowledge_view = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false);
@@ -47,9 +48,10 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
     placeholder: "Time origin position",
     value: final_time_origin_x.value,
     allow_undefined: true,
-    conditional_on_blur: (new_time_origin_x) => {
+    on_blur: (new_time_origin_x) => {
       update_item({time_origin_x: new_time_origin_x});
     },
+    on_blur_type: EditableTextOnBlurType.conditional,
     style: {width: "70%"}
   }), editing && /* @__PURE__ */ h(IndicateSource, {
     source: final_time_origin_x.source
@@ -57,9 +59,10 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
     placeholder: "Time scale",
     value: final_time_scale.value,
     allow_undefined: true,
-    conditional_on_blur: (new_time_scale) => {
+    on_blur: (new_time_scale) => {
       update_item({time_scale: new_time_scale});
     },
+    on_blur_type: EditableTextOnBlurType.conditional,
     style: {width: "70%"}
   }), editing && /* @__PURE__ */ h(IndicateSource, {
     source: final_time_scale.source
@@ -67,9 +70,10 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
     placeholder: "Time line number",
     value: final_time_line_number.value,
     allow_undefined: true,
-    conditional_on_blur: (new_time_line_number) => {
+    on_blur: (new_time_line_number) => {
       update_item({time_line_number: new_time_line_number});
     },
+    on_blur_type: EditableTextOnBlurType.conditional,
     style: {width: "70%"}
   }), editing && /* @__PURE__ */ h(IndicateSource, {
     source: final_time_line_number.source
@@ -77,9 +81,10 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props) => {
     placeholder: "Days between time line",
     value: final_time_line_spacing_days.value,
     allow_undefined: true,
-    conditional_on_blur: (new_time_line_spacing_days) => {
+    on_blur: (new_time_line_spacing_days) => {
       update_item({time_line_spacing_days: new_time_line_spacing_days});
     },
+    on_blur_type: EditableTextOnBlurType.conditional,
     style: {width: "70%"}
   }), editing && /* @__PURE__ */ h(IndicateSource, {
     source: final_time_line_spacing_days.source

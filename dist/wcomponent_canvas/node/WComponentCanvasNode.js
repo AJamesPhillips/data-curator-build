@@ -41,7 +41,7 @@ import {get_uncertain_datetime} from "../../shared/uncertainty/datetime.js";
 import {
   start_moving_wcomponents
 } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents.js";
-import {useEffect, useState} from "../../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useMemo, useState} from "../../../snowpack/pkg/preact/hooks.js";
 import {pub_sub} from "../../state/pub_sub/pub_sub.js";
 import {WComponentCanvasNodeBackgroundFrame} from "./WComponentCanvasNodeBackgroundFrame.js";
 import {get_wcomponent_state_value_and_probabilities} from "../../wcomponent_derived/get_wcomponent_state_value.js";
@@ -222,6 +222,7 @@ function _WComponentCanvasNode(props) {
     wcomponent_id: id
   });
   const _kv_entry = is_on_canvas ? temporary_drag_kv_entry || kv_entry : void 0;
+  const label_ids = useMemo(() => calculate_label_ids(wcomponent), [wcomponent]);
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WComponentCanvasNodeBackgroundFrame, {
     wcomponent_id: id,
     kv_entry: _kv_entry
@@ -274,7 +275,7 @@ function _WComponentCanvasNode(props) {
       fontSize: "small",
       color: "disabled"
     }), wcomponent && /* @__PURE__ */ h(LabelsListV2, {
-      label_ids: wcomponent.label_ids
+      label_ids
     }))),
     extra_css_class,
     extra_css_class_node_main_content: classes.sizer,
@@ -355,4 +356,19 @@ function get_wcomponent_color(args) {
     }
   }
   return {background, font};
+}
+function calculate_label_ids(wcomponent) {
+  if (!wcomponent)
+    return [];
+  const ids = [...wcomponent.label_ids || []];
+  const ids_set = new Set(ids);
+  if (wcomponent_is_action(wcomponent) && wcomponent.parent_goal_or_action_ids) {
+    wcomponent.parent_goal_or_action_ids.forEach((id) => {
+      if (ids_set.has(id))
+        return;
+      ids.push(id);
+      ids_set.add(id);
+    });
+  }
+  return ids;
 }

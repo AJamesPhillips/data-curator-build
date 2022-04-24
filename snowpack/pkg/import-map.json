@@ -44,6 +44,7 @@
     "@material-ui/icons/PresentToAll": "./@material-ui/icons/PresentToAll.js",
     "@material-ui/icons/Refresh": "./@material-ui/icons/Refresh.js",
     "@material-ui/icons/Save": "./@material-ui/icons/Save.js",
+    "@material-ui/icons/Search": "./@material-ui/icons/Search.js",
     "@material-ui/icons/Sync": "./@material-ui/icons/Sync.js",
     "@material-ui/icons/SyncProblem": "./@material-ui/icons/SyncProblem.js",
     "@material-ui/icons/TrendingDown": "./@material-ui/icons/TrendingDown.js",

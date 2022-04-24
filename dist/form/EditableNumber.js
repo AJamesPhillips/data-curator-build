@@ -3,6 +3,7 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import "./Editable.css.proxy.js";
 import "./EditableNumber.css.proxy.js";
 import {EditableTextSingleLine} from "./editable_text/EditableTextSingleLine.js";
+import {EditableTextOnBlurType} from "./editable_text/editable_text_common.js";
 const map_state = (state) => ({
   editing: !state.display_options.consumption_formatting
 });
@@ -12,13 +13,14 @@ function _EditableNumber(props) {
   const {
     allow_undefined,
     conditional_on_change,
-    conditional_on_blur,
+    on_blur,
+    on_blur_type,
     disabled,
     editing,
     default_value_when_invalid = 0
   } = props;
   let class_name = "editable_number";
-  if (!editing || !conditional_on_change && !conditional_on_blur || disabled) {
+  if (!editing || !conditional_on_change && !on_blur || disabled) {
     class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "");
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
@@ -46,11 +48,12 @@ function _EditableNumber(props) {
       else if (valid_value !== void 0)
         conditional_on_change(valid_value);
     },
-    conditional_on_blur: (value2) => {
-      if (!conditional_on_blur)
+    on_blur: (value2) => {
+      if (!on_blur)
         return;
-      handle_blur({value: value2, default_value_when_invalid, on_blur: conditional_on_blur, allow_undefined});
-    }
+      handle_blur({value: value2, default_value_when_invalid, on_blur, allow_undefined});
+    },
+    on_blur_type: on_blur_type || EditableTextOnBlurType.conditional
   }));
 }
 export const EditableNumber = connector(_EditableNumber);

@@ -2,6 +2,7 @@ import {h} from "../../snowpack/pkg/preact.js";
 import {useState} from "../../snowpack/pkg/preact/hooks.js";
 import {grid_small_step, h_step, round_coordinate_small_step, v_step} from "../canvas/position_utils.js";
 import {EditableNumber} from "./EditableNumber.js";
+import {EditableTextOnBlurType} from "./editable_text/editable_text_common.js";
 export function EditablePosition(props) {
   const [change_left, set_change_left] = useState(0);
   const [change_top, set_change_top] = useState(0);
@@ -17,7 +18,8 @@ export function EditablePosition(props) {
     placeholder: "Right",
     value: change_left,
     allow_undefined: false,
-    conditional_on_blur: (new_change_left) => set_change_left(round_coordinate_small_step(new_change_left))
+    on_blur: (new_change_left) => set_change_left(round_coordinate_small_step(new_change_left)),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h("input", {
     type: "button",
     value: "Move",
@@ -43,7 +45,8 @@ export function EditablePosition(props) {
     placeholder: "Up",
     value: -change_top,
     allow_undefined: false,
-    conditional_on_blur: (new_change_top) => set_change_top(round_coordinate_small_step(-new_change_top))
+    on_blur: (new_change_top) => set_change_top(round_coordinate_small_step(-new_change_top)),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h("input", {
     type: "button",
     value: "Move",

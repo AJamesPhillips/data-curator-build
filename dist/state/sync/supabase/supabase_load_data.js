@@ -1,6 +1,6 @@
 import {get_supabase} from "../../../supabase/get_supabase.js";
 import {supabase_get_knowledge_views} from "./knowledge_view.js";
-import {supabase_get_wcomponents} from "./wcomponent.js";
+import {supabase_get_wcomponents, supabase_get_wcomponents_from_other_bases} from "./wcomponent.js";
 import {local_data} from "../local/data.js";
 export async function supabase_load_data(load_state_from_storage, base_id) {
   if (!load_state_from_storage) {
@@ -13,8 +13,20 @@ export async function supabase_load_data(load_state_from_storage, base_id) {
   const wcomponents_response = await supabase_get_wcomponents({supabase, base_id});
   if (wcomponents_response.error)
     return Promise.reject(wcomponents_response.error);
-  return Promise.resolve({
+  const wcomponents_other_bases_response = await supabase_get_wcomponents_from_other_bases({
+    supabase,
+    base_id,
     knowledge_views: knowledge_views_response.items,
     wcomponents: wcomponents_response.items
+  });
+  if (wcomponents_other_bases_response.error)
+    return Promise.reject(wcomponents_other_bases_response.error);
+  const wcomponents = [
+    ...wcomponents_response.items,
+    ...wcomponents_other_bases_response.wcomponents
+  ];
+  return Promise.resolve({
+    knowledge_views: knowledge_views_response.items,
+    wcomponents
   });
 }

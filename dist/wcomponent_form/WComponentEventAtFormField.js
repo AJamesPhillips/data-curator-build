@@ -6,6 +6,7 @@ import {UncertainDateTimeForm} from "./uncertain_datetime/UncertainDateTimeForm.
 import {EditablePercentage} from "../form/EditablePercentage.js";
 import {PredictionBadge} from "../sharedf/prediction_badge/PredictionBadge.js";
 import {Button} from "../sharedf/Button.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 const map_state = (state) => ({
   creation_context_state: state.creation_context,
   editing: !state.display_options.consumption_formatting,
@@ -38,11 +39,13 @@ function _WComponentEventAtFormField(props) {
   }, /* @__PURE__ */ h(EditablePercentage, {
     placeholder: "Probability",
     value: event_at?.probability,
-    conditional_on_blur: (new_probability) => upsert_event_at({probability: new_probability})
+    on_blur: (new_probability) => upsert_event_at({probability: new_probability}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h(EditablePercentage, {
     placeholder: "Confidence",
     value: event_at?.conviction,
-    conditional_on_blur: (new_conviction) => upsert_event_at({conviction: new_conviction})
+    on_blur: (new_conviction) => upsert_event_at({conviction: new_conviction}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), "  ", event_at && /* @__PURE__ */ h(PredictionBadge, {
     disabled: true,
     size: 20,

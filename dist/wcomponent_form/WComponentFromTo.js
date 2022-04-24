@@ -8,7 +8,7 @@ import {ACTIONS} from "../state/actions.js";
 import {get_wc_id_to_counterfactuals_v2_map} from "../state/derived/accessor.js";
 import "./WComponentFromTo.css.proxy.js";
 const map_state = (state) => ({
-  any_link: state.derived.wcomponent_ids_by_type.any_link,
+  any_node: state.derived.current_composed_knowledge_view?.wc_ids_by_type.any_node,
   wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
   knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
   wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
@@ -24,7 +24,7 @@ function _WComponentFromTo(props) {
     connection_terminal_description,
     wcomponent_id,
     connection_terminal_type,
-    any_link,
+    any_node,
     wcomponents_by_id,
     knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
@@ -35,7 +35,7 @@ function _WComponentFromTo(props) {
   const wcomponent = wcomponent_id ? wcomponents_by_id[wcomponent_id] : void 0;
   const wcomponent_id_options = get_wcomponent_search_options({
     wcomponents_by_id,
-    allowed_wcomponent_ids: any_link,
+    allowed_wcomponent_ids: any_node,
     knowledge_views_by_id,
     wc_id_to_counterfactuals_map,
     created_at_ms: props.created_at_ms,

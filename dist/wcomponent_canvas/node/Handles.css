@@ -43,6 +43,9 @@
 .node_handle.explore.current_but_no_parent:hover {
   color: red;
 }
+.node_handle.explore.will_create_on_click {
+  color: #b1d1ff;
+}
 
 .node_handle.overlapping_nodes.hidden {
   opacity: 0;

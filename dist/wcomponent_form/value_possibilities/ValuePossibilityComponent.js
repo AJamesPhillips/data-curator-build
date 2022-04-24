@@ -6,6 +6,7 @@ import "../../form/editable_list/EditableListEntry.css.proxy.js";
 import {EditableTextSingleLine} from "../../form/editable_text/EditableTextSingleLine.js";
 import {ValuePossibilityDuplicate} from "./ValuePossibilityDuplicate.js";
 import {VALUE_POSSIBILITY_IDS_to_text} from "../../wcomponent/value/parse_value.js";
+import {EditableTextOnBlurType} from "../../form/editable_text/editable_text_common.js";
 export function ValuePossibilityComponent(props) {
   const {editing, value_possibility, count_of_value_possibilities, update_value_possibility} = props;
   const [current_value, set_current_value] = useState(value_possibility.value);
@@ -34,12 +35,13 @@ export function ValuePossibilityComponent(props) {
     hide_label: true,
     value: value_possibility.value,
     conditional_on_change: (value) => set_current_value(value),
-    conditional_on_blur: (value) => {
+    on_blur: (value) => {
       update_value_possibility({
         ...value_possibility,
         value
       });
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   }))), VALUE_POSSIBILITY_IDS_to_text[value_possibility.id] && /* @__PURE__ */ h(Box, {
     style: {width: 100, color: "#cb4", cursor: "pointer"},
     title: "Using interoperable ID"

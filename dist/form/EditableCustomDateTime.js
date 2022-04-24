@@ -3,7 +3,7 @@ import {connect} from "../../snowpack/pkg/react-redux.js";
 import {TextField} from "../../snowpack/pkg/@material-ui/core.js";
 import "./Editable.css.proxy.js";
 import {date_to_string, correct_datetime_for_local_time_zone, valid_date} from "./datetime_utils.js";
-import {useState} from "../../snowpack/pkg/preact/hooks.js";
+import {useEffect, useRef, useState} from "../../snowpack/pkg/preact/hooks.js";
 import {Button} from "../sharedf/Button.js";
 import {date2str, get_today_str} from "../shared/utils/date_helpers.js";
 import {find_parent_element_by_class} from "../utils/html.js";
@@ -32,6 +32,20 @@ function _EditableCustomDateTime(props) {
     if (diff_value(props.value, new_value))
       on_change(new_value);
   }
+  const el_ref = useRef(void 0);
+  const ref_conditional_on_change = useRef(conditional_on_change);
+  ref_conditional_on_change.current = conditional_on_change;
+  useEffect(() => {
+    return () => {
+      if (!el_ref.current)
+        return;
+      const is_editing_this_specific_text = document.activeElement === el_ref.current;
+      if (!is_editing_this_specific_text)
+        return;
+      const new_value = handle_on_blur({working_value: el_ref.current.value, invariant_value});
+      ref_conditional_on_change.current(new_value);
+    };
+  }, []);
   return /* @__PURE__ */ h("div", {
     className: class_name,
     title
@@ -42,7 +56,10 @@ function _EditableCustomDateTime(props) {
     value: display_value,
     onFocus: () => set_editing(true),
     inputRef: (r) => {
-      if (!r || !editing)
+      if (!r)
+        return;
+      el_ref.current = r;
+      if (!editing)
         return;
       const date = props_value(props);
       const new_working_value = date_to_string({date, time_resolution: "minute", trim_midnight: false});

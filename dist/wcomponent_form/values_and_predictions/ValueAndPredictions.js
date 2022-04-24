@@ -14,6 +14,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
 import {remove_element, replace_element} from "../../utils/list.js";
 import {ValuePossibilityLink} from "../value_possibilities/ValuePossibilityLink.js";
+import {EditableTextOnBlurType} from "../../form/editable_text/editable_text_common.js";
 const map_state = (state) => {
   return {
     editing: !state.display_options.consumption_formatting
@@ -85,14 +86,16 @@ const get_summary = (args) => (VAP, crud) => {
   }, is_number && (editing || orig_min) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "Min",
     value: orig_min || "",
-    conditional_on_blur: (new_min) => crud.update_item({...VAP, min: new_min})
+    on_blur: (new_min) => crud.update_item({...VAP, min: new_min}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h("br", null)), (editing || orig_value) && /* @__PURE__ */ h("div", {
     style: {position: "relative"}
   }, /* @__PURE__ */ h(EditableTextSingleLine, {
     disabled: is_boolean,
     placeholder: "Value",
     value: is_boolean ? orig_probability > 0.5 ? "True" : "False" : orig_value,
-    conditional_on_blur: (value) => crud.update_item({...VAP, value})
+    on_blur: (value) => crud.update_item({...VAP, value}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), !is_number && !is_boolean && /* @__PURE__ */ h("div", {
     style: {position: "absolute", right: "-25px", top: "15px"}
   }, /* @__PURE__ */ h(ValuePossibilityLink, {
@@ -103,7 +106,8 @@ const get_summary = (args) => (VAP, crud) => {
   })), /* @__PURE__ */ h("br", null)), is_number && (editing || orig_max) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "Max",
     value: orig_max || "",
-    conditional_on_blur: (max) => crud.update_item({...VAP, max})
+    on_blur: (max) => crud.update_item({...VAP, max}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h("br", null))), /* @__PURE__ */ h("div", {
     className: "predictions"
   }, is_boolean && /* @__PURE__ */ h("div", {
@@ -112,13 +116,15 @@ const get_summary = (args) => (VAP, crud) => {
     disabled: disabled_prob,
     placeholder: "Probability",
     value: orig_probability,
-    conditional_on_blur: (new_probability) => {
+    on_blur: (new_probability) => {
       crud.update_item({...VAP, probability: new_probability});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   })), is_boolean && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(EditablePercentage, {
     placeholder: "Confidence",
     value: orig_conviction,
-    conditional_on_blur: (new_conviction) => crud.update_item({...VAP, conviction: new_conviction})
+    on_blur: (new_conviction) => crud.update_item({...VAP, conviction: new_conviction}),
+    on_blur_type: EditableTextOnBlurType.conditional
   })), !is_boolean && orig_relative_probability !== void 0 && /* @__PURE__ */ h("div", {
     className: disabled_rel_prob ? "disabled" : ""
   }, /* @__PURE__ */ h(EditableNumber, {
@@ -127,10 +133,11 @@ const get_summary = (args) => (VAP, crud) => {
     size: "medium",
     value: is_boolean ? void 0 : orig_relative_probability,
     allow_undefined: true,
-    conditional_on_blur: (new_relative_probability) => {
+    on_blur: (new_relative_probability) => {
       new_relative_probability = is_boolean ? void 0 : new_relative_probability || 0;
       crud.update_item({...VAP, relative_probability: new_relative_probability});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   })), "  ", /* @__PURE__ */ h(PredictionBadge, {
     disabled: true,
     size: 20,
@@ -150,6 +157,7 @@ const get_details = (VAPs_represent, editing) => (item, crud) => {
   }, "Description"), /* @__PURE__ */ h(EditableText, {
     placeholder: "...",
     value: item.description,
-    conditional_on_blur: (description) => crud.update_item({...item, description})
+    on_blur: (description) => crud.update_item({...item, description}),
+    on_blur_type: EditableTextOnBlurType.conditional
   }));
 };

@@ -1,3 +1,4 @@
+import {wcomponent_is_action} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
 import {parse_wcomponent} from "../../../wcomponent/parse_json/parse_wcomponent.js";
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
@@ -10,19 +11,37 @@ export function supabase_get_wcomponents(args) {
     converter: wcomponent_supabase_to_app
   });
 }
-export async function supabase_get_wcomponent_from_any_base(args) {
+export async function supabase_get_wcomponents_from_any_base(args) {
   const result = await supabase_get_items({
     supabase: args.supabase,
     all_bases: true,
     base_id: void 0,
-    specific_id: args.id,
+    specific_ids: args.ids,
     table: TABLE_NAME,
     converter: wcomponent_supabase_to_app
   });
   return {
     error: result.error,
-    wcomponent: result.items[0]
+    wcomponents: result.items
   };
+}
+export async function supabase_get_wcomponents_from_other_bases(args) {
+  const downloaded_wcomponent_ids = new Set(args.wcomponents.map((wc) => wc.id));
+  const missing_wcomponent_ids = new Set();
+  function record_missing_ids(ids2) {
+    ids2.forEach((id) => {
+      if (!downloaded_wcomponent_ids.has(id))
+        missing_wcomponent_ids.add(id);
+    });
+  }
+  args.knowledge_views.forEach((kv) => record_missing_ids(Object.keys(kv.wc_id_map)));
+  args.wcomponents.forEach((wc) => {
+    record_missing_ids(wc.label_ids || []);
+    if (wcomponent_is_action(wc))
+      record_missing_ids(wc.parent_goal_or_action_ids || []);
+  });
+  const ids = Array.from(missing_wcomponent_ids);
+  return await supabase_get_wcomponents_from_any_base({supabase: args.supabase, ids});
 }
 export async function supabase_upsert_wcomponent(args) {
   return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args);

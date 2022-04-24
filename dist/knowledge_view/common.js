@@ -15,6 +15,7 @@ import {create_wcomponent} from "../state/specialised_objects/wcomponents/create
 import {KnowledgeViewChangeBase} from "./change_base/KnowledgeViewChangeBase.js";
 import {SelectKnowledgeView} from "./SelectKnowledgeView.js";
 import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -39,10 +40,11 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "Title",
     value: knowledge_view.title,
-    conditional_on_blur: (new_title) => {
+    on_blur: (new_title) => {
       const default_title = knowledge_view.is_base ? "All" : make_default_kv_title();
       crud.update_item({...knowledge_view, title: new_title ?? default_title});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   }), has_wcomponent && /* @__PURE__ */ h(Link, {
     route: "wcomponents",
     sub_route: void 0,
@@ -63,9 +65,10 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   }, "Description"), "  ", /* @__PURE__ */ h(EditableText, {
     placeholder: "...",
     value: knowledge_view.description,
-    conditional_on_blur: (description) => {
+    on_blur: (description) => {
       crud.update_item({...knowledge_view, description});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   })), /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("span", {
     className: "description_label"
   }, "Active assumptions (counterfactuals)"), /* @__PURE__ */ h(KnowledgeViewActiveCounterFactuals, {

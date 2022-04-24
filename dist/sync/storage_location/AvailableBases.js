@@ -4,7 +4,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {StorageOption} from "./StorageOption.js";
 import {ACTIONS} from "../../state/actions.js";
 import {SortDirection, sort_list} from "../../shared/utils/sort.js";
-import {refresh_bases_for_current_user} from "../../state/user_info/utils.js";
+import {refresh_bases_for_current_user} from "../../state/user_info/refresh_bases_for_current_user.js";
 import {SyncButton} from "../../sharedf/SyncButton.js";
 import {DisplaySupabasePostgrestError} from "../user_info/DisplaySupabaseErrors.js";
 const map_state = (state) => {

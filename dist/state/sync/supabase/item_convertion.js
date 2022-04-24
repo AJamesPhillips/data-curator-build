@@ -8,7 +8,6 @@ export function app_item_to_supabase(item, base_id) {
     id: item.id,
     modified_at: item.modified_at ? item.modified_at.toISOString() : void 0,
     base_id,
-    title: item.title,
     json
   };
 }

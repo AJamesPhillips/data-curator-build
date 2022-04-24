@@ -5,6 +5,11 @@ import {get_store} from "../../state/store.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {RichMarkDown} from "../../sharedf/RichMarkDown.js";
 import {ConditionalWComponentSearchWindow} from "./ConditionalWComponentSearchWindow.js";
+export var EditableTextOnBlurType;
+(function(EditableTextOnBlurType2) {
+  EditableTextOnBlurType2[EditableTextOnBlurType2["conditional"] = 0] = "conditional";
+  EditableTextOnBlurType2[EditableTextOnBlurType2["always"] = 1] = "always";
+})(EditableTextOnBlurType || (EditableTextOnBlurType = {}));
 const map_state = (state) => ({
   presenting: state.display_options.consumption_formatting,
   use_creation_context: state.creation_context.use_creation_context,
@@ -18,13 +23,14 @@ function _EditableTextCommon(props) {
     presenting,
     force_editable,
     select_all_on_focus,
-    force_focus_on_first_render
+    force_focus_on_first_render,
+    on_blur_type = 0
   } = props;
   const [value, set_value] = useState(props.value);
   useEffect(() => set_value(props.value), [props.value]);
   const el_ref = useRef(void 0);
   const id_insertion_point = useRef(void 0);
-  if (force_editable === false || !props.conditional_on_change && !props.conditional_on_blur || disabled || presenting && force_editable !== true) {
+  if (force_editable === false || !props.conditional_on_change && !props.on_blur || disabled || presenting && force_editable !== true) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {
@@ -55,14 +61,15 @@ function _EditableTextCommon(props) {
       props.conditional_on_change && props.conditional_on_change(new_value);
     set_value(new_value);
   }, [props.value, props.creation_context, props.conditional_on_change]);
-  const wrapped_conditional_on_blur = useMemo(() => (new_value) => {
+  const wrapped_on_blur = useMemo(() => (new_value) => {
     if (props.use_creation_context) {
       new_value = custom_creation_context_replace_text(props.creation_context, new_value);
     }
-    if (new_value !== props.value)
-      props.conditional_on_blur && props.conditional_on_blur(new_value);
+    const value_has_changed = new_value !== props.value;
+    if (on_blur_type === 1 || value_has_changed)
+      props.on_blur && props.on_blur(new_value);
     set_value(new_value);
-  }, [props.value, props.creation_context, props.conditional_on_blur]);
+  }, [props.value, props.creation_context, on_blur_type, props.on_blur]);
   const handle_on_change = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
@@ -74,13 +81,13 @@ function _EditableTextCommon(props) {
   const handle_on_blur = useMemo(() => (e) => {
     if (id_insertion_point.current !== void 0)
       return;
-    wrapped_conditional_on_blur(e.currentTarget.value);
-  }, [props.value, wrapped_conditional_on_blur]);
+    wrapped_on_blur(e.currentTarget.value);
+  }, [props.value, wrapped_on_blur]);
   const on_key_down = useMemo(() => (e) => {
-    handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_conditional_on_blur);
-  }, [wrapped_conditional_on_change, wrapped_conditional_on_blur]);
-  const ref_wrapped_conditional_on_blur = useRef(wrapped_conditional_on_blur);
-  ref_wrapped_conditional_on_blur.current = wrapped_conditional_on_blur;
+    handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur);
+  }, [wrapped_conditional_on_change, wrapped_on_blur]);
+  const ref_wrapped_on_blur = useRef(wrapped_on_blur);
+  ref_wrapped_on_blur.current = wrapped_on_blur;
   useEffect(() => {
     return () => {
       if (!el_ref.current)
@@ -88,7 +95,7 @@ function _EditableTextCommon(props) {
       const is_editing_this_specific_text = document.activeElement === el_ref.current;
       if (!is_editing_this_specific_text)
         return;
-      ref_wrapped_conditional_on_blur.current(el_ref.current.value);
+      ref_wrapped_on_blur.current(el_ref.current.value);
     };
   }, []);
   const [_, force_refreshing_render] = useState({});
@@ -137,14 +144,14 @@ function handle_text_field_focus(args) {
     el.setSelectionRange(0, el.value.length);
   }
 }
-function handle_general_key_down(e, el, wrapped_conditional_on_change, wrapped_conditional_on_blur) {
+function handle_general_key_down(e, el, wrapped_conditional_on_change, wrapped_on_blur) {
   const is_editing_this_specific_text = document.activeElement === el;
   if (!is_editing_this_specific_text)
     return;
   if (!el)
     return;
   handle_ctrl_k_link_insert(e, el, wrapped_conditional_on_change);
-  handle_stop_propagation(e, el, wrapped_conditional_on_blur);
+  handle_stop_propagation(e, el, wrapped_on_blur);
 }
 var ReplacingTextType;
 (function(ReplacingTextType2) {
@@ -178,9 +185,9 @@ function handle_ctrl_k_link_insert(e, el, conditional_on_change) {
   }
   setTimeout(() => el.setSelectionRange(start, end), 0);
 }
-function handle_stop_propagation(e, el, wrapped_conditional_on_blur) {
+function handle_stop_propagation(e, el, wrapped_on_blur) {
   if (e.ctrlKey && e.key === "e") {
-    wrapped_conditional_on_blur(el.value);
+    wrapped_on_blur(el.value);
     return;
   }
   if (e.key === "Shift")

@@ -4,6 +4,7 @@ import {VAPsType} from "../wcomponent/interfaces/VAPsType.js";
 import {wcomponent_is_statev2} from "../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_wcomponent_VAPs_represent} from "../wcomponent/get_wcomponent_VAPs_represent.js";
 import {Button} from "../sharedf/Button.js";
+import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
 export function WComponentCausalLinkForm(props) {
   const {
     wcomponent,
@@ -48,7 +49,8 @@ export function BasicCausalLinkForm(props) {
     value: effect_when_true,
     allow_undefined: true,
     style: {width: "100px"},
-    conditional_on_blur: (effect_when_true2) => change_effect({effect_when_true: effect_when_true2, effect_when_false})
+    on_blur: (effect_when_true2) => change_effect({effect_when_true: effect_when_true2, effect_when_false}),
+    on_blur_type: EditableTextOnBlurType.conditional
   })), show_effect_when_false && /* @__PURE__ */ h("div", {
     style: {flex: 1}
   }, /* @__PURE__ */ h("span", {
@@ -58,7 +60,8 @@ export function BasicCausalLinkForm(props) {
     value: effect_when_false,
     allow_undefined: true,
     style: {width: "100px"},
-    conditional_on_blur: (effect_when_false2) => change_effect({effect_when_false: effect_when_false2, effect_when_true})
+    on_blur: (effect_when_false2) => change_effect({effect_when_false: effect_when_false2, effect_when_true}),
+    on_blur_type: EditableTextOnBlurType.conditional
   })), editing && show_effect_when_false && /* @__PURE__ */ h("div", {
     style: {flex: 1, margin: "auto"}
   }, /* @__PURE__ */ h(Button, {

@@ -24,9 +24,9 @@ export function get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id, _wc
   else if (wcomponent_is_causal_link(wcomponent)) {
     VAPs_represent = VAPsType.boolean;
   } else if (wcomponent_is_state_value(wcomponent)) {
-    const target_wcomponent = wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""];
-    if (target_wcomponent)
-      VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id, _wcomponent_ids_touched);
+    const attribute_wcomponent = wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""];
+    if (attribute_wcomponent)
+      VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id, _wcomponent_ids_touched);
   } else {
     console.error(`Unimplmented "get_wcomponent_VAPs_represent" for wcomponent id: "${wcomponent.id}" type: "${wcomponent.type}"`);
   }

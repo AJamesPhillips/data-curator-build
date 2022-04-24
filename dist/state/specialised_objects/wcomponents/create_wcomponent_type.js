@@ -1,7 +1,9 @@
 import {prepare_new_wcomponent_object} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object.js";
 import {
   wcomponent_is_action,
-  wcomponent_is_judgement_or_objective
+  wcomponent_is_judgement_or_objective,
+  wcomponent_is_statev2,
+  wcomponent_is_state_value
 } from "../../../wcomponent/interfaces/SpecialisedObjects.js";
 import {get_created_at_ms} from "../../../shared/utils_datetime/utils_datetime.js";
 import {ACTIONS} from "../../actions.js";
@@ -13,6 +15,9 @@ import {
 import {get_store} from "../../store.js";
 import {get_latest_sim_ms_for_routing} from "../../routing/utils/get_latest_sim_ms_for_routing.js";
 import {get_default_parent_goal_or_action_ids} from "../get_default_parent_goal_or_action_ids.js";
+import {get_wcomponent_VAPs_represent} from "../../../wcomponent/get_wcomponent_VAPs_represent.js";
+import {get_possibilities_from_VAP_sets} from "../../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets.js";
+import {get_items_by_id} from "../../../shared/utils/get_items.js";
 const ONE_MINUTE = 60 * 1e3;
 export function create_wcomponent(args) {
   const store = args.store || get_store();
@@ -21,6 +26,7 @@ export function create_wcomponent(args) {
   let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context);
   wcomponent = set_judgement_or_objective_target(wcomponent, state);
   wcomponent = set_parent_goal_or_action_ids(wcomponent, state);
+  wcomponent = set_state_value_fields(wcomponent, state);
   const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state);
   const add_to_top = !wcomponent_is_judgement_or_objective(wcomponent);
   let created_at_ms = get_created_at_ms(wcomponent);
@@ -68,14 +74,47 @@ function set_parent_goal_or_action_ids(wcomponent, state) {
 function get_knowledge_view_entry(add_to_knowledge_view, wcomponent, state) {
   const current_knowledge_view = get_current_composed_knowledge_view_from_state(state);
   if (!add_to_knowledge_view && current_knowledge_view) {
-    let position;
+    let target_wcomponent_id = void 0;
     if (wcomponent_is_judgement_or_objective(wcomponent)) {
-      position = current_knowledge_view.composed_wc_id_map[wcomponent.judgement_target_wcomponent_id];
+      target_wcomponent_id = wcomponent.judgement_target_wcomponent_id;
+    } else if (wcomponent_is_state_value(wcomponent)) {
+      target_wcomponent_id = wcomponent.attribute_wcomponent_id;
     }
+    let position = current_knowledge_view.composed_wc_id_map[target_wcomponent_id || ""];
     if (!position) {
       position = get_middle_of_screen(state);
     }
     add_to_knowledge_view = {id: current_knowledge_view.id, position};
   }
   return add_to_knowledge_view;
+}
+function set_state_value_fields(wcomponent, state) {
+  if (wcomponent_is_state_value(wcomponent)) {
+    const current_knowledge_view = get_current_composed_knowledge_view_from_state(state);
+    const {wcomponents_by_id} = state.specialised_objects;
+    const current_knowledge_view_wc = wcomponents_by_id[current_knowledge_view?.id || ""];
+    const owner_wcomponent_id = wcomponent.owner_wcomponent_id || current_knowledge_view_wc?.id;
+    let {attribute_wcomponent_id, value_possibilities} = wcomponent;
+    const selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_list;
+    const selected_wcomponent_id = selected_wcomponent_ids[0];
+    if (selected_wcomponent_ids.length === 1 && selected_wcomponent_id) {
+      const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponent_id);
+      if (selected_wcomponent && wcomponent_is_statev2(selected_wcomponent)) {
+        const attribute_wcomponent = selected_wcomponent;
+        attribute_wcomponent_id = selected_wcomponent.id;
+        if (!value_possibilities || !Object.keys(value_possibilities)) {
+          const VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id);
+          const possible_values = get_possibilities_from_VAP_sets(VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || []);
+          value_possibilities = get_items_by_id(possible_values, "attribute's possible_values");
+        }
+      }
+    }
+    wcomponent = {
+      ...wcomponent,
+      owner_wcomponent_id,
+      attribute_wcomponent_id,
+      value_possibilities
+    };
+  }
+  return wcomponent;
 }

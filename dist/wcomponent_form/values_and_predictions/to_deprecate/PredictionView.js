@@ -1,6 +1,7 @@
 import {h} from "../../../../snowpack/pkg/preact.js";
 import {EditablePercentage} from "../../../form/EditablePercentage.js";
 import {EditableText} from "../../../form/editable_text/EditableText.js";
+import {EditableTextOnBlurType} from "../../../form/editable_text/editable_text_common.js";
 import {UncertainDateTimeForm} from "../../uncertain_datetime/UncertainDateTimeForm.js";
 import {PredictionSummary} from "./PredictionSummary.js";
 export function PredictionViewSummary(props) {
@@ -27,6 +28,10 @@ export function PredictionViewDetails(props) {
     const new_prediction = {...prediction, ...arg};
     on_change(new_prediction);
   };
+  const on_blur_props = !update_prediction ? {} : {
+    on_blur: (new_explanation) => update_prediction({explanation: new_explanation}),
+    on_blur_type: EditableTextOnBlurType.conditional
+  };
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h(UncertainDateTimeForm, {
     datetime: prediction.datetime,
     on_change: (datetime) => update_prediction && update_prediction({datetime})
@@ -35,6 +40,6 @@ export function PredictionViewDetails(props) {
   }, "Explanation"), " ", /* @__PURE__ */ h(EditableText, {
     placeholder: "Explanation...",
     value: explanation,
-    conditional_on_blur: update_prediction && ((new_explanation) => update_prediction({explanation: new_explanation}))
+    ...on_blur_props
   })));
 }

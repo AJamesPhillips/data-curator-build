@@ -9,7 +9,7 @@ import {LinkButton} from "../../sharedf/Link.js";
 import {Button} from "../../sharedf/Button.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_supabase} from "../../supabase/get_supabase.js";
-import {supabase_get_wcomponent_from_any_base} from "../../state/sync/supabase/wcomponent.js";
+import {supabase_get_wcomponents_from_any_base} from "../../state/sync/supabase/wcomponent.js";
 import {NotFoundWComponentKnowledgeViewForm} from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm.js";
 const map_state = (state) => {
   const {ready_for_reading: ready} = state.sync;
@@ -30,36 +30,30 @@ const map_state = (state) => {
 };
 const map_dispatch = {
   clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
-  set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage
+  set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage,
+  add_wcomponent_to_store: ACTIONS.specialised_object.add_wcomponent_to_store
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentsSidePanel(props) {
   const [searching_for_unfound, set_searching_for_unfound] = useState(void 0);
-  const [searched_for_wcomponent, set_searched_for_wcomponent] = useState(void 0);
   const {ready, item_id: id} = props;
-  const wcomponent = props.wcomponent || searched_for_wcomponent;
+  const wcomponent = props.wcomponent;
   const display_type = props.bases_by_id && !props.chosen_base_id ? DisplayType.need_to_choose_base_id : !ready ? DisplayType.loading : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple : id === null ? DisplayType.no_id : DisplayType.render_wcomponent;
   function clear_old_wcomponent_from_other_base() {
-    if (id && wcomponent && wcomponent.id !== id) {
+    if (id && wcomponent?.id !== id) {
       set_searching_for_unfound(void 0);
-      set_searched_for_wcomponent(void 0);
     }
   }
   function look_for_wcomponent_in_any_base() {
-    if (!ready)
-      return;
-    if (display_type === DisplayType.render_wcomponent && id && !wcomponent && searching_for_unfound === void 0) {
+    if (ready && display_type === DisplayType.render_wcomponent && id && !wcomponent && searching_for_unfound === void 0) {
+      ;
       (async () => {
-        let component_form_closed = false;
         set_searching_for_unfound(true);
         const result = await search_for_wcomponent_in_all_bases(id);
-        if (component_form_closed)
-          return;
+        if (result.wcomponents[0]) {
+          props.add_wcomponent_to_store({wcomponent: result.wcomponents[0]});
+        }
         set_searching_for_unfound(false);
-        set_searched_for_wcomponent(result.wcomponent);
-        return () => {
-          component_form_closed = true;
-        };
       })();
     }
   }
@@ -89,7 +83,7 @@ function _WComponentsSidePanel(props) {
       is_left: true
     })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("hr", null)), /* @__PURE__ */ h(CreateNewWComponent, null));
   if (wcomponent) {
-    const wcomponent_from_different_base = !props.wcomponent && !!searched_for_wcomponent;
+    const wcomponent_from_different_base = !!props.wcomponent && props.wcomponent.base_id !== props.chosen_base_id;
     return /* @__PURE__ */ h(WComponentForm, {
       wcomponent,
       wcomponent_from_different_base
@@ -110,5 +104,5 @@ var DisplayType;
 })(DisplayType || (DisplayType = {}));
 function search_for_wcomponent_in_all_bases(wcomponent_id) {
   const supabase = get_supabase();
-  return supabase_get_wcomponent_from_any_base({supabase, id: wcomponent_id});
+  return supabase_get_wcomponents_from_any_base({supabase, ids: [wcomponent_id]});
 }

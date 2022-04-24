@@ -192,7 +192,6 @@ function convert_prioritised_goals_and_actions_to_nodes(args) {
       x,
       y: 100 * offset_index,
       width: x2 - x,
-      height: 100,
       display: true
     });
   });

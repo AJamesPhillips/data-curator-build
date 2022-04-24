@@ -11,6 +11,7 @@ import {UncertainDateTimeForm} from "../uncertain_datetime/UncertainDateTimeForm
 import {ValueAndPredictions} from "./ValueAndPredictions.js";
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
 import {set_VAP_probabilities} from "../../wcomponent/CRUD_helpers/prepare_new_VAP.js";
+import {EditableTextOnBlurType} from "../../form/editable_text/editable_text_common.js";
 export const get_summary_for_single_VAP_set = (VAPs_represent, show_created_at) => (VAP_set, crud) => {
   let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent);
   VAP_set = {...VAP_set, entries: VAPs};
@@ -57,18 +58,20 @@ export const get_details2_for_single_VAP_set = (VAPs_represent, editing) => (VAP
     disabled: false,
     placeholder: "Confidence",
     value: conviction,
-    conditional_on_blur: (conviction2) => {
+    on_blur: (conviction2) => {
       const shared_entry_values2 = {...VAP_set.shared_entry_values, conviction: conviction2};
       const entries = VAP_set.entries.map((e) => ({...e, conviction: conviction2}));
       crud.update_item({...VAP_set, entries, shared_entry_values: shared_entry_values2});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   })), display_explanation && /* @__PURE__ */ h(EditableText, {
     placeholder: "Explanation",
     value: explanation,
-    conditional_on_blur: (explanation2) => {
+    on_blur: (explanation2) => {
       const shared_entry_values2 = {...VAP_set.shared_entry_values, explanation: explanation2};
       crud.update_item({...VAP_set, shared_entry_values: shared_entry_values2});
-    }
+    },
+    on_blur_type: EditableTextOnBlurType.conditional
   }), /* @__PURE__ */ h("br", null));
 };
 const get_created_at = (item) => item.created_at;

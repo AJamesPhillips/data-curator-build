@@ -2,7 +2,7 @@ import {get_supabase} from "../../supabase/get_supabase.js";
 import {ACTIONS} from "../actions.js";
 import {pub_sub} from "../pub_sub/pub_sub.js";
 import {selector_chosen_base} from "./selector.js";
-import {refresh_bases_for_current_user} from "./utils.js";
+import {refresh_bases_for_current_user} from "./refresh_bases_for_current_user.js";
 export function user_info_subscribers(store) {
   if (!store.load_state_from_storage)
     return;
@@ -25,9 +25,7 @@ export function user_info_subscribers(store) {
     get_users(store);
   });
   pub_sub.user.sub("stale_bases", (full_reload_required) => {
-    if (full_reload_required)
-      store.dispatch(ACTIONS.user_info.update_bases({bases: void 0}));
-    refresh_bases_for_current_user(store);
+    refresh_bases_for_current_user(store, full_reload_required);
   });
   const supabase = get_supabase();
   supabase.auth.onAuthStateChange(() => {
