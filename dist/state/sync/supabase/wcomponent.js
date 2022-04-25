@@ -1,4 +1,4 @@
-import {wcomponent_is_action} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
+import {wcomponent_is_action, wcomponent_is_state_value} from "../../../wcomponent/interfaces/SpecialisedObjects.js";
 import {parse_wcomponent} from "../../../wcomponent/parse_json/parse_wcomponent.js";
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
@@ -75,7 +75,11 @@ async function supabase_update_wcomponent(args) {
   return {status: result.status, error, item: new_item};
 }
 function wcomponent_app_to_supabase(item, base_id) {
-  return app_item_to_supabase(item, base_id);
+  return {
+    ...app_item_to_supabase(item, base_id),
+    type: item.type,
+    attribute_id: wcomponent_is_state_value(item) ? item.attribute_wcomponent_id : void 0
+  };
 }
 export function wcomponent_supabase_to_app(item) {
   let wc = supabase_item_to_app(item);

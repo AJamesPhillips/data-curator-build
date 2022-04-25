@@ -2,19 +2,13 @@ import {get_new_knowledge_view_object} from "../../../knowledge_view/create_new_
 import {ACTIONS} from "../../actions.js";
 import {ensure_any_knowledge_view_displayed} from "../../routing/utils/ensure_any_knowledge_view_displayed.js";
 import {selector_chosen_base_id} from "../../user_info/selector.js";
-import {get_base_knowledge_view} from "../accessors.js";
 export function ensure_base_knowledge_view_subscriber(store) {
   return () => {
     const state = store.getState();
     if (!state.sync.ready_for_reading)
       return;
-    if (state.derived.base_knowledge_view)
+    if (state.derived.knowledge_views.length)
       return;
-    const base_knowledge_view = get_base_knowledge_view(Object.values(state.specialised_objects.knowledge_views_by_id));
-    if (base_knowledge_view) {
-      console.error("Should have set base_knowledge_view by now but state.derived.base_knowledge_view is undefined");
-      return;
-    }
     const base_id = selector_chosen_base_id(state);
     if (base_id === void 0) {
       console.error("Can not create knowledge view without chosen_base_id");

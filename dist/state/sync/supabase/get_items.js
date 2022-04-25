@@ -8,7 +8,6 @@ export async function supabase_get_items(args) {
     query = query.eq("base_id", args.base_id);
   if (args.specific_ids !== void 0) {
     const specific_ids = args.specific_ids.slice(offset, offset_max_inclusive + 1);
-    console.trace("specific_ids", offset, offset_max_inclusive + 1, specific_ids.slice(0, 3));
     query = query.in("id", specific_ids);
   }
   const res1 = await query;
