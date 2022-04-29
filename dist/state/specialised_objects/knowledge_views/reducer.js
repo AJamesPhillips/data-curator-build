@@ -63,15 +63,3 @@ function add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponen
   const new_knowledge_view = {...knowledge_view, wc_id_map: new_wc_id_map};
   return handle_upsert_knowledge_view(state, new_knowledge_view);
 }
-function add_wcomponent_to_base_knowledge_view(state, wcomponent_id, entry) {
-  const {base_knowledge_view} = state.derived;
-  if (!base_knowledge_view) {
-    console.error("There should always be a base knowledge view once wcomponents are being added");
-    return state;
-  }
-  const existing_entry = base_knowledge_view.wc_id_map[wcomponent_id];
-  if (existing_entry) {
-    return state;
-  }
-  return add_wcomponent_entry_to_knowledge_view(state, base_knowledge_view, wcomponent_id, entry);
-}

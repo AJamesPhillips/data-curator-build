@@ -1,6 +1,6 @@
 import {test} from "../../shared/utils/test.js";
 import {uuid_v4_for_tests} from "../../utils/uuid_v4_for_tests.js";
-import {uuids_regex} from "./id_regexs.js";
+import {double_at_mentioned_uuids_regex} from "./id_regexs.js";
 import {format_wcomponent_id_error, format_wcomponent_link} from "./templates.js";
 export function replace_normal_ids(text, current_depth, args) {
   const {root_url, depth_limit, get_title, render_links} = args;
@@ -18,8 +18,8 @@ export function replace_normal_ids(text, current_depth, args) {
   });
   return text;
 }
-function get_ids_from_text(text) {
-  const matches = [...text.matchAll(uuids_regex)];
+export function get_ids_from_text(text) {
+  const matches = [...text.matchAll(double_at_mentioned_uuids_regex)];
   return matches.map((entry) => entry[1].slice(2));
 }
 function test_get_ids_from_text() {

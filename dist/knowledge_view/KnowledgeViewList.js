@@ -64,12 +64,7 @@ function factory_get_summary(current_view) {
     item_id: void 0,
     args: {view, subview_id: knowledge_view.id},
     selected_on: new Set(["route", "args.subview_id"])
-  }, get_knowledge_view_title(knowledge_view));
-}
-function get_knowledge_view_title(knowledge_view) {
-  if (!knowledge_view.is_base)
-    return knowledge_view.title;
-  return knowledge_view.title !== "All" ? `All (${knowledge_view.title})` : "All";
+  }, knowledge_view.title);
 }
 function get_details3() {
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("br", null));

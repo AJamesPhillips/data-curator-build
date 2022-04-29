@@ -17,9 +17,6 @@ export const project_priority_height = 7 * SCALE;
 export const action_y = y_factory(8);
 export const action_height = 1 * SCALE;
 export const COLOURS = {
-  green: "#C8F7B8",
-  yellow: "#FDE6A8",
-  blue: "#C5D6FD",
-  red: "#F7D2DE",
-  white: "#FFF"
+  white: {r: 255, g: 255, b: 255, a: 1},
+  white_a75: {r: 255, g: 255, b: 255, a: 0.75}
 };

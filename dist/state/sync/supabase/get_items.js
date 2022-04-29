@@ -13,7 +13,8 @@ export async function supabase_get_items(args) {
   const res1 = await query;
   let error = res1.error || void 0;
   let items = (res1.data || []).map(args.converter);
-  if (!error && items.length === MAX_ROWS) {
+  const specific_ids_remaining_to_fetch = args.specific_ids && offset + MAX_ROWS < args.specific_ids.length;
+  if (!error && (items.length === MAX_ROWS || specific_ids_remaining_to_fetch)) {
     const res2 = await supabase_get_items({...args, offset: offset + MAX_ROWS});
     if (!res2.error)
       items = items.concat(res2.items);

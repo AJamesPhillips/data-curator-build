@@ -77,6 +77,7 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     to_wcomponent = get_wcomponent_from_state(state, wcomponent.to_id);
   }
   const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state);
+  const is_in_editing_mode = !state.display_options.consumption_formatting;
   return {
     ready: state.sync.ready_for_reading,
     base_id: selector_chosen_base_id(state),
@@ -85,9 +86,10 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
-    is_in_editing_mode: !state.display_options.consumption_formatting,
-    editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
-    force_editable: wcomponent_from_different_base ? false : void 0,
+    is_in_editing_mode,
+    editable: is_in_editing_mode,
+    force_editable: is_in_editing_mode,
+    wcomponent_from_different_base,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
   };
@@ -149,10 +151,11 @@ function _WComponentForm(props) {
   const conditional_on_blur_title = (title2) => wrapped_upsert_wcomponent({title: title2});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
-    onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id})
+    onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id}),
+    title: `Click to change to base ${props.wcomponent.base_id}`
   }, /* @__PURE__ */ h(WarningTriangle, {
     message: ""
-  }), " ", props.is_in_editing_mode ? /* @__PURE__ */ h("span", null, "Editing disabled. Change to base ", props.wcomponent.base_id, " to edit") : /* @__PURE__ */ h("span", null, "Change to base ", props.wcomponent.base_id, " to view")), /* @__PURE__ */ h(FormControl, {
+  }), "  Is owned by base ", props.wcomponent.base_id), /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal",
     style: {fontWeight: 600, fontSize: 22}

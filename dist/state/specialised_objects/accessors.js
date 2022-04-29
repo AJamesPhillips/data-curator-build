@@ -37,19 +37,6 @@ export function is_on_current_knowledge_view(state, wcomponent_id) {
 export function get_knowledge_view_from_state(state, knowledge_view_id) {
   return state.specialised_objects.knowledge_views_by_id[knowledge_view_id];
 }
-export function get_base_knowledge_view(knowledge_views) {
-  const base_knowledge_views = knowledge_views.filter((kv) => kv.is_base);
-  let base_knowledge_view;
-  base_knowledge_view = base_knowledge_views[0];
-  if (base_knowledge_views.length > 1) {
-    base_knowledge_views.forEach((kv) => {
-      if (kv.created_at.getTime() < base_knowledge_view.created_at.getTime()) {
-        base_knowledge_view = kv;
-      }
-    });
-  }
-  return base_knowledge_view;
-}
 export function get_nested_knowledge_view_ids(knowledge_views) {
   const map = {top_ids: [], map: {}};
   const unused_knowledge_views = [];

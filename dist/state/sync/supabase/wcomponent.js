@@ -3,6 +3,8 @@ import {parse_wcomponent} from "../../../wcomponent/parse_json/parse_wcomponent.
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
 import {app_item_to_supabase, supabase_item_to_app} from "./item_convertion.js";
+import {get_ids_from_text} from "../../../wcomponent_derived/rich_text/replace_normal_ids.js";
+import {is_valid_uuid} from "../../../wcomponent_derived/rich_text/id_regexs.js";
 const TABLE_NAME = "wcomponents";
 export function supabase_get_wcomponents(args) {
   return supabase_get_items({
@@ -28,17 +30,25 @@ export async function supabase_get_wcomponents_from_any_base(args) {
 export async function supabase_get_wcomponents_from_other_bases(args) {
   const downloaded_wcomponent_ids = new Set(args.wcomponents.map((wc) => wc.id));
   const missing_wcomponent_ids = new Set();
-  function record_missing_ids(ids2) {
+  function determine_if_missing_ids(ids2, owner_wcomponent_id) {
     ids2.forEach((id) => {
+      if (!is_valid_uuid(id)) {
+        console.trace(`Found invalid UUID "${id}".  Owned by wcomponent_id: "${owner_wcomponent_id}"`);
+        return;
+      }
       if (!downloaded_wcomponent_ids.has(id))
         missing_wcomponent_ids.add(id);
     });
   }
-  args.knowledge_views.forEach((kv) => record_missing_ids(Object.keys(kv.wc_id_map)));
+  args.knowledge_views.forEach((kv) => determine_if_missing_ids(Object.keys(kv.wc_id_map)));
   args.wcomponents.forEach((wc) => {
-    record_missing_ids(wc.label_ids || []);
+    determine_if_missing_ids(wc.label_ids || [], wc.id);
+    let ids2 = get_ids_from_text(wc.title);
+    determine_if_missing_ids(ids2);
+    ids2 = get_ids_from_text(wc.description);
+    determine_if_missing_ids(ids2);
     if (wcomponent_is_action(wc))
-      record_missing_ids(wc.parent_goal_or_action_ids || []);
+      determine_if_missing_ids(wc.parent_goal_or_action_ids || []);
   });
   const ids = Array.from(missing_wcomponent_ids);
   return await supabase_get_wcomponents_from_any_base({supabase: args.supabase, ids});

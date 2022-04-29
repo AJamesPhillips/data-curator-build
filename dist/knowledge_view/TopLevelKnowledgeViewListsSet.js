@@ -7,7 +7,6 @@ import {get_all_parent_knowledge_view_ids} from "./common.js";
 import {KnowledgeViewListsSet} from "./KnowledgeViewListsSet.js";
 const map_state = (state) => ({
   ready: state.sync.ready_for_reading,
-  base_knowledge_view: state.derived.base_knowledge_view,
   knowledge_views: state.derived.knowledge_views,
   nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
   knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
@@ -22,10 +21,10 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _TopLevelKnowledgeViewListsSet(props) {
-  if (!props.base_knowledge_view) {
+  if (props.knowledge_views.length === 0) {
     return /* @__PURE__ */ h("div", {
       style: {cursor: "progress"}
-    }, props.ready ? "Automatically creating base knowledge view..." : "Loading...");
+    }, props.ready ? "Automatically creating a knowledge view..." : "Loading...");
   }
   const possible_parent_knowledge_view_ids = useMemo(() => props.knowledge_views.map((kv) => kv.id), [props.knowledge_views]);
   const knowledge_views = props.nested_knowledge_view_ids.top_ids.map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
