@@ -69,7 +69,7 @@ import {wcomponent_statev2_subtype_options, wcomponent_type_options} from "./typ
 import {WComponentParentGoalOrActionForm} from "./WComponentParentGoalOrActionForm.js";
 import {WComponentStateValueForm} from "./WComponentStateValueForm.js";
 import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
-const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
+const map_state = (state, {wcomponent}) => {
   let from_wcomponent = void 0;
   let to_wcomponent = void 0;
   if (wcomponent_is_plain_connection(wcomponent)) {
@@ -89,7 +89,6 @@ const map_state = (state, {wcomponent, wcomponent_from_different_base}) => {
     is_in_editing_mode,
     editable: is_in_editing_mode,
     force_editable: is_in_editing_mode,
-    wcomponent_from_different_base,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
   };
@@ -131,8 +130,6 @@ function _WComponentForm(props) {
   const focus_title = _focus_title.current;
   _focus_title.current = false;
   const wrapped_upsert_wcomponent = (partial_wcomponent) => {
-    if (props.wcomponent_from_different_base)
-      return;
     const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent;
     props.upsert_wcomponent({wcomponent: updated});
   };
@@ -151,11 +148,11 @@ function _WComponentForm(props) {
   const conditional_on_blur_title = (title2) => wrapped_upsert_wcomponent({title: title2});
   return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
-    onClick: () => props.update_chosen_base_id({base_id: props.wcomponent.base_id}),
-    title: `Click to change to base ${props.wcomponent.base_id}`
+    onClick: () => props.update_chosen_base_id({base_id: wcomponent.base_id}),
+    title: `Click to change to base ${wcomponent.base_id}`
   }, /* @__PURE__ */ h(WarningTriangle, {
     message: ""
-  }), "  Is owned by base ", props.wcomponent.base_id), /* @__PURE__ */ h(FormControl, {
+  }), "  Is owned by base ", wcomponent.base_id), /* @__PURE__ */ h(FormControl, {
     fullWidth: true,
     margin: "normal",
     style: {fontWeight: 600, fontSize: 22}
@@ -185,7 +182,10 @@ function _WComponentForm(props) {
     on_change: (type) => {
       if (!type)
         return;
-      const vanilla = prepare_new_contextless_wcomponent_object({base_id, type});
+      const vanilla = prepare_new_contextless_wcomponent_object({
+        type,
+        base_id: wcomponent.base_id
+      });
       const new_wcomponent = {...vanilla, ...wcomponent};
       new_wcomponent.type = type;
       wrapped_upsert_wcomponent(new_wcomponent);
@@ -281,6 +281,7 @@ function _WComponentForm(props) {
     })
   })), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("br", null)), orig_values_and_prediction_sets !== void 0 && (editable || orig_values_and_prediction_sets.length > 0) && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("p", null, VAPs_represent === VAPsType.undefined && /* @__PURE__ */ h("div", null, "Set subtype to show Value Predictions"), VAPs_represent === VAPsType.action && /* @__PURE__ */ h(EasyActionValueAndPredictionSets, {
     VAPs_represent,
+    base_id: wcomponent.base_id,
     existing_value_possibilities: orig_value_possibilities,
     values_and_prediction_sets: orig_values_and_prediction_sets,
     update_VAPSets_and_value_possibilities: ({value_possibilities, values_and_prediction_sets}) => {

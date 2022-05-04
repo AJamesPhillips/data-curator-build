@@ -2,7 +2,6 @@ import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {VAPsType} from "../../wcomponent/interfaces/VAPsType.js";
 import {ACTIONS} from "../../state/actions.js";
-import {selector_chosen_base_id} from "../../state/user_info/selector.js";
 import {Button} from "../../sharedf/Button.js";
 import {group_versions_by_id} from "../../wcomponent_derived/value_and_prediction/group_versions_by_id.js";
 import {sort_by_uncertain_event_datetimes} from "../../shared/utils_datetime/partition_by_uncertain_datetime.js";
@@ -14,7 +13,6 @@ const map_state = (state) => {
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
     editing: !state.display_options.consumption_formatting,
-    base_id: selector_chosen_base_id(state) || -1,
     current_created_at_ms: state.routing.args.created_at_ms
   };
 };
