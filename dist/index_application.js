@@ -21,8 +21,6 @@ import {set_window_title} from "./window_title/set_window_title.js";
 import {SandboxCircularConnections} from "./scratch_pad/SandboxCircularConnections.js";
 import {DataApp} from "./x_data_app/DataApp.js";
 import {get_data_app_store} from "./x_data_app/state/get_data_app_store.js";
-import {PrivacyPolicy} from "./home/PrivacyPolicy.js";
-import {TermsAndConditions} from "./home/TermsAndConditions.js";
 const root = document.getElementById("root");
 if (root) {
   root.innerText = "";
@@ -58,9 +56,9 @@ if (root) {
       store
     }, /* @__PURE__ */ h(App, null)), root);
   } else if (window.location.pathname === "/privacy-policy/" || window.location.pathname === "/privacy-policy") {
-    render(/* @__PURE__ */ h(PrivacyPolicy, null), root);
+    render(/* @__PURE__ */ h("div", null, "Will render public/privacy-policy"), root);
   } else if (window.location.pathname === "/terms-and-conditions/" || window.location.pathname === "/terms-and-conditions") {
-    render(/* @__PURE__ */ h(TermsAndConditions, null), root);
+    render(/* @__PURE__ */ h("div", null, "Will render public/terms-and-conditions.html"), root);
   } else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim") {
     render(/* @__PURE__ */ h(SimHome, null), root);
   } else if (window.location.pathname === "/data/" || window.location.pathname === "/data") {

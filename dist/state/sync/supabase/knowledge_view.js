@@ -7,8 +7,14 @@ export function supabase_get_knowledge_views(args) {
   return supabase_get_items({
     ...args,
     table: TABLE_NAME,
-    converter: knowledge_view_supabase_to_app
+    converter: knowledge_view_supabase_to_app,
+    specific_ids: args.ids
   });
+}
+export async function supabase_get_knowledge_views_from_other_bases(args) {
+  const wcomponents_from_other_bases = args.wcomponents_from_other_bases.filter((wc) => !wc.deleted_at);
+  const wcomponent_ids = Array.from(new Set(wcomponents_from_other_bases.map((wc) => wc.id)));
+  return await supabase_get_knowledge_views({supabase: args.supabase, ids: wcomponent_ids, all_bases: true});
 }
 export async function supabase_upsert_knowledge_view(args) {
   return args.knowledge_view.modified_at ? supabase_update_knowledge_view(args) : supabase_create_knowledge_view(args);
