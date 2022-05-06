@@ -85,7 +85,8 @@ const map_dispatch = {
   set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
   pointerupdown_on_component: ACTIONS.meta_wcomponents.pointerupdown_on_component,
   pointerupdown_on_connection_terminal: ACTIONS.meta_wcomponents.pointerupdown_on_connection_terminal,
-  set_wcomponent_ids_to_move: ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move
+  set_wcomponent_ids_to_move: ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move,
+  request_searching_for_wcomponents_by_id_in_any_base: ACTIONS.sync.request_searching_for_wcomponents_by_id_in_any_base
 };
 const connector = connect(map_state, map_dispatch);
 function _WComponentCanvasNode(props) {
@@ -113,6 +114,11 @@ function _WComponentCanvasNode(props) {
   const {change_route, set_highlighted_wcomponent} = props;
   if (!composed_kv)
     return /* @__PURE__ */ h("div", null, "No current knowledge view");
+  useEffect(() => {
+    if (wcomponent)
+      return;
+    props.request_searching_for_wcomponents_by_id_in_any_base({ids: [id]});
+  }, [!!wcomponent]);
   const kv_entry_maybe = composed_kv.composed_wc_id_map[id];
   if (!kv_entry_maybe && !always_show)
     return /* @__PURE__ */ h("div", null, "Could not find knowledge view entry for id ", id);

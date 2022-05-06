@@ -6,10 +6,10 @@ import {VAPsType} from "../../../wcomponent/interfaces/VAPsType.js";
 import {update_subsubstate} from "../../../utils/update_state.js";
 import {is_update_specialised_object_sync_info} from "../../sync/actions.js";
 import {get_wcomponent_from_state} from "../accessors.js";
-import {is_upsert_wcomponent, is_delete_wcomponent, is_add_wcomponent_to_store} from "./actions.js";
+import {is_upsert_wcomponent, is_delete_wcomponent, is_add_wcomponents_to_store} from "./actions.js";
 import {bulk_editing_wcomponents_reducer} from "./bulk_edit/reducer.js";
 import {tidy_wcomponent} from "./tidy_wcomponent.js";
-import {handle_add_wcomponent_to_store, handle_upsert_wcomponent} from "./utils.js";
+import {handle_add_wcomponents_to_store, handle_upsert_wcomponent} from "./utils.js";
 export const wcomponents_reducer = (state, action) => {
   if (is_upsert_wcomponent(action)) {
     const tidied = tidy_wcomponent(action.wcomponent, state.specialised_objects.wcomponents_by_id);
@@ -23,9 +23,9 @@ export const wcomponents_reducer = (state, action) => {
       state = handle_upsert_wcomponent(state, existing, false, true);
     }
   }
-  if (is_add_wcomponent_to_store(action)) {
-    const tidied = tidy_wcomponent(action.wcomponent, state.specialised_objects.wcomponents_by_id);
-    state = handle_add_wcomponent_to_store(state, tidied);
+  if (is_add_wcomponents_to_store(action)) {
+    const tidied = action.wcomponents.map((wc) => tidy_wcomponent(wc, state.specialised_objects.wcomponents_by_id));
+    state = handle_add_wcomponents_to_store(state, tidied);
   }
   if (is_update_specialised_object_sync_info(action) && action.object_type === "wcomponent") {
     let wc = get_wcomponent_from_state(state, action.id);

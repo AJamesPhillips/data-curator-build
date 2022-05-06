@@ -6,8 +6,9 @@ import {
   is_replace_all_specialised_objects
 } from "../specialised_objects/syncing/actions.js";
 import {is_upsert_wcomponent} from "../specialised_objects/wcomponents/actions.js";
-import {is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save, is_update_network_status} from "./actions.js";
+import {is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save, is_update_network_status, is_request_searching_for_wcomponents_by_id_in_any_base, is_searching_for_wcomponents_by_id_in_any_base, is_searched_for_wcomponents_by_id_in_any_base} from "./actions.js";
 import {update_knowledge_view_last_source_of_truth, update_wcomponent_last_source_of_truth} from "./utils.js";
+import {set_union} from "../../utils/set.js";
 export const sync_reducer = (state, action) => {
   if (is_update_sync_status(action)) {
     const {status, loading_base_id, error_message = "", attempt: retry_attempt} = action;
@@ -54,6 +55,29 @@ export const sync_reducer = (state, action) => {
   if (is_update_network_status(action)) {
     state = update_substate(state, "sync", "network_functional", action.network_functional);
     state = update_substate(state, "sync", "network_function_last_checked", action.last_checked);
+  }
+  if (is_request_searching_for_wcomponents_by_id_in_any_base(action)) {
+    const wcomponent_ids_to_search_for_in_any_base = new Set(state.sync.wcomponent_ids_to_search_for_in_any_base);
+    const {wcomponent_ids_searching_for_in_any_base, wcomponent_ids_searched_for_in_any_base} = state.sync;
+    action.ids.filter((id) => {
+      return !wcomponent_ids_to_search_for_in_any_base.has(id) && !wcomponent_ids_searching_for_in_any_base.has(id) && !wcomponent_ids_searched_for_in_any_base.has(id) && !state.specialised_objects.wcomponents_by_id[id];
+    }).forEach((id) => wcomponent_ids_to_search_for_in_any_base.add(id));
+    state = update_substate(state, "sync", "wcomponent_ids_to_search_for_in_any_base", wcomponent_ids_to_search_for_in_any_base);
+  }
+  if (is_searching_for_wcomponents_by_id_in_any_base(action)) {
+    const wcomponent_ids_searching_for_in_any_base = set_union(state.sync.wcomponent_ids_to_search_for_in_any_base, state.sync.wcomponent_ids_searching_for_in_any_base);
+    state = update_substate(state, "sync", "wcomponent_ids_to_search_for_in_any_base", new Set());
+    state = update_substate(state, "sync", "wcomponent_ids_searching_for_in_any_base", wcomponent_ids_searching_for_in_any_base);
+  }
+  if (is_searched_for_wcomponents_by_id_in_any_base(action)) {
+    const wcomponent_ids_searching_for_in_any_base = new Set(state.sync.wcomponent_ids_searching_for_in_any_base);
+    const wcomponent_ids_searched_for_in_any_base = new Set(state.sync.wcomponent_ids_searched_for_in_any_base);
+    action.ids.forEach((id) => {
+      wcomponent_ids_searching_for_in_any_base.delete(id);
+      wcomponent_ids_searched_for_in_any_base.add(id);
+    });
+    state = update_substate(state, "sync", "wcomponent_ids_searching_for_in_any_base", wcomponent_ids_searching_for_in_any_base);
+    state = update_substate(state, "sync", "wcomponent_ids_searched_for_in_any_base", wcomponent_ids_searched_for_in_any_base);
   }
   return state;
 };

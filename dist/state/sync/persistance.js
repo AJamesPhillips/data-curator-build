@@ -29,6 +29,9 @@ export function sync_starting_state() {
     ready_for_writing: false,
     network_functional: true,
     network_function_last_checked: void 0,
+    wcomponent_ids_to_search_for_in_any_base: new Set(),
+    wcomponent_ids_searching_for_in_any_base: new Set(),
+    wcomponent_ids_searched_for_in_any_base: new Set(),
     bases: {...default_sync_state_for_one_data_type},
     specialised_objects: {...default_sync_state_for_one_data_type},
     ...obj

@@ -9,9 +9,9 @@ export function handle_upsert_wcomponent(state, wcomponent, is_source_of_truth, 
   state = update_specialised_object_ids_pending_save(state, "wcomponent", wcomponent.id, !!wcomponent.needs_save);
   return state;
 }
-export function handle_add_wcomponent_to_store(state, wcomponent) {
+export function handle_add_wcomponents_to_store(state, wcomponents) {
   const map = {...state.specialised_objects.wcomponents_by_id};
-  map[wcomponent.id] = wcomponent;
+  wcomponents.forEach((wcomponent) => map[wcomponent.id] = wcomponent);
   state = update_substate(state, "specialised_objects", "wcomponents_by_id", map);
   return state;
 }
