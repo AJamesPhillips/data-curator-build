@@ -4,6 +4,7 @@ export function app_item_to_supabase(item, base_id) {
   if (base_id === void 0)
     throw new Error("Must provide base_id for app_item_to_supabase");
   const json = clean_base_object_of_sync_meta_fields(item);
+  delete json.base_id;
   const supabase_item = {
     id: item.id,
     modified_at: item.modified_at ? item.modified_at.toISOString() : void 0,
@@ -16,6 +17,7 @@ export function app_item_to_supabase(item, base_id) {
 export function supabase_item_to_app(item) {
   let {json, id, base_id, modified_at} = item;
   const modified_at_date = modified_at ? new Date(modified_at + "Z") : void 0;
+  delete json.base_id;
   json = {...json, id, base_id, modified_at: modified_at_date};
   return json;
 }
