@@ -32,7 +32,8 @@ function base_supabase_to_app(base, access_controls, user_id) {
   updated_at = new Date(updated_at);
   const access_control = access_controls?.find((ac) => ac.user_id === user_id);
   const access_level = access_control?.access_level || (user_id === owner_user_id ? "owner" : public_read ? "viewer" : "none");
-  return {...santise_base(base), inserted_at, updated_at, access_level};
+  const can_edit = access_level === "owner" || access_level === "editor";
+  return {...santise_base(base), inserted_at, updated_at, access_level, can_edit};
 }
 export async function modify_base(base) {
   const santised_base = santise_base(base);

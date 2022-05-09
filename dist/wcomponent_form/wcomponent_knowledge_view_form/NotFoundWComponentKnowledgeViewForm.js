@@ -3,6 +3,7 @@ import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {ConfirmatoryDeleteButton} from "../../form/ConfirmatoryDeleteButton.js";
 import {ACTIONS} from "../../state/actions.js";
 import {get_current_knowledge_view_from_state} from "../../state/specialised_objects/accessors.js";
+import {WComponentKnowledgeViewForm} from "./WComponentKnowledgeViewForm.js";
 import {WComponentPresenceInOtherKVs} from "./WComponentPresenceInOtherKVs.js";
 const map_state = (state, own_props) => {
   const current_knowledge_view = get_current_knowledge_view_from_state(state);
@@ -24,7 +25,9 @@ function _NotFoundWComponentKnowledgeViewForm(props) {
     knowledge_view_entry,
     editing
   } = props;
-  return /* @__PURE__ */ h("div", null, editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WComponentKnowledgeViewForm, {
+    wcomponent_id
+  }), editing && knowledge_view_entry && !knowledge_view_entry.passthrough && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h(ConfirmatoryDeleteButton, {
     button_text: "Delete from knowledge view",
     tooltip_text: "Delete from current knowledge view (" + knowledge_view_title + ")",
     on_delete: () => {

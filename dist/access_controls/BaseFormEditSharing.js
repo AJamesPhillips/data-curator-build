@@ -17,9 +17,7 @@ function _BaseFormEditSharing(props) {
   const [async_state, set_async_state] = useState("initial");
   const [access_controls, set_access_controls] = useState(void 0);
   const [error, set_error] = useState(void 0);
-  const {access_level} = base;
   const is_owner = base.owner_user_id === user.id;
-  const owner_or_editor = access_level === "editor" || is_owner;
   function refresh_sharing_options() {
     set_async_state("in_progress");
     get_access_controls_for_base(base.id).then((res) => {

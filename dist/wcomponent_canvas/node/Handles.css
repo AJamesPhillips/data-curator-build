@@ -16,12 +16,13 @@
   transition: background-color 0.2s, color 0.2s;
   cursor: pointer;
 }
-
-.node_handle:hover {
-  color: black;
+.node_handle.error_disabled {
+  color: rgba(200, 0, 0, 0.3);
+  cursor: not-allowed;
 }
-.node_handle:hover.disabled {
-  color: rgba(0, 0, 0, 0.3);
+
+.node_handle.highlight_on_hover:hover {
+  color: black;
 }
 
 .node_handle.movement {

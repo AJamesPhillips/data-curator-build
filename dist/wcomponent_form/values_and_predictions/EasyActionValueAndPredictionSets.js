@@ -7,12 +7,12 @@ import {group_versions_by_id} from "../../wcomponent_derived/value_and_predictio
 import {sort_by_uncertain_event_datetimes} from "../../shared/utils_datetime/partition_by_uncertain_datetime.js";
 import {ACTION_VALUE_POSSIBILITY_ID} from "../../wcomponent/value/parse_value.js";
 import {handle_update_VAP_sets, set_action_VAP_set_state} from "./handle_update_VAP_sets.js";
-const map_state = (state) => {
+const map_state = (state, own_props) => {
   return {
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
-    editing: !state.display_options.consumption_formatting,
+    editing: own_props.force_editable ?? !state.display_options.consumption_formatting,
     current_created_at_ms: state.routing.args.created_at_ms
   };
 };

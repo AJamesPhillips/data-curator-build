@@ -7,12 +7,12 @@ import {ACTIONS} from "../../state/actions.js";
 import {selector_chosen_base_id} from "../../state/user_info/selector.js";
 import {ValueAndPredictionSetsComponent} from "./ValueAndPredictionSetsComponent.js";
 import {handle_update_VAP_sets} from "./handle_update_VAP_sets.js";
-const map_state = (state) => {
+const map_state = (state, own_props) => {
   return {
     current_created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
-    editing: !state.display_options.consumption_formatting,
+    editing: own_props.force_editable ?? !state.display_options.consumption_formatting,
     base_id: selector_chosen_base_id(state) || -1
   };
 };

@@ -170,7 +170,7 @@ function _WComponentCanvasNode(props) {
     change_route,
     is_current_item
   });
-  const children = !wcomponent || props.node_is_moving ? [] : [
+  const children = props.node_is_moving ? [] : [
     /* @__PURE__ */ h(Handles, {
       show_move_handle: is_on_canvas && is_editing && is_highlighted,
       user_requested_node_move: (position) => {

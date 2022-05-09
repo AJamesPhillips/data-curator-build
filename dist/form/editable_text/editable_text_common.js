@@ -30,7 +30,7 @@ function _EditableTextCommon(props) {
   useEffect(() => set_value(props.value), [props.value]);
   const el_ref = useRef(void 0);
   const id_insertion_point = useRef(void 0);
-  if (force_editable === false || !props.conditional_on_change && !props.on_blur || disabled || presenting && force_editable !== true) {
+  if (force_editable === false || !props.conditional_on_change && !props.on_blur || disabled || presenting && force_editable === void 0) {
     const class_name2 = disabled ? "disabled" : "";
     const have_value = props.value !== void 0;
     return /* @__PURE__ */ h("div", {

@@ -37,7 +37,7 @@ export function is_on_current_knowledge_view(state, wcomponent_id) {
 export function get_knowledge_view_from_state(state, knowledge_view_id) {
   return state.specialised_objects.knowledge_views_by_id[knowledge_view_id];
 }
-export function get_nested_knowledge_view_ids(knowledge_views) {
+export function get_nested_knowledge_view_ids(knowledge_views, chosen_base_id) {
   const map = {top_ids: [], map: {}};
   const unused_knowledge_views = [];
   knowledge_views.forEach((kv) => {
@@ -49,10 +49,10 @@ export function get_nested_knowledge_view_ids(knowledge_views) {
       map.map[kv.id] = {id: kv.id, title, sort_type, parent_id: void 0, child_ids: []};
     }
   });
-  add_child_views(unused_knowledge_views, map);
+  add_child_views(unused_knowledge_views, map, chosen_base_id);
   return map;
 }
-function add_child_views(potential_children, map) {
+function add_child_views(potential_children, map, chosen_base_id) {
   if (potential_children.length === 0)
     return;
   const lack_parent = [];
@@ -72,13 +72,17 @@ function add_child_views(potential_children, map) {
       lack_parent.push(potential_child);
   });
   if (potential_children.length === lack_parent.length) {
-    console.error(`Circular knowledge view tree.  Look in "Views" for: ${lack_parent.map((kv) => `${kv.title} ${kv.id}`).join(", ")}`);
+    const lack_parent_in_this_base = lack_parent.filter((kv) => kv.base_id === chosen_base_id);
+    if (lack_parent_in_this_base.length) {
+      console.error(`Maybe broken knowledge view tree.  Look in "Views" for:
+ * ${lack_parent_in_this_base.map((kv) => `${kv.title} ${kv.id}`).join("\n * ")}`);
+    }
     lack_parent.forEach(({id, title, sort_type}) => {
       map.top_ids.push(id);
       map.map[id] = {id, title, sort_type, parent_id: void 0, child_ids: [], ERROR_is_circular: true};
     });
   } else {
-    add_child_views(lack_parent, map);
+    add_child_views(lack_parent, map, chosen_base_id);
   }
 }
 export function sort_nested_knowledge_map_ids_by_priority_then_title(map) {

@@ -14,7 +14,8 @@ export function run_tests() {
     owner_user_id: user_id,
     public_read: false,
     title: "owned by this user",
-    access_level: "owner"
+    access_level: "owner",
+    can_edit: true
   };
   const a_base_with_editor_access = {
     id: 2,
@@ -23,7 +24,8 @@ export function run_tests() {
     owner_user_id: other_user_id,
     public_read: false,
     title: "editable by this user",
-    access_level: "editor"
+    access_level: "editor",
+    can_edit: true
   };
   const a_base_with_viewer_access = {
     id: 3,
@@ -32,7 +34,8 @@ export function run_tests() {
     owner_user_id: other_user_id,
     public_read: false,
     title: "viewable by this user",
-    access_level: "viewer"
+    access_level: "viewer",
+    can_edit: false
   };
   const a_public_base = {
     id: 3,
@@ -41,7 +44,8 @@ export function run_tests() {
     owner_user_id: other_user_id,
     public_read: true,
     title: "public viewable by this user",
-    access_level: "viewer"
+    access_level: "viewer",
+    can_edit: false
   };
   const bases = [
     an_owned_base,

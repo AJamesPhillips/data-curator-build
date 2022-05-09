@@ -17,7 +17,8 @@ function _EditableNumber(props) {
     on_blur_type,
     disabled,
     editing,
-    default_value_when_invalid = 0
+    default_value_when_invalid = 0,
+    force_editable
   } = props;
   let class_name = "editable_number";
   if (!editing || !conditional_on_change && !on_blur || disabled) {
@@ -38,6 +39,7 @@ function _EditableNumber(props) {
     size: props.size || "small",
     style: props.style,
     value,
+    force_editable,
     select_all_on_focus: true,
     conditional_on_change: (new_value) => {
       if (!conditional_on_change)

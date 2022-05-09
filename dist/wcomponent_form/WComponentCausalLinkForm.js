@@ -47,6 +47,7 @@ export function BasicCausalLinkForm(props) {
   }, primary_effect_description), "   ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "...",
     value: effect_when_true,
+    force_editable: editing,
     allow_undefined: true,
     style: {width: "100px"},
     on_blur: (effect_when_true2) => change_effect({effect_when_true: effect_when_true2, effect_when_false}),
@@ -58,6 +59,7 @@ export function BasicCausalLinkForm(props) {
   }, "Effect when false"), "   ", /* @__PURE__ */ h(EditableNumber, {
     placeholder: "...",
     value: effect_when_false,
+    force_editable: editing,
     allow_undefined: true,
     style: {width: "100px"},
     on_blur: (effect_when_false2) => change_effect({effect_when_false: effect_when_false2, effect_when_true}),

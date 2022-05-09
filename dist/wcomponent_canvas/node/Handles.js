@@ -20,9 +20,10 @@ export function Handles(props) {
 }
 function HandleForMoving(props) {
   const {show_move_handle, user_requested_node_move} = props;
+  const class_name = "node_handle movement highlight_on_hover";
   if (!show_move_handle)
     return /* @__PURE__ */ h("div", {
-      className: "node_handle movement"
+      className: class_name
     }, " ");
   const handle_pointer_down = (e) => {
     e.stopPropagation();
@@ -30,7 +31,7 @@ function HandleForMoving(props) {
     user_requested_node_move(position);
   };
   return /* @__PURE__ */ h("div", {
-    className: "node_handle movement",
+    className: class_name,
     onPointerDown: handle_pointer_down
   }, "✥");
 }

@@ -8,7 +8,7 @@ const map_state = (state) => ({
 const connector = connect(map_state);
 function _SelectBaseToMoveTo(props) {
   const selected_option_id = props.base_id_to_move_to === void 0 ? void 0 : `${props.base_id_to_move_to}`;
-  const options_of_other_editable_bases = Object.values(props.bases_by_id || {}).filter((b) => b.id !== props.chosen_base_id).filter((b) => b.access_level === "editor" || b.access_level === "owner").map((base) => ({id: `${base.id}`, title: base.title}));
+  const options_of_other_editable_bases = Object.values(props.bases_by_id || {}).filter((b) => b.id !== props.chosen_base_id && b.can_edit).map((base) => ({id: `${base.id}`, title: base.title}));
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(AutocompleteText, {
     selected_option_id,
     allow_none: true,
