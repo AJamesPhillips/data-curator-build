@@ -7,8 +7,6 @@ import PresentToAllIcon from "../../snowpack/pkg/@material-ui/icons/PresentToAll
 import {ACTIONS} from "../state/actions.js";
 import {invert_disabled_appearance} from "../ui_themes/invert_disabled.js";
 import {selector_current_user_access_level} from "../state/user_info/selector.js";
-import {Modal} from "../modal/Modal.js";
-import {Button} from "../sharedf/Button.js";
 const map_state = (state) => {
   const access_level = selector_current_user_access_level(state);
   return {
@@ -57,18 +55,6 @@ function _ViewOptions(props) {
     disabled: props.presenting,
     onClick: props.toggle_consumption_formatting,
     value: "presenting"
-  }, /* @__PURE__ */ h(PresentToAllIcon, null)), are_in_edit_mode && present_warning && /* @__PURE__ */ h(Modal, {
-    title: "",
-    size: "small",
-    scrollable: false,
-    on_close: () => set_present_warning(false),
-    child: /* @__PURE__ */ h("div", {
-      style: {margin: "30px"}
-    }, /* @__PURE__ */ h("h1", null, "Warning: Your edits will not be saved"), /* @__PURE__ */ h("p", null, "You can make changes to this knowledge base but they will not be saved. The owner of this knowledge base may give you editing rights if you ask them."), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("p", {
-      style: {textAlign: "center"}
-    }, /* @__PURE__ */ h(Button, {
-      onClick: () => set_present_warning(false)
-    }, "Ok")))
-  }));
+  }, /* @__PURE__ */ h(PresentToAllIcon, null)));
 }
 export const ViewOptions = connector(_ViewOptions);

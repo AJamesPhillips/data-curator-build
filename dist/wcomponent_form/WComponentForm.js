@@ -76,9 +76,10 @@ const map_state = (state, {wcomponent}) => {
     from_wcomponent = get_wcomponent_from_state(state, wcomponent.from_id);
     to_wcomponent = get_wcomponent_from_state(state, wcomponent.to_id);
   }
-  const base_for_wcomponent = (state.user_info.bases_by_id || {})[wcomponent.base_id];
   const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state);
   const is_in_editing_mode = !state.display_options.consumption_formatting;
+  const base_for_wcomponent = (state.user_info.bases_by_id || {})[wcomponent.base_id];
+  const allowed_to_edit = !!base_for_wcomponent?.can_edit;
   return {
     ready: state.sync.ready_for_reading,
     base_id: selector_chosen_base_id(state),
@@ -87,7 +88,9 @@ const map_state = (state, {wcomponent}) => {
     wc_id_to_counterfactuals_map,
     from_wcomponent,
     to_wcomponent,
-    force_editable: is_in_editing_mode && !!base_for_wcomponent?.can_edit,
+    is_in_editing_mode,
+    allowed_to_edit,
+    force_editable: is_in_editing_mode && allowed_to_edit,
     base_for_wcomponent,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms
@@ -145,7 +148,9 @@ function _WComponentForm(props) {
   const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0;
   const title = get_title({rich_text: !force_editable, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms});
   const conditional_on_blur_title = (title2) => wrapped_upsert_wcomponent({title: title2});
-  return /* @__PURE__ */ h(Box, null, props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
+  return /* @__PURE__ */ h(Box, null, props.is_in_editing_mode && !props.allowed_to_edit && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WarningTriangle, {
+    message: ""
+  }), "  Not allow to edit.  Ask base owner to give you edit permissions."), props.wcomponent_from_different_base && /* @__PURE__ */ h("div", {
     style: {cursor: "pointer"},
     onClick: () => props.update_chosen_base_id({base_id: wcomponent.base_id}),
     title: `Click to change to base ${wcomponent.base_id}`
