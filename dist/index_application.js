@@ -55,10 +55,14 @@ if (root) {
     render(/* @__PURE__ */ h(Provider, {
       store
     }, /* @__PURE__ */ h(App, null)), root);
-  } else if (window.location.pathname === "/privacy-policy/" || window.location.pathname === "/privacy-policy") {
-    render(/* @__PURE__ */ h("div", null, "Will render public/privacy-policy"), root);
-  } else if (window.location.pathname === "/terms-and-conditions/" || window.location.pathname === "/terms-and-conditions") {
+  } else if (window.location.pathname === "/privacy-policy") {
+    render(/* @__PURE__ */ h("div", null, "Will render public/privacy-policy.html"), root);
+  } else if (window.location.pathname === "/privacy-policy/") {
+    render(/* @__PURE__ */ h("div", null, "Will need to remove trailing / and link to privacy-policy or privacy-policy.html to render correctly"), root);
+  } else if (window.location.pathname === "/terms-and-conditions") {
     render(/* @__PURE__ */ h("div", null, "Will render public/terms-and-conditions.html"), root);
+  } else if (window.location.pathname === "/terms-and-conditions/") {
+    render(/* @__PURE__ */ h("div", null, "Will need to remove trailing / and link to terms-and-conditions or terms-and-conditions.html to render correctly"), root);
   } else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim") {
     render(/* @__PURE__ */ h(SimHome, null), root);
   } else if (window.location.pathname === "/data/" || window.location.pathname === "/data") {

@@ -11,6 +11,7 @@
 }
 .priorities_list_view_content h1 {
   padding: 10px;
+  min-width: 370px;
 }
 .priorities_list_view_content .goals, .priorities_list_view_content .prioritisations {
   flex: 1;
