@@ -38,6 +38,9 @@ export function get_knowledge_view_from_state(state, knowledge_view_id) {
   return state.specialised_objects.knowledge_views_by_id[knowledge_view_id];
 }
 export function get_nested_knowledge_view_ids(knowledge_views, chosen_base_id) {
+  const all_kvs_ids_any_base = new Set(knowledge_views.map((kv) => kv.id));
+  knowledge_views = knowledge_views.filter((kv) => kv.base_id === chosen_base_id);
+  const all_kvs_ids_only_this_base = new Set(knowledge_views.map((kv) => kv.id));
   const map = {top_ids: [], map: {}};
   const unused_knowledge_views = [];
   knowledge_views.forEach((kv) => {
@@ -49,10 +52,10 @@ export function get_nested_knowledge_view_ids(knowledge_views, chosen_base_id) {
       map.map[kv.id] = {id: kv.id, title, sort_type, parent_id: void 0, child_ids: []};
     }
   });
-  add_child_views(unused_knowledge_views, map, chosen_base_id);
+  add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, unused_knowledge_views, map, chosen_base_id);
   return map;
 }
-function add_child_views(potential_children, map, chosen_base_id) {
+function add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, potential_children, map, chosen_base_id) {
   if (potential_children.length === 0)
     return;
   const lack_parent = [];
@@ -77,12 +80,24 @@ function add_child_views(potential_children, map, chosen_base_id) {
       console.error(`Maybe broken knowledge view tree.  Look in "Views" for:
  * ${lack_parent_in_this_base.map((kv) => `${kv.title} ${kv.id}`).join("\n * ")}`);
     }
-    lack_parent.forEach(({id, title, sort_type}) => {
+    lack_parent.forEach(({id, title, parent_knowledge_view_id}) => {
       map.top_ids.push(id);
-      map.map[id] = {id, title, sort_type, parent_id: void 0, child_ids: [], ERROR_is_circular: true};
+      const ERROR_is_circular = all_kvs_ids_only_this_base.has(parent_knowledge_view_id);
+      const ERROR_parent_kv_missing = !all_kvs_ids_any_base.has(parent_knowledge_view_id);
+      const ERROR_parent_from_diff_base = !ERROR_is_circular && !ERROR_parent_kv_missing;
+      map.map[id] = {
+        id,
+        title,
+        sort_type: "errored",
+        parent_id: void 0,
+        child_ids: [],
+        ERROR_is_circular,
+        ERROR_parent_kv_missing,
+        ERROR_parent_from_diff_base
+      };
     });
   } else {
-    add_child_views(lack_parent, map, chosen_base_id);
+    add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, lack_parent, map, chosen_base_id);
   }
 }
 export function sort_nested_knowledge_map_ids_by_priority_then_title(map) {
@@ -95,7 +110,8 @@ const sort_type_to_prefix = {
   priority: "0",
   normal: "1",
   hidden: "2",
-  archived: "3"
+  archived: "3",
+  errored: "4"
 };
 function sort_knowledge_map_ids_by_priority_then_title(ids, map) {
   return sort_list(ids, (id) => {

@@ -16,6 +16,7 @@ import {KnowledgeViewChangeBase} from "./change_base/KnowledgeViewChangeBase.js"
 import {SelectKnowledgeView} from "./SelectKnowledgeView.js";
 import {useMemo} from "../../snowpack/pkg/preact/hooks.js";
 import {EditableTextOnBlurType} from "../form/editable_text/editable_text_common.js";
+import {WarningTriangle} from "../sharedf/WarningTriangle.js";
 export function get_all_parent_knowledge_view_ids(nested_knowledge_view_ids_map, current_subview_id) {
   const all_parent_ids = new Set();
   let nested_entry = nested_knowledge_view_ids_map[current_subview_id];
@@ -31,11 +32,29 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
   const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id];
   const children = (nested_kv?.child_ids || []).map((id) => props.knowledge_views_by_id[id]).filter(is_defined);
   const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""];
+  const kv_from_different_base = knowledge_view.base_id !== props.chosen_base_id;
+  const base_for_knowledge_view = (props.bases_by_id || {})[knowledge_view.base_id];
   const is_current_kv = props.current_subview_id === knowledge_view.id;
   const allow_nest_under_knowledge_view_ids = useMemo(() => new Set(props.possible_parent_knowledge_view_ids), [props.possible_parent_knowledge_view_ids]);
+  let kv_nesting_error = "";
+  if (nested_kv?.ERROR_is_circular)
+    kv_nesting_error = "Is circularly nested";
+  if (nested_kv?.ERROR_parent_kv_missing) {
+    kv_nesting_error = "Parent knowledge view is missing (may be present in a different knowledge base)";
+  }
+  let kv_nesting_warning = "";
+  if (nested_kv?.ERROR_parent_from_diff_base) {
+    kv_nesting_warning = "Parent knowledge view from a different base";
+  }
   return /* @__PURE__ */ h("div", {
     style: {backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5}
-  }, /* @__PURE__ */ h("p", {
+  }, kv_from_different_base && /* @__PURE__ */ h("div", {
+    style: {cursor: "pointer"},
+    onClick: () => props.update_chosen_base_id({base_id: knowledge_view.base_id}),
+    title: `Click to change to base ${knowledge_view.base_id}`
+  }, /* @__PURE__ */ h(WarningTriangle, {
+    message: ""
+  }), '  Is part of base "', base_for_knowledge_view?.title, '"'), /* @__PURE__ */ h("p", {
     style: {display: "inline-flex"}
   }, /* @__PURE__ */ h(EditableTextSingleLine, {
     placeholder: "Title",
@@ -79,11 +98,13 @@ export const factory_get_kv_details = (props) => (knowledge_view, crud) => {
     on_change: (foundation_knowledge_view_ids) => {
       crud.update_item({...knowledge_view, foundation_knowledge_view_ids});
     }
-  })), (editing || nested_kv?.ERROR_is_circular) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
+  })), (editing || kv_nesting_error || kv_nesting_warning) && /* @__PURE__ */ h("p", null, /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Nest under"), nested_kv?.ERROR_is_circular && /* @__PURE__ */ h("div", {
+  }, "Nest under"), kv_nesting_error && /* @__PURE__ */ h("div", {
     style: {backgroundColor: "pink"}
-  }, "Is circularly nested"), /* @__PURE__ */ h(SelectKnowledgeView, {
+  }, " ", kv_nesting_error, " "), kv_nesting_warning && /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(WarningTriangle, {
+    message: kv_nesting_warning
+  }), " ", kv_nesting_warning), /* @__PURE__ */ h(SelectKnowledgeView, {
     selected_option_id: knowledge_view.parent_knowledge_view_id,
     allowed_ids: allow_nest_under_knowledge_view_ids,
     on_change: (parent_knowledge_view_id) => {

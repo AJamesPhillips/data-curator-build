@@ -40,7 +40,9 @@ export async function supabase_get_wcomponents_from_other_bases(args) {
         missing_wcomponent_ids.add(id);
     });
   }
-  args.knowledge_views.forEach((kv) => determine_if_missing_ids(Object.keys(kv.wc_id_map)));
+  args.knowledge_views.forEach((kv) => {
+    determine_if_missing_ids(Object.keys(kv.wc_id_map));
+  });
   args.wcomponents.forEach((wc) => {
     determine_if_missing_ids(wc.label_ids || [], wc.id);
     let ids2 = get_ids_from_text(wc.title);

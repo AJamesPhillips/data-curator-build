@@ -2,6 +2,7 @@ import {parse_knowledge_view} from "../../../wcomponent/parse_json/parse_knowled
 import {supabase_create_item} from "./create_items.js";
 import {supabase_get_items} from "./get_items.js";
 import {app_item_to_supabase, supabase_item_to_app} from "./item_convertion.js";
+import {is_defined} from "../../../shared/utils/is_defined.js";
 const TABLE_NAME = "knowledge_views";
 export function supabase_get_knowledge_views(args) {
   return supabase_get_items({
@@ -14,7 +15,14 @@ export function supabase_get_knowledge_views(args) {
 export async function supabase_get_knowledge_views_from_other_bases(args) {
   const wcomponents_from_other_bases = args.wcomponents_from_other_bases.filter((wc) => !wc.deleted_at);
   const wcomponent_ids = Array.from(new Set(wcomponents_from_other_bases.map((wc) => wc.id)));
-  return await supabase_get_knowledge_views({supabase: args.supabase, ids: wcomponent_ids, all_bases: true});
+  const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map((kv) => kv.id));
+  const parent_kv_ids = args.knowledge_views.map((kv) => kv.parent_knowledge_view_id).filter(is_defined).filter((id) => !downloaded_knowledge_view_ids.has(id));
+  let kv_ids = wcomponent_ids.concat(parent_kv_ids);
+  args.knowledge_views.map((kv) => kv.foundation_knowledge_view_ids).forEach((ids) => {
+    ids?.filter((id) => !downloaded_knowledge_view_ids.has(id)).forEach((id) => kv_ids.push(id));
+  });
+  kv_ids = Array.from(new Set(kv_ids));
+  return await supabase_get_knowledge_views({supabase: args.supabase, ids: kv_ids, all_bases: true});
 }
 export async function supabase_upsert_knowledge_view(args) {
   return args.knowledge_view.modified_at ? supabase_update_knowledge_view(args) : supabase_create_knowledge_view(args);

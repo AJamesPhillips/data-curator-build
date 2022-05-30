@@ -73,8 +73,8 @@ const view_options = [
   {id: "actions_list", title: "Actions list"}
 ];
 function calc_if_is_hidden(entry) {
-  const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived";
-  const color = entry.ERROR_is_circular ? pink : void 0;
+  const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived" || entry.sort_type === "errored";
+  const color = entry.sort_type === "errored" ? pink : void 0;
   return {id: entry.id, title: entry.title, is_hidden, color};
 }
 const pink = {r: 231, g: 190, b: 201, a: 1};

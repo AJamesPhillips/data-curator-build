@@ -1,3 +1,4 @@
+import Markdown from "../../../snowpack/pkg/markdown-to-jsx.js";
 import {h} from "../../../snowpack/pkg/preact.js";
 import {connect} from "../../../snowpack/pkg/react-redux.js";
 import {Link} from "../../sharedf/Link.js";
@@ -22,7 +23,7 @@ function _WComponentMoveConflicts(props) {
       sub_route: void 0,
       item_id: wc_id,
       args: void 0
-    }, 'Component "', wcomponent_title, '" in:'), /* @__PURE__ */ h("ul", null, conflicts.map((conflict) => {
+    }, 'Component "', /* @__PURE__ */ h(Markdown, null, wcomponent_title), '" in:'), /* @__PURE__ */ h("ul", null, conflicts.map((conflict) => {
       const knowledge_view = knowledge_views_by_id[conflict.kv_id];
       const knowledge_view_title = knowledge_view?.title || conflict.kv_id;
       const position_for_middle_of_screen = lefttop_to_xy(conflict, true);

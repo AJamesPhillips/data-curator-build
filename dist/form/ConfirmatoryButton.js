@@ -7,7 +7,7 @@ export function ConfirmatoryButton(props) {
   const [progressing, set_progressing] = useState(false);
   const {tooltip_text = ""} = props;
   return /* @__PURE__ */ h("div", {
-    style: {display: "flex", justifyContent: "space-between"}
+    style: {display: "flex", justifyContent: "space-between", margin: "4px 0px"}
   }, /* @__PURE__ */ h(ThemeProvider, {
     theme: WarningTheme
   }, /* @__PURE__ */ h(Button, {

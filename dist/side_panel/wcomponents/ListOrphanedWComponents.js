@@ -12,7 +12,7 @@ const map_dispatch = {
 };
 const connector = connect(map_state, map_dispatch);
 function _ListOrphanedWComponents(props) {
-  const [orphaned_wcomponents, set_orphaned_wcomponents] = useState([]);
+  const [orphaned_wcomponents, set_orphaned_wcomponents] = useState(void 0);
   const find_components = useMemo(() => {
     return () => {
       const store = get_store();
@@ -27,21 +27,23 @@ function _ListOrphanedWComponents(props) {
       set_orphaned_wcomponents(sorted_orphaned_wcomponents);
     };
   }, []);
-  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", null, "List Orphaned Components"), /* @__PURE__ */ h("span", {
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("h3", {
+    style: {marginTop: 30, marginBottom: 0}
+  }, "Orphaned Components"), /* @__PURE__ */ h("span", {
     className: "description_label"
-  }, "Show all components in this base which are not part of a knowledge view in this base."), /* @__PURE__ */ h(ButtonGroup, {
+  }, "Show all components in this knowledge base which are not in one or more knowledge views in this base."), /* @__PURE__ */ h(ButtonGroup, {
     fullWidth: true,
     color: "primary",
     variant: "contained",
     orientation: "vertical"
   }, /* @__PURE__ */ h(Button, {
     onClick: () => find_components()
-  }, "Find components")), /* @__PURE__ */ h("table", null, /* @__PURE__ */ h("tbody", {
+  }, "Find orphan components")), orphaned_wcomponents && orphaned_wcomponents.length > 0 && /* @__PURE__ */ h("table", null, /* @__PURE__ */ h("tbody", {
     style: {cursor: "pointer"}
   }, orphaned_wcomponents.map((wc) => /* @__PURE__ */ h("tr", {
     onClick: () => props.change_route({item_id: wc.id})
   }, /* @__PURE__ */ h("td", null, wc.type), /* @__PURE__ */ h("td", null, /* @__PURE__ */ h(RichMarkDown, {
     text: wc.title
-  })))))));
+  })))))), orphaned_wcomponents && orphaned_wcomponents.length === 0 && /* @__PURE__ */ h("p", null, "No orphaned components found."));
 }
 export const ListOrphanedWComponents = connector(_ListOrphanedWComponents);

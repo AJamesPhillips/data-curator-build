@@ -28,7 +28,7 @@ export function KnowledgeViewList(props) {
     debug_item_descriptor: "View"
   });
   const expanded_initial_state = calc_expanded_initial_state(props);
-  if (sort_type === "hidden" || sort_type === "archived") {
+  if (sort_type === "hidden" || sort_type === "archived" || sort_type === "errored") {
     return /* @__PURE__ */ h(ExpandableList, {
       items_count: knowledge_views.length,
       content: render_list_content,
